@@ -60,7 +60,7 @@ Before OpenLaszlo 4.0, OpenLaszlo applications were compiled in .swf format to r
 <h3>
 OpenLaszlo @VERSIONID@ is the recommended platform for Flash and DHTML development
 </h3>
-This release has been tested by users worldwide and vetted by the Laszlo Systems Quality Assurance team. Hundreds of improvements have been made since OpenLaszlo 4.0. Please see the release notes for a detailed description of new features, known problems, and information about the preliminary SWF9 support included in this release. 
+This release has been tested by users worldwide and vetted by the Laszlo Systems Quality Assurance team. Hundreds of improvements have been made since OpenLaszlo 4.0. Please see the release notes for a detailed description of new features, known problems, and information about the SWF10 support included in this release. 
 </div>
 </div>
 
@@ -86,7 +86,7 @@ This OpenLaszlo Explorer contains several demos compiled for both Flash and DHTM
 <div class="column-in" style="margin-top: 40px;">
 <h3 style="float: left">Reload OpenLaszlo Explorer</h3>
 <a href="../../index.jsp?lzr=swf8" target="_top" style="margin-left: 10px;"><img src="images/launch_flash8.png" border="0"/></a>
-<a href="../../index.jsp?lzr=swf9" target="_top"><img src="images/launch_flash9.png" border="0"/></a>
+<a href="../../index.jsp?lzr=swf10" target="_top"><img src="images/launch_flash10.png" border="0"/></a>
 <a href="../../index.jsp?lzr=dhtml" target="_top"><img src="images/launch_dhtml.png" border="0"/></a>
 </div>
 

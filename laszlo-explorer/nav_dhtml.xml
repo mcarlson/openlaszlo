@@ -1,6 +1,6 @@
 <menu>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/" title="OpenLaszlo Server" 
@@ -19,8 +19,8 @@
                      popup="/demos/calendar/calendar.lzx" runtime="dhtml" />
             <subitem title="Launch in Flash 8" name="View in Flash 8" action="popup" target="_blank"
                      popup="/demos/calendar/calendar.lzx" runtime="swf8" />
-            <subitem title="Launch in Flash 9" name="View in Flash 9" action="popup" target="_blank"
-                     popup="/demos/calendar/calendar.lzx" runtime="swf9" />
+            <subitem title="Launch in Flash 10" name="View in Flash 10" action="popup" target="_blank"
+                     popup="/demos/calendar/calendar.lzx" runtime="swf10" />
             <subitem title="Source Code Explorer" name="Source" action="source"
                      src="/demos/calendar/calendar.lzx" />
         </item>
@@ -31,8 +31,8 @@
                      popup="/demos/amazon/amazon.lzx" runtime="dhtml" />
             <subitem title="Launch in Flash 8" name="View in Flash 8" action="popup" target="_blank"
                      popup="/demos/amazon/amazon.lzx" runtime="swf8" />
-            <subitem title="Launch in Flash 9" name="View in Flash 9" action="popup" target="_blank"
-                     popup="/demos/amazon/amazon.lzx" runtime="swf9" />
+            <subitem title="Launch in Flash 10" name="View in Flash 10" action="popup" target="_blank"
+                     popup="/demos/amazon/amazon.lzx" runtime="swf10" />
             <subitem title="Source Code Explorer"
                          src="/demos/amazon/amazon.lzx" name="Source"  action="source"/>
         </item>
@@ -43,8 +43,8 @@
                      popup="/demos/lzpix/app.lzx" runtime="dhtml" width="780"/>
             <subitem title="Launch in Flash 8" name="View in Flash 8" action="popup" target="_blank"
                      popup="/demos/lzpix/app.lzx" runtime="swf8" width="780"/>
-            <subitem title="Launch in Flash 9" name="View in Flash 9" action="popup" target="_blank"
-                     popup="/demos/lzpix/app.lzx" runtime="swf9" width="780"/>
+            <subitem title="Launch in Flash 10" name="View in Flash 10" action="popup" target="_blank"
+                     popup="/demos/lzpix/app.lzx" runtime="swf10" width="780"/>
             <subitem title="Source Code Explorer"
                 src="/demos/lzpix/app.lzx" name="Source" action="source" />
         </item>
@@ -55,8 +55,8 @@
                      popup="/demos/lzproject/lzx/lzproject/LZProject.lzx" runtime="dhtml" height="700"/>
             <subitem title="Launch in Flash 8" name="View in Flash 8" action="popup" target="_blank"
                      popup="/demos/lzproject/lzx/lzproject/LZProject.lzx" runtime="swf8" height="700"/>
-            <subitem title="Launch in Flash 9" name="View in Flash 9" action="popup" target="_blank"
-                     popup="/demos/lzproject/lzx/lzproject/LZProject.lzx" runtime="swf9" height="700"/>
+            <subitem title="Launch in Flash 10" name="View in Flash 10" action="popup" target="_blank"
+                     popup="/demos/lzproject/lzx/lzproject/LZProject.lzx" runtime="swf10" height="700"/>
             <subitem title="Source Code Explorer"
                 src="/demos/lzproject/lzx/lzproject/LZProject.lzx" name="Source" action="source" />
         </item>
@@ -193,8 +193,8 @@
                      src="/demos/weather/weather.html" runtime="dhtml" />
             <subitem title="View in Flash 8" name="View in Flash 8" 
                      src="/demos/weather/weather.html" runtime="swf8" />
-            <subitem title="View in Flash 9" name="View in Flash 9" 
-                     src="/demos/weather/weather.html" runtime="swf9" />
+            <subitem title="View in Flash 10" name="View in Flash 10" 
+                     src="/demos/weather/weather.html" runtime="swf10" />
             <subitem name="Source" src="/demos/weather/weather.lzx"  action="source"/>
         </item>
         <item title="Survey" name="Survey" 
@@ -204,8 +204,8 @@
                      src="/demos/vacation-survey/vacation-survey.html" runtime="dhtml" />
             <subitem title="View in Flash 8" name="View in Flash 8" 
                      src="/demos/vacation-survey/vacation-survey.html" runtime="swf8" />
-            <subitem title="View in Flash 9" name="View in Flash 9" 
-                     src="/demos/vacation-survey/vacation-survey.html" runtime="swf9" />
+            <subitem title="View in Flash 10" name="View in Flash 10" 
+                     src="/demos/vacation-survey/vacation-survey.html" runtime="swf10" />
             <subitem title="Learn by doing" name="Source" action="source" src="/demos/vacation-survey/vacation-survey.lzx" />
         </item>
         <item title="Contact List" name="Contact List" 
@@ -216,9 +216,9 @@
             <subitem title="View in Flash 8" name="View in Flash 8" 
                      src="/examples/contactlist/contactlist.html" 
                      runtime="swf8" />
-            <subitem title="View in Flash 9" name="View in Flash 9" 
+            <subitem title="View in Flash 10" name="View in Flash 10" 
                      src="/examples/contactlist/contactlist.html" 
-                     runtime="swf9" />
+                     runtime="swf10" />
             <subitem title="Learn by doing" name="Source" action="source" src="/examples/contactlist/contactlist.lzx" />
         </item>
         <item  title="Animation" name="Animation" text="Demonstrates basic animation features"
@@ -227,8 +227,8 @@
                      src="/examples/animation/animation.html" runtime="dhtml" />
             <subitem title="View in Flash 8" name="View in Flash 8" 
                      src="/examples/animation/animation.html" runtime="swf8" />
-            <subitem title="View in Flash 9" name="View in Flash 9" 
-                     src="/examples/animation/animation.html" runtime="swf9" />
+            <subitem title="View in Flash 10" name="View in Flash 10" 
+                     src="/examples/animation/animation.html" runtime="swf10" />
             <subitem title="Learn by doing" name="Source" action="source" src="/examples/animation/animation.lzx" />
         </item>
         <item  title="Loading images" src="/examples/image-loading/image-loading.html" name="Image Loading" text="Loading images at compile time and at run time." >
@@ -236,16 +236,16 @@
                      src="/examples/image-loading/image-loading.html" runtime="dhtml" />
             <subitem title="View in Flash 8" name="View in Flash 8" 
                      src="/examples/image-loading/image-loading.html" runtime="swf8" />
-            <subitem title="View in Flash 9" name="View in Flash 9" 
-                     src="/examples/image-loading/image-loading.html" runtime="swf9" />
+            <subitem title="View in Flash 10" name="View in Flash 10" 
+                     src="/examples/image-loading/image-loading.html" runtime="swf10" />
             <subitem title="Learn by doing" name="Source" action="source" src="/examples/image-loading/dataimage.lzx" />
         </item>
         <item title="Playing music" name="Music" text="An example of streaming media."
               src="/examples/music/music.html" runtime="swf8" >
             <subitem title="View in Flash 8" name="View in Flash 8" 
                      src="/examples/music/music.html" runtime="swf8" />
-            <subitem title="View in Flash 9" name="View in Flash 9" 
-                     src="/examples/music/music.html" runtime="swf9" />
+            <subitem title="View in Flash 10" name="View in Flash 10" 
+                     src="/examples/music/music.html" runtime="swf10" />
             <subitem title="Learn by doing" name="Source" action="source" src="/examples/music/music.lzx" />
         </item>
         <item title="Component Sampler" name="Component Sampler" text="A sampler of OpenLaszlo widgets" 
@@ -254,8 +254,8 @@
                      src="/examples/components/component_sampler.html" runtime="dhtml" />
             <subitem title="View in Flash 8" name="View in Flash 8" 
                      src="/examples/components/component_sampler.html" runtime="swf8" />
-            <subitem title="View in Flash 9" name="View in Flash 9" 
-                     src="/examples/components/component_sampler.html" runtime="swf9" />
+            <subitem title="View in Flash 10" name="View in Flash 10" 
+                     src="/examples/components/component_sampler.html" runtime="swf10" />
              <subitem src="/examples/components/component_sampler.lzx" name="Source" action="source" />
         </item>
     </section>

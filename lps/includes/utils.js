@@ -20,7 +20,7 @@ function writeOpenLaszloApp (loc, base, lzr, w, h) {
         "<iframe src='" + base + "?lzt=html&amp;lzr=" + lzr + "' style='width: " + w + "; height: " + h + ";  margin: 0; padding: 0; border: 0 none;' frameborder='0' scrolling='no'/>";
 }
 
-var __tagmap = { "swf7" : "Flash", "swf8" : "Flash", "dhtml" : "DHTML" };
+var __tagmap = { "swf7" : "Flash 7", "swf8" : "Flash 8", "dhtml" : "DHTML", "swf9" : "Flash 9", "swf10" : "Flash 10" };
 
 function lzRuntimeTagToRuntimeName (tag) {
     if (tag in __tagmap)
