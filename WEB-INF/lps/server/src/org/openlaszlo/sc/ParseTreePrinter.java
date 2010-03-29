@@ -262,7 +262,11 @@ public class ParseTreePrinter {
       if (n instanceof PassThroughNode) {
         n = childnodes[i] = ((PassThroughNode)n).realNode;
       }
-      children[i] = visit(n, node);
+      try {
+        children[i] = visit(n, node);
+      } catch (CompilerException e) {
+        throw new CompilerError("Error " + e + " visiting \u00AB" + node.toString() + "(" + join(COMMA, children) + ")\u00BB");
+      }
     }
 
     Class nt = node.getClass();
@@ -801,8 +805,7 @@ public class ParseTreePrinter {
                node instanceof ASTLiteral) {
       ;
     } else {
-      System.err.println("No prec for " + node + " in " + Compiler.nodeString(node));
-      (new CompilerException()).printStackTrace();
+      throw new CompilerException("No prec for " + node);
     }
 
     if (assoc ? (thisPrec < parentPrec) : (thisPrec <= parentPrec)) {

@@ -219,15 +219,15 @@ public abstract class CommonGenerator extends GenericVisitor {
   private Boolean usePredictable = null;
   private Random rand = new Random();
   private int uuidCounter = 1;
-  protected Integer UUID() {
+  protected String UUID() {
     if (usePredictable == null) {
       usePredictable = new Boolean(options.getBoolean(Compiler.GENERATE_PREDICTABLE_TEMPS));
     }
     if (usePredictable.equals(Boolean.TRUE)) {
-      return new Integer(uuidCounter++);
+      return Integer.toString(uuidCounter++, Character.MAX_RADIX);
     }
     else {
-      return new Integer(rand.nextInt(Integer.MAX_VALUE));
+      return Integer.toString(rand.nextInt(Integer.MAX_VALUE), Character.MAX_RADIX);
     }
   }
 

@@ -644,7 +644,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   public SimpleNode visitEmptyExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     // Side-effect free expressions can be suppressed if not referenced
-    if ((! isReferenced)) {
+    if ((! isReferenced) && options.getBoolean(Compiler.ELIMINATE_DEAD_EXPRESSIONS)) {
       return null;
     }
     return node;
@@ -652,7 +652,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
   public SimpleNode visitThisReference(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     // Side-effect free expressions can be suppressed if not referenced
-    if ((! isReferenced)) {
+    if ((! isReferenced) && options.getBoolean(Compiler.ELIMINATE_DEAD_EXPRESSIONS)) {
       return null;
     }
     return translateReference(node).get();
@@ -758,11 +758,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
         SimpleNode property = args[0];
         SimpleNode value = args[1];
         List newBody = new ArrayList();
-        String thisvar = "$lzsc$" + UUID().toString();
-        String propvar = "$lzsc$" + UUID().toString();
-        String valvar = "$lzsc$" + UUID().toString();
-        String svar = "$lzsc$" + UUID().toString();
-        String evtvar = "$lzsc$" + UUID().toString();
+        String thisvar = "$lzsc$" + UUID();
+        String propvar = "$lzsc$" + UUID();
+        String valvar = "$lzsc$" + UUID();
+        String svar = "$lzsc$" + UUID();
+        String evtvar = "$lzsc$" + UUID();
         String decls = "";
         ParseTreePrinter ptp = new ParseTreePrinter();
         if (scope instanceof ASTIdentifier || scope instanceof ASTThisReference) {

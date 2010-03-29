@@ -1570,11 +1570,11 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         SimpleNode property = args[0];
         SimpleNode value = args[1];
         List newBody = new ArrayList();
-        String thisvar = "$lzsc$" + UUID().toString();
-        String propvar = "$lzsc$" + UUID().toString();
-        String valvar = "$lzsc$" + UUID().toString();
-        String svar = "$lzsc$" + UUID().toString();
-        String evtvar = "$lzsc$" + UUID().toString();
+        String thisvar = "$lzsc$" + UUID();
+        String propvar = "$lzsc$" + UUID();
+        String valvar = "$lzsc$" + UUID();
+        String svar = "$lzsc$" + UUID();
+        String evtvar = "$lzsc$" + UUID();
         String decls = "";
         ParseTreePrinter ptp = new ParseTreePrinter();
         if (scope instanceof ASTIdentifier || scope instanceof ASTThisReference) {
