@@ -46,7 +46,7 @@
             <view width="${parent.width}" height="${parent.height}" clip="true">
                 <text name="smalltitletext" 
                         fgcolor="#4B5D6C"
-                        width="${parent.width - this.x}" height="15"
+                        width="${parent.width - this.x}" height="20"
                         x="${parent.parent.timeArea.width + 5}"
                         y="$once{parent.parent.timeArea.y}"
                         datapath="summary/@value"/>
@@ -437,7 +437,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

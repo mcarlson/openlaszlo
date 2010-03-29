@@ -1,21 +1,16 @@
 <vcalendar>
-<!-- LZ_XML_COPYRIGHT_BEGIN
-
-  Copyright (c) 2001-2007 Laszlo Systems, Inc.
-  All Rights Reserved.
- 
-  This software is the proprietary information of Laszlo Systems, Inc.
-  Use is subject to license terms.
- 
-LZ_XML_COPYRIGHT_END -->
-    <year2007>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <year>
         <month8>
             <day6>
                 <event>
                    <summary value="Mail Launch Party!"/>
                    <comment value="Drinks at the Pub!"/>
-                   <start year="2007" month="8" day="6" hour="6" />
-                   <end year="2007" month="8" day="6" hour="9" />
+                   <start year="" month="8" day="6" hour="6" />
+                   <end year="" month="8" day="6" hour="9" />
                    <category value="holiday"/>
                    <notes value="Hooray!  Mail is launched!"/>
                    <location value="The Pub"/>
@@ -27,8 +22,8 @@ LZ_XML_COPYRIGHT_END -->
                 <event>
                    <summary value="Civic Holiday"/>
                    <comment value="Civic Holiday, Canada"/>
-                   <start year="2007" month="8" day="2" hour="9" />
-                   <end year="2007" month="8" day="2" hour="10" />
+                   <start year="" month="8" day="2" hour="9" />
+                   <end year="" month="8" day="2" hour="10" />
                    <category value="holiday"/>
                    <notes value="Call Billy in Vancouver and wish him a happy Civic Holiday."/>
                 </event>
@@ -37,8 +32,8 @@ LZ_XML_COPYRIGHT_END -->
                 <event>
                    <summary value="Swim Club"/>
                    <comment value="Understanding the butterfly stroke"/>
-                   <start year="2007" month="8" day="14" hour="9" />
-                   <end year="2007" month="8" day="14" hour="10" />
+                   <start year="" month="8" day="14" hour="9" />
+                   <end year="" month="8" day="14" hour="10" />
                    <category value="holiday"/>
                    <notes value="Remember to bring swim trunks."/>
                    <location value="Swim Club"/>
@@ -49,8 +44,8 @@ LZ_XML_COPYRIGHT_END -->
                 <event>
                    <summary value="Laszlo's Birthday!"/>
                    <comment value="Surprise Party in the Kitchen"/>
-                   <start year="2007" month="8" day="19" hour="1" />
-                   <end year="2007" month="8" day="19" hour="3" />
+                   <start year="" month="8" day="19" hour="1" />
+                   <end year="" month="8" day="19" hour="3" />
                    <category value="holiday"/>
                    <notes value="Happy birthday, Laszlo!"/>
                    <location value="The kitchen"/>
@@ -58,5 +53,5 @@ LZ_XML_COPYRIGHT_END -->
                 </event>
            </day19>
         </month8>
-    </year2007>
+    </year>
 </vcalendar>

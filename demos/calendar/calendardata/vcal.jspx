@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<jsp:root version="2.0"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+    xmlns:x="http://java.sun.com/jsp/jstl/xml">
+    <jsp:directive.page contentType="text/xml" pageEncoding="UTF-8" isELIgnored="false"/>
+    <jsp:directive.page import="java.util.Calendar"/>
+    <jsp:text><![CDATA[<?xml version="1.0" encoding="UTF-8" ?>]]></jsp:text>
+    <jsp:scriptlet>
+        pageContext.setAttribute("currentyear", Calendar.getInstance().get(Calendar.YEAR));
+    </jsp:scriptlet>
+    <c:catch var="ex">
+        <fmt:parseNumber var="pmonth" value="${param.month}" type="number" integerOnly="true"/>
+        <fmt:parseNumber var="pyear" value="${param.year}" type="number" integerOnly="true"/>
+        <c:set var="validmonth" value="${(pmonth ge 1) and (pmonth le 12)}"/>
+        <c:set var="validyear" value="${(pyear ge 2000) and (pyear le currentyear)}"/>
+    </c:catch>
+    <c:choose>
+        <c:when test="${(empty ex) and validmonth and validyear}">
+            <c:catch var="ex">
+                <c:import var="xml" url="./vcal_xxxx-${pmonth}-01.xml" />
+                <c:import var="xsl" url="./vcal.xsl"/>
+                <x:transform xml="${xml}" xslt="${xsl}">
+                    <x:param name="year" value="${pyear}"/>
+                </x:transform>
+            </c:catch>
+            <c:if test="${not empty ex}">
+                <error message="xsl-transformation error"/>
+            </c:if>
+        </c:when>
+        <c:otherwise>
+            <error message="invalid parameter: year=${param.year}, month=${param.month}"/>
+        </c:otherwise>
+    </c:choose>
+</jsp:root>

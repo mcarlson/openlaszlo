@@ -1,16 +1,16 @@
 <vcalendar>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <year2008>
+    <year>
         <month3>
             <day14>
                 <event>
                        <summary value="Lunch with Jane"/>
                        <comment value="Lunch with Jane"/>
-                       <start year="2008" month="3" day="14" hour="14" minute="1"/>
-                       <end year="2008" month="3" day="14" hour="16" minute="1"/>
+                       <start year="" month="3" day="14" hour="14" minute="1"/>
+                       <end year="" month="3" day="14" hour="16" minute="1"/>
                        <category/>
                        <uid/>
                        <location value="That neat sushi place"/>
@@ -19,8 +19,8 @@
                 <event>
                        <summary value="Meeting with Steve"/>
                        <comment value="Meeting with Steve"/>
-                       <start year="2008" month="3" day="14" hour="16" minute="30"/>
-                       <end year="2008" month="3" day="14" hour="17" minute="30"/>
+                       <start year="" month="3" day="14" hour="16" minute="30"/>
+                       <end year="" month="3" day="14" hour="17" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Remember the presentation packet"/>
@@ -30,8 +30,8 @@
                 <event>
                        <summary value="Pick up kids"/>
                        <comment value="Pick up kids"/>
-                       <start year="2008" month="3" day="14" hour="17" minute="0"/>
-                       <end year="2008" month="3" day="14" hour="18" minute="0"/>
+                       <start year="" month="3" day="14" hour="17" minute="0"/>
+                       <end year="" month="3" day="14" hour="18" minute="0"/>
                        <category/>
                        <uid/>
                        <notes value="Try to get out of work early..."/>
@@ -41,8 +41,8 @@
                 <event>
                        <summary value="Send letter to Mom"/>
                        <comment value="Send letter to Mom"/>
-                       <start year="2008" month="3" day="14" hour="13" minute="2"/>
-                       <end year="2008" month="3" day="14" hour="14" minute="2"/>
+                       <start year="" month="3" day="14" hour="13" minute="2"/>
+                       <end year="" month="3" day="14" hour="14" minute="2"/>
                        <category/>
                        <uid/>
                        <notes value="Tell her about the pregnancy."/>
@@ -51,8 +51,8 @@
                 <event>
                        <summary value="Call Irene"/>
                        <comment value="Call Irene"/>
-                       <start year="2008" month="3" day="14" hour="9" minute="12"/>
-                       <end year="2008" month="3" day="14" hour="10" minute="12"/>
+                       <start year="" month="3" day="14" hour="9" minute="12"/>
+                       <end year="" month="3" day="14" hour="10" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Yet more phone tag..."/>
@@ -62,8 +62,8 @@
                 <event>
                        <summary value="Special Event"/>
                        <comment value="A special event"/>
-                       <start year="2008" month="3" day="2" hour="8" minute="30"/>
-                       <end year="2008" month="3" day="2" hour="10" minute="30"/>
+                       <start year="" month="3" day="2" hour="8" minute="30"/>
+                       <end year="" month="3" day="2" hour="10" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Something very special is going to take place."/>
@@ -73,8 +73,8 @@
                 <event>
                        <summary value="A longer event to show wrapping"/>
                        <comment value="A longer event to show wrapping"/>
-                       <start year="2008" month="3" day="2" hour="14" minute="12"/>
-                       <end year="2008" month="3" day="2" hour="15" minute="12"/>
+                       <start year="" month="3" day="2" hour="14" minute="12"/>
+                       <end year="" month="3" day="2" hour="15" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Some longer notes to show some wrapping as well, since this event seems to be about demonstrating wrapping."/>
@@ -84,8 +84,8 @@
                 <event>
                        <summary value="Go to new office"/>
                        <comment value="Go to new office"/>
-                       <start year="2008" month="3" day="2" hour="7" minute="12"/>
-                       <end year="2008" month="3" day="2" hour="8" minute="12"/>
+                       <start year="" month="3" day="2" hour="7" minute="12"/>
+                       <end year="" month="3" day="2" hour="8" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="It's really not that new anymore, at this point."/>
@@ -97,8 +97,8 @@
                 <event>
                        <summary value="Another meeting"/>
                        <comment value="Another meeting"/>
-                       <start year="2008" month="3" day="6" hour="3" minute="30"/>
-                       <end year="2008" month="3" day="6" hour="5" minute="30"/>
+                       <start year="" month="3" day="6" hour="3" minute="30"/>
+                       <end year="" month="3" day="6" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="We need to revise our plan."/>
@@ -108,8 +108,8 @@
                 <event>
                        <summary value="Lunch with kids"/>
                        <comment value="Lunch with kids"/>
-                       <start year="2008" month="3" day="6" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="6" hour="13" minute="12"/>
+                       <start year="" month="3" day="6" hour="12" minute="12"/>
+                       <end year="" month="3" day="6" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Children need food to function."/>
@@ -119,8 +119,8 @@
                 <event>
                        <summary value="Pick up car"/>
                        <comment value="Pick up car"/>
-                       <start year="2008" month="3" day="6" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="6" hour="13" minute="12"/>
+                       <start year="" month="3" day="6" hour="12" minute="12"/>
+                       <end year="" month="3" day="6" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="It's still broken."/>
@@ -132,8 +132,8 @@
                 <event>
                        <summary value="Happy birthday Bob!"/>
                        <comment value="Happy birthday Bob!"/>
-                       <start year="2008" month="3" day="30" hour="3" minute="30"/>
-                       <end year="2008" month="3" day="30" hour="5" minute="30"/>
+                       <start year="" month="3" day="30" hour="3" minute="30"/>
+                       <end year="" month="3" day="30" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="A different Bob this time."/>
@@ -143,8 +143,8 @@
                 <event>
                        <summary value="Good evening"/>
                        <comment value="Good evening"/>
-                       <start year="2008" month="3" day="30" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="30" hour="13" minute="12"/>
+                       <start year="" month="3" day="30" hour="12" minute="12"/>
+                       <end year="" month="3" day="30" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Not a bad evening."/>
@@ -152,8 +152,8 @@
                 <event>
                        <summary value="Another example event"/>
                        <comment value="Another example event"/>
-                       <start year="2008" month="3" day="30" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="30" hour="13" minute="12"/>
+                       <start year="" month="3" day="30" hour="12" minute="12"/>
+                       <end year="" month="3" day="30" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Another example note"/>
@@ -165,8 +165,8 @@
                 <event>
                        <summary value="Happy birthday Bob!"/>
                        <comment value="Happy birthday Bob!"/>
-                       <start year="2008" month="3" day="12" hour="3" minute="30"/>
-                       <end year="2008" month="3" day="12" hour="5" minute="30"/>
+                       <start year="" month="3" day="12" hour="3" minute="30"/>
+                       <end year="" month="3" day="12" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Okay, this is really starting to get suspicious.  Bob's had about three birthdays in the last six months."/>
@@ -175,16 +175,16 @@
                 <event>
                        <summary value="Good evening"/>
                        <comment value="Good evening"/>
-                       <start year="2008" month="3" day="12" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="12" hour="13" minute="12"/>
+                       <start year="" month="3" day="12" hour="12" minute="12"/>
+                       <end year="" month="3" day="12" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                 </event>
                 <event>
                        <summary value="Another example event"/>
                        <comment value="Another example event"/>
-                       <start year="2008" month="3" day="12" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="12" hour="13" minute="12"/>
+                       <start year="" month="3" day="12" hour="12" minute="12"/>
+                       <end year="" month="3" day="12" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Another example note"/>
@@ -196,8 +196,8 @@
                 <event>
                        <summary value="Happy birthday Bob!"/>
                        <comment value="Happy birthday Bob!"/>
-                       <start year="2008" month="3" day="1" hour="3" minute="30"/>
-                       <end year="2008" month="3" day="1" hour="5" minute="30"/>
+                       <start year="" month="3" day="1" hour="3" minute="30"/>
+                       <end year="" month="3" day="1" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Hrmm, another birthday for Bob."/>
@@ -207,16 +207,16 @@
                 <event>
                        <summary value="Good evening"/>
                        <comment value="Good evening"/>
-                       <start year="2008" month="3" day="1" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="1" hour="13" minute="12"/>
+                       <start year="" month="3" day="1" hour="12" minute="12"/>
+                       <end year="" month="3" day="1" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                 </event>
                 <event>
                        <summary value="Another example event"/>
                        <comment value="Another example event"/>
-                       <start year="2008" month="3" day="1" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="1" hour="13" minute="12"/>
+                       <start year="" month="3" day="1" hour="12" minute="12"/>
+                       <end year="" month="3" day="1" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Another example note"/>
@@ -228,8 +228,8 @@
                 <event>
                        <summary value="St. Patricks Day"/>
                        <comment value="Wear green"/>
-                       <start year="2008" month="3" day="17" hour="9" />
-                       <end year="2008" month="3" day="17" hour="16" />
+                       <start year="" month="3" day="17" hour="9" />
+                       <end year="" month="3" day="17" hour="16" />
                        <category value="holiday"/>
                        <notes value="Wear that green shirt."/>
                        <location value="Sullivan's Pub"/>
@@ -239,8 +239,8 @@
                 <event>
                        <summary value="Happy birthday Gina!"/>
                        <comment value="Happy birthday Gina!"/>
-                       <start year="2008" month="3" day="16" hour="3" minute="30"/>
-                       <end year="2008" month="3" day="16" hour="5" minute="30"/>
+                       <start year="" month="3" day="16" hour="3" minute="30"/>
+                       <end year="" month="3" day="16" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="Get her that cat."/>
@@ -250,16 +250,16 @@
                 <event>
                        <summary value="Good evening"/>
                        <comment value="Good evening"/>
-                       <start year="2008" month="3" day="16" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="16" hour="13" minute="12"/>
+                       <start year="" month="3" day="16" hour="12" minute="12"/>
+                       <end year="" month="3" day="16" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                 </event>
                 <event>
                        <summary value="Another example event"/>
                        <comment value="Another example event"/>
-                       <start year="2008" month="3" day="16" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="16" hour="13" minute="12"/>
+                       <start year="" month="3" day="16" hour="12" minute="12"/>
+                       <end year="" month="3" day="16" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Another example note"/>
@@ -271,8 +271,8 @@
                 <event>
                        <summary value="How we do it back home"/>
                        <comment value="How we do it back home"/>
-                       <start year="2008" month="3" day="18" hour="3" minute="30"/>
-                       <end year="2008" month="3" day="18" hour="5" minute="30"/>
+                       <start year="" month="3" day="18" hour="3" minute="30"/>
+                       <end year="" month="3" day="18" hour="5" minute="30"/>
                        <category/>
                        <uid/>
                        <notes value="The way we do it back home is superior to the way it is done here."/>
@@ -282,8 +282,8 @@
                 <event>
                        <summary value="Text wrapping for dummies class"/>
                        <comment value="Text wrapping for dummies class"/>
-                       <start year="2008" month="3" day="18" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="18" hour="13" minute="12"/>
+                       <start year="" month="3" day="18" hour="12" minute="12"/>
+                       <end year="" month="3" day="18" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="I'm really ashamed of my inability to comprehend text wrapping."/>
@@ -293,8 +293,8 @@
                 <event>
                        <summary value="Conference"/>
                        <comment value="Conference"/>
-                       <start year="2008" month="3" day="18" hour="12" minute="12"/>
-                       <end year="2008" month="3" day="18" hour="13" minute="12"/>
+                       <start year="" month="3" day="18" hour="12" minute="12"/>
+                       <end year="" month="3" day="18" hour="13" minute="12"/>
                        <category/>
                        <uid/>
                        <notes value="Give a talk on emerging technologies"/>
@@ -303,5 +303,5 @@
                 </event>
             </day18>
         </month3>
-    </year2008>
+    </year>
 </vcalendar>

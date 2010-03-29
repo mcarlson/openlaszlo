@@ -26,12 +26,12 @@
             this.doNextRequest();
         </handler>
 
-        <method name="loadData" args="mo, yr">
+        <method name="loadData" args="mo, yr"><![CDATA[
             if( !datatester.hasNode( mo , yr ) ){
-                var r = "calendardata/vcal_" + yr + "-" + mo + "-01.xml";
+                var r = "calendardata/vcal.jspx?year=" + yr + "&month=" + mo;
                 this.enqueueRequest( r );
             }
-        </method>
+        ]]></method>
 
         <method name="doNextRequest" >
             if ( !this.reqq.length ) return;
@@ -496,7 +496,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
