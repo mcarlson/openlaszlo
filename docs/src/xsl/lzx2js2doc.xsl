@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- 
@@ -294,6 +294,9 @@
         <xsl:when test="contains($arg, '=')">
           <parameter name="{normalize-space(substring-before($arg, '='))}"/>
           <!-- TODO [dda 2008-05-14] handle initializers for method args -->
+        </xsl:when>
+        <xsl:when test="contains($arg, '...')">
+          <parameter name="{normalize-space(substring-after($arg, '...'))}"/>
         </xsl:when>
         <xsl:otherwise>
           <parameter name="{normalize-space($arg)}"/>
