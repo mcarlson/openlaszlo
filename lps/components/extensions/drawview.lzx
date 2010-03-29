@@ -563,7 +563,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function drawImage(image, x, y, w, h, r) {
-                this._dirty = true;
+                this.__dirty = true;
                 if ($debug) this.__checkContext();
                 if (typeof image == 'string') {
                     image = this.getImage(image);
@@ -708,7 +708,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             function __playPath() {
                 if (this.__path.length == 0) return;
-                this._dirty = true;
+                this.__dirty = true;
                 if ($debug) this.__checkContext();
                 this.__updateLineStyle();
                 this.__updateFillStyle();
@@ -759,8 +759,8 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function clear() {
-                if (! this._dirty) return;
-                this._dirty = false;
+                if (this['__dirty'] == false) return;
+                this.__dirty = false;
                 if ($debug) this.__checkContext();
                 this.context.clearRect(0, 0, this.width, this.height);
             }
@@ -808,7 +808,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function fillRect(x, y, w, h) {
-                this._dirty = true;
+                this.__dirty = true;
                 this.__updateFillStyle();
                 this.context.fillRect(x, y, w, h);
             }
@@ -818,7 +818,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function strokeRect(x, y, w, h) {
-                this._dirty = true;
+                this.__dirty = true;
                 this.__updateLineStyle();
                 this.context.strokeRect(x, y, w, h);
             }
@@ -1162,7 +1162,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function __playPath(context:*) :void {
-                this._dirty = true;
+                this.__dirty = true;
                 if ($as2) { context._visible = false; }
                 var p:Array = this.__path;
                 //Debug.write(p, context);
@@ -1210,8 +1210,8 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function clear() {
-                if (! this._dirty) return;
-                this._dirty = false;
+                if (this['__dirty'] == false) return;
+                this.__dirty = false;
                 this.context.clear();
                 if (this['__bitmapdata']) {
                     this.clearRect(0,0,this.width,this.height);
@@ -1841,7 +1841,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             function fillRect(x, y, w, h) {
                 if (! w && ! h) return;
-                this._dirty = true;
+                this.__dirty = true;
                 if (this.fillStyle instanceof LzCanvasGradient) {
                     this.fillStyle.__applyFillTo(this.context);
                     this.__strokeRect(x,y,w,h);
@@ -1916,7 +1916,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             // and (if appropriate) miterLimit attributes. 
             function strokeRect(x, y, w, h) {
                 if (! w && ! h) return;
-                this._dirty = true;
+                this.__dirty = true;
                 this.__updateLineStyle();
                 this.__strokeRect(x,y,w,h);
                 this.context.lineStyle(undefined);
@@ -1932,7 +1932,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     image = this.getImage(image);
                 }
                 if (! image) return;
-                this._dirty = true;
+                this.__dirty = true;
 
                 var matrix:Matrix = this.getIdentityMatrix();
 
