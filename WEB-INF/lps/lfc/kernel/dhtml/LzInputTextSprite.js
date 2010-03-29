@@ -239,8 +239,8 @@ LzInputTextSprite.prototype.__handlemouse = function(evt) {
 //    }
 }
 
-LzInputTextSprite.prototype.init = function(v) {
-    this.setVisible(v);
+//LzInputTextSprite.prototype.init = function(v) {
+//    this.setVisible(v);
 //    if (this.quirks['fix_inputtext_with_parent_resource']) {
 //        var sprites = this.__findParents('clickable', true);
 //        var l = sprites.length;
@@ -267,7 +267,7 @@ LzInputTextSprite.prototype.init = function(v) {
 //            }
 //        }
 //    }
-}
+//}
 
 LzInputTextSprite.prototype.__show = function() {
     if (this.__shown == true || this.disabled == true) return;
@@ -774,7 +774,12 @@ LzInputTextSprite.prototype.setMaxLength = function ( val ){
     // do, but Mozilla does not, probably neither does IE).  The
     // clever ~>>> expression computes MOST_POSITIVE_FIXNUM.
     if (val == Infinity) { val = ~0>>>1; }
+    var t = this.getText();
     this.__LzInputDiv.maxLength = val;    
+
+    if(t && t.length > val){
+      this.owner._updateSize();
+    }
 }
 
 LzInputTextSprite.prototype.select = function (){

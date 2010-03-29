@@ -280,6 +280,10 @@ LzSprite.prototype._setrescwidth = false;
 LzSprite.prototype._setrescheight = false;
 
 /**
+  * @access protected
+  */
+LzSprite.prototype.initted = false;
+/**
   * Called right before the view is shown. See <method
   * classname="LzNode">init</method> for more.
   * 
@@ -298,6 +302,7 @@ LzSprite.prototype.init = function( ) {
         // Tell JavaScript that you are ready to have method calls
         DojoExternalInterface.loaded();
     }
+    this.initted = true;
 }
 
 

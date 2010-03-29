@@ -659,7 +659,6 @@ dynamic class LzText extends LzView with LzFormatter {
   function $lzc$set_multiline(ml) :void {
     this.multiline = (ml = (!! ml));
     this.tsprite.setMultiline(ml);
-    this._updateSize();
   }
 
   /**
@@ -675,7 +674,6 @@ dynamic class LzText extends LzView with LzFormatter {
   function $lzc$set_resize(val) {
     this.resize = val;
     this.tsprite.setResize(val);
-    this._updateSize();
   }
 
 
@@ -708,13 +706,14 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     tsprite.setText(t);
     this.text =  t;
-    this._updateSize();
 
     if (this.ontext.ready) this.ontext.sendEvent(t);
   }
 
-  /** Update the height/width if changed
-      @access private */
+  /** Update the height/width if changed.  Called by init() and the text sprite
+    * when the size changes.
+    * @access private 
+    */
   function _updateSize() {
     // Defer updates while constructing
     if (! this.isinited) { return; }
@@ -767,11 +766,6 @@ dynamic class LzText extends LzView with LzFormatter {
     this.maxlength = val;
     this.tsprite.setMaxLength(val);
     if (this.onmaxlength.ready) this.onmaxlength.sendEvent(val);
-
-    var t = this.getText();
-    if(t && t.length > this.maxlength){
-      this._updateSize();
-    }
   }
   /** @lzxtype event */
   var onmaxlength:LzDeclaredEventClass = LzDeclaredEvent;
@@ -798,7 +792,6 @@ dynamic class LzText extends LzView with LzFormatter {
     if (fstyle == 'plain' || fstyle == 'bold' || fstyle == 'italic' || fstyle == 'bolditalic' || fstyle == 'bold italic') {
       super.$lzc$set_fontstyle(fstyle);
       this.tsprite.setFontStyle(fstyle);
-      this._updateSize();
     } else {
       if ($debug) Debug.warn('invalid font style', fstyle);
     }
@@ -808,7 +801,6 @@ dynamic class LzText extends LzView with LzFormatter {
   override function $lzc$set_font(fname) {
     super.$lzc$set_font(fname);
     this.tsprite.setFontName(fname);
-    this._updateSize();
   }
 
   /** @access private */
@@ -818,7 +810,6 @@ dynamic class LzText extends LzView with LzFormatter {
     } else {
       super.$lzc$set_fontsize(fsize);
       this.tsprite.setFontSize(fsize);
-      this._updateSize();
     }
   }
 
@@ -839,7 +830,6 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     this.textalign = align;
     this.tsprite.setTextAlign(align);
-    this._updateSize();
   }
 
   /** text-indent for this text
@@ -854,7 +844,6 @@ dynamic class LzText extends LzView with LzFormatter {
     } else {
       this.textindent = indent;
       this.tsprite.setTextIndent(indent);
-      this._updateSize();
     }
   }
 
@@ -870,7 +859,6 @@ dynamic class LzText extends LzView with LzFormatter {
     } else {
       this.letterspacing = spacing;
       this.tsprite.setLetterSpacing(spacing);
-      this._updateSize();
     }
   }
 
@@ -892,7 +880,6 @@ dynamic class LzText extends LzView with LzFormatter {
     }
     this.textdecoration = decoration;
     this.tsprite.setTextDecoration(decoration);
-    this._updateSize();
   }
 
 
@@ -1016,7 +1003,6 @@ dynamic class LzText extends LzView with LzFormatter {
         this.$lzc$set_gridFit ("subpixel");
       }
     }
-    this._updateSize();
   }
 
 
@@ -1116,7 +1102,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * Calculates the current width of the text held by the text field.
    */
   function getTextWidth ( ){
-    return this.tsprite.getTextWidth();
+    return this.tsprite.getTextWidth(true);
   }
   /** @access private */
   function $lzc$getTextWidth_dependencies ( who , self){

@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.as
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -581,6 +581,7 @@ public class LzTextSprite extends LzSprite {
                 if (theight == 0) theight = this.lineheight;
                 this.setHeight(theight + LzTextSprite.PAD_TEXTHEIGHT);
             }
+            if (this.initted) this.owner._updateSize();
         }
 
         /**
@@ -650,6 +651,7 @@ public class LzTextSprite extends LzSprite {
                 this.textfield.multiline = false;
                 this.textfield.wordWrap = false;
             }
+            if (this.initted) this.owner._updateSize();
         }
 
         /**
@@ -660,7 +662,7 @@ public class LzTextSprite extends LzSprite {
             this.textfield.selectable = isSel;
         }
       
-        public function getTextWidth ( ):Number {
+        public function getTextWidth (force=null):Number {
             var tf:TextField = this.textfield;
             var ml:Boolean = tf.multiline;
             var mw:Boolean = tf.wordWrap;
@@ -714,6 +716,7 @@ function setHScroll(s:Number) :void {
 function setAntiAliasType( aliasType:String ):void {
     var atype:String = (aliasType == 'advanced') ? AntiAliasType.ADVANCED : AntiAliasType.NORMAL;
     this.textfield.antiAliasType = atype;
+    if (this.initted) this.owner._updateSize();
 }
 
 function getAntiAliasType():String {
@@ -722,6 +725,7 @@ function getAntiAliasType():String {
 
 function setGridFit( gridFit:String ):void{
     this.textfield.gridFitType = gridFit;
+    if (this.initted) this.owner._updateSize();
 }
 
 function getGridFit():String {
@@ -748,6 +752,7 @@ function setMaxLength(val:Number) {
     // Runtime does not understand Infinity
     if (val == Infinity) { val = null; }
     this.textfield.maxChars = val;
+    if (this.initted) this.owner._updateSize();
 }
 
 function setPattern (val:String) :void {
@@ -767,6 +772,7 @@ function setSelection(start:Number, end:Number) :void {
 
 function setResize ( val:Boolean ) :void {
     this.resize = val;
+    if (this.initted) this.owner._updateSize();
 }
 
 function setScroll ( h:Number ) :void {

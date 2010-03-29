@@ -26,7 +26,6 @@ var LzSprite = function(owner, isroot) {
 
     if (isroot) {
         this.isroot = true;
-        this.__initdone = false;
         LzSprite.__rootSprite = this;
         var div = document.createElement('div');
         div.className = 'lzcanvasdiv';
@@ -1063,6 +1062,11 @@ LzSprite.prototype._h = '0pt';
   */
 LzSprite.prototype.__LZcontext = null;
 
+/**
+  * @access protected
+  */
+LzSprite.prototype.initted = false;
+
 /** Must be called when the sprite should show itself, usually after the 
   * owner is done initializing 
   */
@@ -1084,8 +1088,8 @@ LzSprite.prototype.init = function(v) {
         if (this._id) {
             lz.embed[this._id]._ready(this.owner);
         }
-        this.__initdone = true;
     }
+    this.initted = true;
 }
 
 /**
@@ -2445,7 +2449,7 @@ LzSprite.__poscachecnt = 0;
   */
 LzSprite.prototype.__getPos = function() {
     // Handle LPP-4357
-    if (! LzSprite.__rootSprite.__initdone) {
+    if (! LzSprite.__rootSprite.initted) {
         return lz.embed.getAbsolutePosition(this.__LZdiv);
     }
 

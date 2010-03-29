@@ -1,7 +1,7 @@
 /**
   * LzTextSprite.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -210,6 +210,7 @@ LzTextSprite.prototype._textDecoration = "none";
   */
 LzTextSprite.prototype.setResize = function ( val ){
     this.resize = val;
+    if (this.initted) this.owner._updateSize();
 }
 
 /**
@@ -260,6 +261,7 @@ LzTextSprite.prototype.setMaxLength = function ( val ){
     // Runtime does not understand Infinity
     if (val == Infinity) { val = null; }
     this.__LZtextclip.maxChars = val;
+    if (this.initted) this.owner._updateSize();
 }
 
 /**
@@ -289,7 +291,7 @@ LzTextSprite.prototype.setPattern = function ( val ){
  * @devnote NOTE: [2009-03-28 ptw] But if the text is empty, we return
  * 0.  <sigh />
  */
-LzTextSprite.prototype.getTextWidth = function ( ){
+LzTextSprite.prototype.getTextWidth = function (force){
     if (this.text == '') { return 0; }
     var textclip = this.__LZtextclip;
     var tca = textclip.autoSize;
@@ -638,6 +640,7 @@ LzTextSprite.prototype.getText = function() {
         this.setSelection(l);
       }
     }
+    if (this.initted) this.owner._updateSize();
 }
 
 // @field Number height: The height of the text field. If unspecified,
@@ -752,7 +755,6 @@ LzTextSprite.prototype.setFontSize = function ( fsize ){
     // recompute dimensions: must use clip html here -- inputtext may
     // have modified the contents
     this.setText( this.getText() );
-
 }
 
 /**
@@ -805,6 +807,7 @@ LzTextSprite.prototype.setMultiline = function ( ml ){
         mc.wordWrap = false;
         //mc.autoSize = false;
     }
+    if (this.initted) this.owner._updateSize();
 }
 
 /// extensions for flash6 

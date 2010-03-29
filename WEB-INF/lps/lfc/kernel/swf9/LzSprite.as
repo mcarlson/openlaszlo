@@ -210,6 +210,10 @@ public class LzSprite extends Sprite {
         DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'height', LzKernelUtils.CSSDimension(v))
     }
 
+    /**
+     * @access private
+     */
+    public var initted = false;
     public function init (v:Boolean = true):void {
         if (this.mask) {
             this.drawMask();
@@ -234,6 +238,7 @@ public class LzSprite extends Sprite {
                 DojoExternalInterface.loaded();
             }
         }
+        this.initted = true;
     }
 
     /**  addChildSprite(Sprite:sprite)

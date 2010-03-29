@@ -51,7 +51,6 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
     this.setFontName(args.font);
     this.setFontStyle(args.fontstyle);
     this.setFontSize(args.fontsize);
-    this.initted = true;
 }
 
 // Should reflect CSS defaults in LzSprite.js
@@ -108,16 +107,20 @@ LzTextSprite.prototype.setFontStyle = function (fstyle) {
         fweight = "bold";
         fstyle = "italic";        
     }
+    var changed = false;
 
     if (fweight != this._fontWeight) {
         this._fontWeight = fweight;
         this.scrolldiv.style.fontWeight = fweight;
-        this.__updatefieldsize();
+        changed = true;
     }
 
     if (fstyle != this._fontStyle) {
         this._fontStyle = fstyle;
         this.scrolldiv.style.fontStyle = fstyle;
+        changed = true;
+    }
+    if (changed) {
         this.__updatefieldsize();
     }
 }
@@ -185,75 +188,29 @@ LzTextSprite.prototype.setScrollEvents = function (on) {
   this.__updatefieldsize();
 }
 
-LzTextSprite.prototype.initted = false;
-LzTextSprite.prototype.__loadedfonts = {counter: 0};
-LzTextSprite.prototype.__loadedfontscallback = {};
-LzTextSprite.prototype.__isExternalFontLoaded = function (url){
-  var font = LzFontManager.getFont(this._fontFamily, this._fontStyle, this._fontWeight);
-  if (! font || ! this.initted) return true;
-  var url = LzFontManager.getURL(font);
-  var loadingstatus = this.__loadedfonts[url];
-  if (loadingstatus == 2) {
-    // done loading
-    return true;
-  } else if (loadingstatus == 1) {
-    var lfc = this.__loadedfontscallback;
-    lfc[this.uid] = this;
-    // already loading the font
-    return false;
-  }
-  // loading
-  this.__loadedfonts[url] = 1;
-  this.__loadedfonts.counter++;
-
-  // set up loader to call back and re-measure when the font has loaded
-  var style = 'font-family:' + this._fontFamily + ';font-style:' + this._fontStyle + ';font-weight:' + this._fontWeight + ';width:auto;height:auto;';
-  var mdiv = this.__createMeasureDiv('lzswftext', style, 'Yq_gy"9;ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=abcdefghijklmnopqrstuvwxyz');
-  mdiv.style.display = 'inline';
-  var width = mdiv.clientWidth;
-  var height = mdiv.clientHeight;
-  mdiv.style.display = 'none';
-  this.__measurefontdiv(mdiv, width, height, url);
-}
-
-LzTextSprite.prototype.__measurefontdiv = function(mdiv, width, height, url){
-  mdiv.style.display = 'inline';
-  var newwidth = mdiv.clientWidth;
-  var newheight = mdiv.clientHeight;
-  mdiv.style.display = 'none';
-  if (newwidth == width && newheight == height) {
-    // Give the browser layout engine a chance to recompute the layout, by
-    // calling back from the browser's timer queue. (FFOX needs this, not sure about other browsers)
-    var cstr = lz.BrowserUtils.getcallbackfunc(this, '__measurefontdiv', [mdiv, width, height, url]);
-    setTimeout(cstr, 0);
-  } else {
-    //Debug.warn('comparing', width, newwidth, height, newheight, mdiv);
-    this.__loadedfonts.counter--;
-    this.__loadedfonts[url] = 2;
-
-    if (this.__loadedfonts.counter == 0) {
-      var loadedfontscallback = this.__loadedfontscallback;
-      this.__clearMeasureCache();
-
-      for (var i in loadedfontscallback) {
-        var sprite = loadedfontscallback[i];
-        sprite._cachevalue = sprite._cacheStyleKey = sprite._cacheTextKey = null;
-        sprite.setWidth(sprite.getTextWidth());
-        sprite.setHeight(sprite.getTextHeight());
-        sprite.__updatefieldsize();
-        //Debug.warn('callback', sprite.uid);
-      }
-      delete loadedfontscallback[i];
-    }
-  }
-}
+// tracks any timeouts we may have
+LzTextSprite.prototype.__updatefieldsizeTID = null;
 
 // This uses a timer callback to actually call the routines which measure text,
 // so that the browser has a chance to re-layout the div if something changed.
 LzTextSprite.prototype.__updatefieldsize = function ( ){
-  if (! this.__isExternalFontLoaded()) return;
+  // Load fonts as early as possible
+  var loaded = LzFontManager.isFontLoaded(this, this._fontFamily, this._fontStyle, this._fontWeight);
+  if (! loaded || ! this.initted) return;
+  this.owner._updateSize();
   var cstr = lz.BrowserUtils.getcallbackfunc(this, '__updatefieldsizeCallback', []);
-  setTimeout(cstr, 0);
+  if (this.__updatefieldsizeTID != null) {
+    clearTimeout(this.__updatefieldsizeTID);
+  }
+  this.__updatefieldsizeTID = setTimeout(cstr, 0);
+}
+
+LzTextSprite.prototype.__fontLoaded = function() {
+  // clear caches and update size
+  this._cachevalue = this._cacheStyleKey = this._cacheTextKey = null;
+  this.setWidth(this.getTextWidth());
+  this.setHeight(this.getTextHeight());
+  this.__updatefieldsize();
 }
 
 LzTextSprite.prototype.__updatefieldsizeCallback = function () {
@@ -274,6 +231,11 @@ LzTextSprite.prototype.__updatefieldsizeCallback = function () {
   this.__updatefieldprop('scrollTop');
   this.__updatefieldprop('scrollWidth');
   this.__updatefieldprop('scrollLeft');
+}
+
+LzTextSprite.prototype.setMaxLength = function ( val ){
+    // TODO: implement
+    return;
 }
 
 LzTextSprite.prototype.__updatefieldprop = function(name) {
@@ -364,7 +326,8 @@ LzTextSprite.prototype.setPattern = function ( val ){
   * @devnot NOTE: [2009-02-27 ptw] Perhaps this API should be
   * obsoleted in favor of the scrolling API?
   */
-LzTextSprite.prototype.getTextWidth = function () {
+LzTextSprite.prototype.getTextWidth = function (force) {
+  if (! this.initted&& ! force) return 0;
   //Debug.write('LzTextSprite.getTextWidth', this.text, this._textsizecache[this.text]);
   //if (this.text == '') return 0;
   var width;
@@ -392,6 +355,7 @@ LzTextSprite.prototype.getTextWidth = function () {
 LzTextSprite.prototype.getLineHeight = function () {
   // If the font size has been set, we already know the line height 
   if (this._lineHeight) return this._lineHeight;
+  if (! this.initted) return 0;
   // Line height does _not_ include padding
   ////
   // NOTE: Quick cache check, inlined from getTextDimension
@@ -416,6 +380,7 @@ LzTextSprite.prototype.getTextHeight = LzTextSprite.prototype.getLineHeight;
 
 
 LzTextSprite.prototype.getTextfieldHeight = function () {
+    if (! this.initted) return 0;
     var fieldHeight = null;
     if (this.multiline && this.text != '') {
       // NOTE: [2009-03-27 ptw] You might think you could use

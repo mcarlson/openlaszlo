@@ -1,7 +1,7 @@
 /**
   * LzFontManager.as
   *
-  * @copyright Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2009-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -53,10 +53,97 @@ LzFontManager.generateCSS = function() {
 }
 
 LzFontManager.getURL = function(font) {
-    var baseurl = LzSprite.prototype.getBaseUrl(font);
-    return baseurl + font.url;
+    return LzSprite.prototype.getBaseUrl(font) + font.url;
 }
 
-LzFontManager.getFont = function(fontname, fontstyle, fontweight) {
-    return this.fonts[fontname + '_' + fontstyle + '_' + fontweight];
+// tracks load state for each font url
+LzFontManager.__fontloadstate = {counter: 0};
+// callbacks for when fonts finish loading
+LzFontManager.__fontloadcallbacks = {};
+// Returns true if the font is available and loaded
+LzFontManager.isFontLoaded = function(sprite, fontname, fontstyle, fontweight) {
+    var font = this.fonts[fontname + '_' + fontstyle + '_' + fontweight];
+    // No font to load, return true
+    if (! font) return true;
+
+    // Check loading state
+    var url = this.getURL(font);
+    var fontloadstate = this.__fontloadstate[url];
+    if (fontloadstate) {
+        var loadingstatus = fontloadstate.state;
+        if (loadingstatus >= 2) {
+            // done loading or timed out
+            return true;
+        }
+    } else {
+        // Load font...
+
+        // Create measurement div and measure its initial size
+        var style = 'font-family:' + fontname + ';font-style:' + fontstyle + ';font-weight:' + fontweight + ';width:auto;height:auto;';
+        var mdiv = sprite.__createMeasureDiv('lzswftext', style, 'Yq_gy"9;ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=abcdefghijklmnopqrstuvwxyz');
+        mdiv.style.display = 'inline';
+        var width = mdiv.clientWidth;
+        var height = mdiv.clientHeight;
+        mdiv.style.display = 'none';
+
+        // Init loading state
+        var fontloadstate = {state: 1, timer: (new Date()).valueOf()};
+        this.__fontloadstate[url] = fontloadstate;
+        this.__fontloadstate.counter++;
+
+        // Create callback for each font url
+        var cstr = lz.BrowserUtils.getcallbackfunc(LzFontManager, '__measurefontdiv', [mdiv, width, height, url]);
+        fontloadstate.TID = setInterval(cstr, (Math.random() * 20) + 30);
+    }
+
+    // Add sprite to callbacks table
+    this.__fontloadcallbacks[sprite.uid] = sprite;
+}
+
+// Time before a font load is canceled
+LzFontManager.fontloadtimeout = 15000;
+
+LzFontManager.__measurefontdiv = function(mdiv, width, height, url){
+    mdiv.style.display = 'inline';
+    var newwidth = mdiv.clientWidth;
+    var newheight = mdiv.clientHeight;
+    mdiv.style.display = 'none';
+
+    var fontloadstate = this.__fontloadstate[url];
+    if (newwidth == width && newheight == height) {
+        // Size didn't change...
+        var timediff = (new Date()).valueOf() - fontloadstate.timer;
+        if (timediff < LzFontManager.fontloadtimeout) {
+            // keep loading until timout is reached
+            return;
+        }
+        // Mark as timed out and warn
+        fontloadstate.state = 3;
+        if ($debug) {
+            Debug.warn('Timeout or error loading font ', url);
+        }
+    } else {
+        // Mark as loaded
+        fontloadstate.state = 2;
+    }
+
+    // Finished loading this font
+    clearInterval(fontloadstate.TID);
+    this.__fontloadstate.counter--;
+
+    // Don't call back until all fonts finish loading
+    if (this.__fontloadstate.counter != 0) return;
+
+    // Clear text measurement cache once
+    LzTextSprite.prototype.__clearMeasureCache();
+
+    // Call back each sprite
+    var callbacks = this.__fontloadcallbacks;
+    for (var i in callbacks) {
+        var sprite = callbacks[i];
+        if (sprite) {
+            sprite.__fontLoaded();
+        }
+    }
+    delete this.__fontloadcallbacks;
 }
