@@ -916,7 +916,7 @@ LzTextSprite.prototype.__LZforceScrollAttrs = function ( ignore ) {
   this.__LZupdateScrollAttrs();
   // The scroll attributes don't update right away, so we have to
   // wait...
-  if (! this['scrolldel']) {
+  if (! this.scrolldel) {
     this.scrolldel = new LzDelegate(this, "__LZupdateScrollAttrs");
   }
   lz.Idle.callOnIdle(this.scrolldel);

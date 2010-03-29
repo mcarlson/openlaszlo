@@ -459,7 +459,6 @@ override function $lzc$set_name(name:String) {
   */
 override function destroy () {
     this.$lzc$set_childNodes([ ]);
-    this.dataprovider.destroy();
     this.dataRequest = null;
 
     var name:String = this.name;

@@ -27,6 +27,7 @@
   */
 class LzHTTPDataProvider extends LzDataProvider {
 
+    /** @access private */
     private var __loaders:Array = null;
 
     function LzHTTPDataProvider () {
@@ -334,8 +335,6 @@ class LzHTTPDataProvider extends LzDataProvider {
     }
     /**
      * @access private
-     * @param LzHTTPDataRequest dreq:
-     * @param LzDataElement data:
      */
     override function destroy() {
         for (var i = this.__loaders.length - 1; i > -1; i--) {

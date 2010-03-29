@@ -49,11 +49,8 @@ class LzXMLLoader extends LzLoader {
       */
     override function destroy () {
         if (this.__LZdeleted == true) return;
-        // To keep delegates from resurrecting us.  See LzDelegate#execute
-        this.__LZdeleted = true;
 
         this.removeCopyTask();
-        if (this.copyTaskDel.hasevents) this.copyTaskDel.destroy();
         super.destroy();
     }
 

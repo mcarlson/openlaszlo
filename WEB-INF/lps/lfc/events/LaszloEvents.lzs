@@ -287,7 +287,6 @@ public function unregisterFrom (event:LzDeclaredEventClass) :void {
         if (ev === event) {
             ev.removeDelegate( this );
             this.__events.splice(i, 1);
-            break;
         }
     }
     this.hasevents = this.__events.length > 0;
