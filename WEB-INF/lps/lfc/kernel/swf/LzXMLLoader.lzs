@@ -1,7 +1,7 @@
 /**
   * LzXMLLoader.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -48,8 +48,12 @@ class LzXMLLoader extends LzLoader {
       * (not really, but the doc tools will complain
       */
     override function destroy () {
+        if (this.__LZdeleted == true) return;
+        // To keep delegates from resurrecting us.  See LzDelegate#execute
+        this.__LZdeleted = true;
+
         this.removeCopyTask();
-        this.copyTaskDel = null;
+        if (this.copyTaskDel.hasevents) this.copyTaskDel.destroy();
         super.destroy();
     }
 
@@ -345,7 +349,7 @@ class LzXMLLoader extends LzLoader {
     function removeCopyTask() {
         // Remove copyTask delegate
         //    Debug.write("removing copy idle task ", this);
-        this.copyTaskDel.unregisterAll();
+        if (this.copyTaskDel.hasevents) this.copyTaskDel.unregisterAll();
         this.copyQueue = null;
         this.lfcrootnode = null;
     }

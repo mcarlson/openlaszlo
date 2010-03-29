@@ -211,14 +211,20 @@ LzMakeLoadSprite.__LZsendTimeout = function (e) {
   * @access private
   */
 LzMakeLoadSprite.destroy = function () {
-    if ('updateDel' in this)
-         this.updateDel.unregisterAll();
-    if ('errorDel' in this)
-         this.errorDel.unregisterAll();
-    if ('timeoutDel' in this)
-         this.timeoutDel.unregisterAll();
+    if (this.__LZdeleted == true) return;
+
+    if ('updateDel' in this && this.updateDel.hasevents) {
+         this.updateDel.destroy();
+    }
+    if ('errorDel' in this && this.errorDel.hasevents) {
+         this.errorDel.destroy();
+    }
+    if ('timeoutDel' in this && this.timeoutDel.hasevents) {
+         this.timeoutDel.destroy();
+    }
 
     this.loader.unload(this.loader.mc);
+    this.loader.destroy();
 
     // call shadowed destroy()
     this.___destroy();

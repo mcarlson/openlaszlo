@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.js
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -370,4 +370,9 @@ LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ig
             this.setupTimeout(this, this.timeout);
         }
     }
+}
+
+LzHTTPLoader.prototype.destroy = function () {
+    // TODO: implement
+    return;
 }

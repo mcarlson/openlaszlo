@@ -23,8 +23,6 @@
         if ( args[ 'release' ] != null ){
             this.heldSubs[ args.release.getUID() ] = false;
         }
-
-        this.delegates.push( this.resetDelegate );
     </method>
 
     <!--- setter for the axis attribute. The default value is 'y' 
@@ -207,7 +205,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

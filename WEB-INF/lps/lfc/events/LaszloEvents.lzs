@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzevent lzdelegate
@@ -76,14 +76,12 @@
   * @lzxname handler
   * @see LzEvent
   *
-  * @devnote This class is only dynamic because it uses itself as an
-  * array to track the events it is registered to.  It would probably
-  * be better to store that array as a property, and only create the
-  * array if you are actually registered to more than one event.
   */
-public dynamic final class LzDelegate {
+public final class LzDelegate {
   /** @access private */
   var __delegateID:int = 0;
+  /** @access private */
+  var __events:Array = null;
 
   /**
    * Create an LzDelegate
@@ -98,6 +96,12 @@ public dynamic final class LzDelegate {
    */
   public function LzDelegate (context:LzEventable, methodName:String, eventSender:LzEventable = null, eventName:String = null) {
     super();
+    if ((context == null) || (context['__LZdeleted'])) {
+        if ($debug) {
+            Debug.warn('Ignoring an attempt to create a delegate with a null or deleted context.', context, methodName, eventSender, eventName);
+        }
+        return;
+    }
     if ($as3) {
       // This type-check is superfluous in JS2, but we want it as an
       // aid to portability in JS1
@@ -151,8 +155,11 @@ var c:LzEventable;
  */
 var m:Function;
 
-/** @access private */
-var lastevent:int = 0;
+/** 
+  * Signals whether a call to unregisterAll() is needed, used by swf8 sprites
+  * @access private 
+  */
+var hasevents:Boolean = false;
 /** @access private */
 var enabled:Boolean = true;
 /** @access private */
@@ -214,9 +221,23 @@ public function execute (eventValue:*) :* {
       // We proceed anyways, for back-compatibility
     }
 
-    if (this.c['__LZdeleted']) {
+    if ((this.c == null) || (this.c['__LZdeleted'])) {
         // don't register to event when context is deleted
         return;
+    }
+    // Delegates between LzEventables can cause memory leaks.  We record these 
+    // delegates so they can be cleaned up in destroy()
+    if ((eventSender is LzEventable) && (eventSender !== this.c)) {
+      // Don't track more than once
+      if (this.__tracked == false) {
+        this.__tracked = true;
+        var _dels:Array = this.c['__delegates'];
+        if (_dels == null) {
+          this.c.__delegates = [ this ];
+        } else {
+          _dels.push( this );
+        }
+      }
     }
 
     var anEvent:* = eventSender[ eventName ];
@@ -231,18 +252,27 @@ public function execute (eventValue:*) :* {
       (anEvent cast LzEvent).addDelegate( this );
     }
 
-    this[ this.lastevent++ ] = anEvent;
+    if (this.__events == null) this.__events = [];
+    this.__events.push(anEvent);
+    this.hasevents = true;
   }
 
 /**
   * Unregisters the delegate for all of the events it is registered for.
   */
 public function unregisterAll () :void {
-    for (var i:int = 0; i < this.lastevent; i++) {
-        this[ i ].removeDelegate( this );
-        this[ i ] = null;
+    if (this.hasevents == false) return;
+// Caused too many warnings for datapaths, e.g. demos/amazon/amazon.lzx
+//    if ($debug) {
+//        if (this.c == null) {
+//            Debug.warn('This delegate has already been destroyed, so there is no need for a call to unregisterAll() in this case.  LzDelegates are automatically destroyed by the event system when their context is destroyed.');
+//        }
+//    }
+    for (var i:int = 0, l:int = this.__events.length; i < l; i++) {
+        this.__events[ i ].removeDelegate( this );
     }
-    this.lastevent = 0;
+    this.__events.length = 0;
+    this.hasevents = false;
 }
 
 /**
@@ -251,22 +281,16 @@ public function unregisterAll () :void {
   *                       (e.g.  myview.onmouseup)
   */
 public function unregisterFrom (event:LzDeclaredEventClass) :void {
-    var keep:Array = [];
-    for (var i:int = 0; i < this.lastevent; i++) {
-        var ev:LzEvent = this[ i ];
+    if (this.hasevents == false) return;
+    for (var i:int = 0, l:int = this.__events.length; i < l; i++) {
+        var ev:LzEvent = this.__events[ i ];
         if (ev === event) {
             ev.removeDelegate( this );
-        } else {
-            keep.push( ev );
+            this.__events.splice(i, 1);
+            break;
         }
-        this[ i ] = null;
     }
-    //now fix it
-    this.lastevent = 0;
-    var len:int = keep.length;
-    for (var i:int = 0; i < len; i++) {
-        this[ this.lastevent++ ] = keep[ i ];
-    }
+    this.hasevents = this.__events.length > 0;
 }
 
 /**
@@ -324,6 +348,31 @@ public function enable () :void {
 /** @access private */
 public function toString (){
     return ("Delegate for " + this.c + " calls " + this.m + " " + this.__delegateID );
+}
+
+/** 
+  * If true, the delegate is being tracked by __delegates
+  * @access private
+  */
+private var __tracked = false;
+ 
+/** 
+  * If true, the delegate has been destroyed
+  * @access private
+  */
+public var __LZdeleted = false;
+/**
+  * Unregisters from any events and clears the delegate state
+  * @access private
+  */
+public function destroy ():void {
+    if (this.__LZdeleted == true) return;
+    this.__LZdeleted = true;
+    if (this.hasevents) this.unregisterAll();
+    this.hasevents = false;
+    this.__events = null;
+    this.c = null;
+    this.m = null;
 }
 
 if ($debug) {
@@ -490,10 +539,11 @@ public class LzEvent extends LzDeclaredEventClass {
 
 /**
   * Adds the given delegate to the event's delegate list. Should
-  * rarely be called explicitly -- it is used exclusively by
-  * <b><i>LzDelegate</i>.register</b>
+  * rarely be called explicitly -- it is used by
+  * <b><i>LzDelegate</i>.register</b> and LzIdle.
   *
-  * @param LzDelegate d: The delegate to add to the list of delegates called by the event.
+  * @param LzDelegate d: The delegate to add to the list of delegates called 
+  * by the event.
   * @access private
   */
 public function addDelegate (d:LzDelegate) :void {
@@ -540,7 +590,7 @@ public override function sendEvent (eventValue:* = null) :void {
             if (c && (! c.__LZdeleted)) {
                 if (c.__LZdeferDelegates) {
                   var evq:Array = c.__LZdelegatesQueue;
-                  if (!evq) { evq = c.__LZdelegatesQueue = new Array(); }
+                  if (!evq) { evq = c.__LZdelegatesQueue = []; }
                   evq.push(this, d, eventValue);
                 } else if (d.m) {
                   // d.execute( eventValue ); inlined

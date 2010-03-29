@@ -1450,12 +1450,6 @@ function __LZcheckDotDot ( chgpkg:Object ) :void {
 /** @access private */
 override function destroy () {
     this.__LZsetTracking( null );
-    if ( this.errorDel ) this.errorDel.unregisterAll();
-    if ( this.timeoutDel ) this.timeoutDel.unregisterAll();
-
-    if ( this.__LZdotdotCheckDel ) {
-        this.__LZdotdotCheckDel.unregisterAll();
-    }
     this.p = null;
     this.data = null;
     this.__LZlastdotdot = null;

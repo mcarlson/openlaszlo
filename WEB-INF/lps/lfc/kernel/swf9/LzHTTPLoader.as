@@ -384,4 +384,9 @@ public class LzHTTPLoader {
             this.loadError(this, null);
         }
     }
+
+    public function destroy() {
+        // TODO: implement
+        return;
+    }
 }

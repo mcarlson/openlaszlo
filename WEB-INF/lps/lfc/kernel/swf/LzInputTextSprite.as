@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -231,7 +231,9 @@ TextField.prototype.__gotFocus = function (oldfocus) {
   * @access private
   */
 TextField.prototype.__lostFocus = function () {
-    if (this['__handlelostFocusdel'] == null) this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
+    if (this['__handlelostFocusdel'] == null) {
+        this.__handlelostFocusdel = new LzDelegate(this, "__handlelostFocus");
+    }
     lz.Idle.callOnIdle(this.__handlelostFocusdel);
 }
 
@@ -299,3 +301,16 @@ LzInputTextSprite.findSelection = function ( ){
         if ( focusview != undefined ) return focusview;
     }
 }
+
+/**
+  * @access private
+  */
+LzInputTextSprite.prototype.destroy = function( parentvalid = true ) {
+    if (this.__LZdeleted == true) return;
+
+    if (this.__handlelostFocusdel.hasevents) {
+        this.__handlelostFocusdel.destroy();
+    }
+    LzTextSprite.prototype.destroy.call(this, parentvalid);
+}
+

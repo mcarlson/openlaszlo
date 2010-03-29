@@ -605,7 +605,6 @@ public dynamic class LzAnimatorGroup extends LzNode {
       */
     override function destroy () {
         this.stop();
-        this.updateDel.unregisterAll();
         this.animators = null;
         this.actAnim = null;
 

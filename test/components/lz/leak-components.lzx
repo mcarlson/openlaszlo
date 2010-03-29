@@ -1,10 +1,12 @@
 <canvas>
+    <include href="utils/diagnostic/memorymonitor.lzx"/>
+
     <class name="leaktest">
-        <attribute name="start" value="0"/>
-        <attribute name="numtimes" value="0"/>
+        <attribute name="start" value="0" type="number"/>
+        <attribute name="numtimes" value="0" type="number"/>
         <attribute name="itemlist" value="null"/>
-        <attribute name="numitems" value="0"/>
-        <attribute name="limit" value="60"/>
+        <attribute name="numitems" value="0" type="number"/>
+        <attribute name="limit" value="${iterations.value}" type="number"/>
         <attribute name="itemclassname" value="" type="string"/>
         <handler name="oninit">
             this.itemlist = [];
@@ -19,8 +21,12 @@
                 if (this.numitems == 0) {
                     for (var i=0; i < 10; i ++) {
                         //itemlist[i] = new button(canvas, {text:'title', y:i*24, x:200});
-                        this.itemlist[i] = new lz[this.itemclassname](canvas, {bgcolor:0x006600,
+
+                        var item = new lz[this.itemclassname](canvas, {bgcolor:0x006600,
                             width:100, height:22, y:i*24, x:300});
+                        new LzDelegate(item, '_setEnabled', canvas, 'onwidth');
+                        new LzDelegate(item, '_setEnabled', item, 'onwidth');
+                        this.itemlist[i] = item;
                         this.numitems ++;
                     }
                     this.setAttribute('numtimes', numtimes+1);
@@ -42,6 +48,7 @@
             <textlistitem>basevaluecomponent</textlistitem>
             <textlistitem selected="true">button</textlistitem>
         </combobox>
+        <slider id="iterations" value="60" maxvalue="100"/>
         <text width="250" multiline="true">to use this test you need to use an external tool (like the
             Windows Task Manager) to look at how much memory this
             process is using.  When you click the "start" button.  The
@@ -53,7 +60,7 @@
     <text x="200" width="150" text="${test.numtimes +'/'+test.limit}"/>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008,2010 Laszlo Systems, Inc.  All Rights Reserved.   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

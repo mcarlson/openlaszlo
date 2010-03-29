@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005-2009 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2005-2010 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -113,15 +113,6 @@
             if ( this.statictext != null ) {
                 this._cbtext.setAttribute('text', this.statictext );
             }
-        ]]></method>
-        
-        <!--- @keywords private -->
-        <method name="destroy" ><![CDATA[
-            if (this._datacatchdel != null) {
-                this._datacatchdel.unregisterAll();
-            }
-
-            super.destroy();
         ]]></method>
         
         <!--- This catches the initial ondata, since there is no datapath

@@ -126,11 +126,6 @@ dynamic class LzLayout extends LzNode {
     */
   var updateDelegate:LzDelegate;
   
-  /** An array of all the delegates used by the layout
-    * @type LzDelegate
-    */
-  var delegates;
-
 /**
   * @param view: A view above this one that the Layout should apply to. Note:
   * this may not ultimately be the same as the view that it will eventually be
@@ -156,13 +151,11 @@ override  function construct ( view , args) {
 
     this.updateDelegate = new LzDelegate( this , "update" );
 
-    this.delegates = [ this.updateDelegate ];
-
     // register for unlock when parent inits, or unlock if already inited
     if (this.immediateparent.isinited) {
         this.__parentInit();
     } else {
-        this.delegates.push(new LzDelegate( this , "__parentInit", this.immediateparent, "oninit" ));
+        new LzDelegate( this , "__parentInit", this.immediateparent, "oninit" );
     }
 
 }
@@ -176,11 +169,11 @@ override function __LZapplyArgs ( args , constcall = null ){
     if (this.__LZdeleted) { return; }
 
     //all layouts need to know when their view adds/deletes a subview
-    this.delegates.push( new LzDelegate (  this, "gotNewSubview",
-                                        this.immediateparent,"onaddsubview" ));
+    new LzDelegate (  this, "gotNewSubview",
+                                        this.immediateparent, "onaddsubview" );
     //this is never called b/c removeSubview is not implemented yet
-    this.delegates.push( new LzDelegate (  this, "removeSubview",
-                                    this.immediateparent, "onremovesubview" ));
+    new LzDelegate (  this, "removeSubview",
+                                    this.immediateparent, "onremovesubview" );
 
     var vsl = this.vip.subviews.length;
 
@@ -195,7 +188,7 @@ override function __LZapplyArgs ( args , constcall = null ){
   * @access private
   */
 override function destroy () {
-    this.releaseLayout();
+    this.releaseLayout(true);
     super.destroy();
 }
 
@@ -327,12 +320,12 @@ function __parentInit (v=null){
   * uses.
   * @deprecated will be removed from a future release.
   */
-function releaseLayout ( ) {
-    if (this.delegates) {
-        for ( var i = this.delegates.length - 1;  i >= 0; i -- ){
-            this.delegates[ i ] .unregisterAll();
-        }
+function releaseLayout (fromdestroy=null) {
+    if ($debug) {
+        if (fromdestroy == null) Debug.deprecated(this, arguments.callee, this.destroy);
     }
+    // if called from destroy(), don't remove delegates
+    if (fromdestroy == null && this.__delegates != null) this.removeDelegates();
     if (this.immediateparent && this.vip.layouts) {
         for ( var i = this.vip.layouts.length -1 ; i >= 0 ; i-- ){
             if ( this.vip.layouts[ i ] == this ){

@@ -339,10 +339,6 @@ lz.embed.iframemanager.restoreSelection = function(id) {
     <!--- @keywords private -->
     <method name="destroy">
         if (this['iframeid']) lz.embed.iframemanager.__destroy(this.iframeid);
-        <!-- TODO: remove when cleanup is automatic -->
-        if (this._posdel) {
-            this._posdel.unregisterAll();
-        }
         super.destroy();
     </method>
     <switch>

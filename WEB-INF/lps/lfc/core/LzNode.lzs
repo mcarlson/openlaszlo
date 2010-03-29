@@ -397,8 +397,11 @@ public dynamic class LzNode extends LzEventable {
   }
   /** @access private */
   var __LZRuleCache = null;
-  /** @access private */
-  var __LZdelegates = null;
+  /** Tracks delegates and data bindings for states so they can be 
+    * applied/removed
+    * @access private 
+    */
+  var __LZconstraintdelegates = null;
 
   /**
    * Internal flag, private to the LFC.  Indicates that
@@ -693,12 +696,14 @@ public dynamic class LzNode extends LzEventable {
         // Create a new binder to update the destination attribute,
         var binder = new LzStyleAttrBinder(this, attr, source);
         // register it on the source attribute,
-        if (! this.__LZdelegates) { this.__LZdelegates = []; }
+        if (! this.__LZconstraintdelegates) { 
+          this.__LZconstraintdelegates = [];
+        }
         // TODO: [2008-02-20 ptw] The delegate and binder could be
         // collapsed into a single object, a custom delegate with the
         // bind method as its execute method, but I don't think these
         // are common enough to warrant optimization at this time.
-        this.__LZdelegates.push(new LzDelegate(binder, 'bind', this, 'on' + source));
+        this.__LZconstraintdelegates.push(new LzDelegate(binder, 'bind', this, 'on' + source));
         // bind it
         binder.bind();
       } else if (styleValue is LzStyleIdent) {
@@ -1351,11 +1356,10 @@ public dynamic class LzNode extends LzEventable {
       this.$lzc$set_datapath(".");
     }
 
-    if ( ! this.__LZdelegates ){
-      this.__LZdelegates = [];
+    if ( ! this.__LZconstraintdelegates ){
+      this.__LZconstraintdelegates = [];
     }
-
-    this.__LZdelegates.push ( new LzDataAttrBind( this.datapath, attr, path, type ));
+    this.__LZconstraintdelegates.push ( new LzDataAttrBind( this.datapath, attr, path, type ));
   }
 
   /** @access private */
@@ -1375,19 +1379,21 @@ public dynamic class LzNode extends LzEventable {
   function $lzc$set_$delegates ( delarr ){
     //delarr is a sequence of triplets of the form
     //... eventname, methodname, referencemethodname
-
-    var resarray = [];
     var l = delarr.length;
+    if (l < 1) return;
+
+    var dels:Array = this.__LZconstraintdelegates;
+    var resarray:Array = [];
     for ( var i = 0; i < l;i +=3 ){
       if ( delarr[i + 2] ) {
         //let's resolve this later
         resarray.push ( delarr[ i ] , delarr[ i +1 ] , delarr[ i + 2 ] );
       } else {
         var m = delarr[i + 1];
-        if ( !this.__LZdelegates ){
-          this.__LZdelegates = [];
+        if (! dels) {
+          dels = this.__LZconstraintdelegates = [];
         }
-        this.__LZdelegates.push( new LzDelegate( this , m , this , delarr[i] ) );
+        dels.push( new LzDelegate( this , m , this , delarr[i] ) );
       }
     }
 
@@ -1449,8 +1455,12 @@ public dynamic class LzNode extends LzEventable {
    * @access private
    */
   function __LZsetDelegates ( delarr ){
-    if ( delarr.length && !this.__LZdelegates ){
-      this.__LZdelegates = [];
+    if ( delarr.length < 1) {
+      return;
+    }
+    var dels:Array = this.__LZconstraintdelegates;
+    if (! dels){
+      dels = this.__LZconstraintdelegates = [];
     }
 
     var l = delarr.length;
@@ -1459,7 +1469,7 @@ public dynamic class LzNode extends LzEventable {
       var sender = (sendermethodname != null) ? this[sendermethodname]() : null;
       if ( sender == null ) sender = this;
       var meth = delarr[i + 1];
-      this.__LZdelegates.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
+      dels.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
     }
 
   }
@@ -1515,8 +1525,9 @@ public dynamic class LzNode extends LzEventable {
       }
     }
     if (dependencies && dependencies.length > 0){
-      if ( !this.__LZdelegates ){
-        this.__LZdelegates = [];
+      var dels:Array = this.__LZconstraintdelegates;
+      if ( ! dels ){
+        dels = this.__LZconstraintdelegates = [];
       }
 
       // NOTE: [2006-05-30 ptw] You may think to yourself 'this is
@@ -1534,8 +1545,7 @@ public dynamic class LzNode extends LzEventable {
       for (var i = 0, l = dependencies.length; i < l; i += 2) {
         dp = dependencies[i];
         if (dp) {
-          var d = new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]);
-          this.__LZdelegates.push(d);
+          dels.push( new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]) );
         }
       }
     }
@@ -1607,13 +1617,15 @@ public dynamic class LzNode extends LzEventable {
    */
   function releaseConstraintMethod (constraintMethodName) {
     var result:Boolean = false;
-    var dels:Array = this.__LZdelegates;
+    var dels:Array = this.__LZconstraintdelegates;
     if (dels) {
       for (var i:int = 0; i < dels.length; ) {
         var del:* = dels[i];
         if (del is LzDelegate && del.c === this &&
                 del.m === this[constraintMethodName]) {
-          del.unregisterAll();
+          if (del.__LZdeleted != true) {
+            del.destroy();
+          }
           dels.splice(i, 1);
           result = true;
         } else {
@@ -2067,17 +2079,14 @@ public dynamic class LzNode extends LzEventable {
       }
     }
 
-    //remove __LZdelegates
-    if (this.__LZdelegates != null) {
-      for ( var i = this.__LZdelegates.length - 1; i >= 0; i-- ){
-        this.__LZdelegates[ i ].unregisterAll();
-      }
+    if (this.__LZconstraintdelegates != null) {
+      this.__LZconstraintdelegates = null;
     }
-    this.__LZdelegates = null;
 
+    // remove from subnodes array
     if (this.immediateparent && this.immediateparent.subnodes) {
       for( var i = this.immediateparent.subnodes.length - 1; i >= 0; i-- ){
-        if ( this.immediateparent.subnodes[ i ] == this ){
+        if ( this.immediateparent.subnodes[ i ] === this ){
           this.immediateparent.subnodes.splice( i , 1 );
           break;
         }

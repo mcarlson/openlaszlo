@@ -1,7 +1,7 @@
 /**
   * LzDatapath.lzs
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic LFC
@@ -522,7 +522,7 @@ override function destroy(){
         ip.datapath = null;
     }
 
-    super.destroy.apply(this, arguments);
+    super.destroy();
 }
 
 /**

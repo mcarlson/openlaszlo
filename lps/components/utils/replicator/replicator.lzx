@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <!--- This is a declared replicator for visual elements. Unlike
         OpenLaszlo''s data-replication feature, a replicator can take an
@@ -69,7 +69,6 @@
         </method>
 
         <method name="destroy">
-            if (this['_ondatadel']) this._ondatadel.unregisterAll();
             this._pointer = null;
             this.dataset = null;
             super.destroy();

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -27,6 +27,8 @@
   */
 class LzHTTPDataProvider extends LzDataProvider {
 
+    private var __loaders:Array = null;
+
     function LzHTTPDataProvider () {
         super();
     }  
@@ -38,7 +40,9 @@ class LzHTTPDataProvider extends LzDataProvider {
         var proxied:Boolean = dreq.proxied;
         // If there is no loader, or if the loader changed it's proxied
         // flag, make a new loader.
+        if (this.__loaders == null) this.__loaders = [];
         var tloader:LzHTTPLoader = new LzHTTPLoader(this, proxied);
+        this.__loaders.push(tloader);
         dreq.loader = tloader;
         tloader.loadSuccess = this.loadSuccess;
         tloader.loadError   = this.loadError;
@@ -327,6 +331,18 @@ class LzHTTPDataProvider extends LzDataProvider {
         dreq.xmldata = content;
         dreq.responseheaders = headers;
         dreq.onstatus.sendEvent( dreq );
+    }
+    /**
+     * @access private
+     * @param LzHTTPDataRequest dreq:
+     * @param LzDataElement data:
+     */
+    override function destroy() {
+        for (var i = this.__loaders.length - 1; i > -1; i--) {
+            this.__loaders[i].destroy();
+        }
+        this.__loaders = null;
+        super.destroy();
     }
 }
 

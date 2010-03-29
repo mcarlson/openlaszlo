@@ -81,12 +81,11 @@ override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boo
     return result;
 }
 
-
 /**
-  * This matches the LzDelegate method of the same name so that these objects
-  * can be stored in a node's __LZdelegates array.
+  * @access private
   */
-function unregisterAll () :void { 
+override function destroy () {
+    if (this.__LZdeleted == true) return;
     var dca:Array = this.pathparent.__LZdepChildren;
 
     if (dca != null) {
@@ -98,7 +97,7 @@ function unregisterAll () :void {
         }
     }
 
-    this.destroy();
+    super.destroy();
 }
 
 /**

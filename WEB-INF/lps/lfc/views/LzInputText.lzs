@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -113,28 +113,6 @@ override function construct ( parent , args ){
                                             "onblur" );
     this._modemanagerDel = new LzDelegate( this, "_modechanged", lz.ModeManager,
                                             "onmode" );
-}
-
-/**
-  * @access private
-  */
-override function destroy(){
-    if (this._onfocusDel) {
-        this._onfocusDel.unregisterAll();
-        this._onfocusDel = null;
-    }
-    
-    if (this._onblurDel) {
-        this._onblurDel.unregisterAll();
-        this._onblurDel = null;
-    }
-    
-    if (this._modemanagerDel) {
-        this._modemanagerDel.unregisterAll();
-        this._modemanagerDel = null;
-    }
-    
-    super.destroy();
 }
 
 /** @access private */

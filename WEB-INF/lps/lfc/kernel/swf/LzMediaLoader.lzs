@@ -62,7 +62,7 @@ function startingLoad (loadmc) {
   */
 function removeLoadChecker (ignore) {
     // Remove loadChecker delegate
-    this.loadCheckerDel.unregisterAll();
+    if (this.loadCheckerDel.hasevents) this.loadCheckerDel.unregisterAll();
     lz.Timer.removeTimer( this.errorCheckerDel );
 }
 
@@ -333,6 +333,17 @@ override function unload (loadobj) {
     this.owner.owner.resourceevent('framesloadratio', 0);
 
     this.removeLoadChecker();
+}
+
+/**
+  * @access private
+  */
+override function destroy () {
+    if (this.__LZdeleted == true) return;
+
+    if (this.loadCheckerDel && this.loadCheckerDel.hasevents) this.loadCheckerDel.destroy();
+    if (this.errorCheckerDel && this.errorCheckerDel.hasevents) this.errorCheckerDel.destroy();
+    super.destroy();
 }
 
 /**

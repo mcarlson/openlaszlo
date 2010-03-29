@@ -8,7 +8,7 @@
   * @subtopic AS2
   */
 {
-#pragma "warnUndefinedReferences=true"
+#pragma "warnUndefinedReferences=false"
 var LzTextSprite = function(newowner, args) {
     if (newowner == null) return this;
     this.__LZdepth = newowner.immediateparent.sprite.__LZsvdepth++;
@@ -916,8 +916,10 @@ LzTextSprite.prototype.__LZforceScrollAttrs = function ( ignore ) {
   this.__LZupdateScrollAttrs();
   // The scroll attributes don't update right away, so we have to
   // wait...
-  var scrolldel = new LzDelegate(this, "__LZupdateScrollAttrs");
-  lz.Idle.callOnIdle(scrolldel);
+  if (! this['scrolldel']) {
+    this.scrolldel = new LzDelegate(this, "__LZupdateScrollAttrs");
+  }
+  lz.Idle.callOnIdle(this.scrolldel);
 }
 
 
@@ -1073,12 +1075,15 @@ LzTextSprite.deleteLinkID = function (UID) {
     delete LzTextSprite.linkIDMap[UID];
 }
 
-// Clean up the link ID table if this view is destroyed
-LzTextSprite.prototype._viewdestroy = LzSprite.prototype.destroy;
-
 LzTextSprite.prototype.destroy = function(){
+    if (this.__LZdeleted == true) return;
+
+    // Clean up the link ID table if this view is destroyed
     LzTextSprite.deleteLinkID(this.owner.getUID());
-    this._viewdestroy( );
+    if (this.scrolldel.hasevents) {
+        this.scrolldel.destroy();
+    }
+    LzSprite.prototype.destroy.call(this, parentvalid);
 }
 
 LzTextSprite.prototype.setTextAlign = function (align) {

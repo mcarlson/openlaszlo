@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @topic LFC
@@ -18,13 +18,6 @@
  *
  * @shortdesc Base class for all LZX classes that wish to send or
  * receive events.
- *
- * @devnote Eventually we should be able to implicitly track the
- * creation of delegates here, so that no user class has to manually
- * manage its delegates to prevent memory leaks, by moving
- * __LZdelegates and the associated protocols from LzNode to here (and
- * automatically pushing new LzDelegates onto that queue in
- * LzDelegate).
  *
  * @devnote Eventually we should be able to simplify the
  * implementation of events and delegates by recording them here
@@ -52,6 +45,14 @@ class LzEventable {
    * @access private
    */
   var _events:Array = null;
+
+  /**
+   * All the delegates this instance is captured by.  Used to clean up 
+   * references to this instance when it is destroyed.
+   *
+   * @access private
+   */
+  var __delegates:Array = null;
 
   /**
    * Sent just before an instance is destroyed
@@ -89,9 +90,28 @@ class LzEventable {
         for (var i = this._events.length-1; i >=0; i--){
             this._events[i].clearDelegates();
         }
+        this._events = null;
     }
-    this._events = null;
+    if (this.__delegates != null) this.removeDelegates();
   }
+
+  /**
+   * Removes all delegates registered for this context.  Also called by 
+   * LaszloLayout.releaseLayout()...
+   * @access private
+   */
+  function removeDelegates() {
+    if (this.__delegates != null) {
+      for (var i = this.__delegates.length-1; i >=0; i--){
+        var del = this.__delegates[i];
+        if (del.__LZdeleted != true) {
+          del.destroy();
+        }
+      }
+      this.__delegates = null;
+    }
+  }
+  
 
   /**
    * Private protocol with LzNode to cause events to delegates to be

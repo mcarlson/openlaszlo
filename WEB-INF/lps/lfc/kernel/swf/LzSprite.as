@@ -979,20 +979,20 @@ LzSprite.prototype.destroy = function( parentvalid = true ) {
     this.__LZdeleted = true;
 
     this.stopTrackPlay();
-    delete this.updatePlayDel;
-    delete this.checkPlayStatusDel;
-
-    if (this.doQueuedDel.lastevent) {
-        this.doQueuedDel.unregisterAll();
-        delete this.doQueuedDel;
+    if (this.updatePlayDel.hasevents) {
+        this.updatePlayDel.destroy();
     }
-    if (this._moDel.lastevent) {
-        this._moDel.unregisterAll();
-        delete this._moDel;
+    if (this.checkPlayStatusDel.hasevents) {
+        this.checkPlayStatusDel.destroy();
     }
-    if (this._muDel.lastevent) {
-        this._muDel.unregisterAll();
-        delete this._muDel;
+    if (this.doQueuedDel.hasevents) {
+        this.doQueuedDel.destroy();
+    }
+    if (this._moDel.hasevents) {
+        this._moDel.destroy();
+    }
+    if (this._muDel.hasevents) {
+        this._muDel.destroy();
     }
 
     if (! parentvalid) return;
@@ -1343,9 +1343,9 @@ LzSprite.prototype.setCursor = function( cursor ){
         
         delete this._cures;
         if (this._moDel) {
-            this._moDel.unregisterAll();
+            this._moDel.destroy();
             delete this._moDel;
-            this._muDel.unregisterAll();
+            this._muDel.destroy();
             delete this._muDel;
         }
     }
@@ -1373,7 +1373,7 @@ LzSprite.prototype.trackPlay = function() {
 
     if (this.updatePlayDel == null) {
         this.updatePlayDel = new LzDelegate(this, "updatePlayStatus");
-    } else {
+    } else if (this.updatePlayDel.hasevents) {
         this.updatePlayDel.unregisterAll();
     }
     this.__LZtracking = true;
@@ -1389,10 +1389,10 @@ LzSprite.prototype.stopTrackPlay = function() {
     if (this.__LZtracking) {
         this.updatePlayStatus();
         this.__LZtracking = false;
-        if (this.updatePlayDel.lastevent) {
+        if (this.updatePlayDel.hasevents) {
             this.updatePlayDel.unregisterAll();
         }
-        if (this.checkPlayStatusDel.lastevent) {
+        if (this.checkPlayStatusDel.hasevents) {
             this.checkPlayStatusDel.unregisterAll();
         }
     }
@@ -1471,16 +1471,18 @@ LzSprite.prototype.checkPlayStatus2 = function (ignore){
     this.__lzskipplaycheck++;
     if (this.__lzskipplaycheck < this.__lzskipplaychecklimit) {
         return;
+    } else if (this.checkPlayStatusDel.hasevents) {
+        this.checkPlayStatusDel.unregisterAll();
     }
-    this.checkPlayStatusDel.unregisterAll();
 
     if ( this.frame != this.__lzcheckframe || this.totalframes != this.__lzchecktotalframes){
         //Debug.write('checkPlayStatus2 tracking', this.frame, this.__lzcheckframe);
         this.trackPlay();
     } else {
         //Debug.write('checkPlayStatus2 done', this.updatePlayDel, this);
-        if (this.updatePlayDel)
+        if (this.updatePlayDel.hasevents) {
             this.updatePlayDel.unregisterAll();
+        }
         this.__LZtracking = false;
         this.owner.playing = false;
     }
@@ -1575,7 +1577,9 @@ LzSprite.prototype.queuePlayAction = function ( a, arg1, arg2 ){
   * @access private
   */
 LzSprite.prototype.doQueuedPlayAction = function (ignore){
-    this.doQueuedDel.unregisterAll();
+    if (this.doQueuedDel.hasevents) {
+        this.doQueuedDel.unregisterAll();
+    }
     
     var qa = this.queuedplayaction;
     this.queuedplayaction = null;

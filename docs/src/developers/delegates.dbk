@@ -165,7 +165,7 @@ all events from the delegate, and resets the message to nothing special.
 
 <para/></section></section></section><section><title>Delegates and Memory Management</title>
 <para>
-When you destroy an object--for example, a view -- you free up the memory that was used to store it.  However, destroying the view does not destroy the delegates associated with it.  You should "clean up" the delegate manually to free up the memory used by it.
+In the past, it was necessary to manually track delegates and manually clean them up when objects were destroyed to prevent memory leaks.  This is no longer required - the event system now automatically cleans up delegates as needed.
 </para>
 <para/><section><title>Memory Management example</title>
 <para>
@@ -177,17 +177,8 @@ To dynamically attach a method to an event, use a delegate:
 
    &lt;method name="init"&gt;
      super.init();
-     this.myDel = new LzDelegate(this, 'doit', libraryName, 'onload');
+     new LzDelegate(this, 'doit', libraryName, 'onload');
    &lt;/method&gt;
-&lt;!--
-Be sure to clean up your delegate manually, if you destroy
-instances, or the application will "leak" memory:--&gt;
-
-   &lt;method name="destroy"&gt;
-     this.myDel.unregisterAll();  // "destroys" delegates
-     super.destroy();
-   &lt;/method&gt;
-
 &lt;/class&gt;
 </programlisting></example>
 <para/></section></section><section><title>Using a lz.Timer to show the passage of time </title>

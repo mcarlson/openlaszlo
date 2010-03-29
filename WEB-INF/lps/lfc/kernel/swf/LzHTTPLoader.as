@@ -1,7 +1,7 @@
 /**
   * LzHTTPLoader.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -221,4 +221,24 @@ LzHTTPLoader.prototype.setTimeout = function (timeout) {
     this.timeout = timeout;
     // [todo hqm 2006-07] Should we have  an API method for setting LzLoader timeout?
     this.lzloader.timeout = timeout;
+}
+
+/**
+  * @access private
+  * Called by lzloader:LzXMLLoader to clean up delegates
+  */
+LzHTTPLoader.prototype.destroy = function() {
+    if (this.__LZdeleted == true) return;
+    // To keep delegates from resurrecting us.  See LzDelegate#execute
+    this.__LZdeleted = true;
+
+    if (this.dsloadDel.hasevents) this.dsloadDel.destroy();
+    if (this.dscontentDel.hasevents) this.dscontentDel.destroy();
+    if (this.dserrorDel.hasevents) this.dserrorDel.destroy();
+    if (this.dstimeoutDel.hasevents) this.dstimeoutDel.destroy();
+    if (this.lzloader) {
+        this.lzloader.destroy();
+    }
+    this.lzloader = null;
+    this.owner = null;
 }

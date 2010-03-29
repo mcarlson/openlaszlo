@@ -1787,25 +1787,10 @@ function searchSubviews ( prop , val) {
 /**
  * The layouts that are controlling the layout of this view.
  * @type [LzLayout]
+ * @devnote Used by LzReplicationManager
  * @access private
  */
 var layouts = null;
-
-/**
-  * Releases all the layouts applied to this view. <method>releaseLayouts()</method> has been deprecated.
-  * @deprecated
-  * @devnote NOTE [2008-06-26 ptw] This is deprecated and tells you to
-  * use setAttribute instead, but there is no setter for layouts.
-  * What was really meant?
-  */
-function releaseLayouts( ) {
-    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
-    if (this.layouts) {
-        for ( var i = this.layouts.length - 1; i >= 0; i-- ){
-            this.layouts[ i ].releaseLayout();
-        }
-    }
-}
 
 /**
   * @access private

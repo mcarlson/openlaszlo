@@ -242,41 +242,6 @@
 
         <!--- @keywords private -->
         <method name="destroy" ><![CDATA[
-            if (this._mwActivateDel) {
-                this._mwActivateDel.unregisterAll();
-                this._mwActivateDel = null;
-            }
-
-            if (this._mwDeactivateDel) {
-                this._mwDeactivateDel.unregisterAll();
-                this._mwDeactivateDel = null;
-            }
-
-            if (this._mwUpdateDel) {
-                this._mwUpdateDel.unregisterAll();
-                this._mwUpdateDel = null;
-            }
-
-            if (this.clipSizeDel) {
-                this.clipSizeDel.unregisterAll();
-                this.clipSizeDel = null;
-            }
-
-            if (this.targetHeightDel) {
-                this.targetHeightDel.unregisterAll();
-                this.targetHeightDel = null;
-            }
-
-            if (this.targetPosDel) {
-                this.targetPosDel.unregisterAll();
-                this.targetPosDel = null;
-            }
-
-            if (this.heightDel) {
-                this.heightDel.unregisterAll();
-                this.heightDel = null;
-            }
-
             this.scrolltarget = null;
             this.focusview = null;
             this.othersb = null
@@ -687,7 +652,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

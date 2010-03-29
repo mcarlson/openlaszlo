@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzstate
@@ -99,7 +99,7 @@ dynamic class LzState extends LzNode {
   /** @access private */
   var __LZpool = [];
   /** @access private */
-  var __LZstatedelegates;
+  var __LZstateconstraintdelegates;
 
   /**
    * @access private
@@ -308,9 +308,9 @@ dynamic class LzState extends LzNode {
       }
     }
 
-    //capture delegates created by process of applying state
-    var od = parent.__LZdelegates;
-    parent.__LZdelegates = null;
+    // capture delegates created by process of applying state
+    var od = parent.__LZconstraintdelegates;
+    parent.__LZconstraintdelegates = null;
 
     parent.__LZapplyArgs( this.heldArgs );
 
@@ -329,9 +329,11 @@ dynamic class LzState extends LzNode {
     parent.__LZclearPreventInit();
 
     parent.__LZresolveReferences();
-    this.__LZstatedelegates = parent.__LZdelegates;
+    // capture constraint delegates
+    this.__LZstateconstraintdelegates = parent.__LZconstraintdelegates;
 
-    parent.__LZdelegates = od;
+    // restore delegates
+    parent.__LZconstraintdelegates = od;
 
     if (this.onapply.ready) this.onapply.sendEvent( this );
     if (this.onapplied.ready) this.onapplied.sendEvent( true );
@@ -354,10 +356,15 @@ dynamic class LzState extends LzNode {
     if (this.onremove.ready) this.onremove.sendEvent( this );
     if (this.onapplied.ready) this.onapplied.sendEvent( false );
 
-    if (this.__LZstatedelegates) {
-      for ( var i = 0; i < this.__LZstatedelegates.length; i++ ){
-        this.__LZstatedelegates[ i ].unregisterAll();
+    var dels = this.__LZstateconstraintdelegates;
+    if (dels) {
+      for ( var i = 0, l = dels.length; i < l; i++ ){
+        var del = dels[i];
+        if (del.__LZdeleted == false) {
+          del.destroy();
+        }
       }
+      this.__LZstateconstraintdelegates = null;
     }
 
     if ( this.pooling && this.appliedChildren.length ){

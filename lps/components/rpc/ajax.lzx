@@ -56,16 +56,6 @@
         <!--- @keywords private -->
         <attribute name="dataRequest" value="null" />
         
-        <!--- @keywords private -->
-        <method name="destroy" >
-            if (this.onstatusDelegate) {
-                this.onstatusDelegate.unregisterAll();
-                this.onstatusDelegate = null;
-            }
-            super.destroy();
-        </method>
-
-
         <!--=================================================================-->
         <!-- public methods                                                  -->
         <!--=================================================================-->
@@ -303,7 +293,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
