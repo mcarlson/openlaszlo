@@ -669,6 +669,7 @@ LzTextSprite.prototype.updateMaxLines = function (){
     if ( newlin != this.maxlines ){
         this.maxlines = newlin;
     }
+    if (this.initted) this.owner._updateSize();
 }
 
 
@@ -729,6 +730,7 @@ LzTextSprite.prototype.__setFormat = function (){
       // Tell the owner the linescale has changed
       this.owner.scrollevent('lineHeight', lh);
     }
+    if (this.initted) this.owner._updateSize();
 }
 
 LzTextSprite.prototype.setFontInfo = function () {

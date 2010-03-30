@@ -534,6 +534,7 @@ public class LzTextSprite extends LzSprite {
                 // you can't set defaultTextFormat if a style sheet is applied
                 tfield.htmlText = this.text;
             }
+            if (this.initted) this.owner._updateSize();
         }
 
         public function getText():String {
@@ -639,6 +640,7 @@ public class LzTextSprite extends LzSprite {
               // Tell the owner the linescale has changed
               this.owner.scrollevent('lineHeight', lh);
             }
+            if (this.initted) this.owner._updateSize();
         }
 
 
