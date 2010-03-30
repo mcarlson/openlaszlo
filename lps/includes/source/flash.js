@@ -1098,7 +1098,7 @@ lz.embed.dojo.Communicator.prototype = {
         data = data.replace(RegExp(">", "g"), "&gt;");
         
         // transforming \ into \\ doesn't work; just use a custom encoding
-        data = data.replace("\\", "&custom_backslash;&custom_backslash;");
+        data = data.replace("\\", "&custom_backslash;");
         
         data = data.replace(RegExp("\\n", "g"), "\\n");
         data = data.replace(RegExp("\\r", "g"), "\\r");
@@ -1372,6 +1372,6 @@ lz.embed.dojo.Install.prototype = {
 lz.embed.dojo.info = new lz.embed.dojo.Info();
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
