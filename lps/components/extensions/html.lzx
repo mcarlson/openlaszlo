@@ -319,7 +319,7 @@ lz.embed.iframemanager.restoreSelection = function(id) {
       Calls a method in the the loaded page.
       @param String methodName: The name of the method to call
       @param LzDelegate callbackDel: An optional LzDelegate which will be called with the return value from the method call.
-      @param args: Optional arguments to pass to the method.
+      @param ...args: Optional arguments to pass to the method.
     -->
     <method name="callJavascript" args="methodName, callbackDel = null, ...args">
         lz.embed.iframemanager.callJavascript(this.iframeid, methodName, callbackDel, args);

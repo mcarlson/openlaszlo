@@ -221,8 +221,7 @@
 
         <!--- Set the value (text) of baseedittext.
               @param String value: the string to set.
-              @param Boolean isinitvalue: if the string is an initvalue.
-              @param Boolean isHTML: set HTML text. -->
+              @param Boolean isinitvalue: if the string is an initvalue. -->
         <method name="doSetValue" args="value,isinitvalue,_ignorecalldown"><![CDATA[
               //----------------------------------------------------------------
               // @param Boolean _ignorecalldown: if true, means that setValue
@@ -351,7 +350,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2010 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->

@@ -2,7 +2,7 @@
 
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbacktrace
@@ -153,8 +153,6 @@ dynamic class LzBacktrace {
 
   /**
    * Convert a backtrace to a string
-   * @param printer:Function the function to print the backtrace
-   * functions with.  Defaults to Debug.__String
    * @param length:Number the length to abbreviate the string to
    * 
    * @access private

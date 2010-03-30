@@ -262,8 +262,8 @@
 
       @param Number x: starting x position
       @param Number y: starting y position
-      @param Number w: Width
-      @param Number h: Height
+      @param Number width: Width
+      @param Number height: Height
       @param Number topleftradius: Optional radius of rounding for topleft corner.  If no other radius parameters are specified, topleftradius is used for all corners.
       @param Number bottomleftradius: Optional radius of rounding for bottomleft corner.
       @param Number bottomrightradius: Optional radius of rounding for bottomright corner.
