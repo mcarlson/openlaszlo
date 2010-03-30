@@ -995,9 +995,6 @@
        // Funky thing that Henry discovered you have to do to make newlines
        // why wouldn't <br/> work?
        this.middle.content.addText(str.split('\n').join('&#32;\n'));
-       if (this.autoscroll) {
-           this.middle.content.scrollToEnd();
-       }
      ]]>
   </method>
 
@@ -1018,17 +1015,12 @@
      ]]>
   </method>
 
-  <!--- Scroll the debugger output window to display the last line of text  -->
-<method name="scrollToEnd">
-     this.middle.content.scrollToEnd();
-  </method>
 
 <!-- Ensures the debugger window is visible, in front, and last output displayed. -->
 <method name="ensureVisible">
     if (! this.visible) {
         this.setAttribute('visible', true );
         this.bringToFront();
-        this.scrollToEnd();
     }
 </method>
 
@@ -1043,7 +1035,6 @@
         this.clientBridge = Debug.attachDebugConsole(bridge);
 
         this.bringToFront();
-        this.scrollToEnd();
 
         Debug.window = this;
       ]]>

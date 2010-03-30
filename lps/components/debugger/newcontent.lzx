@@ -421,15 +421,10 @@
        this.textpane.setAttribute('x', Math.max (-(this.textpane.width), Math.min( 0, x)));
      </method>
 
-<method name="scrollToEnd">
-       var enddel = new LzDelegate(this, 'scrollToEnd_int')
-        lz.Idle.callOnIdle(enddel);
-     </method>
-
-<method name="scrollToEnd_int" args="e=null">
+     <handler name="onmaxscroll" reference="this.textpane">
        this.setLine(textpane.getMaxScroll());
        this.updateDisplay();
-     </method>
+     </handler>
 
 <method name="fontheight">
         return this.textpane.font.height;
