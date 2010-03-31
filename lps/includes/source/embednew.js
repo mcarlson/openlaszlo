@@ -1014,7 +1014,15 @@ lz.embed = {
          performs the method call, returning a value if available.  */
     __unescapestring: function(isfocused) {
         // look up method
-        var method = eval(arguments[0]);
+        var methodname = arguments[0];
+        var method = eval(methodname);
+
+        var scope = null;
+        var str = methodname.lastIndexOf('.');
+        if (str > -1) {
+            scope = eval(methodname.substring(0, str));
+        }
+        
         if (! method || ! method is Function) {
             return;
         }
@@ -1029,7 +1037,7 @@ lz.embed = {
             args[i - 1] = arg;
         }
 
-        var result = method.apply(null, args);
+        var result = method.apply(scope, args);
         // unescape return value
         if (result == '') {
             return '__#lznull';
