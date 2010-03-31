@@ -1105,17 +1105,24 @@ LzSprite.prototype.__parent = null;
   */
 LzSprite.prototype.__children = null;
 
+/**
+  * @access private
+  */
+if ($debug) {
+    LzSprite.__warnonce = {};
+}
+
 LzSprite.prototype.addChildSprite = function(sprite) {
     if (sprite.__parent != null) return;
     //Debug.info('appendChild', sprite.__LZdiv);
     if ($debug) {
-        if (this.stretches != null && this.__warnstretches != true) {
-            Debug.warn("Due to limitations in the DHTML runtime, stretches will only apply to resources in this view, and doesn't affect child views.");
-            this.__warnstretches = true;
+        if (this.stretches != null && LzSprite.__warnonce.stretches != true) {
+            Debug.warn("Due to limitations in the DHTML runtime, stretches will only apply to the view %w, and doesn't affect child views.", this.owner);
+            LzSprite.__warnonce.stretches = true;
         }
-        if (this.color != null && this.__warncolorcascade != true) {
-            Debug.warn("Due to limitations in the DHTML runtime, color will only apply to resources in this view, and doesn't affect child views.");
-            this.__warncolorcascade = true;
+        if (this.color != null && LzSprite.__warnonce.colorcascade != true) {
+            Debug.warn("Due to limitations in the DHTML runtime, color will only apply to the view %w, and doesn't affect child views.", this.owner);
+            LzSprite.__warnonce.colorcascade = true;
         }
     }
 

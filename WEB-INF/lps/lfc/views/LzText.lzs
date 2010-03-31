@@ -133,6 +133,7 @@ dynamic class LzText extends LzView with LzFormatter {
    */
 
   /** The number of lines that will fit in the current height
+   * @devnote not ever updated, see updateMaxLines()
    * @lzxtype Number
    * @type Number
    * @keywords read-only
@@ -791,6 +792,10 @@ dynamic class LzText extends LzView with LzFormatter {
   override function $lzc$set_fontstyle(fstyle) {
     if (fstyle == 'plain' || fstyle == 'bold' || fstyle == 'italic' || fstyle == 'bolditalic' || fstyle == 'bold italic') {
       super.$lzc$set_fontstyle(fstyle);
+      if (this.__keepconstraint != true && this['__cascadeDelfontstyle']) {
+        this.__cascadeDelfontstyle.unregisterAll();
+        this.__cascadeDelfontstyle = null;
+      }
       this.tsprite.setFontStyle(fstyle);
     } else {
       if ($debug) Debug.warn('invalid font style', fstyle);
@@ -800,6 +805,10 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @access private */
   override function $lzc$set_font(fname) {
     super.$lzc$set_font(fname);
+    if (this.__keepconstraint != true && this['__cascadeDelfont']) {
+      this.__cascadeDelfont.unregisterAll();
+      this.__cascadeDelfont = null;
+    }
     this.tsprite.setFontName(fname);
   }
 
@@ -809,8 +818,42 @@ dynamic class LzText extends LzView with LzFormatter {
       if ($debug) Debug.warn('invalid font size', fsize);
     } else {
       super.$lzc$set_fontsize(fsize);
+      if (this.__keepconstraint != true && this['__cascadeDelfontsize']) {
+        this.__cascadeDelfontsize.unregisterAll();
+        this.__cascadeDelfontsize = null;
+      }
       this.tsprite.setFontSize(fsize);
     }
+  }
+  override function $lzc$set_fgcolor(color) {
+    super.$lzc$set_fgcolor(color);
+    if (this.__keepconstraint != true && this['__cascadeDelfgcolor']) {
+      this.__cascadeDelfgcolor.unregisterAll();
+      this.__cascadeDelfgcolor = null;
+    }
+  }
+
+  // false except when being called from a cascaded parent
+  var __keepconstraint = false;
+  function $lzc$set_cascadedfontsize(val) {
+    this.__keepconstraint = true;
+    this.$lzc$set_fontsize(val);
+    this.__keepconstraint = false;
+  }
+  function $lzc$set_cascadedfont(val) {
+    this.__keepconstraint = true;
+  this.$lzc$set_font(val);
+    this.__keepconstraint = false;
+  }
+  function $lzc$set_cascadedfontstyle(val) {
+    this.__keepconstraint = true;
+    this.$lzc$set_fontstyle(val);
+    this.__keepconstraint = false;
+  }
+  function $lzc$set_cascadedfgcolor(val) {
+    this.__keepconstraint = true;
+    this.$lzc$set_fgcolor(val);
+    this.__keepconstraint = false;
   }
 
   /** text-align for this text
@@ -888,53 +931,49 @@ dynamic class LzText extends LzView with LzFormatter {
    */
 
   /** @access private */
-  static var fontArgToAttr:Object = {font: 'fontname', fontsize: 'fontsize', fontstyle: 'fontstyle'};
-
-  /** @access private */
   override function construct ( parent, args ) {
-
-    // NOTE [2008-06-22 ptw] multiline cannot be constrained, it must
-    // be set at init time
     this.multiline = ('multiline' in args) ? args.multiline : null;
 
     super.construct(parent, args);
 
-    // Install constant/default font attributes
-    for (var arg:String in LzText.fontArgToAttr) {
-      var attr:String = LzText.fontArgToAttr[arg];
-      // Default missing args
-      if (! (arg in args)) {
-        args[arg] = this.searchParents(attr)[attr];
+    // Attributes that should cascade
+    var cascadeattrs:Object = {font: null, 
+                               fontsize: null, 
+                               fontstyle: null, 
+                               fgcolor: null};
+
+    // Attributes to be passed to LzTextSprite.__initTextProperties()
+    var initattrs = {hassetheight: this.hassetheight,
+                     height: this.height};
+    // Attribute names that need to be found in parents.
+    var searchattrs:Array = [];
+    // Install font attributes passed in as args
+    for (var attr:String in cascadeattrs) {
+      if (attr in args) {
+        // set local value
+        this[attr] = initattrs[attr] = args[attr];
+        //Debug.info('got attr', this, attr, args[attr]);
+      } else {
+        // add to list of missing attributes
+        searchattrs.push(attr);
       }
-      this[attr] = args[arg];
     }
-
-    // fgcolor is inherited from a parent if one was specified
-    if (!('fgcolor' in args)) {
-      var sview = this;
-      do{
-        sview = sview.immediateparent;
-        var fg = sview['hasfgcolor'];
-        if (fg != null && fg){
-          args['fgcolor'] = sview['fgcolor']
-          break;
-        }
-      }while ( sview != canvas );
+    // Look in parents
+    if (searchattrs.length > 0) {
+      var parents:Object = this.searchParentAttrs(searchattrs);
+      for (var attr:String in parents) {
+        var par = parents[attr];
+        // set value and sprite init attrs
+        this[attr] = initattrs[attr] = par[attr];
+        // register for updates to the nearest parent with the attr
+        this['__cascadeDel' + attr] = new LzDelegate(this, '$lzc$set_cascaded' + attr, par, 'on' + attr);
+        // this results in an extra call with a null arg! 
+        // this.applyConstraintMethod('__cascade' + attr, [par, attr]);
+      }
     }
-
 
     var tsprite = this.tsprite;
-    // FIXME [2008-11-24 ptw] (LPP-7391) We should not be passing node
-    // init args across the kernel API, there should be a more
-    // explicit API that isolates the kernel from the node
-    // implementation details
-    tsprite.__initTextProperties(args);
-
-    // Remove constant/default font attributes, so they won't be
-    // re-handled by LzNode/__LZapplyArgs
-    for (var arg:String in LzText.fontArgToAttr) {
-      delete args[arg];
-    }
+    tsprite.__initTextProperties(initattrs);
 
     this.yscroll = 0;
     this.xscroll = 0;
@@ -1338,10 +1377,12 @@ dynamic class LzText extends LzView with LzFormatter {
    * @access private
    */
   function updateMaxLines (){
-    var newlin = Math.floor( this.height / (  this.font.height -1 ) );
-    if ( newlin != this.maxlines ){
-      this.maxlines = newlin;
-    }
+    // TODO: Make sure maxlines is updated or remove from the LFC
+    //this is a copy of the method in kernel/swf/LzTextSprite.as - commenting out for now...
+    //var newlin = Math.floor( this.height / (  this.font.height -1 ) );
+    //if ( newlin != this.maxlines ){
+    //  this.maxlines = newlin;
+    //}
   }
 
   /**

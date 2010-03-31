@@ -389,16 +389,9 @@ public class LzTextSprite extends LzSprite {
         }
 
         public function __initTextProperties (args:Object) :void {
-            this.password = args.password  ? true : false;
             var textclip:TextField = this.textfield;
-            textclip.displayAsPassword = this.password;
 
-            textclip.selectable = args.selectable;
             textclip.autoSize = TextFieldAutoSize.NONE;
-
-            // TODO [hqm 2008-01] have to figure out how the Flex textfield multiline
-            // maps to Laszlo model.
-            this.setMultiline( args.multiline );
 
             //inherited attributes, documented in view
             this.fontname = args.font;
@@ -422,11 +415,9 @@ public class LzTextSprite extends LzSprite {
             //    if  single line, use font line height
             //    else get height from flash textobject.textHeight 
             // 
-            // FIXME [2008-11-24 ptw] (LPP-7391) kernel sprites should not be
-            // using LzNode args directly
-            if (! this.owner.hassetheight) {
+            if (! args.hassetheight) {
                 this.sizeToHeight = true;
-                if (args.multiline) {
+                if (this.multiline) {
                     textclip.autoSize = TextFieldAutoSize.LEFT;
                 }
             } else if (args['height'] != null) {
@@ -440,7 +431,6 @@ public class LzTextSprite extends LzSprite {
             // __setFormat during instantiation of an lzText. Figure
             // out how to suppress the other calls from setters.
             this.__setFormat();
-            this.setText((args['text'] != null) ? String(args.text) : '');
 
             if (this.sizeToHeight) {
                 var h = this.lineheight;
@@ -645,6 +635,8 @@ public class LzTextSprite extends LzSprite {
 
 
         public function setMultiline ( ml:Boolean ):void {
+            // TODO [hqm 2008-01] have to figure out how the Flex textfield multiline
+            // maps to Laszlo model.
             this.multiline = (ml == true);
             if (this.multiline) {
                 this.textfield.multiline = true;

@@ -1988,26 +1988,56 @@ public dynamic class LzNode extends LzEventable {
    * the first one.
    *
    * @param String prop: named property
-   * @return LzView: the first view which has a non-null value for <param>prop</param>
+   * @return LzView: the first node which has a non-null value for <param>prop</param>
    * or <i>null</i> if none is found
    * @access private
    */
   function searchParents ( prop ){
+    return this.searchParentAttrs([prop])[prop];
+  }
+
+  /**
+   * Search up parent views finding the first parent node(s) with a non-null ttribute value for each for the key in the object properties.
+   *
+   * @param Array proplist: An array of property names, e.g. ['width', 'floogle'].
+   * @return Object:  An object of references to the first parent with a 
+   * non-null attribute value, e.g. {width: canvas}.
+   * @access private
+   */
+  function searchParentAttrs ( proplist ){
+    var out = {};
+    if (! proplist.length) return out;
+    var props = proplist.slice();
     var sview = this;
     do{
       sview = sview.immediateparent;
 
-      if ($debug) {
-        if (sview == null) {
-          Debug.error('searchParents got null immediateparent', this);
-          return;
+      if (sview == null) {
+        if ($debug) {
+          Debug.error('searchParentAttrs got null immediateparent', this);
         }
+        return out;
       }
 
-      if (sview[ prop ] != null ){
-        return sview;
+      var i = 0;
+      var l = props.length;
+      while (i < l) {
+        var prop = props[i];
+        if (sview[ prop ] != null ){
+          // store a reference to the view found
+          out[prop] = sview;
+          // remove this property from the search list
+          props.splice(i,1);
+          // one less to search
+          l--;
+          // don't increment i since we just deleted it
+        } else {
+          // check the next property
+          i++;
+        }
       }
-    }while ( sview != canvas );
+    }while ( sview != canvas && l > 0 );
+    return out;
   }
 
   /**

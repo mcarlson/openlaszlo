@@ -79,18 +79,13 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     // setHTML, then this should all magically work. :)
     textclip.html = false;
 
-    textclip.selectable = args.selectable;
     textclip.autoSize = false;
-
-    this.setMultiline( args.multiline );
 
     //inherited attributes, documented in view
     this.fontname = args.font;
     this.fontsize = args.fontsize;
     this.fontstyle = args.fontstyle;
     this.__setFormat();
-
-    this.text = ((args['text'] != null) ? String(args.text) : '');
 
     textclip.htmlText = this.text;
     textclip.background = false;
@@ -112,9 +107,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    // FIXME [2008-11-24 ptw] (LPP-7391) kernel sprites should not be
-    // using LzNode args directly
-    if (! this.owner.hassetheight) {
+    if (! args.hassetheight) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
@@ -134,29 +127,6 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     }
     // Default the scrollheight to the visible height.
     this.scrollheight = this.height;
-
-    //@field Number maxlength:  maximum number of characters allowed in this field
-    // default: null
-    // 
-    if (args.maxlength != null) {
-        this.setMaxLength(args.maxlength);
-    }
-
-    //@field String pattern:  regexp describing set of characters allowed in this field
-    // Restrict the characters that can be entered to a pattern
-    // specified by a regular expression.
-    //
-    // Currently only the expression [ ]* enclosing a set of
-    // characters or character ranges, preceded by an optional "^", is
-    // supported.
-    //
-    // examples: [0-9]*  ,  [a-zA-Z0-9]*,  [^0-9]*
-    // default: null
-    // 
-    if (args.pattern != null) {
-        this.setPattern(args.pattern);
-    }
-
 
     // We do not support html in input fields. 
     if ('enabled' in this && this.enabled) {

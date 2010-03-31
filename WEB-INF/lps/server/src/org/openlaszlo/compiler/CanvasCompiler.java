@@ -207,7 +207,7 @@ class CanvasCompiler extends ToplevelCompiler {
         inits.put("embedfonts", Boolean.toString(mEnv.getEmbedFonts()));
         inits.put("bgcolor", new Integer(canvas.getBGColor()));
         FontInfo fontInfo = canvas.getFontInfo();
-        inits.put("fontname", ScriptCompiler.quote(fontInfo.getName()));
+        inits.put("font", ScriptCompiler.quote(fontInfo.getName()));
         inits.put("fontsize", new Integer(fontInfo.getSize()));
         inits.put("fontstyle", ScriptCompiler.quote(fontInfo.getStyle()));
         if (element.getAttribute("id") != null)

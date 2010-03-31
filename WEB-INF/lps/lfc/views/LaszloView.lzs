@@ -765,21 +765,15 @@ function $lzc$set_fgcolor(c) {
   * appear inside this view. Like all the font properties
   * (<code>fontstyle</code> and <code>fontsize</code> too) these
   * properties cascade down the view hierarchy until a new value is
-  * specified. When the font attributes are modified at runtime,
-  * using JavaScript, the font is changed for the view itself, not
-  * for any of its subviews.
+  * specified.
   * @type String
   * @lzxtype string
   */
 var font;  
 
 /** @access private */
-var fontname;
-
-/** @access private */
 function $lzc$set_font(val) {
     this.font = val;
-    this.fontname = val ;
     if (this.onfont.ready) { 
         this.onfont.sendEvent( this.font ); 
     }
@@ -3782,6 +3776,10 @@ function __LZresolveOtherReferences(rdict:Object) {
 
 /**
   * True if this view requires a call to getBounds() for accurate width and height measurement. This may be necessary when an offset or rotation are applied.
+  * @type Boolean
+  * @lzxtype boolean
+  * @keywords readonly
+  * @lzxdefault false
   */
 var usegetbounds = false;
 

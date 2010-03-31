@@ -157,9 +157,9 @@ public class ViewCompiler extends ElementCompiler {
               );
           }
 
-          fontInfo = new FontInfo(mEnv.getCanvas().getFontInfo());
           try {
-              fontInfo = new FontInfo(mEnv.getCanvas().getFontInfo());
+              // A blank FontInfo with all empty slots
+              fontInfo = FontInfo.blankFontInfo();
               mapTextMetricsCompilation(element, mEnv, fontInfo, new HashSet());
           } catch (NumberFormatException e) {
               throw new CompilationError(e.getMessage());
@@ -620,8 +620,6 @@ public class ViewCompiler extends ElementCompiler {
         // Now override with any directly declared attributes
         mergeFontInfo(elt, fontInfo);
 
-        String fontName = fontInfo.getName();
-
         // If it inherits from text or inputttext, annotate it with font info
         String eltName = elt.getName();
         if ("text".equals(eltName) ||
@@ -630,6 +628,11 @@ public class ViewCompiler extends ElementCompiler {
             "inputtext".equals(mSchema.getBaseClassname(eltName))) {
             compileTextMetrics(elt, env, fontInfo);
         }
+
+        // Only set fontInfo for self, so the runtime knows when font is
+        // actually set via the class/instance
+
+/*
         ClassModel classinfo =  env.getSchema().getClassModel(eltName);
 
         // If this invokes a 'user-defined' class, let's walk that
@@ -661,6 +664,7 @@ public class ViewCompiler extends ElementCompiler {
             Element e = (Element) iter.next();
             mapTextMetricsCompilation(e, env, fontInfo, classList);
         }
+*/
     }
 
     /** Merges font name/size/style from an element's direct
@@ -668,7 +672,7 @@ public class ViewCompiler extends ElementCompiler {
     protected static void mergeFontAttributes (Element elt, FontInfo fontInfo) {
         String myfont = getAttributeValue(elt, "font");
         if (myfont != null) {
-            if (myfont.matches("\\s*[^${}]*\\s*")) {
+            if (myfont.matches(sFontNamePatStr)) {
                 fontInfo.setName(myfont);
             } else {
                 // we don't know what font value is, so set back to the 'unknown' value

@@ -178,13 +178,7 @@ dynamic class LzCanvas extends LzView {
       * LzCanvas 
       * 
       * @param Object args: a hash of arguments specifying the way the
-      * canvas was compiled, e.g. {__LZproxied: "true", bgcolor:
-      * 16777215, embedfonts: true, fontname:
-      * "Verdana,Vera,sans-serif", fontsize: 11, fontstyle: "plain",
-      * height: "100%", lpsbuild: "8763
-      * /Users/maxcarlson/openlaszlo/trunk", lpsbuilddate:
-      * "2008-04-17T18:17:33-0700", lpsrelease: "Yodel Production",
-      * lpsversion: "4.2a2", runtime: "swf8", width: "100%"}
+      * canvas was compiled, e.g. {__LZproxied:"true",appbuilddate:"2010-03-25T18:25:50Z",bgcolor:16777215,embedfonts:true,font:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:"100%",lpsbuild:"15945 /Users/maxcarlson/openlaszlo/trunk-clean",lpsbuilddate:"2010-03-25T04:30:43Z",lpsrelease:"Latest",lpsversion:"5.0.x",runtime:"dhtml",width:"100%"}
       *
       * @devnote The parameter pattern has to match LzNode, since we
       * claim to be a subclass of LzNode.
@@ -624,7 +618,7 @@ function $lzc$set_allowfullscreen( fs:Boolean ) {
 
 /**
   * @access private
-  * only called from the snippet loader
+  * only called from the snippet loader or from the generated app object code
   */
 function initDone (){
     //reorder initial subviews so preloaded stuff is first
@@ -721,7 +715,7 @@ override function __LZcallInit ( an = null ){
     //do this now, so that others know that they're too late
     this.isinited = true;
 
-    this.__LZresolveReferences();
+    if (this.__LZresolveDict != null) this.__LZresolveReferences();
 
     // Install computed initializations
     var sl = this.subnodes;

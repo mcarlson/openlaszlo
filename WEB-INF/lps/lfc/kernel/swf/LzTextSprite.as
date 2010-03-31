@@ -68,17 +68,12 @@ LzTextSprite.prototype._dbg_typename = 'LzTextSprite';
 LzTextSprite.prototype.textcolor = 0x0; // black
 
 LzTextSprite.prototype.__initTextProperties = function (args) {
-    this.password = args['password']  ? true : false;
     var textclip = this.__LZtextclip;
-    textclip.password = this.password;
 
     // conditionalize this; set to false for inputtext for back compatibility with lps 2.1
     textclip.html = true;
 
-    textclip.selectable = args.selectable;
     textclip.autoSize = false;
-
-    this.setMultiline( (!! args['multiline']) );
 
     //inherited attributes, documented in view
     this.fontname = args.font;
@@ -105,9 +100,7 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight 
     // 
-    // FIXME [2008-11-24 ptw] (LPP-7391) kernel sprites should not be
-    // using LzNode args directly
-    if (! this.owner.hassetheight) {
+    if (! args.hassetheight) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
