@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -73,13 +73,13 @@ static function callJS (js, callback) :* {
     args.unshift(js, LzBrowserKernel.callJSReturn);
 
     LzBrowserKernel.__jslocked = true;
-    //Debug.write('calling with args real', arguments);
-    DojoExternalInterface.call.apply(this, args);
+    var result = DojoExternalInterface.call.apply(this, args);
+    //Debug.write('calling with args real', arguments, args, result);
 
     if (callback == false) {
         LzBrowserKernel._dequeueJS();
     }
-    return null;
+    return result;
 }
 
 /** @access private */ 

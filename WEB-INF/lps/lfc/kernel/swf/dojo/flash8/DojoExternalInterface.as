@@ -72,21 +72,48 @@ class DojoExternalInterfaceClass {
 		// we might have any number of optional arguments, so we have to 
 		// pass them in dynamically; strip out the results callback
 		var parameters = [];
-		for(var i = 0; i < arguments.length; i++){
+		for(var i = 0, l = arguments.length; i < l; i++){
 			if(i != 1){ // skip the callback
-				parameters.push(arguments[i]);
+				// TODO: should do objects and arrays properties also (sigh)
+				// Need to escape strings as they're encoded/decoded improperly
+				// by ExternalInterface:
+				// "" gets converted to "null"
+				// \ characters cause problems and need to be escaped. 
+				// &amp; or any other html entity gets converted to the entity 
+				var param = arguments[i];
+				if (typeof param == 'string') {
+					if (param.length == 0) {
+						param = '__#lznull';
+					} else {
+						if (param.indexOf("\\") > -1) {
+							param = param.split("\\").join("\\\\")
+						}
+						if (param.indexOf("&") > -1) {
+							param = param.split("&").join("&amp;");
+						}
+					}
+				}
+				parameters.push(param);
 			}
 		}
-		
+
+		// call wrapper method to unescape empty strings
+		parameters.unshift('lz.embed.__unescapestring');
+
 		var results = flash.external.ExternalInterface.call.apply(flash.external.ExternalInterface, parameters);
+		// unescape empty strings
+		if (results == '__#lznull') {
+			results = '';
+		}
 		
 		// immediately give the results back, since ExternalInterface is
 		// synchronous
 		if(resultsCallback != null && typeof resultsCallback != "undefined"){
 			resultsCallback.call(null, results);
 		}
+		return results;
 	}
-	
+
 	/** 
 			Called by Flash to indicate to JavaScript that we are ready to have
 			our Flash functions called. Calling loaded()
@@ -237,7 +264,7 @@ class DojoExternalInterfaceClass {
 }
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 

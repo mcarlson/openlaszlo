@@ -76,14 +76,22 @@ class DojoExternalInterfaceClass {
         return true;
     }
 
-    function call(...args) :void {
+    function call(...args) {
         var methodName:String = args[0];
         var resultsCallback:Function = args[1];
 
         var parameters:Array = [];
         for(var i:int = 0; i < args.length; i++){
             if(i != 1){ // skip the callback
-                parameters.push(args[i]);
+				// TODO: should do objects and arrays properties also (sigh)
+                // \ characters cause problems and need to be escaped. 
+				var param = args[i];
+				if (typeof param == 'string') {
+                    if (param.indexOf("\\") > -1) {
+                        param = param.split("\\").join("\\\\")
+                    }
+				}
+                parameters.push(param);
             }
         }
 
@@ -97,6 +105,7 @@ class DojoExternalInterfaceClass {
         if(resultsCallback != null && typeof resultsCallback != "undefined"){
             resultsCallback.call(null, results);
         }
+        return results;
     }
 
     /** 
@@ -249,6 +258,6 @@ class DojoExternalInterfaceClass {
 }
 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
