@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -18,8 +18,8 @@ class LzBrowserKernel {
   * Loads a URL in the browser, optionally in a target
   * 
   * @param String url: URL to load
-  * @param String target: Optionally specifies a named frame to display the contents of the URL.
-  * The document specified by URL is loaded into the current browser frame by default.
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.  Otherwise defaults to the current window.
+  * @param String features: Optional features to use in the new window.
   */
 static function loadURL ( url, target=null, features=null ){
     if (target != null) {

@@ -69,8 +69,8 @@ public final class LzBrowserService {
      * Loads a URL in the browser, optionally in a target
      *
      * @param String url: URL to load
-     * @param String target: Optionally specifies a named frame to display the contents of the URL.
-     * The document specified by URL is loaded into the current browser frame by default.
+     * @param String target: Optionally specifies a named frame to display the contents of the URL.  Otherwise defaults to the current window.
+     * @param String features: Optional features to use in the new window.
      */
     function loadURL (url:String, target:String = null, features:String = null) :void {
         LzBrowserKernel.loadURL(url, target, features);
@@ -94,11 +94,11 @@ public final class LzBrowserService {
      * Runs a Javascript method in the browser, optionally returning the result.  Note that this feature
      * requires the application to be embedded by the embed-compressed.js library.
      *
-     * @param String methodname: Browser javascript method name to execute
-     * @param Function callback: Optional callback function to receive the return value of the javascript call
-     * @param * arguments to call the method with
+     * @param String methodname: Browser javascript method to execute
+     * @param Function callback: Optional callback function to receive the return value of the javascript call.
+     * @param args: Optional arguments to call the method with
      */
-  function callJS (methodname:String, callback:Function = null, args:* = null) :* {
+    function callJS (methodname:String, callback:* = null, args:* = null) :* {
         try {
             return LzBrowserKernel.callJS.apply(null, arguments);
         } catch (e) {

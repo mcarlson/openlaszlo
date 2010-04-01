@@ -28,10 +28,11 @@ class LzBrowserKernel {
   * Loads a URL in the browser, optionally in a target
   * 
   * @param String url: URL to load
-  * @param String target: Optionally specifies a named frame to display the contents of the URL.
-  * The document specified by URL is loaded into the current browser frame by default.
+  * @param String target: Optionally specifies a named frame to display the contents of the URL.  Otherwise defaults to the current window.
+  * @param String features: Optional features to use in the new window.
   */
 static function loadURL (url:String, target:String=null, features:String=null) :void {
+  if (target == null) target = '_self';
   navigateToURL(new URLRequest(url), target);
 }
 
