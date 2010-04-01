@@ -1040,29 +1040,6 @@ LzSprite.prototype.getMCRef = function () {
 }
 
 /**
-  * Sets the color of the view (the view's resource and any subviews) to the
-  * the color given. This will completely override any color information in the
-  * view or subview resources. Use the view method
-  * <method>setColorTransform</method> to tint a view.
-  * @param Integer c: A color in rgb format; for example, 0xff0000 is red.
-  */
-LzSprite.prototype.setColor = function ( c ){
-    // Only applicable for text
-    this.fgcolor = c;
-}
-
-/**
-  * Gets the color of the view (the view's resource and any subviews) view as
-  * as set with setColor().
-  * Returns A color in rgb format; for example, 0xff0000 is red.
-  */
-LzSprite.prototype.getColor = function (){
-    // Only applicable for text
-    return this.fgcolor;
-}
-
-
-/**
   * color transforms everything contained in the view (except the
   * background) by the transformation dictionary given in <param>o</param>.  The dictionary has
   * the following possible keys:

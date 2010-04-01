@@ -189,7 +189,6 @@ dynamic class LzCanvas extends LzView {
       if (! args['mediaerrortimeout']) args.mediaerrortimeout = this.mediaerrortimeout;
       super(parent, args, children, async);
       this.datasets = {};
-      // Canvas can't change size
       // Override values defined in LzView
       this.__LZcheckwidth = null;
       this.__LZcheckheight = null;
@@ -313,10 +312,6 @@ dynamic class LzCanvas extends LzView {
 
         if (capabilities.allowfullscreen == true) {
             LzScreenKernel.setFullscreenCallback(this, '__fullscreenEventCallback', '__fullscreenErrorCallback');
-        }
-
-        if (args['fgcolor'] != null) {
-            this.hasfgcolor = true;
         }
 
         this.lpsversion = args.lpsversion + "." + this.__LZlfcversion;

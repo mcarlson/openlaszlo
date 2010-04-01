@@ -791,12 +791,15 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @access private */
   override function $lzc$set_fontstyle(fstyle) {
     if (fstyle == 'plain' || fstyle == 'bold' || fstyle == 'italic' || fstyle == 'bolditalic' || fstyle == 'bold italic') {
+      var oldval = this.fontstyle;
       super.$lzc$set_fontstyle(fstyle);
       if (this.__keepconstraint != true && this['__cascadeDelfontstyle']) {
         this.__cascadeDelfontstyle.unregisterAll();
         this.__cascadeDelfontstyle = null;
       }
-      this.tsprite.setFontStyle(fstyle);
+      if (oldval !== this.fontstyle) {
+        this.tsprite.setFontStyle(fstyle);
+      }
     } else {
       if ($debug) Debug.warn('invalid font style', fstyle);
     }
@@ -804,12 +807,15 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   override function $lzc$set_font(fname) {
+    var oldval = this.font;
     super.$lzc$set_font(fname);
     if (this.__keepconstraint != true && this['__cascadeDelfont']) {
       this.__cascadeDelfont.unregisterAll();
       this.__cascadeDelfont = null;
     }
-    this.tsprite.setFontName(fname);
+    if (oldval !== this.font) {
+      this.tsprite.setFontName(fname);
+    }
   }
 
   /** @access private */
@@ -817,39 +823,52 @@ dynamic class LzText extends LzView with LzFormatter {
     if (fsize <= 0 || isNaN(fsize)) {
       if ($debug) Debug.warn('invalid font size', fsize);
     } else {
+      var oldval = this.fontsize;
       super.$lzc$set_fontsize(fsize);
       if (this.__keepconstraint != true && this['__cascadeDelfontsize']) {
         this.__cascadeDelfontsize.unregisterAll();
         this.__cascadeDelfontsize = null;
       }
-      this.tsprite.setFontSize(fsize);
+      if (oldval !== this.fontsize) {
+        this.tsprite.setFontSize(fsize);
+      }
     }
   }
+  /** @access private */
   override function $lzc$set_fgcolor(color) {
+    var oldval = this.fgcolor;
     super.$lzc$set_fgcolor(color);
     if (this.__keepconstraint != true && this['__cascadeDelfgcolor']) {
       this.__cascadeDelfgcolor.unregisterAll();
       this.__cascadeDelfgcolor = null;
     }
+    if (oldval !== this.fgcolor) {
+      this.tsprite.setTextColor(this.fgcolor);
+    }
   }
 
-  // false except when being called from a cascaded parent
+  /** false except when being called from a cascaded parent 
+    * @access private */
   var __keepconstraint = false;
+  /** @access private */
   function $lzc$set_cascadedfontsize(val) {
     this.__keepconstraint = true;
     this.$lzc$set_fontsize(val);
     this.__keepconstraint = false;
   }
+  /** @access private */
   function $lzc$set_cascadedfont(val) {
     this.__keepconstraint = true;
   this.$lzc$set_font(val);
     this.__keepconstraint = false;
   }
+  /** @access private */
   function $lzc$set_cascadedfontstyle(val) {
     this.__keepconstraint = true;
     this.$lzc$set_fontstyle(val);
     this.__keepconstraint = false;
   }
+  /** @access private */
   function $lzc$set_cascadedfgcolor(val) {
     this.__keepconstraint = true;
     this.$lzc$set_fgcolor(val);

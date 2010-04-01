@@ -397,6 +397,7 @@ public class LzTextSprite extends LzSprite {
             this.fontname = args.font;
             this.fontsize = args.fontsize;
             this.fontstyle = args.fontstyle;
+            this.textcolor = args.fgcolor;
             textclip.background = false;
 
             // To compute our width:
@@ -493,12 +494,11 @@ public class LzTextSprite extends LzSprite {
          * Sets the color of all the text in the field to the given hex color.
          * @param Number c: The color for the text -- from 0x0 (black) to 0xFFFFFF (white)
          */
-        public override function setColor ( col:* ):void {
-            if (col != null) {
-                this.textcolor = col;
-                this.__setFormat();
-                this.setText( this.text );
-            }
+        public function setTextColor ( col:* ):void {
+            if (col == null || this.textcolor === col) return;
+            this.textcolor = col;
+            this.__setFormat();
+            this.setText( this.text );
         }
 
         /**

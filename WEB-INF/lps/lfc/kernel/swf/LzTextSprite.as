@@ -79,6 +79,7 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
     this.fontname = args.font;
     this.fontsize = args.fontsize;
     this.fontstyle = args.fontstyle;
+    this.textcolor = args.fgcolor;
     this.__setFormat();
     textclip.htmlText = this.text;
     textclip.background = false;
@@ -767,21 +768,13 @@ LzTextSprite.prototype.setFontStyle = function ( fstyle ){
   * Sets the color of all the text in the field to the given hex color.
   * @param Number c: The color for the text -- from 0x0 (black) to 0xFFFFFF (white)
   */
-LzTextSprite.prototype.setColor = function ( c ){
+LzTextSprite.prototype.setTextColor = function ( c ){
+    if (this.textcolor === c) return;
     this.textcolor = c;
     this.__setFormat();
     // recompute dimensions: must use clip html here -- inputtext may
     // have modified the contents
     this.setText( this.getText() );
-}
-
-/**
-  * Gets the color of the view (the view's resource and any subviews) view as
-  * as set with setColor().
-  * Returns A color in rgb format; for example, 0xff0000 is red.
-  */
-LzSprite.prototype.getColor = function (){
-    return this.textcolor;
 }
 
 /**

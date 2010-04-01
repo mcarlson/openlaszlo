@@ -1061,24 +1061,6 @@ public class LzSprite extends Sprite {
         this.visible = visibility;
     }
 
-
-    /** setColor( String/Number:color )
-        o Sets the foreground color of the sprite
-        o Can be a number (0xff00ff):void or a string ('#ff00ff'):void 
-    */
-    public function setColor( color:* ):void {
-        // Only applicable for text
-    }
-
-    /** Returns the foreground color of the sprite. This isn't known so
-        0 is returned.
-    */
-    public function getColor () :Number {
-        // Only applicable for text
-        return 0;
-    }
-
-
     /**
      * Returns an object that represents the color transformation currently applied
      * to the view. The color transform object has the following possible keys

@@ -469,10 +469,6 @@ override function construct ( parent , args) {
         args.resource = LzNode._ignoreAttribute;
     }
 
-    if (args['fgcolor'] != null){
-        this.hasfgcolor = true;
-    }
-
     if($debug){
         if(args['valign'] && args['y']){
             Debug.warn(this, "y attribute ignored; superseded by valign constraint.");
@@ -724,9 +720,8 @@ function $lzc$set_clickregion(cr) {
 var cursor;  
 
 /**
- * The foreground color of the view (and any views contained in it).
- * This is the color of the ink that text and other drawing (such as
- * vector or bitmap art) will be done in.
+ * The foreground color of any <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag> or <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag> elements that
+ * appear inside this view.  To apply a color transform, see <code>tintcolor</code>.
  *
  * May be set to any valid CSS color specification.  When read, will
  * be read as the equivalent numeric value.  To retrieve a CSS color
@@ -737,7 +732,7 @@ var cursor;
  * @type Number
  * @lzxdefault 0
  */
-var fgcolor = 0;
+var fgcolor = null;
 /** true if the view specified a fgcolor
     @access private */
 var hasfgcolor = false;
@@ -756,7 +751,6 @@ function $lzc$set_fgcolor(c) {
   if ((c != null) && isNaN(c)) {
       c = this.acceptTypeValue('color', c);
   }
-  this.sprite.setColor(c);
   this.fgcolor = c;
   if (this.onfgcolor.ready) this.onfgcolor.sendEvent( c );
 };
@@ -2241,9 +2235,11 @@ final function setColor ( c ){
   * Gets the color of the view (the view's resource and any subviews) view as
   * as set with setColor().
   * Returns A color in rgb format; for example, 0xff0000 is red.
+  * @deprecated
   */
 function getColor (){
-    return this.sprite.getColor();
+    if ($debug) Debug.deprecated(this, arguments.callee, this.fgcolor);
+    return this.fgcolor;
 }
 
 

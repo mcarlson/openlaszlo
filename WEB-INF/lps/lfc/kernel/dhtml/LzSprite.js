@@ -1120,10 +1120,6 @@ LzSprite.prototype.addChildSprite = function(sprite) {
             Debug.warn("Due to limitations in the DHTML runtime, stretches will only apply to the view %w, and doesn't affect child views.", this.owner);
             LzSprite.__warnonce.stretches = true;
         }
-        if (this.color != null && LzSprite.__warnonce.colorcascade != true) {
-            Debug.warn("Due to limitations in the DHTML runtime, color will only apply to the view %w, and doesn't affect child views.", this.owner);
-            LzSprite.__warnonce.colorcascade = true;
-        }
     }
 
     sprite.__parent = this;
@@ -1788,12 +1784,6 @@ LzSprite.prototype.setVisible = function ( v ){
             this.applyCSS('display', vis, '__LZcontextcontainerdiv');
         }
     }
-}
-
-LzSprite.prototype.setColor = function ( c ){
-    if (this.color === c) return;
-    this.color = c;
-    this.__LZdiv.style.color = LzColorUtils.inttohex(c);
 }
 
 LzSprite.prototype.setBGColor = function ( c ){

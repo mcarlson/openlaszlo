@@ -51,6 +51,7 @@ LzTextSprite.prototype.__initTextProperties = function (args) {
     this.setFontName(args.font);
     this.setFontStyle(args.fontstyle);
     this.setFontSize(args.fontsize);
+    this.setTextColor(args.fgcolor);
 }
 
 // Should reflect CSS defaults in LzSprite.js
@@ -133,7 +134,11 @@ LzTextSprite.prototype.setFontName = function (fname) {
     }
 }
 
-LzTextSprite.prototype.setTextColor = LzSprite.prototype.setColor;
+LzTextSprite.prototype.setTextColor = function ( c ){
+    if (this.textcolor === c) return;
+    this.textcolor = c;
+    this.__LZdiv.style.color = LzColorUtils.inttohex(c);
+}
 
 LzTextSprite.prototype.lineHeight = null;
 LzTextSprite.prototype.scrollTop = null;
