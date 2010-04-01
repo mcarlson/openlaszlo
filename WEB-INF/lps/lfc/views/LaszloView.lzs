@@ -733,9 +733,6 @@ var cursor;
  * @lzxdefault 0
  */
 var fgcolor = null;
-/** true if the view specified a fgcolor
-    @access private */
-var hasfgcolor = false;
 /** @access private */
 var onfgcolor = LzDeclaredEvent;
 /** @access private */
