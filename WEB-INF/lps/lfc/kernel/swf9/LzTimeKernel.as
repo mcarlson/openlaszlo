@@ -1,7 +1,7 @@
 /**
   * LzTimeKernel.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -110,7 +110,7 @@ final class LzKernelTimer extends Timer {
      */
     public static function create () :LzKernelTimer {
         var timer:LzKernelTimer = timerPool.pop() || new LzKernelTimer();
-        timer._timerID = idCounter++;
+        timer._timerID = ++idCounter;
         return timer;
     }
 

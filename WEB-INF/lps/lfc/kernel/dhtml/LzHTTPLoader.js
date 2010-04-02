@@ -11,11 +11,11 @@
 
 var LzHTTPLoader = function (owner, proxied) {
     this.owner = owner;
+    // parsexml flag : if true, translate native XML tree into LzDataNode tree,
+    //                 if false, don't attempt to translate the XML (if it exists)
     this.options = {parsexml: true, serverproxyargs: null};
     this.requestheaders = {};
     this.requestmethod = LzHTTPLoader.GET_METHOD;
-    
-    this.__loaderid = LzHTTPLoader.loaderIDCounter++;
 }
 
 LzHTTPLoader.GET_METHOD    = "GET";
@@ -23,9 +23,8 @@ LzHTTPLoader.POST_METHOD   = "POST";
 LzHTTPLoader.PUT_METHOD    = "PUT";
 LzHTTPLoader.DELETE_METHOD = "DELETE";
 
-// holds list of outstanding data requests, to handle timeouts
-LzHTTPLoader.activeRequests = {};
-LzHTTPLoader.loaderIDCounter = 0;
+// id to clear timeout of current request
+LzHTTPLoader.prototype.__timeoutID = 0;
 
 // Default callback handlers
 LzHTTPLoader.prototype.loadSuccess = function (loader, data) {}
@@ -85,12 +84,10 @@ LzHTTPLoader.prototype.getResponseStatus = function () {
 
 /* Returns an object of response headers  */
 LzHTTPLoader.prototype.getResponseHeaders = function () {
-    //return this.req.getAllResponseHeaders();
     return this.responseHeaders;
 }
 
 LzHTTPLoader.prototype.getResponseHeader = function (key) {
-    //return this.req.getResponseHeader(key);
     return this.responseHeaders[key];
 }
 
@@ -155,15 +152,12 @@ LzHTTPLoader.prototype.abort = function () {
 LzHTTPLoader.prototype.open = function (method, url, username, password) {
     if (this.req) {
         if ($debug) {
-            Debug.warn("pending request for id=%s", this.__loaderid);
+            Debug.warn("pending request for %w", this);
         }
         this.abort();
     }
 
-    {
-        #pragma "passThrough=true" 
-        this.req = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
-    }
+    this.req = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     this.responseStatus = 0;
     this.responseHeaders = null;
     this.responseText = null;
@@ -171,6 +165,7 @@ LzHTTPLoader.prototype.open = function (method, url, username, password) {
 
     this.__abort = false;
     this.__timeout = false;
+    this.__timeoutID = 0;
     this.requesturl = url;
     this.requestmethod = method;
 }
@@ -217,51 +212,25 @@ LzHTTPLoader.prototype.setTimeout = function (timeout) {
 
 // Set up a pending timeout for a loader.
 LzHTTPLoader.prototype.setupTimeout = function (loader, duration) {
-    var endtime = (new Date()).getTime() + duration;
-    var lid = loader.__loaderid;
-    
-    LzHTTPLoader.activeRequests[lid] = [loader, endtime];
-    var timeoutid = setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts(" + lid + ")", duration);
-    LzHTTPLoader.activeRequests[lid][2] = timeoutid;
+    loader.__timeoutID = setTimeout(LzHTTPLoader.__LZhandleXMLHTTPTimeout, duration, loader);
 }
 
-// Remove a loader from the timeouts list.
+// Remove the timeout for a loader
 LzHTTPLoader.prototype.removeTimeout = function (loader) {
-    var lid = loader.__loaderid;
-    //Debug.write("remove timeout for id=%s", lid);
-    if (lid != null) {
-        var reqarr = LzHTTPLoader.activeRequests[lid];
-        if (reqarr && reqarr[0] === loader) {
-            clearTimeout(reqarr[2]);
-            delete LzHTTPLoader.activeRequests[lid];
-        }
+    var tid = loader.__timeoutID;
+    if (tid != 0) {
+        clearTimeout(tid);
     }
 }
 
-// Check if any outstanding requests have timed out. 
-LzHTTPLoader.__LZcheckXMLHTTPTimeouts = function (lid) {
-    var reqarr = LzHTTPLoader.activeRequests[lid];
-    if (reqarr) {
-        var now = (new Date()).getTime();
-        var loader = reqarr[0];
-        var dstimeout = reqarr[1];
-        //Debug.write("diff %d", now - dstimeout);
-        if (now >= dstimeout) {
-            //Debug.write("timeout for %s", lid);
-            delete LzHTTPLoader.activeRequests[lid];
-            loader.__timeout = true;
-            if (loader.req) {
-                loader.req.abort();
-            }
-            loader.req = null;
-            loader.loadTimeout(loader, null);
-        } else {
-            // if it hasn't timed out, add it back to the list for the future
-            //Debug.write("recheck timeout");
-            var timeoutid = setTimeout("LzHTTPLoader.__LZcheckXMLHTTPTimeouts(" + lid + ")", now - dstimeout);
-            reqarr[2] = timeoutid;
-        }
+// Handle request which has timed out
+LzHTTPLoader.__LZhandleXMLHTTPTimeout = function (loader) {
+    loader.__timeout = true;
+    if (loader.req) {
+        loader.req.abort();
+        loader.req = null;
     }
+    loader.loadTimeout(loader, null);
 }
 
 LzHTTPLoader.prototype.getElapsedTime = function () {
@@ -292,9 +261,6 @@ LzHTTPLoader.prototype.__getAllResponseHeaders = function (xhr) {
     return allheaders;
 }
 
-// public
-// parsexml flag : if true, translate native XML tree into LzDataNode tree,
-//                 if false, don't attempt to translate the XML (if it exists)
 LzHTTPLoader.prototype.loadXMLDoc = function (method, url, headers, postbody, ignorewhite) {
     if (this.req) {
         // we can't close over "this", so use another variable name. 

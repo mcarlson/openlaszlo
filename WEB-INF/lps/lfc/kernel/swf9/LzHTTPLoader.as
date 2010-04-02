@@ -29,12 +29,9 @@ public class LzHTTPLoader {
     static const PUT_METHOD:String    = "PUT";
     static const DELETE_METHOD:String = "DELETE";
 
-    // holds list of outstanding data requests, to handle timeouts
-    static const activeRequests :Object = {};
-    static var loaderIDCounter :uint = 0;
-
     const owner:*;
-    const __loaderid:uint;
+    // id to clear timeout of current request
+    var __timeoutID:uint = 0;
     var __abort:Boolean = false;
     var __timeout:Boolean = false;
     var gstart:Number;
@@ -42,11 +39,11 @@ public class LzHTTPLoader {
     var options:Object;
     // Default infinite timeout
     var timeout:Number = Infinity;
-    
+
     var requestheaders:Object;
     var requestmethod:String;
     var requesturl:String;
-    
+
     var responseText:String;
     var responseXML:XML = null;
 
@@ -63,7 +60,6 @@ public class LzHTTPLoader {
         this.options = {parsexml: true, serverproxyargs: null};
         this.requestheaders = {};
         this.requestmethod = LzHTTPLoader.GET_METHOD;
-        this.__loaderid = LzHTTPLoader.loaderIDCounter++;
     }
 
     // Default callback handlers
@@ -88,7 +84,7 @@ public class LzHTTPLoader {
         // flash.events.HTTPStatusEvent docs say response headers are AIR-only
         return null;
     }
-    
+
     public function getResponseHeader (key:String) :String {
         // There seems to be no way to get response headers in the flash.net URLLoader API
         return null;
@@ -154,11 +150,11 @@ public class LzHTTPLoader {
     public function open (method:String, url:String, username:String = null, password:String = null) :void {
         if (this.loader) {
             if ($debug) {
-                Debug.warn("pending request for id=%s", this.__loaderid);
+                Debug.warn("pending request for %w", this);
             }
             this.abort();
         }
-    
+
         this.loader = new URLLoader();
         this.loader.dataFormat = URLLoaderDataFormat.TEXT;
 
@@ -167,10 +163,11 @@ public class LzHTTPLoader {
 
         this.__abort = false;
         this.__timeout = false;
+        this.__timeoutID = 0;
         this.requesturl = url;
         this.requestmethod = method;
     }
-    
+
     public function send (content:String = null) :void {
         this.loadXMLDoc(/* method */ this.requestmethod,
                         /* url */ this.requesturl,
@@ -215,52 +212,22 @@ public class LzHTTPLoader {
 
     // Set up a pending timeout for a loader.
     public function setupTimeout (httploader:LzHTTPLoader, duration:Number) :void {
-        var endtime:Number = (new Date()).getTime() + duration;
-        var lid:uint = httploader.__loaderid;
-    
-        LzHTTPLoader.activeRequests[lid] = [httploader, endtime];
-        var callback:Function = function () :void {
-            LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
-        }
-        var timeoutid:uint = LzTimeKernel.setTimeout(callback, duration);
-        LzHTTPLoader.activeRequests[lid][2] = timeoutid;
+        httploader.__timeoutID = LzTimeKernel.setTimeout(httploader.__LZhandleXMLHTTPTimeout, duration);
     }
-    
-    // Remove a loader from the timeouts list.
+
+    // Remove the timeout for a loader
     public function removeTimeout (httploader:LzHTTPLoader) :void {
-        var lid:uint = httploader.__loaderid;
-        //Debug.write("remove timeout for id=%s", lid);
-        var reqarr:Array = LzHTTPLoader.activeRequests[lid];
-        if (reqarr && reqarr[0] === httploader) {
-            LzTimeKernel.clearTimeout(reqarr[2]);
-            delete LzHTTPLoader.activeRequests[lid];
+        var tid:uint = httploader.__timeoutID;
+        if (tid != 0) {
+            LzTimeKernel.clearTimeout(tid);
         }
     }
-    
-    // Check if any outstanding requests have timed out. 
-    static function __LZcheckXMLHTTPTimeouts (lid:uint) :void {
-        var req:Array = LzHTTPLoader.activeRequests[lid];
-        if (req) {
-            var now:Number = (new Date()).getTime();
-            var httploader:LzHTTPLoader = req[0];
-            var dstimeout:Number = req[1];
-            //Debug.write("diff %d", now - dstimeout);
-            if (now >= dstimeout) {
-                //Debug.write("timeout for %s", lid);
-                delete LzHTTPLoader.activeRequests[lid];
-                httploader.__timeout = true;
-                httploader.abort();
-                httploader.loadTimeout(httploader, null);
-            } else {
-                // if it hasn't timed out, add it back to the list for the future
-                //Debug.write("recheck timeout");
-                var callback:Function = function () :void {
-                    LzHTTPLoader.__LZcheckXMLHTTPTimeouts(lid);
-                }
-                var timeoutid:uint = LzTimeKernel.setTimeout(callback, now - dstimeout);
-                req[2] = timeoutid;
-            }
-        }
+
+    // Handle request which has timed out
+    private function __LZhandleXMLHTTPTimeout () :void {
+        this.__timeout = true;
+        this.abort();
+        this.loadTimeout(this, null);
     }
 
     public function getElapsedTime () :Number {
@@ -287,10 +254,10 @@ public class LzHTTPLoader {
                 // request was cancelled, ignore complete event
             } else {
                 removeTimeout(this);
-                
+
                 this.responseText = loader.data;
                 loader = null;
-                
+
                 if (this.options['parsexml']) {
                     var lzxdata:LzDataElement = null;
                 
@@ -345,7 +312,7 @@ public class LzHTTPLoader {
             }
             return;
         }
-        
+
         var secure:Boolean = (url.indexOf("https:") == 0);
         url = lz.Browser.toAbsoluteURL( url, secure );
 
