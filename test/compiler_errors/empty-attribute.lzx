@@ -1,0 +1,43 @@
+<canvas >
+<!-- empty values should cause compiler errors for these attribute types -->
+
+
+<class name="bar">
+  <attribute name="case1" value=""/>
+</class>
+
+<bar case1=""/>
+
+<view>
+  <attribute name="case2" type="number" value=""/>
+</view>
+
+<view>
+  <attribute name="case3" value=""/>
+</view>
+
+<view>
+  <attribute name="case4" type="boolean" value=""/>
+</view>
+
+
+
+
+<view>
+  <handler name="onclick" reference="">
+    Debug.write('foo');
+  </handler>
+</view>
+
+
+<!-- this should not generate an error -->
+<view>
+  <attribute name="noError" type="string" value=""/>
+</view>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

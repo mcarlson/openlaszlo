@@ -82,10 +82,22 @@ public class ViewSchema extends Schema {
     public static final Type METHOD_TYPE              = newType("method");
     public static final Type NODE_TYPE                = newType("node");
 
+    public static final Set sNonEmptyValueTypes = new HashSet();
     static {
 
         sHTMLContentElements.add("text");
         sInputTextElements.add("inputtext");
+
+        // types that cannot have empty attribute values
+        Object[] nev = new Object[]{ViewSchema.BOOLEAN_TYPE,
+                                    ViewSchema.EVENT_HANDLER_TYPE,
+                                    ViewSchema.EXPRESSION_TYPE,
+                                    ViewSchema.NODE_TYPE,
+                                    ViewSchema.NUMBER_EXPRESSION_TYPE,
+                                    ViewSchema.NUMBER_TYPE,
+                                    ViewSchema.REFERENCE_TYPE,
+                                    ViewSchema.SIZE_EXPRESSION_TYPE};
+        sNonEmptyValueTypes.addAll(Arrays.asList(nev));
 
         // from http://www.w3.org/TR/REC-html40/interact/scripts.html
         String[] mouseEventAttributes = {

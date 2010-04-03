@@ -298,6 +298,13 @@ public class NodeModel implements Cloneable {
           this.dependenciesname =  env.methodNameGenerator.next();
         }
       }
+
+      // If this attribute type is not allowed to take an empty string, complain
+      if (ViewSchema.sNonEmptyValueTypes.contains(type) && value != null && value.matches("\\s*")) {
+        throw new CompilationError("The attribute '" + name +"' has type "+type +
+                                   ", which cannot have an empty value."
+                                   , source);
+      }
     }
 
     public void setFallbackExpression(String fallback) {
@@ -1460,6 +1467,10 @@ solution =
         String parent_name =
             element.getParentElement().getAttributeValue("id");
         String reference = element.getAttributeValue("reference");
+        if (reference != null && reference.matches("\\s*")) {
+          throw new CompilationError("The 'reference' attribute value cannot be an empty string"
+                                     , element);
+        }
         String body = element.getText();
         if (body.trim().length() == 0) { body = null; }
         // If non-empty body AND method name are specified, flag an error
