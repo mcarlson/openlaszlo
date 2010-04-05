@@ -18,7 +18,7 @@ lz.embed.history = {
         if (_this.active || _this.active == false) return;
         _this.active = true;
         //console.log('init', _this._apps);
-        _this._title = top.document.title;
+        //_this._title = top.document.title;
         var currstate = _this.get();
         var browser = lz.embed.browser;
         // fine in Safari 3.0.4
@@ -134,9 +134,9 @@ lz.embed.history = {
                     this._currentstate = h;
                     this._parse(h);
                 }
-                if (top.document.title != this._title) {
-                    top.document.title = this._title;
-                }
+                //if (top.document.title != this._title) {
+                //    top.document.title = this._title;
+                //}
             } else {
                 this._currentstate = h;
                 this._parse(h);

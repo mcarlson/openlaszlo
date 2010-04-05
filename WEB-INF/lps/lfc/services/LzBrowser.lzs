@@ -180,6 +180,16 @@ public final class LzBrowserService {
     }
 
     /**
+     * Sets the browser window title
+     *
+     * @param String str: String to set the browser window title
+     */
+    function setWindowTitle (str:String) :void {
+        LzBrowserKernel.callJS('eval', null, 'top.document.title="' + str + '"');
+    }
+
+
+    /**
      * Determines if a screen reader is active and the application is focused
      *
      * @return: True if a screen reader is active and the application is focused
