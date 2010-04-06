@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -381,7 +381,7 @@
     it does not in fact seem to be the currently favored way of 
     setting up live examples. It seems, rather, that it was *once* new,
     and is no longer new, but rather, it is now old. Preferred to
-    this structure is the template defined at line 201 of this file,
+    this structure is the template defined at line 245 of this file,
     with the first line 
     <xsl:template match="programlisting[@language='lzx' and textobject/textdata/@fileref]">
     
@@ -426,11 +426,11 @@
            If you don't want to see the SWF version as well, comment out the 
            first script block. -->
       <script language="JavaScript" type="text/javascript">
-        Lz.swfEmbed(<xsl:value-of select="$swf-embed-params"/>);
+        lz.embed.swf(<xsl:value-of select="$swf-embed-params"/>);
       </script>
 <?ignore
       <script language="JavaScript" type="text/javascript">
-        Lz.dhtmlEmbed(<xsl:value-of select="$dhtml-embed-params"/>);
+        lz.embed.dhtml(<xsl:value-of select="$dhtml-embed-params"/>);
       </script>
 ?>
     </div>

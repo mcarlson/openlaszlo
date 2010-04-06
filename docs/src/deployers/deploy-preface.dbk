@@ -39,12 +39,11 @@ lines
 application is shown first, followed by the application source code,
 followed by an Edit button that allows you to try out the effect of
 making changes to the application source code.</para>
-<informalexample role="live-example"><programlisting role="lzx-embednew"><filename>deploy-preface-$2.lzx</filename><parameter/><code>&lt;canvas height="20"&gt;
-  &lt;text&gt;Hello World!&lt;/text&gt;
-&lt;/canvas&gt;</code></programlisting><programlisting>&lt;canvas height="20"&gt;
-  &lt;text&gt;Hello World!&lt;/text&gt;
-&lt;/canvas&gt;</programlisting><?lzx-edit programs/deploy-preface-$2.lzx?></informalexample>
-
+<example role="live-example">
+ <programlisting language="lzx">
+  <textobject><textdata fileref="programs/deploy-preface-$2.lzx"/></textobject>
+ </programlisting>
+</example>
 
 
 <para/></section><section><title>Related documentation</title>
