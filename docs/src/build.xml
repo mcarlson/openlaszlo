@@ -240,13 +240,12 @@ verbosity=1
           @param local.worksheet
        -->
 
-    <!-- localdir is the output dir relative to LPS_HOME -->
-    <propertyregex property="LPS_HOME.escaped" input="${LPS_HOME}"
-        regexp="\\" replace="\\\\\\\\" global="true" defaultvalue="${LPS_HOME}" />
-    <propertyregex property="localdir"
-              input="${local.output.dir}"
-              regexp="${LPS_HOME.escaped}/(.*)"
-              select="\1/"/>
+    <!-- replace all backslash characters with a normal slash,
+         this step is necessary, because the base.dir parameter
+         is part of a file-protocol URI string and on Windows
+         local.input.dir may contain backslashes -->
+    <propertyregex property="local.input.dir.normalized" input="${local.input.dir}"
+        regexp="\\" replace="\/" global="true" defaultvalue="${local.input.dir}" />
 
     <java classname="com.icl.saxon.StyleSheet"
           fork="yes"
@@ -263,7 +262,7 @@ verbosity=1
       <arg line="-o ${local.output.dir}/${local.output.index}"/>
       <arg line="${local.input.dir}/${local.input.index}"/>
       <arg line="${local.worksheet}"/>
-      <arg line="base.dir=${local.input.dir}/"/>
+      <arg line="base.dir=${local.input.dir.normalized}/"/>
     </java>
 
   </target>
@@ -779,7 +778,7 @@ All Rights Reserved. Use is subject to license terms.</p>
        </uptodate>
      </or>
    </condition>
-   <echo message="reference.skip is $reference.skip"/>
+   <echo message="reference.skip is ${reference.skip}"/>
   </target>
   
 
@@ -863,25 +862,37 @@ All Rights Reserved. Use is subject to license terms.</p>
       <copy todir="${reference.output.dir}">
           <fileset dir="nav" includes="*.*"/>
       </copy>
+      <!-- replace all backslash characters with a normal slash,
+           apparently mixed paths confuse ruby -->
+      <propertyregex property="reference.output.dir.normalized" input="${reference.output.dir}"
+        regexp="\\" replace="\/" global="true" defaultvalue="${reference.output.dir}" />
       <exec executable="ruby" failonerror="true">
         <arg value="${reference.src.dir}/postprocess.rb" />
         <arg value="--inputdir" />
-        <arg value="${reference.output.dir}" />
+        <arg value="${reference.output.dir.normalized}" />
       </exec>
       <exec executable="ruby" failonerror="true">
         <arg value="${reference.src.dir}/navbuilder/navxmlbuilder.rb" />
         <arg value="--inputdir" />
-        <arg value="${reference.output.dir}" />
+        <arg value="${reference.output.dir.normalized}" />
         <arg value="--outputdir" />
-        <arg value="${reference.output.dir}" />
+        <arg value="${reference.output.dir.normalized}" />
       </exec>
-      <exec executable="ruby" failonerror="true">
+      <exec executable="ruby" failonerror="false" resultproperty="toccheck.result">
         <arg value="${reference.src.dir}/navbuilder/toccheck.rb" />
         <arg value="--inputdir" />
-        <arg value="${reference.output.dir}" />
+        <arg value="${reference.output.dir.normalized}" />
       </exec>
+      <!-- only fail if not building test version -->
+      <if>
+        <and>
+          <isfalse value="${QUICK}" />
+          <isfailure code="${toccheck.result}" />
+        </and>
+        <then><fail message="toccheck failed"/></then>
+      </if>
   </target>
-  
+
   <target name="reference.html.disclaimer" depends="init"
       description="insert a disclaimer into each page of the reference">
         <exec executable="bash" failonerror="true">

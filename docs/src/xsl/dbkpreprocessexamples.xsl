@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2009-2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -66,7 +66,7 @@
       <xsl:call-template name="dbhtml-dir"/>
     </xsl:variable>
     <xsl:variable name="programpath" select="concat($base.dir,$relative.dir,$fname)"/>
-    <xsl:variable name="programsource" select="document($programpath)"/>
+    <xsl:variable name="programsource" select="document(concat('file:///', $programpath))"/>
 
     <!-- format program listing itself -->
     <xsl:variable name="callout.ids">

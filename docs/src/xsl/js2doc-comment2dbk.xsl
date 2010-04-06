@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
                 xmlns:xalanredirect="org.apache.xalan.xslt.extensions.Redirect"
                 xmlns:exslt="http://exslt.org/common"
-                extension-element-prefixes="xalanredirect"
+                extension-element-prefixes="xalanredirect redirect"
                 exclude-result-prefixes="exslt"
                 >
   
@@ -521,12 +522,23 @@
     </xsl:element>
 
     <xsl:if test="$fname">
-      <xsl:if test="not(element-available('xalanredirect:write'))">
-        <xsl:message><xsl:text>no xalanredirect</xsl:text></xsl:message>
-      </xsl:if>
-      <xalanredirect:write file="{$lzxdir}{$fname}.in">
-        <xsl:value-of select="$text"/>
-      </xalanredirect:write>
+      <xsl:choose>
+        <xsl:when test="element-available('xalanredirect:write')">
+          <xalanredirect:write file="{$lzxdir}{$fname}.in">
+            <xsl:value-of select="$text"/>
+          </xalanredirect:write>
+        </xsl:when>
+        <xsl:when test="element-available('redirect:write')">
+          <!-- TODO [20100402 anba] figure out why it is necessary to prepend
+            'build/reference/' for redirect:write -->
+          <redirect:write file="{'build/reference/'}{$lzxdir}{$fname}.in">
+            <xsl:value-of select="$text"/>
+          </redirect:write>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:message><xsl:text>no xalanredirect|redirect</xsl:text></xsl:message>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
 
   </xsl:template>

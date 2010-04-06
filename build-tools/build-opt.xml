@@ -172,11 +172,6 @@
     <property name="skip.prefetch" value="true" />
     <!-- property name="skip.wrappertest" value="true" -->
     <!-- <property name="skip.runlzunit" value="true" -->
-
-    <!-- currently unable to generate the reference on Windows -->
-    <condition property="skip.doc.reference" value="true">
-      <os family="windows"/>
-    </condition>
     <!-- property name="skip.doc.reference" value="true" / -->
 
     <property name="build.doc.index" value="1" />

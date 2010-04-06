@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!DOCTYPE xsl:stylesheet [
@@ -48,8 +48,8 @@
         <xsl:choose>
           <xsl:when test="count($ambig) > 1">
             <xsl:variable name="id" select="concat(@id,'.',generate-id(.))"/>
-            <xsl:message><xsl:value-of select="concat('found ambiguous unit id ', @id, ', substituting ', $id)"/></xsl:message>
             <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+            <xsl:message><xsl:value-of select="concat('found ambiguous unit id ', @id, ', substituting ', $id)"/></xsl:message>
           </xsl:when>
           <xsl:otherwise>
             <xsl:attribute name="id"><xsl:value-of select="@id"/></xsl:attribute>
@@ -67,8 +67,8 @@
       <xsl:variable name="ambig" select="key('lowerid', @id)"/>
       <xsl:if test="count($ambig) > 1">
         <xsl:variable name="id" select="concat(@id,'.',generate-id(.))"/>
-        <xsl:message><xsl:value-of select="concat('found ambiguous property id ', @id, ', substituting ', $id)"/></xsl:message>
         <xsl:attribute name="id"><xsl:value-of select="$id"/></xsl:attribute>
+        <xsl:message><xsl:value-of select="concat('found ambiguous property id ', @id, ', substituting ', $id)"/></xsl:message>
       </xsl:if>
     </xsl:template>
 

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2010 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -17,6 +17,8 @@ public class Comment {
 
     private static Logger logger = Logger.getLogger("org.openlaszlo.js2doc.Comment");
     
+    private static final Pattern lineSeparatorPattern = Pattern.compile("\r\n?|\n"); 
+
     static private final Pattern commentLineStart = Pattern.compile("^\\s*/\\*((?:.)*)$");
     static private final Pattern commentLineEnd   = Pattern.compile("^((?:.)*)\\*/.*$");
     
@@ -66,15 +68,11 @@ public class Comment {
     }
     
     static public Comment extractJS2DocComment(String sourceComment) {
-        
-        String cr = System.getProperty("line.separator");
-
         Comment parsedComment = new Comment();
         
         if (sourceComment != null) {
             String content = contentsPattern.matcher(sourceComment).replaceAll("$1");
-    
-            String[] lines = content.split(cr);
+            String[] lines = lineSeparatorPattern.split(content);
     
             int i=0;
             String textContent = "";
