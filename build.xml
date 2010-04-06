@@ -115,7 +115,11 @@
       <include name="my-apps/**" />
 
       <include name="WEB-INF/web.xml"/>
+      <include name="WEB-INF/c.tld"/>
+      <include name="WEB-INF/fmt.tld"/>
+      <include name="WEB-INF/fn.tld"/>
       <include name="WEB-INF/taglibs-i18n.tld"/>
+      <include name="WEB-INF/x.tld"/>
       <include name="WEB-INF/classes/**"/>
       <include name="${webapp-lps-home}/schema/lzx.rng" />
       <include name="${webapp-lps-home}/schema/lfc.lzx" />
