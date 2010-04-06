@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -421,7 +421,7 @@ mLogger.warn(
     public static String insertSubdir(String pathname, String subdir) {
         boolean hasDrive = false;
         if (pathname.length() > 1) {
-            hasDrive = (pathname.substring(1,2)==":");
+            hasDrive = (":".equals(pathname.substring(1,2)));
         }
         String driveSpecifier ="";
         if (hasDrive) {

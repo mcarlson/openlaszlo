@@ -162,7 +162,7 @@ class ResourceCompiler extends ElementCompiler {
                     if (!sources.isEmpty()) {
                         if (tagName.equals("preloadresource")) {
                           mEnv.getResourceGenerator().importPreloadResource(sources, name, file);
-                        } else if ((offx == null) && (offx == null)) {
+                        } else if ((offx == null) && (offy == null)) {
                           mEnv.getResourceGenerator().importResource(sources, name, file);
                         } else {
                           mEnv.getResourceGenerator().importResource(sources, name, file,
@@ -182,7 +182,7 @@ class ResourceCompiler extends ElementCompiler {
                     if (tagName.equals("preloadresource")) {
                         mEnv.getResourceGenerator().importPreloadResource(file.getAbsolutePath(), 
                                                                           name);
-                    } else if ((offx == null) && (offx == null)) {
+                    } else if ((offx == null) && (offy == null)) {
                         mEnv.getResourceGenerator().importResource(file.getAbsolutePath(), name);
                     } else {
                         mEnv.getResourceGenerator().importResource(file.getAbsolutePath(), 
@@ -226,6 +226,6 @@ class ResourceCompiler extends ElementCompiler {
 }
 
 /**
- * @copyright Copyright 2001-2007, 2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2007, 2009, 2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
