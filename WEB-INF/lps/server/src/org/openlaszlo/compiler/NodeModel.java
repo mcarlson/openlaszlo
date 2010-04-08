@@ -1108,17 +1108,17 @@ solution =
       throw new CompilerImplementationError("Attempting to addProperty when NodeModel frozen");
     }
 
-    LinkedHashMap attrs;
+    LinkedHashMap lattrs;
     if (ALLOCATION_INSTANCE.equals(allocation)) {
-      attrs = this.attrs;
+      lattrs = this.attrs;
     } else if (ALLOCATION_CLASS.equals(allocation)) {
-      attrs = this.classAttrs;
+      lattrs = this.classAttrs;
     } else {
       throw new CompilationError("Unknown allocation: " + allocation, source);
     }
     // TODO: [2008-05-05 ptw] Make warning say whether it is a
     // class or instance property that is conflicting
-    if (attrs.containsKey(name)) {
+    if (lattrs.containsKey(name)) {
       env.warn(
                 /* (non-Javadoc)
                  * @i18n.test
@@ -1135,14 +1135,14 @@ solution =
       // replicator, so must be compiled as closures
       boolean chm = "datapath".equals(name) ? false : canHaveMethods;
       if (cattr.bindername != null) {
-        attrs.put(cattr.bindername, cattr.getBinderMethod(chm, debug));
+        lattrs.put(cattr.bindername, cattr.getBinderMethod(chm, debug));
       }
       if (cattr.dependenciesname != null) {
-        attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(chm, debug));
+        lattrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(chm, debug));
       }
-      attrs.put(name, cattr.getInitialValue());
+      lattrs.put(name, cattr.getInitialValue());
     } else {
-      attrs.put(name, value);
+      lattrs.put(name, value);
     }
   }
 
@@ -1944,6 +1944,7 @@ solution =
         Element parent = element.getParentElement();
         String parent_name = parent.getAttributeValue("id");
 
+
         if (parent_name == null) {
             parent_name = CompilerUtils.attributeUniqueName(element, name);
         }
@@ -2045,6 +2046,7 @@ solution =
             cattr = new CompiledAttribute(name, type, null, WHEN_IMMEDIATELY, element, env);
         }
 
+
         if (style != null) {
             // style attributes take precedent over value attributes
             value = "$style{" + ScriptCompiler.quote(style) + "}";
@@ -2053,20 +2055,25 @@ solution =
             Object origvalue = cattr.getInitialValue();
             String origvalueexpression;
             if (origvalue instanceof NodeModel.BindingExpr) {
-                // add dependancy methods
-                if (ALLOCATION_INSTANCE.equals(allocation)) {
-                    attrs = this.attrs;
-                } else if (ALLOCATION_CLASS.equals(allocation)) {
-                    attrs = this.classAttrs;
-                }
-                if (cattr.bindername != null) {
-                  attrs.put(cattr.bindername, cattr.getBinderMethod(false, debug));
-                }
-                if (cattr.dependenciesname != null) {
-                  attrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(false, debug));
-                }
 
-                origvalueexpression = ((NodeModel.BindingExpr)origvalue).getExpr();
+              LinkedHashMap lattrs;
+              if (ALLOCATION_INSTANCE.equals(allocation)) {
+                lattrs = this.attrs;
+              } else if (ALLOCATION_CLASS.equals(allocation)) {
+                lattrs = this.classAttrs;
+              } else {
+                throw new CompilationError("Unknown allocation: " + allocation, element);
+              }
+
+              // add dependancy methods
+              if (cattr.bindername != null) {
+                lattrs.put(cattr.bindername, cattr.getBinderMethod(false, debug));
+              }
+              if (cattr.dependenciesname != null) {
+                lattrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(false, debug));
+              }
+
+              origvalueexpression = ((NodeModel.BindingExpr)origvalue).getExpr();
             } else {
                 origvalueexpression = (String)origvalue;
             }
@@ -2075,6 +2082,14 @@ solution =
             cattr = compileAttribute(element, name, value, type, when);
             cattr.setFallbackExpression(origvalueexpression);
         }
+
+        if (ALLOCATION_CLASS.equals(allocation) && cattr.when != WHEN_IMMEDIATELY) {
+          throw new CompilationError("You cannot use constraints or styles with an attribute "
+                                     + "that has 'class' (static) allocation",
+                                     element);
+        }
+
+
         addProperty(name, cattr, allocation, element);
 
         // Add entry for attribute setter function
