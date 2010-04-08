@@ -339,19 +339,6 @@ lz.embed.iframemanager = {
         } catch (e) {
         }
     }
-    ,__globalMouseover: function(e, id) {
-        var iframe = lz.embed.iframemanager.getFrame(id);
-        if (! iframe) return;
-        e = window.event;
-
-        // DHTML only...
-        if (iframe.owner && iframe.owner.sprite) {
-            // Turn mouse events back on unless this was over an iframe
-            if (e.toElement && e.toElement.nodeName != 'IFRAME') {
-                LzMouseKernel.__resetMouse();
-            }
-        }
-    }
     ,__mouseEvent: function(e, id) {
         var lze = lz.embed;
         var iframe = lze.iframemanager.getFrame(id);
@@ -408,9 +395,6 @@ lz.embed.iframemanager = {
         //console.log('sending', id, send);
         if (send) {
             // bind into global events.
-            if (lz.embed.browser.isIE) {
-                lz.embed.attachEventHandler(document, 'mouseover', lz.embed.iframemanager, '__globalMouseover', id);
-            }
             try {
                 lz.embed.attachEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent', id);
                 lz.embed.attachEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent', id);
@@ -431,9 +415,6 @@ lz.embed.iframemanager = {
             }
         } else {
             // remove event listeners
-            if (lz.embed.browser.isIE) {
-                lz.embed.removeEventHandler(document, 'mouseover', lz.embed.iframemanager, '__globalMouseover');
-            }
             try {
                 lz.embed.removeEventHandler(iframe.document, 'mousedown', lz.embed.iframemanager, '__mouseEvent');
                 lz.embed.removeEventHandler(iframe.document, 'mouseup', lz.embed.iframemanager, '__mouseEvent');
