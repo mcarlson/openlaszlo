@@ -6,7 +6,6 @@
     
     <!-- dependencies  -->
     <include href="../stylishbutton.lzx" />
-    <include href="../tooltip/tooltip.lzx" />
     
     <!--- class for use of <xref linkend="lz.richtexttoolbar" /> buttons  -->
     <class name="formatbtn" extends="stylishbutton" width="26" 
@@ -101,7 +100,7 @@
 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc. All Rights Reserved.               *
+* Copyright 2006-2010 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

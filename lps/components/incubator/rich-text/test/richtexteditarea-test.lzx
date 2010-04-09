@@ -7,9 +7,7 @@
 <include href="incubator/borderinput.lzx"/>
 <include href="incubator/lzcombobox.lzx"/>
 <include href="incubator/textstyle.lzx"/>
-<include href="incubator/tooltip/tooltip.lzx"/>
 <include href="incubator/baseedittext.lzx" />
-<include href="incubator/tooltip/tooltipview.lzx" />
     
 <include href="incubator/rich-text/richtexttoolbar.lzx"/>
 <include href="incubator/rich-text/richtexteditarea.lzx"/>
@@ -176,7 +174,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-    * Copyright 2006-2008 Laszlo Systems, Inc. All Rights Reserved.                    *
+    * Copyright 2006-2008, 2010 Laszlo Systems, Inc. All Rights Reserved.                    *
     * Use is subject to license terms.                                            *
     * X_LZ_COPYRIGHT_END ****************************************************** -->
     <!-- @LZX_VERSION@                                                         -->
