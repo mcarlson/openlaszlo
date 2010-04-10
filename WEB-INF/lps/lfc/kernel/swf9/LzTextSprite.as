@@ -35,6 +35,7 @@ public class LzTextSprite extends LzSprite {
         #passthrough  {
 
         public var textfield:TextField = null;
+        var textformat:TextFormat = null;
 
         public static const PAD_TEXTWIDTH:Number = 4;
         public static const PAD_TEXTHEIGHT:Number = 4;
@@ -516,9 +517,8 @@ public class LzTextSprite extends LzSprite {
             if (! this.html) {
                 tfield.appendText(t);
             } else if (tfield.styleSheet == null) {
-                var df:TextFormat = tfield.defaultTextFormat;
                 // reset textformat to workaround flash player bug (FP-77)
-                tfield.defaultTextFormat = df;
+                tfield.defaultTextFormat = this.textformat;
                 tfield.htmlText = this.text;
             } else {
                 // you can't set defaultTextFormat if a style sheet is applied
@@ -549,9 +549,8 @@ public class LzTextSprite extends LzSprite {
             if (! this.html) {
                 tfield.text = t;
             } else if (tfield.styleSheet == null) {
-                var df:TextFormat = tfield.defaultTextFormat;
                 // reset textformat to workaround flash player bug (FP-77)
-                tfield.defaultTextFormat = df;
+                tfield.defaultTextFormat = this.textformat;
                 tfield.htmlText = t;
             } else {
                 // you can't set defaultTextFormat if a style sheet is applied
@@ -592,6 +591,7 @@ public class LzTextSprite extends LzSprite {
 
             var tfield:TextField = this.textfield;
             var tf:TextFormat = new TextFormat();
+            this.textformat = tf;
             tf.kerning = true;
             tf.size = this.fontsize;
             tf.font = (this.font == null ? cfontname : this.font.name);

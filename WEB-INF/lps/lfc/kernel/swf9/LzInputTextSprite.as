@@ -1,7 +1,7 @@
 /**
   * LzInputTextSprite.as
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -166,9 +166,8 @@ public class LzInputTextSprite extends LzTextSprite {
             textfield.type = TextFieldType.DYNAMIC;
         }
 
-        var df:TextFormat = textfield.defaultTextFormat;
         // reset textformat to workaround flash player bug (FP-77)
-        textfield.defaultTextFormat = df;
+        textfield.defaultTextFormat = this.textformat;
     }
 
     /**
