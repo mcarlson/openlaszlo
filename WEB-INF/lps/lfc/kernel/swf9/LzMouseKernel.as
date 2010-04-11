@@ -291,8 +291,16 @@ class LzMouseKernel  {
         asset.scaleX = 1.0;
         asset.scaleY = 1.0;
 
-        if (resinfo['offsetx'] != null) { cursorOffsetX = resinfo['offsetx']; }
-        if (resinfo['offsety'] != null) { cursorOffsetY = resinfo['offsety']; }
+        if (resinfo['offsetx'] != null) {
+            cursorOffsetX = resinfo['offsetx'];
+        } else {
+            cursorOffsetX = 0;
+        }
+        if (resinfo['offsety'] != null) {
+            cursorOffsetY = resinfo['offsety'];
+        } else {
+            cursorOffsetY = 0;
+        }
 
         return asset;
     }
