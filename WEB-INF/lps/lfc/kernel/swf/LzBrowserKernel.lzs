@@ -55,10 +55,7 @@ static function callJS (js, callback) :* {
     }
     if (LzBrowserKernel.__jslocked == true) {
         if (callback != false) {
-            var o = [];
-            for (var i = 0; i< arguments.length; i++) {
-                o[i] = arguments[i];
-            }
+            var o = [].slice.call(arguments);
             LzBrowserKernel.__jscallq.push(o);
             //Debug.write('queued', LzBrowserKernel.__jscallq.length, o); 
         }
@@ -112,9 +109,10 @@ static function callJSReturn (a) {
 static function _dequeueJS (a) {
     LzBrowserKernel.__jslocked = false;
     LzBrowserKernel.__jscallback = null;
-    if (LzBrowserKernel.__jscallq.length > 0) {
-        var a = LzBrowserKernel.__jscallq.pop();
-        //Debug.write('calling with args q', a);
+    var queue = LzBrowserKernel.__jscallq;
+    if (queue.length > 0) {
+        var a = queue.shift();
+        //Debug.write('calling with args', a);
         LzBrowserKernel.callJS.apply(LzBrowserKernel, a);
     }
 }

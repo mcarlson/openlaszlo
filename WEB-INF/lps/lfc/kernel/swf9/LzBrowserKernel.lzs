@@ -119,7 +119,7 @@ static function _dequeueJS () :void {
     LzBrowserKernel.__jslocked = false;
     LzBrowserKernel.__jscallback = null;
     if (LzBrowserKernel.__jscallq.length > 0) {
-        var a:Array = LzBrowserKernel.__jscallq.pop();
+        var a:Array = LzBrowserKernel.__jscallq.shift();
         //Debug.write('calling with args q', a);
         LzBrowserKernel.callJS.apply(LzBrowserKernel, a);
     }
