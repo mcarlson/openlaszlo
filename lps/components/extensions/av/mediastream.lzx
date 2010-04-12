@@ -1458,7 +1458,7 @@
         this.muteaudio = muteaudio;
         if (!this.mic)           return;
         if (!this._flashstream)  return;
-        _setupStreamAudio();
+        this._setupStreamAudio();
         if (this["onmuteaudio"]) this.onmuteaudio.sendEvent();
     ]]>
     </setter> 
@@ -1475,7 +1475,7 @@
         this.mutevideo = mutevideo;
         if (!this.cam)  return;
         if (!this._flashstream)  return;
-        _setupStreamVideo();
+        this._setupStreamVideo();
         if (this["onmutevideo"]) this.onmutevideo.sendEvent();
     ]]>
     </setter> 
