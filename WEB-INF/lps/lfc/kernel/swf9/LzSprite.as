@@ -258,6 +258,20 @@ public class LzSprite extends Sprite {
     public function drawBackground():void {
         var context = this.graphics;
         context.clear();
+        // ensures context menus work with compiled resources by covering them with a 
+        // clickable bitmap in the display list - see LPP-8815
+        if (this.__bgcolorhidden && this.clickable != true && this.__isinternalresource) {
+            if (this.__bgsprite == null) {
+                this.__bgsprite = new Sprite()
+                this.addChild(this.__bgsprite);
+            }
+            context = this.__bgsprite.graphics;
+            context.clear();
+        } else if (this.__bgsprite != null) {
+            this.removeChild(this.__bgsprite);
+            this.__bgsprite = null;
+        }
+
         var alpha:Number = this.__bgcolorhidden ? 0 : 1;
         if (this.__repeatbitmap) this.__repeatbitmap.dispose();
         if (this.backgroundrepeat && this.resourcewidth && this.resourceheight) {
@@ -1204,6 +1218,9 @@ public class LzSprite extends Sprite {
                 if (asset == null) {
                     //Debug.write('CACHE MISS, new ',assetclass);
                     asset = new assetclass();
+                    if (asset is Bitmap) {
+                        (asset as Bitmap).smoothing = true;
+                    }
                     asset.scaleX = 1.0;
                     asset.scaleY = 1.0;
                     this.resourceCache[framenumber] = asset;
@@ -1580,6 +1597,7 @@ public class LzSprite extends Sprite {
 
     var __contextmenu:LzContextMenu;
     var __bgcolorhidden:Boolean = false;
+    var __bgsprite:Sprite = null;
 
     function get isBkgndRequired () :Boolean {
         // background is required for:
