@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -16,6 +16,7 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.Parent;
 import org.jdom.filter.ElementFilter;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -629,6 +630,21 @@ public class Parser {
         return children;
     }
 
+    protected boolean ancestorIsDataSet(Parent elt) {
+        if (elt instanceof Document) {
+            return false;
+        } else if (elt instanceof Element) {
+            Element e = (Element) elt;
+            if (e.getName().equals("dataset")) {
+                return true;
+            } else {
+                return ancestorIsDataSet(e.getParent());
+            }
+        } else {
+            return false;
+        }
+    }
+
     /** Replaces include statements by the content of the included
      * file.
      *
@@ -647,7 +663,7 @@ public class Parser {
         for (Iterator iter = children.iterator();
              iter.hasNext(); ) {
             Element child = (Element) iter.next();
-            if (child.getName().equals("switch")) {
+            if (child.getName().equals("switch") && !ancestorIsDataSet(element)) {
                 List goodies  = evaluateSwitchStatement(child, env);
                 // splice these in place of the <switch>
                 int index = element.indexOf(child);
@@ -663,7 +679,7 @@ public class Parser {
             Element child = (Element) iter.next();
 
 
-            if (child.getName().equals("include")) {
+            if (child.getName().equals("include") && !ancestorIsDataSet(element)) {
                 // Ensure there are no child elements
                 if (child.getChildren().size() > 0) {
                     throw new CompilationError("'include' tag must not contain child elements", child);
