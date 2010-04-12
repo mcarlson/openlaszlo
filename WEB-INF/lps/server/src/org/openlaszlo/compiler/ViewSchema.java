@@ -758,7 +758,10 @@ public class ViewSchema extends Schema {
             || name.equals("i")
             || name.equals("p")
             || name.equals("pre")
-            || name.equals("u");
+            || name.equals("u")
+            || name.equals("ul")
+            || name.equals("li")
+            || name.equals("ol");
     }
 
     static boolean isDocElement(Element e) {
