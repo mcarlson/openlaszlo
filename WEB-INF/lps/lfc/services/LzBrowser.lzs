@@ -123,11 +123,20 @@ public final class LzBrowserService {
 
     /**
      * Returns the URL from which the application was loaded.
-     * @return String: the URL the swf was loaded from
+     * @return String: the URL the application was loaded from
      *
      */
     function getLoadURL () :String {
         return LzBrowserKernel.getLoadURL();
+    }
+
+    /**
+     * Returns the URL in the browser location bar. May return null if called before the app initializes.
+     * @return String: the URL in the browser location bar
+     *
+     */
+    function getURL () :String {
+        return LzBrowserKernel.callJS('eval', false, 'window.location.href');
     }
 
     /**

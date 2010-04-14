@@ -1,4 +1,22 @@
-<canvas width="200" height="605" bgcolor="0xeaeaea" debug="false">
+<canvas height="100%" width="100%" bgcolor="0xeaeaea" history="true" title="Laszlo Explorer">
+  <attribute name="bookmark"/>
+  <event name="onbookmark"/>
+  <attribute name="lastbookmark" value="" type="text"/>
+  <setter name="bookmark" args="b">
+  <![CDATA[
+    if (b == null || this.lastbookmark == b) return;
+    this.lastbookmark = b;
+
+    // deserialize
+    this.bookmark = b.split('|');
+
+    lz.Browser.setWindowTitle('Laszlo Explorer: ' + this.bookmark.join(':'));
+
+    //Debug.warn('restoring bookmark', b, this.bookmark);
+    if (this.onbookmark.ready) this.onbookmark.sendEvent(this.bookmark);
+  ]]>
+  </setter>
+  <attribute name="loadcounter" value="0" type="number"/>
 
   <!-- Datasets -->
   <dataset name="navdata"/>
@@ -8,25 +26,19 @@
 
   <include href="resources.lzx" />
 
-  <!-- Global Setup Script -->
-  <script>
-    var opened = new Array(4);
-  </script>
-
-  <handler name="oninit">
-    var navset = global['navset'];
-    if (typeof(navset) == 'undefined') {
-        navset = "nav.xml";
-        var lzr = global['lzr'];
-        if (lzr &amp;&amp; lzr == 'dhtml') {
-            Debug.info("gonna use dhtml nav."); 
+  <handler name="oninit"><![CDATA[
+    var navset = lz.Browser.getInitArg("navset");
+    if (navset == null) {
+        if ($dhtml) {
             navset = "nav_dhtml.xml";
-        }  
+        } else {
+            navset = "nav.xml";
+        }
     }
-    canvas.navdata.setSrc(navset);
+    canvas.navdata.setAttribute("src", navset);
     canvas.navdata.doRequest();
-  </handler>
-  
+  ]]></handler>
+
   <!-- CLASSES -->
 
   <!-- Animator group classes to be instantiated when needed -->
@@ -69,7 +81,7 @@
     <datapath xpath="*">
         <attribute name="doneDel" value="null"/>
         <handler name="onclones">
-            var lastclone = clones[ clones.length - 1 ];
+            var lastclone = this.clones[ this.clones.length - 1 ];
             if ( !this.doneDel ){
                 this.doneDel = new LzDelegate( this, 'replicationDone');
             } else {
@@ -77,9 +89,8 @@
             }
             this.doneDel.register( lastclone , "oninit" );
         </handler>
-        <method name="replicationDone" args="v">
-            var mb = this.parent;
-            mb.dataBound();
+        <method name="replicationDone" args="clone">
+            this.parent.dataBound();
         </method>
     </datapath>
 
@@ -87,16 +98,6 @@
         this.children.sendToBack();
     </handler>
 
-    <handler name="ondata">
-        this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
-        if( !this['clonenumber'] || this.clonenumber == 0) {
-            var mb = this.parent;
-            if (mb instanceof lz.menubutton) {
-                mb.dataBound();
-            }
-        }
-    </handler> 
-            
     <attribute name="deferOpen" value="false"/>
 
     <method name="_setOpen" args="o"><![CDATA[
@@ -105,44 +106,51 @@
             return;
         }
 
-        if (o && this.children.itemlist.subviews.length == 0) {
+        if (o && this.itemlist.subviews.length == 0) {
             this.deferOpen = true;
             new lz.navbutton(this, { level: this.level + 1 });
-        }
-        else
+        } else {
             super._setOpen(o);
-            
+        }
     ]]></method>
-    
+
     <method name="dataBound"><![CDATA[
+        this.dataloaded = true;
         if (this.deferOpen) {
             this.deferOpen = false;
             this.setAttribute('open', true);
         }
         if (this['nextOpenList']) {
-            var nol = this.nextOpenList;
-            var no = this[nol[0]];
-            if (no != null)
-                this[nol[0]].openSequence(nol);
-            else if ($debug) {
-                Debug.warn("invalid element in open sequence %w\n", nol[0]);
-            }
+            this.searchChildren();
         }
     ]]></method>
-    
+
+    <method name="searchChildren">
+        var nol = this.nextOpenList;
+        var no = this.searchSubnodes("title", nol[0]);
+        if (no != null) {
+            no.openSequence(nol);
+        } else if ($debug) {
+            Debug.warn("invalid element in open sequence %w\n", nol[0]);
+        }
+        canvas.loadcounter--;
+        if ($debug) Debug.warn('loaded', nol[0], canvas.loadcounter);
+    </method>
+
     <method name="openChildren" args="o">
-        if (this.children.itemlist.subviews.length > 0) {
-            // Debug.write('doOpenChildren', this, o, this.children.itemlist.subviews);
+        if (this.itemlist.subviews.length > 0) {
+            // Debug.write('doOpenChildren', this, o, this.itemlist.subviews);
             var item_hgt = this.item.height;
 
-            this.itemlist.childlayout.setAttribute('hgt', item_hgt);
+            var layout = this.itemlist.childlayout;
+            layout.setAttribute('hgt', item_hgt);
             if (o) {
-                this.itemlist.childlayout.setAttribute('spacing', -item_hgt);
-                this.itemlist.childlayout.setAttribute('inset', -item_hgt);
+                layout.setAttribute('spacing', -item_hgt);
+                layout.setAttribute('inset', -item_hgt);
                 this.children.setAttribute('visible', true);
-                this.itemlist.childlayout.doOpen();
+                layout.doOpen();
             } else {
-                this.itemlist.childlayout.doClose();
+                layout.doClose();
             }
         }
     </method>
@@ -150,16 +158,27 @@
     <method name="openSequence" args="seq">
         if (seq[0] == this.title) {
             // first, open self
-            this.header.open();
+            if (! this.open) {
+                this.header.open();
+            } else {
+                // do the action even if we're opened...
+                this.header.doaction();
+            }
             if (seq.length > 1) {
-                this.nextOpenList = seq.splice(1,seq.length - 1);
+                this.nextOpenList = seq.splice(1);
+                if (this.dataloaded) {
+                    // data loaded already, search children now.
+                    this.searchChildren();
+                }
             }
         }
     </method>
-    
+
     <view name="itemlist" width="${classroot.width}" placement="children" >
         <simplelayout name="childlayout" spacing="-20">
             <attribute name="hgt" value="0" />
+            <attribute name="animateOpen" value="null"/>
+            <attribute name="animateClose" value="null"/>
 
             <method name="doOpen">
                 if (this.animateOpen == null) {
@@ -167,17 +186,13 @@
                 }
                 this.animateOpen.doStart();
             </method>
-            
+
             <method name="doClose">
                 if (this.animateClose == null) {
                     this.animateClose = new lz.closeanimator(this, { item: classroot });
                 }
                 this.animateClose.doStart();
             </method>
-            
-            <attribute name="animateOpen" value="null"/>
-            <attribute name="animateClose" value="null"/>
-            
         </simplelayout>
     </view>
     <itembutton name="header" level="$once{classroot.level}"
@@ -187,14 +202,14 @@
   <!-- ItemButton class the visible portion of navButtons -->
   <class name="itembutton" placement="item" datapath="."
     onmouseover="background.setAttribute('frame', 2)"
-    onmouseout="showUp(null)"
+    onmouseout="showUp()"
     onmousedown="background.setAttribute('frame', 3)"
-    onmouseup="showUp(null)" clickable="true">
+    onmouseup="showUp()" clickable="true">
 
     <attribute name="level" type="number"/>
     <attribute name="text" type="string"/>
     <attribute name="isleaf" value="false"/>
-    
+
     <event name="onopendone"/>
 
     <method name="largetext">
@@ -202,17 +217,17 @@
         label.setAttribute("fgcolor", 0xffffff);
         label.setAttribute("fontsize", 13);
     </method>
-    
+
     <method name="smalltext">
         icon.setAttribute("y", 5);
         label.setAttribute("fgcolor", 0xd4dcec);
         label.setAttribute("fontsize", 11);
     </method>
-    
+
     <handler name="ondata">
         var dp = this.datapath;
 
-        this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
+        this.setAttribute("isleaf", !dp.p.hasChildNodes());
 
         var tagtype = dp.xpathQuery("name()");
         this.background.setAttribute('resource', tagtype + "_btn");
@@ -228,65 +243,73 @@
         }
     </handler>
 
-    <handler name="onopen" reference="classroot">
-        this.doaction(null);
-    </handler>
-    <method name="doaction" args="v">  <![CDATA[
+    <handler name="onopen" reference="classroot" method="doaction"/>
+    <method name="doaction" args="v=null"><![CDATA[
         var dp = this.datapath;
         var autoselect = dp.xpathQuery("@autoselect");
         if (autoselect == "true") {
-            if (classroot.itemlist.subviews.length > 0 && 
-                'open' in classroot.itemlist.subviews[0].header)
-                    classroot.itemlist.subviews[0].header.open();
+            var firstitem = classroot.itemlist.subviews[0];
+            if (firstitem is lz.menubutton) {
+                firstitem.header.open();
+            }
         } else {
             var action = dp.xpathQuery("@action");
-            var runtime = dp.xpathQuery("@runtime");
-            if (typeof runtime == "undefined")
-                runtime = $runtime;
+            var runtime = dp.xpathQuery("@runtime") || $runtime;
             var src = dp.xpathQuery("@src");
             var tagline = dp.xpathQuery("@text");
             var title = dp.xpathQuery("@title");
-              if (action=='popup'){
+            if (action == 'popup') {
                 var popup = dp.xpathQuery("@popup");
                 var target = dp.xpathQuery("@target");
-                var popwidth = dp.xpathQuery("@width");
-                var popheight = dp.xpathQuery("@height");
-                if(typeof popwidth == 'undefined') popwidth = 860;
-                if(typeof popheight == 'undefined') popheight = 600;
+                var popwidth = dp.xpathQuery("@width") || 860;
+                var popheight = dp.xpathQuery("@height") || 600;
                 if (target == null) target = escape(popup + runtime);
+
+                var url = label.formatToString("loading.jsp?src=%s&lzr=%s&lzt=html", popup, runtime);
+                var features = label.formatToString("scrollbars=yes,width=%s,height=%s", popwidth, popheight);
                 if ($runtime == 'dhtml') {
-                    lz.Browser.loadURL("loading.jsp?src=" + popup + "&lzr=" + runtime + "&lzt=html", target, "scrollbars=yes,width=" + popwidth + ",height=" + popheight);
+                    lz.Browser.loadURL(url, target, features);
                 } else {
-                    lz.Browser.loadJS('window.open("loading.jsp?src=' + popup + '&lzr=' + runtime + '&lzt=html", "' + target + '", "scrollbars=yes,width=' + popwidth + ',height=' + popheight + '")');
+                    var js = label.formatToString("window.open('%s', '%s', '%s')", url, target, features);
+                    lz.Browser.loadJS(js);
                 }
                 if (src != null){
-                  lz.Browser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
-                                    '&title=' + title + '&lzr=' + runtime, 'content');
+                    var url = label.formatToString("content.jsp?src=%s&tag=%s&title=%s&lzr=%s", src, tagline, title, runtime);
+                    browser.loadURL(url);
                 }
-              } else if (action =='popupexternal') {
-                var jsOpenStr = "window.open('" + src + "'," 
-                    + "'" + target + "'," + 
-                    "'scrollbars=yes,resizable=yes,toolbar=yes,location=yes,menubar=yes,width=" + popwidth + ",height=" + popheight + "')";
-                lz.Browser.loadJS(jsOpenStr); 
-                
-              } else {
-                if (title ==null){
-                   title = classroot.title;
+            } else if (action =='popupexternal') {
+                var features = label.formatToString("scrollbars=yes,resizable=yes,toolbar=yes,location=yes,menubar=yes,width=%s,height=%s", popwidth, popheight);
+                var js = label.formatToString("window.open('%s', '%s', '%s')", src, target, features);
+                lz.Browser.loadJS(js);
+            } else {
+                if (title == null) {
+                    title = classroot.title;
                 }
-                lz.Browser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
-                                  '&title=' + title + '&action=' + action + '&lzr=' + runtime, 
-                                  (action=='source') ? 'source' : 'content');
-           }
+                var url = label.formatToString("content.jsp?src=%s&tag=%s&title=%s&action=%s&lzr=%s", src, tagline, title, action, runtime);
+                if (action != 'source') {
+                    browser.loadURL(url);
+                } else {
+                    // load source into a popup
+                    lz.Browser.loadURL(url, action);
+                }
+            }
         }
-        ]]>
-    </method>
-    
-    <handler name="onclick" method="open"/>
-    <method name="open" args="v">
-      <![CDATA[
-        var dp = this.datapath;
-        var tagtype = dp.xpathQuery("name()");
+    ]]></method>
 
+    <handler name="onclick">
+        var p = this.parent;
+        var bookmark = [];
+        while (p.title) {
+          bookmark.unshift(p.title);
+          p = p.parent;
+        }
+        var newbookmark = bookmark.join('|');
+        if (newbookmark != canvas.lastbookmark) {
+          if ($debug) Debug.warn('new bookmark:', newbookmark, this);
+          lz.embed.setCanvasAttribute('bookmark', newbookmark, true);
+        }
+    </handler>
+    <method name="open" args="v=null"><![CDATA[
       classroot.changeFocus(null);
 
       // only open subitems if there are
@@ -295,14 +318,13 @@
         // if ( !classroot.open ) -- this did not completely work, so just always open
         classroot.setAttribute("open", true);
       }
-      this.doaction(null);
-      ]]>
-    </method>
+      if ($debug) Debug.warn('open', this.parent.title, canvas.loadcounter);
 
-    <handler name="onopen" reference="classroot">
-        this.showUp(null);
-    </handler>
-    <method name="showUp" args="v">
+      this.doaction();
+    ]]></method>
+
+    <handler name="onopen" reference="classroot" method="showUp"/>
+    <method name="showUp" args="v=null">
         background.setAttribute('frame', classroot.open ? 4 : 1);
         // Only toggle arrow if there are subnodes
         if (this.datapath.getNodeCount()) {
@@ -314,10 +336,12 @@
 
     <view name="icon" resource="icon" y="9" stretches="both" width="11" height="11"
         x="${classroot.width - this.width - 6 }" />
-    <text name="label" x="${6 + classroot.level*7}" valign="middle" 
-          fontstyle="bold" font="helvetica,sans-serif" fgcolor="#ffffff" 
-        fontsize="13" width="${parent.width-x}" text="${classroot.text}"/>
+    <defaulttext name="label" x="${6 + classroot.level*7}" valign="middle"
+        fontstyle="bold" fontsize="13"
+        width="${parent.width-x}" text="${classroot.text}"/>
   </class>
+
+  <class name="defaulttext" extends="text" font="helvetica,sans-serif" fgcolor="#ffffff"/>
 
   <class name="navbutton" extends="menubutton" width="${immediateparent.width}">
       <attribute name="title" value="$path{'@name'}"/>
@@ -325,43 +349,98 @@
 
   <!-- APPLICATION -->
   <!-- navigation bar and classes -->
-  <view width="200" height="$once{canvas.height}" > 
+  <view width="200" height="$once{canvas.height}" >
     <view x="-15" resource="navbg"/>
     <basebutton resource="logobtn" x="2" y="6"
         onclick="lz.Browser.loadURL('http://www.openlaszlo.org', '_blank')"/>
     <view x="10" y="570" layout="axis:y" >
-      <text resize="true" fgcolor="white" font="verdana,sans-serif" fontsize="10" text="${'Version: ' + canvas.version + ' (' + canvas.runtime + ')'}" />
+      <defaulttext resize="true" fontsize="10" text="${'Version: ' + canvas.version + ' (' + canvas.runtime + ')'}" />
       <view>
-        <text fgcolor="white" font="verdana,sans-serif" fontsize="10" text="${'Build: ' + canvas.lpsbuild}"/>
+        <defaulttext fontsize="10" width="190" text="${'Build: ' + canvas.lpsbuild}"/>
         <simplelayout axis="x"/>
       </view>
     </view>
   </view>
 
-  <view width="200" y="42" height="${menu.height +4}">
+  <view name="treecontainer" width="200" y="42">
+    <simplelayout/>
+    <radiogroup layout="axis:x;">
+        <handler name="oninit">
+            this.selectItem(canvas.runtime);
+        </handler>
+        <handler name="onvalue" args="runtime">
+            <![CDATA[
+            var url = lz.Browser.getURL();
+            if (! url) return;
+            var lzurl = new LzURL(url);
+            var lzr = 'lzr=' + canvas.runtime;
+            if (lzurl.query && lzurl.query.indexOf(lzr) > -1) {
+              lzurl.query = lzurl.query.replace(lzr, 'lzr=' + runtime);
+            } else if (lzurl.file && lzurl.file.indexOf('.html') > -1) {
+              lzurl.file = lzurl.file.replace('.html', '.html?lzr=' + runtime);
+            } else {
+              lzurl.file = 'index.html?lzr=' + runtime;
+            }
+            if (lzurl.fragment) {
+                lzurl.fragment = unescape(lzurl.fragment);
+            }
+            var newurl = lzurl.toString();
+            Debug.warn(newurl, url, lzurl);
+            if (newurl != url) {
+              lz.Browser.loadURL(newurl);
+            }
+            //Debug.warn('onruntime', newurl, href, runtime);
+            ]]>
+        </handler>
+        <radiobutton>dhtml</radiobutton>
+        <radiobutton>swf8</radiobutton>
+        <radiobutton>swf10</radiobutton>
+    </radiogroup>
     <basetree name="menu" datapath="navdata:/menu"
         showroot="false" x="2" y="2"
         layout="spacing:-6">
-        <!-- note spacing is -6, since the shadonw is 6 pixels high -->
-      <method name="dataBound">
-        // this is how we restore the state of the app from an incoming URL, 
-        // this is always provided by the JSP wrappers 
-        if (typeof(global.bookmark) != 'undefined'){
-          var restore = global.bookmark.split('|');
-          if (restore.length > 0) {
-              if (this[restore[0]]) this[restore[0]].openSequence(restore);
+        <!-- note spacing is -6, since the shadow is 6 pixels high -->
+      <method name="dataBound" args="ignore=null">
+        // this is how we restore the state of the app from an incoming URL,
+        // this is always provided by the JSP wrappers
+        var bookmark = canvas.bookmark;
+        if (! bookmark) return;
+        if (bookmark.length > 0) {
+          var no = this.searchSubnodes("title", bookmark[0]);
+          if (no != null) {
+            if (canvas.loadcounter == 0) {
+              canvas.loadcounter = bookmark.length - 1;
+              if ($debug) Debug.info('dataBound', bookmark, canvas.loadcounter);
+              no.openSequence(bookmark);
+            }
           }
         }
       </method>
+      <handler name="onbookmark" reference="canvas" method="dataBound"/>
       <navbutton width="160" level="0">
       </navbutton>
     </basetree>
   </view>
+  <html id="browser" src="coverpages/welcome/" history="false" x="200" width="${canvas.width - this.x}" height="100%">
+    <handler name="oninit" args="ignore=null">
+        this.bringToFront();
+    </handler>
+    <method name="loadURL" args="url">
+      <![CDATA[
+        this.url = url;
+        url = url.toString();
+        if (url !== this.src) {
+          this.setAttribute('src', url);
+          if ($debug) Debug.info('loading', url, canvas.loadcounter);
+        }
+      ]]>
+    </method>
+  </html>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

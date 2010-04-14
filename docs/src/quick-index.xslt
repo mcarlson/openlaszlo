@@ -25,8 +25,8 @@
         <p>
           If this is the first time you've run OpenLaszlo or you are
           looking for an introduction, please try the OpenLaszlo Explorer in <a
-          href="laszlo-explorer/index.jsp?lzr=swf8">Flash</a> or <a
-          href="laszlo-explorer/index.jsp?lzr=dhtml">DHTML</a>.
+          href="laszlo-explorer/index.html?lzr=swf10">Flash</a> or <a
+          href="laszlo-explorer/index.html?lzr=dhtml">DHTML</a>.
         </p>
 
         <p>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<project name="laszlo-explorer" default="build" basedir=".">
+  <target name="build" description="Recompile the SOLO laszlo-explorer app">
+     <sequential>
+       <exec executable="../WEB-INF/lps/server/bin/lzc" >
+         <arg value="--runtime=swf10" />
+         <arg value="explore-nav.lzx" />
+       </exec>
+       <exec executable="../WEB-INF/lps/server/bin/lzc" >
+         <arg value="--runtime=swf8" />
+         <arg value="explore-nav.lzx" />
+       </exec>
+       <exec executable="../WEB-INF/lps/server/bin/lzc" >
+         <arg value="--runtime=dhtml" />
+         <arg value="explore-nav.lzx" />
+       </exec>
+     </sequential>
+  </target>
+</project>
