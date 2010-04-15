@@ -307,12 +307,7 @@ lz.embed = {
             ,options: options
         };
 
-        if (lz.embed[properties.id]) alert('Warning: an OpenLaszlo application with the id: ' + properties.id + ' already exists.'); 
-        if (lz.embed.__hasdhtml) {
-            // create iframe for the app to live in
-            var id = lz.embed.iframemanager.create(this, properties.id, false, lz.embed.__propcache.appenddiv);
-            lz.embed.iframemanager.setSrc
-        }
+        if (lz.embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
         // Add entry for this application 
         var app = lz.embed[properties.id] = lz.embed.applications[properties.id] = { 
             runtime: 'dhtml'
