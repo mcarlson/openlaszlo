@@ -360,7 +360,7 @@ public class LzTextSprite extends LzSprite {
 
         override public function setWidth( w:* ):void {
             super.setWidth(w);
-            if (w) {
+            if (w != null) {
                 this.textfield.width = w;
                 this.__handleScrollEvent();
             }
@@ -368,7 +368,7 @@ public class LzTextSprite extends LzSprite {
 
         override public function setHeight( h:* ):void {
             super.setHeight(h);
-            if (h) {
+            if (h != null) {
                 this.textfield.height = h;
                 this.__handleScrollEvent();
             }
