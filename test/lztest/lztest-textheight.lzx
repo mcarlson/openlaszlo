@@ -80,12 +80,13 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
 
     <view name="inputtexts">
         <simplelayout axis="y" spacing="2" />
-        <inputtext  width="200" id="it1" fgcolor="red">A</inputtext>
-        <inputtext  width="200" fontsize="28" fgcolor="red" id="it2">B</inputtext>
-        <inputtext  width="200" fontsize="36" fgcolor="red" id="it3" >C</inputtext>
-        <inputtext  fontsize="28" resize="false" fgcolor="red" id="it4">D</inputtext>
+        <inputtext  width="200" bgcolor="#cccccc" id="it1" fgcolor="red">A</inputtext>
+        <inputtext  width="200" bgcolor="#cccccc" fontsize="28" fgcolor="red" id="it2">B</inputtext>
+        <inputtext  width="200" bgcolor="#cccccc" fontsize="36" fgcolor="red" id="it3" >C</inputtext>
+        <inputtext  fontsize="28" bgcolor="#cccccc" resize="false" fgcolor="red" id="it4">D</inputtext>
         <view>
-            <inputtext  fontsize="20" fgcolor="red" id="it5" multiline="true">E<br/>F</inputtext>
+            <inputtext  fontsize="20" fgcolor="red" id="it5" multiline="true"><pre>E
+F</pre></inputtext>
         </view>
         <inputtext  fontsize="28" fgcolor="red" id="it6">D</inputtext>
         <inputtext multiline="true" id="it7" width="350"/>
@@ -175,13 +176,19 @@ textSizeSuite.testInputtextHeight = function () {
     LzTestManager.assertWithin(17, tempty.height, fudgefactor, "tempty.height");
     LzTestManager.assertWithin(30, thepost.height, fudgefactor, "thepost height");
     // multiline/fixed: height is the size, the other measures reflect the size of the content (which wraps)
-    LzTestManager.assertWithin(82, c.sprite.getTextfieldHeight(), fudgefactor, "inputtext c sprite.getTextfieldHeight()");
-    LzTestManager.assertWithin(82, c.getTextHeight(), fudgefactor, "inputtext c getTextHeight()");
+    var extramsg = '';
+    if ($dhtml) {
+        if (lz.embed.browser.isFirefox) {
+            extramsg = 'EXPECTED (96 in Firefox DHTML due to pre-wrap differences): ';
+        }
+    }
+    LzTestManager.assertWithin(82, c.sprite.getTextfieldHeight(), fudgefactor, extramsg + "inputtext c sprite.getTextfieldHeight()");
+    LzTestManager.assertWithin(82, c.getTextHeight(), fudgefactor, extramsg + "inputtext c getTextHeight()");
     LzTestManager.assertWithin(40, c.height, fudgefactor, "inputtext c height");
     // multiline/resize: all values should reflect the size of the content (which wraps)
-    LzTestManager.assertWithin(82, d.sprite.getTextfieldHeight(), fudgefactor, "inputtext d getTextfieldHeight()");
-    LzTestManager.assertWithin(82, d.getTextHeight(), fudgefactor, "inputtext d getTextHeight()");
-    LzTestManager.assertWithin(82, d.height, fudgefactor, "inputtext d height");
+    LzTestManager.assertWithin(82, d.sprite.getTextfieldHeight(), fudgefactor, extramsg + "inputtext d getTextfieldHeight()");
+    LzTestManager.assertWithin(82, d.getTextHeight(), fudgefactor, extramsg + "inputtext d getTextHeight()");
+    LzTestManager.assertWithin(82, d.height, fudgefactor, extramsg + "inputtext d height");
     // single line/fixed: content should be 1 line high, because it does not wrap
     LzTestManager.assertWithin(17, g.sprite.getTextfieldHeight(), fudgefactor, "inputtext g sprite.getTextfieldHeight()");
     LzTestManager.assertWithin(17, g.getTextHeight(), fudgefactor, "inputtext g getTextHeight()");
@@ -206,7 +213,7 @@ textSizeSuite.testTextWidth = function () {
     LzTestManager.assertWithin(350, t7.width, fudgefactor, "multiline7 text.width");
     LzTestManager.assertWithin(100, t8.width, fudgefactor, "text8 width");
     LzTestManager.assertWithin(100, t9.width, fudgefactor, "text9 width");
-    LzTestManager.assertWithin(88, t10.width, fudgefactor, "text10 width");
+    LzTestManager.assertWithin(88, t10.width, fudgefactor, "EXPECTED DHTML: text10 width");
     LzTestManager.assertWithin(0, tempty.width, fudgefactor, "tempty.width");
     LzTestManager.assertWithin(110, thepost.width, fudgefactor, "thepost.width");
     LzTestManager.assertWithin(350, t11.width, fudgefactor, "multiline text 12 width");
@@ -220,7 +227,7 @@ textSizeSuite.testInputtextWidth = function () {
     LzTestManager.assertWithin(26, it4.width, fudgefactor, "inputtext4 width");
     LzTestManager.assertWithin(17, it5.width, fudgefactor, "multiline inputtext5 width");
     LzTestManager.assertWithin(it5.parent.width, it5.width, fudgefactor, "multiline inputtext5 width");
-    LzTestManager.assertWithin(70, it6.width, fudgefactor, "inputtext6 width");
+    LzTestManager.assertWithin(70, it6.width, fudgefactor, "EXPECTED (inputtext no longer resizes more than once): inputtext6 width");
 
     LzTestManager.assertWithin(350, it7.width, fudgefactor, "multiline7 inputtext width");
 }
@@ -237,7 +244,7 @@ textSizeSuite.addTest(textSizeSuite.testInputtextWidth);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
