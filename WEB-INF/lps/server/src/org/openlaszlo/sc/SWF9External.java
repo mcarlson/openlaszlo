@@ -1122,9 +1122,6 @@ public class SWF9External {
         }
       }
 
-      // clear out any previously compiled object file
-      new File(outfilename).delete();
-
       mFlexTime = System.currentTimeMillis();
 
       // Call the Flex compiler, either in its own exec'ed process or in a thread 
