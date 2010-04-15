@@ -194,7 +194,7 @@ public abstract class CommonGenerator extends GenericVisitor {
   static Compiler.Parser fragmentParser = (new Compiler.Parser());
 
   static SimpleNode parseFragment(String code) {
-    if (code.equals("\"\"") || code == null) {
+    if (code == null || code.equals("\"\"") ) {
         code = "";
     }
     // Put the statements in a function body, so they are not parsed

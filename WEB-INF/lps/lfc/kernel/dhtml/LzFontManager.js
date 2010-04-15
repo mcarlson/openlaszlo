@@ -80,7 +80,8 @@ LzFontManager.isFontLoaded = function(sprite, fontname, fontstyle, fontweight) {
 
         // Create measurement div and measure its initial size
         var style = 'font-family:' + fontname + ';font-style:' + fontstyle + ';font-weight:' + fontweight + ';width:auto;height:auto;';
-        var mdiv = sprite.__createMeasureDiv('lzswftext', style, 'Yq_gy"9;ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=abcdefghijklmnopqrstuvwxyz');
+        var mdiv = LzFontManager.__createMeasureDiv('lzswftext', style);
+        LzFontManager.__setTextContent(mdiv, 'div', 'Yq_gy"9;ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=abcdefghijklmnopqrstuvwxyz');
         mdiv.style.display = 'inline';
         var width = mdiv.clientWidth;
         var height = mdiv.clientHeight;
@@ -135,7 +136,7 @@ LzFontManager.__measurefontdiv = function(mdiv, width, height, url){
     if (this.__fontloadstate.counter != 0) return;
 
     // Clear text measurement cache once
-    LzTextSprite.prototype.__clearMeasureCache();
+    this.__clearMeasureCache();
 
     // Call back each sprite
     var callbacks = this.__fontloadcallbacks;
@@ -146,4 +147,106 @@ LzFontManager.__measurefontdiv = function(mdiv, width, height, url){
         }
     }
     delete this.__fontloadcallbacks;
+}
+
+LzFontManager.__sizecache = {counter: 0}
+LzFontManager.__rootdiv = null;
+LzFontManager.__clearMeasureCache = function() {
+  this.__sizecache = {counter: 0}
+  if (LzSprite.quirks.ie_leak_prevention) {
+    LzTextSprite.prototype.__cleanupdivs();
+  }
+  if (this.__rootdiv) { this.__rootdiv.innerHTML = ''; }
+}
+
+// create container for text size cache
+LzFontManager.__createContainerDiv = function() {
+    var textsizecache = document.createElement('div');
+    lz.embed.__setAttr(textsizecache, 'id', 'lzTextSizeCache');
+    document.body.appendChild(textsizecache);
+    this.__rootdiv = document.getElementById('lzTextSizeCache');
+}
+
+// Compute the width, height or lineheight of a string with a specific style
+LzFontManager.getSize = function(dimension, className, style, tagname, string){
+    // Full key always includes style and text, even the sample text
+    // used to measure line height
+    var cacheFullKey = className + "/" + style + "{" + string + "}";
+    var __sizecache = this.__sizecache;
+    var cv = __sizecache[cacheFullKey];
+    if (cv && (dimension in cv)) {
+        return cv;
+    }
+    // Otherwise, compute from scratch
+    if ((__sizecache.counter > 0) && ((__sizecache.counter % this.__sizecacheupperbound) == 0)) {
+        this.__clearMeasureCache();
+        cv = null;
+    }
+    if (! cv) {
+        cv = __sizecache[cacheFullKey] = {};
+    }
+    // [2010-04-14 max] this.__setTextContent conditionalizes setting the 
+    // content based on node type - but we're still using plain old <divs/> for 
+    // measurement...
+    var divCacheKey = className + "/" + style +  "/" + tagname;
+    var mdiv = __sizecache[divCacheKey];
+    if (! mdiv) {
+        var mdiv = this.__createMeasureDiv(className, style);
+        // store measurement div to reuse later...
+        __sizecache[divCacheKey] = mdiv;
+    }
+    this.__setTextContent(mdiv, tagname, string);
+    mdiv.style.display = 'inline';
+    // NOTE: clientHeight for both height and lineheight
+    cv[dimension] = (dimension == 'width') ? mdiv.clientWidth : mdiv.clientHeight;
+    mdiv.style.display = 'none';
+    //   Debug.debug("%w %w %d", this, cacheFullKey, lineHeight);
+    return cv;
+}
+
+LzFontManager.__createMeasureDiv = function(className, style) {
+  var tagname = 'div';
+  var __sizecache = this.__sizecache;
+  if (LzSprite.prototype.quirks['text_measurement_use_insertadjacenthtml']) {
+    var html = '<' + tagname + ' id="testSpan' + __sizecache.counter + '"';
+    html += ' class="' + className + '"';
+    html += ' style="' + style + '">';
+    html += '</' + tagname + '>';
+    this.__rootdiv.insertAdjacentHTML('beforeEnd', html);
+    var mdiv = document.all['testSpan' + __sizecache.counter];
+    if (LzSprite.prototype.quirks.ie_leak_prevention) {
+      LzTextSprite.prototype.__divstocleanup.push(mdiv);
+    }
+  } else {
+    var mdiv = document.createElement(tagname)
+    // NOTE: [2009-03-25 ptw] setAttribute needs the real attribute
+    // name, i.e., `class` not `classname`!
+    lz.embed.__setAttr(mdiv, 'class', className);
+    lz.embed.__setAttr(mdiv, 'style', style);
+    this.__rootdiv.appendChild(mdiv);
+  } 
+  __sizecache.counter++;
+  return mdiv;
+}
+
+LzFontManager.__setTextContent = function(mdiv, tagname, string) {
+  // NOTE: [2009-03-29 ptw] For now, DHTML does not support HTML in
+  // input text, so we must measure accordingly
+  switch (tagname) {
+    case 'div':
+      mdiv.innerHTML = string;
+      break;
+    case 'input': case 'textarea':
+      // IE only supports innerText, FF only supports textContent.
+      if (LzSprite.prototype.quirks['text_content_use_inner_text']) {
+        mdiv.innerText = string;
+      } else {
+        mdiv.textContent = string;
+      }
+      break;
+    default:
+      if ($debug) {
+        Debug.error("Unknown tagname: %w", tagname);
+      }
+  }
 }

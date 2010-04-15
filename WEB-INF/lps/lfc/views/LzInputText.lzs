@@ -160,13 +160,17 @@ function inputtextevent (eventname:String, value:* = null) :void {
     } else if (eventname == 'onchange') {
         //multiline resizable fields adjust their height
         var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
+        // Must use instead of local property so sprite can normalize newlines
         this.text = isprite.getText();
-        if ( this.multiline && 
-             !this.hassetheight && 
-             this.height != isprite.getTextfieldHeight() ) {
-            this.$lzc$set_height(isprite.getTextfieldHeight());
+
+        // Update the height if we're multiline and don't have a set height
+        if (this.multiline && !this.hassetheight) {
+            var textheight = this.getTextHeight();
+            if (this.height != textheight) {
+                this.updateHeight(textheight);
+            }
         }
-        if (this.ontext.ready) this.ontext.sendEvent(value);
+        if (this.ontext.ready) this.ontext.sendEvent(this.text);
     } else if (eventname == 'onblur') {
         this._focused = false;
         if (lz.Focus.getFocus() === this) {

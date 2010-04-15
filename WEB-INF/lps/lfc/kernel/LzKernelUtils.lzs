@@ -16,6 +16,7 @@ class LzKernelUtils {
      * and if debugging is on, a warning will be issued.
      */
     public static function CSSDimension (value, units:String='px') {
+        if (value == 0) return value;
         var result = value;
         if (isNaN(value)) {
             // Don't perturb % values

@@ -115,7 +115,7 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
         // is placed.
         var ffoxdiv = document.createElement('div');
         ffoxdiv.style.backgroundColor = 'white';
-        ffoxdiv.style.width = '0px';
+        ffoxdiv.style.width = 0;
         this.__LZclickcontainerdiv.appendChild(ffoxdiv);
         ffoxdiv.appendChild(this.__LZinputclickdiv);
       } else {
@@ -130,18 +130,20 @@ LzInputTextSprite.prototype.__createInputText = function(t) {
 }
 
 LzInputTextSprite.prototype.__createInputDiv = function(type) {
+    var tagname = 'input';
     if (type === 'password') {
         this.multiline = false;
-        this.__LzInputDiv = document.createElement('input');
+        this.__LzInputDiv = document.createElement(tagname);
         this.__LZdiv.className = 'lzinputtextcontainer';
         lz.embed.__setAttr(this.__LzInputDiv, 'type', 'password');
     } else if (type === 'multiline') {
+        tagname = 'textarea';
         this.multiline = true;
-        this.__LzInputDiv = document.createElement('textarea');
+        this.__LzInputDiv = document.createElement(tagname);
         this.__LZdiv.className = 'lzinputtextmultilinecontainer';
     } else {    
         this.multiline = false;
-        this.__LzInputDiv = document.createElement('input');
+        this.__LzInputDiv = document.createElement(tagname);
         this.__LZdiv.className = 'lzinputtextcontainer';
         lz.embed.__setAttr(this.__LzInputDiv, 'type', 'text');
     }
@@ -166,6 +168,7 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
         lz.embed.__setAttr(this.__LzInputDiv, 'name', this.owner.name);
     }
     this.scrolldiv = this.__LzInputDiv;
+    this.scrolldivtagname = tagname;
     this.scrolldiv.owner = this;
     // NOTE [2009-09-21 ptw] (LPP-8246) Multiline input texts must
     // always have scrolling on
@@ -726,8 +729,27 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             var v = d.value;
             if (v != sprite.text) {
                 sprite.text = v;
-                // Text changed, clear this cache!!!
-                sprite.__updatefieldsize();
+                if (sprite.multiline) {
+                    // When resizing the div to it's to scrollHeight,
+                    // in some browsers there is still a visual
+                    // artifact, a "jump", when you add a new line to
+                    // the end of the field. However that seems to be
+                    // the state of the art right now.
+                    if (sprite.quirks['forcemeasurescrollheight']) {
+                        // NOTE: To get a reliable value for
+                        // scrollheight in IE7, first set the field
+                        // height to zero before looking at
+                        // style.scrollheight.
+                        // Also, Safari needs height forced to zero or else
+                        // it leaves text scrolled improperly.
+                        d.style.height = 0;
+                        d.scrollTop = 0;
+                        // restore to old height
+                        d.style.height = sprite._h;
+                    }
+                }
+
+                // height will be reset
                 view.inputtextevent('onchange', v);
             }
             if (quirks.autoscroll_textarea && eventname=='onkeydown' && d.selectionStart == v.length) {

@@ -252,10 +252,8 @@ var LzSprite = function(owner, isroot) {
             LzSprite.__mouseActivationDiv = div;
         }
 
-        // create container for text size cache
-        var textsizecache = document.createElement('div');
-        lz.embed.__setAttr(textsizecache, 'id', 'lzTextSizeCache');
-        document.body.appendChild(textsizecache);
+        // create container div for text size cache
+        LzFontManager.__createContainerDiv();
     } else {
         this.__LZdiv = document.createElement('div');
         this.__LZdiv.className = 'lzdiv';
@@ -312,13 +310,13 @@ LzSprite.__defaultStyles = {
     lzdiv: {
         position: 'absolute'
         ,borderStyle: 'solid'
-        ,borderWidth: '0px'
+        ,borderWidth: 0
     },
     lzclickdiv: {
         position: 'absolute'
         ,borderStyle: 'solid'
         ,borderColor: 'transparent'
-        ,borderWidth: '0px'
+        ,borderWidth: 0
     },
     lzcanvasdiv: {
         position: 'absolute'
@@ -351,14 +349,14 @@ LzSprite.__defaultStyles = {
         position: 'absolute',
         overflow: 'hidden',
         // To create swf textfield 'gutter' and position input element correctly
-        paddingTop: '0px',
+        paddingTop: 0,
         paddingRight: '3px',
         paddingBottom: '4px',
         paddingLeft: '1px'
     },
     lzinputtextcontainer_click: {
         position: 'absolute',
-        paddingTop: '0px',
+        paddingTop: 0,
         paddingRight: '3px',
         paddingBottom: '4px',
         paddingLeft: '1px'
@@ -387,8 +385,8 @@ LzSprite.__defaultStyles = {
         whiteSpace: 'normal',
         position: 'absolute',
         textAlign: 'left',
-        textIndent: '0px',
-        letterSpacing: '0px',
+        textIndent: 0,
+        letterSpacing: 0,
         textDecoration: 'none'
     },
     lzswftext: {
@@ -401,8 +399,8 @@ LzSprite.__defaultStyles = {
         // To match swf font metrics
         lineHeight: '1.2em',
         textAlign: 'left',
-        textIndent: '0px',
-        letterSpacing: '0px',
+        textIndent: 0,
+        letterSpacing: 0,
         textDecoration: 'none',
         // CSS3 browsers, for swf compatibilty
         wordWrap: 'break-word',
@@ -420,8 +418,8 @@ LzSprite.__defaultStyles = {
         position: 'absolute',
         // There is no scrolling of input elements
         textAlign: 'left',
-        textIndent: '0px',
-        letterSpacing: '0px',
+        textIndent: 0,
+        letterSpacing: 0,
         textDecoration: 'none'
     },
     lzswfinputtext: {
@@ -438,8 +436,8 @@ LzSprite.__defaultStyles = {
         // To match swf font metrics
         lineHeight: '1.2em',
         textAlign: 'left',
-        textIndent: '0px',
-        letterSpacing: '0px',
+        textIndent: 0,
+        letterSpacing: 0,
         textDecoration: 'none',
         // CSS3 browsers, for swf compatibilty
         wordWrap: 'break-word',
@@ -462,14 +460,15 @@ LzSprite.__defaultStyles = {
         // To match swf font metrics
         lineHeight: '1.2em',
         textAlign: 'left',
-        textIndent: '0px',
-        letterSpacing: '0px',
+        textIndent: 0,
+        letterSpacing: 0,
         textDecoration: 'none',
         // CSS3 browsers, for swf compatibilty
         wordWrap: 'break-word',
         MsWordBreak: 'break-all',
         outline: 'none',
-        resize: 'none'
+        resize: 'none',
+        whiteSpace: 'pre-wrap'
     },
     lztextlink: {
         cursor: 'pointer'
@@ -481,7 +480,7 @@ LzSprite.__defaultStyles = {
         position: 'absolute'
         ,borderStyle: 'solid'
         ,borderColor: 'transparent'
-        ,borderWidth: '0px'
+        ,borderWidth: 0
     },
     lzimg: {
         position: 'absolute',
@@ -618,6 +617,7 @@ LzSprite.quirks = {
     ,show_img_before_changing_size: false
     ,use_filter_for_dropshadow: false
     ,keyboardlistentotop_in_frame: false
+    ,forcemeasurescrollheight: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -760,6 +760,8 @@ LzSprite.__updateQuirks = function () {
             quirks['show_img_before_changing_size'] = true;
             // LPP-8399 - use directx filters for dropshadows
             quirks['use_filter_for_dropshadow'] = true;
+            // LPP-8591 when measuring text div scrollheight, need to first set it to zero
+            quirks['forcemeasurescrollheight'] = true;
             capabilities['dropshadows'] = true;
             // Force hasLayout for lzTextSizeCache in IE
             defaultStyles['#lzTextSizeCache'] = {zoom: 1};
@@ -822,6 +824,8 @@ LzSprite.__updateQuirks = function () {
             quirks['prevent_selection'] = true;
             // See LPP-8402
             quirks['container_divs_require_overflow'] = true;
+            // LPP-8591 when measuring text div scrollheight, need to first set it to zero
+            quirks['forcemeasurescrollheight'] = true;
         } else if (browser.isOpera) {
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
@@ -1318,7 +1322,7 @@ LzSprite.prototype.__setBGImage = function (url){
     }
     if (bgurl != null) {
         var y = -this.__cssspriteoffset || 0; 
-        this.__LZimg.style.backgroundPosition = '0px ' + y + 'px';
+        this.__LZimg.style.backgroundPosition = '0 ' + y + 'px';
     }
 }
 
@@ -1672,7 +1676,7 @@ LzSprite.prototype.setX = function ( x ){
     }
 }
 
-LzSprite.prototype.setWidth = function ( w ){
+LzSprite.prototype.setWidth = function ( w ) {
     if (w == null || w < 0 || this.width == w) return;
 
     //Debug.info('setWidth', w);
@@ -1686,7 +1690,7 @@ LzSprite.prototype.setWidth = function ( w ){
         if (quirks.size_blank_to_zero) {
             if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow && ! this.borderwidth) {
                 this.__sizedtozero = true;
-                size = '0px';
+                size = 0;
             }
         }
         this.applyCSS('width', size);
@@ -1738,7 +1742,7 @@ LzSprite.prototype.setHeight = function ( h ){
         if (quirks.size_blank_to_zero) {
             if (this.bgcolor == null && this.source == null && ! this.clip && ! (this instanceof LzTextSprite) && ! this.shadow && ! this.borderwidth) {
                 this.__sizedtozero = true;
-                size = '0px';
+                size = 0;
             }
         }
         this.applyCSS('height', size);
@@ -1802,7 +1806,7 @@ LzSprite.prototype.setBGColor = function ( c ){
         if (this.height != null && this.height < 2) {
             this.setSource(LzSprite.blankimage, true);
         } else if (! this._fontSize) {
-            this.__LZdiv.style.fontSize = '0px';
+            this.__LZdiv.style.fontSize = 0;
         }
     }
     //Debug.info('setBGColor ' + c);
@@ -2903,7 +2907,7 @@ LzSprite.prototype.setBackgroundRepeat = function(backgroundrepeat) {
 LzSprite.prototype.__updateBackgroundRepeat = function() {
     if (this.__LZimg) {
         this.__LZimg.style.backgroundRepeat = this.backgroundrepeat;
-        this.__LZimg.style.backgroundPosition = '0px 0px';
+        this.__LZimg.style.backgroundPosition = '0 0';
         this.__LZimg.width = this.backgroundrepeat ? this.width : this.resourceWidth;
         this.__LZimg.height = this.backgroundrepeat ? this.height : this.resourceHeight;
     }

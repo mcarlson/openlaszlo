@@ -668,12 +668,11 @@ public class LzTextSprite extends LzSprite {
             return twidth;
         }
 
-        // TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
-        public function getTextHeight ( ):Number {
+        public function getLineHeight ( ):Number {
             return this.textfield.textHeight;
         }
 
-        public function getTextfieldHeight ( ) :Number {
+        public function getTextfieldHeight (force=null) :Number {
             var textclip:TextField = this.textfield;
             var tca:String = textclip.autoSize;
             var tcw:Number = textclip.width;

@@ -318,7 +318,7 @@ LzTextSprite.prototype.getTextWidth = function (force){
  * is why we have to add 4 pixels for emulate_flash_font_metrics
  * in the DHTML version of this method).
  */
-LzTextSprite.prototype.getTextfieldHeight = function ( ){
+LzTextSprite.prototype.getTextfieldHeight = function (force){
     var textclip = this.__LZtextclip;
 
     var tca = textclip.autoSize;
@@ -359,9 +359,8 @@ LzTextSprite.prototype.getTextfieldHeight = function ( ){
  * the relationship of textHeight and textfieldHeight:
  * http://livedocs.adobe.com/flash/9.0/ActionScriptLangRefV3/images/text-metrics.jpg
  *
- * TODO [2009-02-27 ptw] (LPP-7832) Rename to get LineHeight
  */
-LzTextSprite.prototype.getTextHeight = function ( ){
+LzTextSprite.prototype.getLineHeight = function ( ){
     if (! this.multiline) {
         return this.__LZtextclip.textHeight;
     } else {

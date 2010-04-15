@@ -31,6 +31,7 @@ import org.openlaszlo.xml.internal.Schema;
 import org.openlaszlo.xml.internal.XMLUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.jdom.Attribute;
+import org.jdom.output.Format;
 import org.jdom.Element;
 import org.jdom.Text;
 import org.jdom.Content;
@@ -1221,6 +1222,10 @@ solution =
         org.jdom.output.XMLOutputter xmloutputter =
             new org.jdom.output.XMLOutputter();
         // strip the <dataset> wrapper
+
+        Format fmt = Format.getRawFormat();
+        fmt.setLineSeparator("\n");
+        xmloutputter.setFormat(fmt);
 
         // If nsprefix is false, remove namespace from elements before
         // serializing, or XMLOutputter puts a "xmlns" attribute on

@@ -266,9 +266,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (!this.hassetheight) {
       var h = tsprite.getTextfieldHeight();
       if (h > 0 && h != this.height) {
-        this.$lzc$set_height(h);
-        // This shouldn't change whether we measure later
-        this.hassetheight = false;
+        this.updateHeight(h);
       }
     }
   }
@@ -720,7 +718,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (! this.isinited) { return; }
     if (this.width == 0 || (this.resize && this.multiline == false)) {
       // single line resizable fields adjust their width to match the text
-      var w = this.getTextWidth();
+      var w = this.tsprite.getTextWidth();
       // only set width if it changed
       if (w != this.width) {
         this.$lzc$set_width (w);
@@ -730,9 +728,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if (!this.hassetheight) {
       var h = this.tsprite.getTextfieldHeight();
       if (h > 0 && h != this.height) {
-        this.$lzc$set_height(h);
-        // This shouldn't change whether we measure later
-        this.hassetheight = false;
+        this.updateHeight(h);
       }
     }
   }
@@ -1025,7 +1021,7 @@ dynamic class LzText extends LzView with LzFormatter {
       } else {
         // if there's text content, measure its width
         if (this.text != null && this.text != '' && this.text.length > 0) {
-          args.width = this.getTextWidth();
+          args.width = tsprite.getTextWidth();
         } else {
           // Input text will have a nonzero default width, so it behaves
           // like HTML input field.
@@ -1042,10 +1038,8 @@ dynamic class LzText extends LzView with LzFormatter {
     //    if  single line, use font line height
     //    else get height from flash textobject.textHeight
     //
-    if (this.hassetheight) {
-        if (args['height'] != null) {
+    if (this.hassetheight && ('height' in args)) {
       this.$lzc$set_height(args.height);
-    }
     }
 
     if (args['pattern'] != null) {
@@ -1160,6 +1154,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * Calculates the current width of the text held by the text field.
    */
   function getTextWidth ( ){
+    // call with true to signify this is call is from user code
     return this.tsprite.getTextWidth(true);
   }
   /** @access private */
@@ -1171,7 +1166,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * Calculates the current height of the text held by the text field.
    */
   function getTextHeight ( ){
-    return this.tsprite.getTextfieldHeight();
+    // call with true to signify this is call is from user code
+    return this.tsprite.getTextfieldHeight(true);
   }
   /** @access private */
   function $lzc$getTextHeight_dependencies ( who , self){
