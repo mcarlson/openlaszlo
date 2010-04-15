@@ -149,10 +149,8 @@ lz.embed = {
         embed.dojo.setSwf(swfargs, minimumVersion);
         appenddiv.style.height = embed.CSSDimension(properties.height);
         appenddiv.style.width = embed.CSSDimension(properties.width);
-        if (properties.cancelmousewheel != true && 
-            (embed.browser.OS == 'Mac' || 
-            // fix for LPP-7677
-            embed.browser.OS == 'Windows')) {
+        if (properties.cancelmousewheel != true) {
+            // On for all runtimes - see LPP-8912, LPP-7677 and LPP-5393
             // fix for LPP-5393, commented out because we're always on for Windows
             // ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && embed.browser.OS == 'Windows' && (embed.browser.isOpera || embed.browser.isFirefox)))) {
             if (embed['mousewheel']) {
