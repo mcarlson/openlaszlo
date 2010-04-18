@@ -48,53 +48,87 @@
 <hr>
 <h1>Release Notes for OpenLaszlo @VERSIONID@</h1> 
 <hr>
-<p>
-	OpenLaszlo @VERSIONID@ is a bug fix release to OpenLaszlo 4.7,
-and contains 10 bug fixes and 2 new features. The fixes are in the areas of
-dynamically loading libraries in swf9/10, 
-foreground and background interactions, re-enabling leak detectors for swf8,
-adding sensitivity attributes to microphone, and internal build
-changes. The new features are a new operator `subclassof` to test if
-one class is a subclass of another class (or mixin), and a new Bug information
-button in the debugger window. For details, see the <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11060" target="_blank">JIRA report for Fixed Bugs in OpenLaszlo @VERSIONID@</a>. 
-</p>
-<p>We strongly suggest that you refer to the <a
-href="http://download.openlaszlo.org/4.7.0/release-notes.html"
-target="_blank">Release Notes for OpenLaszlo
+
+<p> OpenLaszlo @VERSIONID@ is a bug fix release to OpenLaszlo 4.7.1,
+	and contains 5 important community bug fixes and a new feature
+	adding Silence Level and Timeout attributes to microphone (see
+	the JIRA report <a
+	 href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11070"
+	target="_blank">4.7.2
+	Fixed Bugs</a> for details).  In addition, the build system
+	has been updated for those of you building OpenLaszlo from the
+	sources.  </p>
+
+<p>We strongly suggest that you refer to the <a href="http://download.openlaszlo.org/4.7.0/release-notes.html" target="_blank">Release Notes for OpenLaszlo
 4.7</a>, which was a significant release preceding OpenLaszlo
-@VERSIONID@.
+@VERSIONID@.  Release notes for the previous minor release can be
+found at <a href="http://download.openlaszlo.org/4.7.1/release-notes.html" target="_blank">Release Notes for OpenLaszlo
+4.7.1</a>
 </p>
 <h2>OpenLaszlo Credits</h2> <p>
 OpenLaszlo continues to be grateful for the significant contributions
-by Andr&#xE9 Bargull and Raju Bitter. You guys are amazing - thank you! In
-addition, OpenLaszlo @VERSIONID@ contains a number of fixes that were
-made possible by the community contributors: Justin Hunt, Rami Ojares,
-and Thomas Deuling. Thanks for filing
-detailed bug reports, creating test apps, and helping us resolve these
-important bugs. We would also like to thank the entire OpenLaszlo
-community for your support in so many ways, like submitting bug fixes and
-participating in discussions to help make OpenLaszlo a better platform. 
+by Andr&#xE9; Bargull and Raju Bitter. You guys are amazing - thank you! In
+addition, we want to thank Cem Sonmez for helping us isolate issues on
+Linux. Thanks for filing detailed bug reports, creating test apps, and
+helping us resolve these important bugs. We would also like to thank
+the entire OpenLaszlo community for your support in so many ways, like
+submitting bug fixes and participating in discussions to help make OpenLaszlo a better platform. 
 </p>
+
+<h2>Build System Changes</h2>
+<p>In OpenLaszlo @VERSIONID@ and trunk (5.0.x), we have updated our
+build tools.  If you are building from source, you will need to do the
+same. The build system now requires ant 1.7. </p>
+
+<p>The instructions have been updated on the wiki here:
+<a
+href="http://wiki.openlaszlo.org/SubversionBuildInstructions">http://wiki.openlaszlo.org/SubversionBuildInstructions</a></p>
+
+<p>Here is a quick summary of what you will need to do to update an existing build system:</p>
+<ol>
+  <li>Update the vendor files (ant and its supporting jars):<br>
+(<code>cd $LZ_VENDOR_ROOT; svn update</code>)
+  </li>
+
+<li>You will have to either install ant 1.7 from the zip file as
+  described in the wiki, or, if you are on OS X Snow Leopard, simply
+  set your <code>ANT_HOME</code> to <code>/usr/share/ant</code> (which is ant 1.7, as distributed
+  in Snow Leopard).</li>
+  
+<li>We recommend that you do <i>not</i> use the install_libs task in vendor as it will install many unnecessary jars.  Instead, copy just the ones you need to your <code>${HOME}/.ant/lib/</code> directory (you will need to ensure this directory exists):<br>
+
+<code>cp ${LZ_VENDOR_ROOT}/{ant-contrib,catalina-ant,jing,js}.jar ${HOME}/.ant/lib/</code>
+<br>
+is sufficient for basic builds.  If you also are building the documentation, you will also need the xalan and serializer jars.<br><br>
+If you are building on Cygwin, note that the <code>.ant/lib</code> must be in your Windows user directory, not your Cygwin directory, so say:<br>
+
+<code>cp ${LZ_VENDOR_ROOT}/{ant-contrib,catalina-ant,jing,js}.jar
+  "`cygpath -u "$USERPROFILE"`"/.ant/lib</code></li>
+</ol>
 
 <h2>Operating System, Browser, Runtime Compatibility</h2> 
 <p>
-	This release has been fully tested on the following operating systems/browser/runtime platforms: 
+	We have a broad specification that we support browsers that
+  obey DOM 2 and CSS 2.1 for DHTML and SWF8, SWF9, and SWF10. We are
+  also actively tracking HTML5 and mobile/touch browsers. These
+  are some of the active operating systems/browser/runtime platforms on which
+  we and the community are using this release: 
 </p>
 <ul>
 	<li>
-		Windows XP, Internet Explorer 7: SWF8, SWF10, DHTML 
+		Windows XP, Internet Explorer 7 and 8: SWF8, SWF9, SWF10, DHTML<br> 
+	Windows XP, Firefox 3.6: SWF8, SWF9, SWF10, DHTML 	</li>
+	<li>
+		Windows 7, Internet Explorer 8: SWF8, SWF9, SWF10,
+	DHTML<br>
+		Windows 7, Firefox 3.6: SWF8, SWF9, SWF10, DHTML
 	</li>
 	<li>
-		Windows XP, Firefox 3.5: SWF8, SWF10, DHTML 
+		Linux 2.6 kernel, Firefox 3.6: SWF8, SWF9, SWF10, DHTML 
 	</li>
 	<li>
-		Linux 2.6 kernel, Firefox 3.5: SWF8, SWF10, DHTML 
-	</li>
-	<li>
-		Mac OS X, Firefox 3.5: SWF8, SWF10, DHTML 
-	</li>
-	<li>
-		Mac OS X, Safari 4: SWF8, SWF10, DHTML 
+		Mac OS X, Firefox 3.6: SWF8, SWF9, SWF10, DHTML <br>
+		Mac OS X, Safari 4: SWF8, SWF9, SWF10, DHTML 
 	</li>
 </ul>
 <p>
@@ -110,33 +144,20 @@ Windows Vista and Windows 7, OpenLaszlo @VERSIONID@ has not been fully qualified
 </p>
 <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2> 
 <p>
-	The @VERSIONID@ release includes 10 bug fixes and 2 new
-features since OpenLaszlo 4.7; we have provided links to our JIRA bug tracking system where you can view the details: 
+	The @VERSIONID@ release includes 4 bug fixes and 1 new
+feature since OpenLaszlo 4.7.1; we have provided links to our JIRA bug tracking system where you can view the details: 
 </p>
 <ul>
 	<li>
-		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11060" target="_blank">Fixed bugs in @VERSIONID@</a> 
+<a
+  href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11070">Fixed
+  bugs in @VERSIONID@</a>
+</li>
+<li>
+  <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11060" target="_blank">Fixed bugs in 4.7.1</a> 
 	</li>
   <li>
 		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11050" target="_blank">Fixed bugs in 4.7.0</a> 
-	</li>
-	<li>
-		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11021" target="_blank">Fixed bugs in 4.6.0</a> 
-	</li>
-	<li>
-		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=11011" target="_blank">Fixed bugs in 4.5.0</a> 
-	</li>
-	<li>
-		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10972" target="_blank">Fixed bugs in 4.4.0</a> 
-	</li>
-	<li>
-		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10950" target="_blank">Fixed bugs in 4.3.0</a> 
-	</li>
-	<li>
-		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10911" target="_blank">Fixed bugs in 4.2.0.2</a> 
-	</li>
-	<li>
-		<a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10880" target="_blank">Fixed bugs in 4.2.0.1</a> 
 	</li>
 </ul>
 
