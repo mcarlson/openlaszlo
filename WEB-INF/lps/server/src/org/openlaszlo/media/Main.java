@@ -3,14 +3,14 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.media;
 
 import org.openlaszlo.utils.FileUtils;
-
+import org.openlaszlo.utils.LZUtils;
 import java.io.*;
 import org.apache.log4j.*;
 import org.apache.log4j.spi.*;
@@ -87,7 +87,7 @@ public class Main {
             String toType   = MimeType.fromExtension(toFileName);
 
             // Assume it's a font.
-            if (fromType.equalsIgnoreCase("UNKNOWN")) {
+            if (LZUtils.equalsIgnoreCase(fromType, "UNKNOWN")) {
                 fromType = FontType.TTF;
                 toType = FontType.FFT;
             }

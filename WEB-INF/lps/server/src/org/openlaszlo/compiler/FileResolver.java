@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -15,6 +15,7 @@ import org.openlaszlo.server.*;
 import org.apache.log4j.*;
 
 import org.openlaszlo.utils.FileUtils;
+import org.openlaszlo.utils.LZUtils;
 
 /**
  * Provides an interface for resolving a pathname to a File.  The
@@ -54,8 +55,8 @@ public interface FileResolver {
  * supplies the context for partial pathnames.)
  */
 class DefaultFileResolver implements FileResolver {
-	private static Logger mLogger = Logger.getLogger(FileResolver.class);
-	
+    private static Logger mLogger = Logger.getLogger(FileResolver.class);
+    
     public Set binaryIncludes = new HashSet();
 
     public Set getBinaryIncludes() { return binaryIncludes; }
@@ -128,7 +129,7 @@ class DefaultFileResolver implements FileResolver {
         if (env != null) {
             dhtmlResourceFlag = env.isDHTML();
         }
-        boolean SWFtoPNG = dhtmlResourceFlag && pnext.equalsIgnoreCase("swf");
+        boolean SWFtoPNG = dhtmlResourceFlag && LZUtils.equalsIgnoreCase(pnext, "swf");
         if (SWFtoPNG) {
             String pnbase = FileUtils.getBase(pathname);
             pathname = pnbase + ".png";
@@ -162,10 +163,10 @@ class DefaultFileResolver implements FileResolver {
               File f = (new File(dir, pathname)).getCanonicalFile();
               if (f.exists() ||
                   ((binaryIncludes != null) && binaryIncludes.contains(f))) {
-            	if (mLogger.isDebugEnabled()) {
+                if (mLogger.isDebugEnabled()) {
                 mLogger.debug("Resolved " + pathname + " to "  +
                               f.getAbsolutePath());
-            	}
+                }
                 return f;
               } else if (SWFtoPNG) {
                 String autoPngPath = FileUtils.insertSubdir(f.getPath(), "autoPng");

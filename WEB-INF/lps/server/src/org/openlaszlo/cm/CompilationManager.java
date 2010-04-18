@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -23,6 +23,7 @@ import org.openlaszlo.server.LPS;
 import org.openlaszlo.server.Configuration;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.LZHttpUtils;
+import org.openlaszlo.utils.LZUtils;
 import org.openlaszlo.cache.Cache;
 import org.openlaszlo.compiler.CompilationEnvironment;
 import org.apache.log4j.*;
@@ -804,7 +805,7 @@ public class CompilationManager extends Cache {
              e.hasMoreElements(); ) {
             String key = (String) e.nextElement();
             // Omit the recompile property
-            if (key.equalsIgnoreCase(RECOMPILE))
+            if (LZUtils.equalsIgnoreCase(key,RECOMPILE))
                 continue;
 
             String value = props.getProperty(key);

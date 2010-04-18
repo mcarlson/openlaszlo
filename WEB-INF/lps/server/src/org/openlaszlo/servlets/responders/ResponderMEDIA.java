@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -11,6 +11,7 @@ package org.openlaszlo.servlets.responders;
 
 import java.io.*;
 import java.util.Properties;
+import java.util.Locale;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +100,7 @@ public final class ResponderMEDIA extends Responder
                 FileUtils.close(instream);
             }
         } catch (Throwable e) { 
-            if (url.toLowerCase().endsWith(".mp3")) {
+            if (url.toLowerCase(Locale.ENGLISH).endsWith(".mp3")) {
                 // See LPP-7880 We can only indicate an error to the
                 // Flash client sound loader by sending a HTTP 404
                 // error.

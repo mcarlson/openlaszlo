@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -28,6 +28,7 @@ import org.openlaszlo.iv.flash.util.*;
 
 import org.openlaszlo.utils.SWFUtils;
 import org.openlaszlo.utils.FileUtils;
+import org.openlaszlo.utils.LZUtils;
 import org.openlaszlo.server.LPS;
 
 import org.openlaszlo.sc.ScriptCompiler;
@@ -52,21 +53,21 @@ public class Transcoder {
      */
     public static boolean canTranscode(String in, String out) {
 
-        if (!out.equalsIgnoreCase(MimeType.SWF)) {
+        if (!LZUtils.equalsIgnoreCase(out, MimeType.SWF)) {
 
-            if (out.equalsIgnoreCase(FontType.FFT) &&
-                in.equalsIgnoreCase(FontType.TTF)) {
+            if (LZUtils.equalsIgnoreCase(out, FontType.FFT) &&
+                LZUtils.equalsIgnoreCase(in, FontType.TTF)) {
                 return true;
             }
             return false;
         }
 
-        if (in.equalsIgnoreCase(MimeType.JPEG) || 
-            in.equalsIgnoreCase(MimeType.PNG)  || 
-            in.equalsIgnoreCase(MimeType.GIF)  ||
-            in.equalsIgnoreCase(MimeType.MP3)  ||
-            in.equalsIgnoreCase(MimeType.XMP3) ||
-            in.equalsIgnoreCase(MimeType.SWF)) {
+        if (LZUtils.equalsIgnoreCase(in, MimeType.JPEG) || 
+            LZUtils.equalsIgnoreCase(in, MimeType.PNG)  || 
+            LZUtils.equalsIgnoreCase(in, MimeType.GIF)  ||
+            LZUtils.equalsIgnoreCase(in, MimeType.MP3)  ||
+            LZUtils.equalsIgnoreCase(in, MimeType.XMP3) ||
+            LZUtils.equalsIgnoreCase(in, MimeType.SWF)) {
             return true;
         }
         return false;
@@ -85,7 +86,7 @@ public class Transcoder {
             String from, String to, boolean doStream) 
         throws TranscoderException, IOException {
 
-        if (!to.equalsIgnoreCase(MimeType.SWF)) {
+        if (!LZUtils.equalsIgnoreCase(to, MimeType.SWF)) {
             throw new TranscoderException(
 /* (non-Javadoc)
  * @i18n.test
@@ -108,18 +109,18 @@ public class Transcoder {
         // We assume this mime type is correct if we get it
         // NOTE: This will keep us from copying big swf video files
         // an extra time for now...
-        if (from.equalsIgnoreCase(MimeType.SWF)) {
+        if (LZUtils.equalsIgnoreCase(from, MimeType.SWF)) {
             return stream;
         } 
 
         // Try images
-        if (from.equalsIgnoreCase(MimeType.JPEG) || 
-            from.equalsIgnoreCase(MimeType.PNG) || 
-            from.equalsIgnoreCase(MimeType.GIF) ||
+        if (LZUtils.equalsIgnoreCase(from, MimeType.JPEG) || 
+            LZUtils.equalsIgnoreCase(from, MimeType.PNG) || 
+            LZUtils.equalsIgnoreCase(from, MimeType.GIF) ||
             from.indexOf("image") != -1 ) {
             return convertImageToSWF(stream);
-        } else if (from.equalsIgnoreCase(MimeType.MP3) ||
-                   from.equalsIgnoreCase(MimeType.XMP3) ||
+        } else if (LZUtils.equalsIgnoreCase(from, MimeType.MP3) ||
+                   LZUtils.equalsIgnoreCase(from, MimeType.XMP3) ||
                    from.indexOf("audio") != -1)  {
             // Try audio
             return convertAudioToSWF(stream, doStream);
@@ -234,8 +235,8 @@ public class Transcoder {
     public static InputStream transcode(File input, String from, String to) 
         throws TranscoderException, IOException {
 
-        if (to.equalsIgnoreCase(FontType.FFT)) {
-            if (from.equalsIgnoreCase(FontType.TTF)) {
+        if (LZUtils.equalsIgnoreCase(to, FontType.FFT)) {
+            if (LZUtils.equalsIgnoreCase(from, FontType.TTF)) {
                 return TTF2FFT.convert(input);
             } else {
                 throw new TranscoderException(

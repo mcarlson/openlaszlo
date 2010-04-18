@@ -330,9 +330,9 @@ public class ViewCompiler extends ElementCompiler {
     static void checkUnsupportedMediaTypes(CompilationEnvironment env, Element elt, String url) {
         String suffix = FileUtils.getExtension(url);
         if (env.isSWF()) {
-          if ( (sUnsupportedServerlessFiletypes.containsKey(suffix.toLowerCase())) ||
+          if ( (sUnsupportedServerlessFiletypes.containsKey(suffix.toLowerCase(Locale.ENGLISH))) ||
                (env.getSWFVersionInt() < 8 &&
-                sUnsupportedServerlessFiletypesSWF7.containsKey(suffix.toLowerCase())))
+                sUnsupportedServerlessFiletypesSWF7.containsKey(suffix.toLowerCase(Locale.ENGLISH))))
                {
               env.warn(
   /* (non-Javadoc)

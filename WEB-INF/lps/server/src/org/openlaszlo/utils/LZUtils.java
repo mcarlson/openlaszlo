@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Class for miscellaneous utility functions.
@@ -107,4 +108,17 @@ public class LZUtils
         }
         return _p;
     }
+
+    /** Case insensitive String equality, using a fixed locale, Locale.ENGLISH
+     * @param s1
+     * @param s2
+     * @return true if strings are equal, ignoring case
+     */
+    static public boolean equalsIgnoreCase(String s1, String s2) {
+        if (s1 == null || s2 == null) {
+            return false;
+        }
+        return(s1.toLowerCase(Locale.ENGLISH).equals(s2.toLowerCase(Locale.ENGLISH)));
+    }
+
 }

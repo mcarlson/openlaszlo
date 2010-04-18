@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -91,7 +91,7 @@ original :  private static String sStyleSheetPathname =
         String unopturl = url.substring(0, url.length() - 4) + ".lzx";
         String opturl = url.substring(0, url.length() - 4) + ".lzo";
         boolean isPocketPC = (os != null && os.indexOf("POCKET PC") > -1);
-        boolean isWin = (agent != null && agent.toLowerCase().indexOf("win") > -1);
+        boolean isWin = (agent != null && agent.toLowerCase(Locale.ENGLISH).indexOf("win") > -1);
 
         Properties props = initCMgrProperties(req);
 

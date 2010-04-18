@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -15,6 +15,7 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Iterator;
+import java.util.Locale;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -115,7 +116,7 @@ public abstract class Responder
         throws ServletException, IOException
     {
         mAllowRequest = 
-            prop.getProperty("allowRequest" + reqName.toUpperCase(), 
+            prop.getProperty("allowRequest" + reqName.toUpperCase(Locale.ENGLISH), 
                              mAllowRequestDefaultProperty).intern() == "true";
 
         if (! mIsInitialized) {

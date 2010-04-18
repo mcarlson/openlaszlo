@@ -3,13 +3,15 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.media;
 
 import org.openlaszlo.utils.FileUtils;
+import org.openlaszlo.utils.LZUtils;
+
 
 /**
  * A class for defining mimetypes and utilities.
@@ -45,31 +47,31 @@ public class MimeType {
         if (extension.equals("") ) {
             return UNKNOWN;
         }
-        if (extension.equalsIgnoreCase("swf")) {
+        if (LZUtils.equalsIgnoreCase(extension, "swf")) {
             return SWF;
         }
-        if (extension.equalsIgnoreCase("jpg") ||
-            extension.equalsIgnoreCase("jpeg")) {
+        if (LZUtils.equalsIgnoreCase(extension, "jpg") ||
+            LZUtils.equalsIgnoreCase(extension, "jpeg")) {
             return JPEG;
         }
-        if (extension.equalsIgnoreCase("gif")) {
+        if (LZUtils.equalsIgnoreCase(extension, "gif")) {
             return GIF;
         }
-        if (extension.equalsIgnoreCase("png")) {
+        if (LZUtils.equalsIgnoreCase(extension, "png")) {
             return PNG;
         }
-        if (extension.equalsIgnoreCase("xml")) {
+        if (LZUtils.equalsIgnoreCase(extension, "xml")) {
             return XML;
         }
-        if (extension.equalsIgnoreCase("lzx")) {
+        if (LZUtils.equalsIgnoreCase(extension, "lzx")) {
             return XML;
         }
-        if (extension.equalsIgnoreCase("html") ||
-            extension.equalsIgnoreCase("htm")) {
+        if (LZUtils.equalsIgnoreCase(extension, "html") ||
+            LZUtils.equalsIgnoreCase(extension, "htm")) {
             return HTML;
         }
-        if (extension.equalsIgnoreCase("mp3") ||
-            extension.equalsIgnoreCase("mpeg")) {
+        if (LZUtils.equalsIgnoreCase(extension, "mp3") ||
+            LZUtils.equalsIgnoreCase(extension, "mpeg")) {
             return MP3;
         }
         return UNKNOWN;

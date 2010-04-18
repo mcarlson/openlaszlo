@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -12,6 +12,7 @@ package org.openlaszlo.utils;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpUtils;
 import javax.servlet.http.HttpServletRequest;
@@ -152,7 +153,7 @@ mLogger.warn(
      * option. */
     static public boolean allowForward(String header, Enumeration connEnum)
     {
-        if (header.toLowerCase().startsWith("content-"))
+        if (header.toLowerCase(Locale.ENGLISH).startsWith("content-"))
             return false;
 
         if (header.equalsIgnoreCase(CONNECTION))

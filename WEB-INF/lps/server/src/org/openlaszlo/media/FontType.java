@@ -3,12 +3,13 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.media;
 
+import java.util.Locale;
 /**
  * Class for holding font type strings.
  *
@@ -27,7 +28,7 @@ public class FontType {
             return "";
         }
 
-        return name.substring(index+1).toLowerCase();
+        return name.substring(index+1).toLowerCase(Locale.ENGLISH);
     }
 }
 

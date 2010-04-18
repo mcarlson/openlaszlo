@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -14,6 +14,7 @@ import org.openlaszlo.media.TranscoderException;
 import org.openlaszlo.cache.Cache;
 import org.openlaszlo.cache.CachedInfo;
 import org.openlaszlo.utils.FileUtils;
+import org.openlaszlo.utils.LZUtils;
 import org.openlaszlo.server.LPS;
 
 import org.apache.log4j.*;
@@ -82,7 +83,7 @@ public class CompilerMediaCache extends Cache {
                FileNotFoundException,
                IOException {
 
-    	if (mLogger.isDebugEnabled()) {
+        if (mLogger.isDebugEnabled()) {
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -91,8 +92,8 @@ public class CompilerMediaCache extends Cache {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 CompilerMediaCache.class.getName(),"051018-90", new Object[] {fromType, toType})
 );
-    	}
-        if (fromType.equalsIgnoreCase(toType)) {
+        }
+        if (LZUtils.equalsIgnoreCase(fromType,toType)) {
             return inputFile;
         }
 
@@ -164,7 +165,7 @@ public class CompilerMediaCache extends Cache {
                 FileUtils.close(input);
             }
         } else {
-        	if (mLogger.isDebugEnabled()) {
+            if (mLogger.isDebugEnabled()) {
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -173,7 +174,7 @@ public class CompilerMediaCache extends Cache {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 CompilerMediaCache.class.getName(),"051018-163")
 );
-        	}
+            }
         }
 
         updateCache(item);

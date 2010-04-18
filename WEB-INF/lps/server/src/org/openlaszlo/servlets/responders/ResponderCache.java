@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -249,7 +250,7 @@ public abstract class ResponderCache extends Responder
     {
         super.init(reqName, config, prop);
 
-        String reqProp = reqName.toLowerCase() + "Request.collectURL";
+        String reqProp = reqName.toLowerCase(Locale.ENGLISH) + "Request.collectURL";
         boolean doURLCollection =
             prop.getProperty(reqProp, "false").intern() == "true";
 
