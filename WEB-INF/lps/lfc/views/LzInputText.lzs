@@ -132,15 +132,13 @@ var _focused = false;
 /** @access private */
 function _gotFocusEvent(e=null){
     this._focused = true;
-    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
-    isprite.gotFocus();
+    this.isprite.gotFocus();
 }
 
 /** @access private */
 function _gotBlurEvent(e=null){
     this._focused = false;
-    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
-    isprite.gotBlur();
+    this.isprite.gotBlur();
 }
 
 /** @access private 
@@ -158,14 +156,12 @@ function inputtextevent (eventname:String, value:* = null) :void {
             lz.Focus.setFocus(this, tabdown);
         }
     } else if (eventname == 'onchange') {
-        //multiline resizable fields adjust their height
-        var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
         // Must use instead of local property so sprite can normalize newlines
-        this.text = isprite.getText();
+        this.text = this.isprite.getText();
 
         // Update the height if we're multiline and don't have a set height
         if (this.multiline && !this.hassetheight) {
-            var textheight = this.getTextHeight();
+            var textheight = this.isprite.getTextfieldHeight();
             if (this.height != textheight) {
                 this.updateHeight(textheight);
             }
@@ -189,8 +185,7 @@ function inputtextevent (eventname:String, value:* = null) :void {
   * @access public
   */
 override function updateData () {
-    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
-    return isprite.getText();
+    return this.isprite.getText();
 }
 
 
@@ -206,8 +201,7 @@ override function updateData () {
 function $lzc$set_enabled(enabled) {
     this.focusable = true;
     this.enabled = enabled;
-    var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
-    isprite.setEnabled(enabled);
+    this.isprite.setEnabled(enabled);
     if (this.onenabled.ready) this.onenabled.sendEvent(enabled);
 }
 
@@ -227,8 +221,7 @@ final function setEnabled (enabled){
   */
 function setHTML (htmlp) {
     if (this.capabilities['htmlinputtext']) {
-        var isprite:LzInputTextSprite = (this.sprite cast LzInputTextSprite);    
-        isprite.setHTML(htmlp);
+        this.isprite.setHTML(htmlp);
     } else if ($debug) {
         LzView.__warnCapability('inputtext.setHTML()', 'htmlinputtext'); 
     }

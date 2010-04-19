@@ -760,7 +760,7 @@ function $lzc$set_fgcolor(c) {
   * @type String
   * @lzxtype string
   */
-var font;  
+var font:String;  
 
 /** @access private */
 function $lzc$set_font(val) {
@@ -775,7 +775,7 @@ function $lzc$set_font(val) {
   * @type String
   * @lzxtype string
   */
-var fontstyle;
+var fontstyle:String;
 
 /** @access private */
 function $lzc$set_fontstyle(val) {
@@ -791,8 +791,10 @@ function $lzc$set_fontstyle(val) {
 
 /** Pixel size to use to render text which appears inside this
   * view. The default is 8.
-  * @type String
+  * @type Number
   * @lzxtype size
+  * @devnote - can't set type to :Number because Numbers aren't nullable, so 
+  * fontsize cascading fails in swf10...
   */
 var fontsize;
 
@@ -1118,9 +1120,6 @@ function $lzc$set_opacity(v) {
     }
 }
 
-/** @access private */
-function $lzc$set_alpha(v) { this.$lzc$set_opacity(v); }
-
 /**
  * The background color of the view.  Setting <code>bgcolor</code> to
  * <code>null</code> will make the view transparent.
@@ -1372,7 +1371,10 @@ function $lzc$set_width(v) {
     } else {
         this.__LZcheckwidth = false;
     }
-    this.sprite.setWidth(v);
+    if (! (this is LzText)) {
+        // already called by LzText.$lzc$set_width()
+        this.sprite.setWidth(v);
+    }
 
     var vip:LzView = (this.immediateparent cast LzView);
     if (vip && vip.__LZcheckwidth) { vip.__LZcheckwidthFunction( this ); }

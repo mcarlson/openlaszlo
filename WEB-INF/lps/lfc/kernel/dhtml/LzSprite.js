@@ -1677,7 +1677,7 @@ LzSprite.prototype.setX = function ( x ){
 }
 
 LzSprite.prototype.setWidth = function ( w ) {
-    if (w == null || w < 0 || this.width == w) return;
+    if (w < 0 || this.width == w) return;
 
     //Debug.info('setWidth', w);
     this.width = w;
@@ -1729,7 +1729,7 @@ LzSprite.prototype.setY = function ( y ){
 }
 
 LzSprite.prototype.setHeight = function ( h ){
-    if (h == null || h < 0 || this.height == h) return;
+    if (h < 0 || this.height == h) return;
 
     this.height = h;
     //Debug.info('setHeight', h, this.height, this.owner);

@@ -358,20 +358,16 @@ public class LzTextSprite extends LzSprite {
             return '<a href="event:'+value+'">'+str+'</a>';
         }
 
-        override public function setWidth( w:* ):void {
+        override public function setWidth( w:Number ):void {
             super.setWidth(w);
-            if (w != null) {
-                this.textfield.width = w;
-                this.__handleScrollEvent();
-            }
+            this.textfield.width = w;
+            this.__handleScrollEvent();
         }
 
-        override public function setHeight( h:* ):void {
+        override public function setHeight( h:Number ):void {
             super.setHeight(h);
-            if (h != null) {
-                this.textfield.height = h;
-                this.__handleScrollEvent();
-            }
+            this.textfield.height = h;
+            this.__handleScrollEvent();
         }
 
         private function createTextField(nx:Number, ny:Number, w:Number, h:Number):TextField {
@@ -460,7 +456,7 @@ public class LzTextSprite extends LzSprite {
          *  setFontSize( Number:size )
          o Sets the size of the font in pixels 
         */
-        public function setFontSize ( fsize:String ):void {
+        public function setFontSize ( fsize:Number ):void {
             this.fontsize = fsize;
             this.__setFormat();
             // force recompute of height if needed

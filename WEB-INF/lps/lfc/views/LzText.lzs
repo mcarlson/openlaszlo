@@ -256,15 +256,14 @@ dynamic class LzText extends LzView with LzFormatter {
 
   /** @access private */
   override function $lzc$set_width(val) {
-    var tsprite = this.tsprite;
-    tsprite.setWidth(val);
+    this.tsprite.setWidth(val);
     super.$lzc$set_width(val);
     // maxhscroll depends on width
     if (this.scrollwidth < this.width) { this.scrollwidth = this.width; }
     this.updateAttribute('maxhscroll', this.scrollwidth - this.width);
     // recalculate height
     if (!this.hassetheight) {
-      var h = tsprite.getTextfieldHeight();
+      var h = this.tsprite.getTextfieldHeight();
       if (h > 0 && h != this.height) {
         this.updateHeight(h);
       }
@@ -314,10 +313,9 @@ dynamic class LzText extends LzView with LzFormatter {
    * @access private
    */
   function updateLineAttribute(name:String, value):void {
-    var tsprite:LzTextSprite = this.tsprite;
     var lineNo:Number;
     if (this.capabilities.linescrolling) {
-      lineNo = tsprite.pixelToLineNo(value);
+      lineNo = this.tsprite.pixelToLineNo(value);
     } else {
         lineNo = Math.ceil(value / this.lineheight) + 1;
     }
@@ -500,10 +498,9 @@ dynamic class LzText extends LzView with LzFormatter {
       }
       n = n < 1 ? 1 : this.maxscroll;
     }
-    var tsprite = this.tsprite;
     var pixel:Number;
     if (this.capabilities.linescrolling) {
-      pixel = tsprite.lineNoToPixel(n);
+      pixel = this.tsprite.lineNoToPixel(n);
     } else {
       pixel = (n - 1) * this.lineheight;
     }
@@ -698,12 +695,11 @@ dynamic class LzText extends LzView with LzFormatter {
       if (this.ontext.ready) this.ontext.sendEvent(t);
       return;
     }
-    var tsprite = this.tsprite;
-    if (this.visible) tsprite.setVisible(this.visible);
+    if (this.visible) this.tsprite.setVisible(this.visible);
     if (t.length > this.maxlength){
       t = t.substring(0, this.maxlength);
     }
-    tsprite.setText(t);
+    this.tsprite.setText(t);
     this.text =  t;
 
     if (this.ontext.ready) this.ontext.sendEvent(t);
@@ -987,8 +983,7 @@ dynamic class LzText extends LzView with LzFormatter {
       }
     }
 
-    var tsprite = this.tsprite;
-    tsprite.__initTextProperties(initattrs);
+    this.tsprite.__initTextProperties(initattrs);
 
     this.yscroll = 0;
     this.xscroll = 0;
@@ -1007,7 +1002,7 @@ dynamic class LzText extends LzView with LzFormatter {
 
     this.$lzc$set_multiline( this.multiline );
 
-    tsprite.setText( this.text );
+    this.tsprite.setText( this.text );
 
     // To compute our width:
     // + if text is multiline:
@@ -1021,7 +1016,7 @@ dynamic class LzText extends LzView with LzFormatter {
       } else {
         // if there's text content, measure its width
         if (this.text != null && this.text != '' && this.text.length > 0) {
-          args.width = tsprite.getTextWidth();
+          args.width = this.tsprite.getTextWidth();
         } else {
           // Input text will have a nonzero default width, so it behaves
           // like HTML input field.
@@ -1154,7 +1149,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * Calculates the current width of the text held by the text field.
    */
   function getTextWidth ( ){
-    // call with true to signify this is call is from user code
+    // call with true to signify this is call is from user code, which may 
+    // happen before the sprite/view is initted
     return this.tsprite.getTextWidth(true);
   }
   /** @access private */
@@ -1166,7 +1162,8 @@ dynamic class LzText extends LzView with LzFormatter {
    * Calculates the current height of the text held by the text field.
    */
   function getTextHeight ( ){
-    // call with true to signify this is call is from user code
+    // call with true to signify this is call is from user code, which may 
+    // happen before the sprite/view is initted
     return this.tsprite.getTextfieldHeight(true);
   }
   /** @access private */

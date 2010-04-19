@@ -743,9 +743,19 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
                         // Also, Safari needs height forced to zero or else
                         // it leaves text scrolled improperly.
                         d.style.height = 0;
+
+                        var oldscroll = d.scrollTop;
                         d.scrollTop = 0;
-                        // restore to old height
-                        d.style.height = sprite._h;
+
+                        // restore to old values
+                        if (sprite._h != 0) {
+                            // use cached CSS height value
+                            d.style.height = sprite._h;
+                        }
+
+                        if (oldscroll != 0) {
+                            d.scrollTop = oldscroll;
+                        }
                     }
                 }
 

@@ -34,17 +34,17 @@ LzFontManager.fonts = {};
   */
 LzFontManager.addFont = function ( fontname, fontstyle, fontweight, path, ptype ){
     var fontobj = {name: fontname, style: fontstyle, weight: fontweight, url: path, ptype: ptype}
-    LzFontManager.fonts[fontname +'_' + fontstyle + '_' + fontweight] = fontobj;
+    this.fonts[fontname +'_' + fontstyle + '_' + fontweight] = fontobj;
 }
 
 // Generates a CSS include for each font added
 // See http://randsco.com/index.php/2009/07/04/p680 for details about the IE hack
 LzFontManager.generateCSS = function() {
-    var fonts = LzFontManager.fonts;
+    var fonts = this.fonts;
     var output = '';
     for (var i in fonts) {
         var font = fonts[i];
-        var url = LzFontManager.getURL(font);
+        var url = this.getURL(font);
         var i = url.lastIndexOf('.ttf');
         var ieurl = url.substring(0, i) + '.eot';
         output += '@font-face{font-family:' + font.name + ';src:url(' + ieurl + ');src:local("' + font.name + '"), url(' + url + ') format("truetype");font-weight:' + font.weight + ';font-style:' + font.style + ';}';
@@ -80,8 +80,8 @@ LzFontManager.isFontLoaded = function(sprite, fontname, fontstyle, fontweight) {
 
         // Create measurement div and measure its initial size
         var style = 'font-family:' + fontname + ';font-style:' + fontstyle + ';font-weight:' + fontweight + ';width:auto;height:auto;';
-        var mdiv = LzFontManager.__createMeasureDiv('lzswftext', style);
-        LzFontManager.__setTextContent(mdiv, 'div', 'Yq_gy"9;ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=abcdefghijklmnopqrstuvwxyz');
+        var mdiv = this.__createMeasureDiv('lzswftext', style);
+        this.__setTextContent(mdiv, 'div', 'Yq_gy"9;ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789-=abcdefghijklmnopqrstuvwxyz');
         mdiv.style.display = 'inline';
         var width = mdiv.clientWidth;
         var height = mdiv.clientHeight;
@@ -114,7 +114,7 @@ LzFontManager.__measurefontdiv = function(mdiv, width, height, url){
     if (newwidth == width && newheight == height) {
         // Size didn't change...
         var timediff = (new Date()).valueOf() - fontloadstate.timer;
-        if (timediff < LzFontManager.fontloadtimeout) {
+        if (timediff < this.fontloadtimeout) {
             // keep loading until timout is reached
             return;
         }
@@ -232,6 +232,7 @@ LzFontManager.__createMeasureDiv = function(className, style) {
 LzFontManager.__setTextContent = function(mdiv, tagname, string) {
   // NOTE: [2009-03-29 ptw] For now, DHTML does not support HTML in
   // input text, so we must measure accordingly
+  // see LPP-8917
   switch (tagname) {
     case 'div':
       mdiv.innerHTML = string;

@@ -54,8 +54,8 @@ public class LzSprite extends Sprite {
 
     public var bgcolor:* = null;
 
-    public var lzwidth:* = 0;
-    public var lzheight:* = 0;
+    public var lzwidth:Number = 0;
+    public var lzheight:Number = 0;
 
     public var opacity:Number = 1;
     public var playing:Boolean = false;
@@ -78,7 +78,7 @@ public class LzSprite extends Sprite {
     // whenevent a mouseover event happens.
     public var showhandcursor:* = null;
 
-    public var fontsize:String = "11";
+    public var fontsize:Number = 11;
     public var fontstyle:String = "plain";
     public var fontname:String = "Verdana";
 
@@ -1009,8 +1009,7 @@ public class LzSprite extends Sprite {
     /** setWidth( Number:width )
         o Sets the sprite to the specified width 
     */
-    public function setWidth( v:* ):void {
-        if (isNaN(v)) return;
+    public function setWidth( v:Number ):void {
         this.lzwidth = v;
         this.applyStretchResource();
         // TODO [hqm 2008-01] We need to add back in the code here to
@@ -1031,8 +1030,7 @@ public class LzSprite extends Sprite {
     /** setHeight( Number:height )
         o Sets the sprite to the specified height 
     */
-    public function setHeight( v:* ):void {
-        if (isNaN(v)) return;
+    public function setHeight( v:Number ):void {
         this.lzheight = v;
         this.applyStretchResource();
         // TODO [hqm 2008-01] We need to add back in the code here to
@@ -1382,12 +1380,12 @@ public class LzSprite extends Sprite {
 
         var scaleX:Number = 1.0;
 
-        if (this.lzwidth != null && this._setrescwidth && this.resourcewidth) {
+        if (this.lzwidth != 0 && this._setrescwidth && this.resourcewidth) {
             scaleX = this.lzwidth / this.resourcewidth;
         }
 
         var scaleY:Number = 1.0;
-        if (this.lzheight != null && this._setrescheight && this.resourceheight) {
+        if (this.lzheight != 0 && this._setrescheight && this.resourceheight) {
             scaleY = this.lzheight / this.resourceheight;
         }
 
