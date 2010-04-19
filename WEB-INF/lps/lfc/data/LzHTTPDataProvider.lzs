@@ -256,7 +256,7 @@ class LzHTTPDataProvider extends LzDataProvider {
         var dreq:LzHTTPDataRequest = loader.dataRequest;
         dreq.loadtime = (new Date()).getTime() - dreq.loadstarttime;
         dreq.status = LzDataRequest.TIMEOUT;
-        dreq.onstatus.sendEvent( dreq );
+        if (dreq.onstatus.ready) dreq.onstatus.sendEvent( dreq );
     }
 
     /**
@@ -278,7 +278,7 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         if (data == null) {
             this.setRequestError(dreq, "client could not parse XML from server");
-            dreq.onstatus.sendEvent( dreq );
+            if (dreq.onstatus.ready) dreq.onstatus.sendEvent( dreq );
             return;
         }
 
@@ -293,11 +293,11 @@ class LzHTTPDataProvider extends LzDataProvider {
             // We might change this at some point and make the server
             // return all proxied responses wrapped up in that format,
             // but it is not being done now for RPC and other raw data users.
-            dreq.onstatus.sendEvent( dreq );
+            if (dreq.onstatus.ready) dreq.onstatus.sendEvent( dreq );
             return;
         } else if (proxied && data.childNodes[0].nodeName == "error") {
             this.setRequestError(dreq, data.childNodes[0].attributes['msg']);
-            dreq.onstatus.sendEvent( dreq );
+            if (dreq.onstatus.ready) dreq.onstatus.sendEvent( dreq );
             return;
         }
 
@@ -331,7 +331,7 @@ class LzHTTPDataProvider extends LzDataProvider {
 
         dreq.xmldata = content;
         dreq.responseheaders = headers;
-        dreq.onstatus.sendEvent( dreq );
+        if (dreq.onstatus.ready) dreq.onstatus.sendEvent( dreq );
     }
     /**
      * @access private

@@ -1028,8 +1028,8 @@ LzTextSprite.prototype.enableClickableLinks = function ( enabled) {
 }
 
 LzTextSprite.prototype.textLinkHandler = function (e:TextEvent) {
-            this.owner.ontextlink.sendEvent(e.text);
-        }
+    if (this.owner.ontextlink.ready) this.owner.ontextlink.sendEvent(e.text);
+}
 
 LzTextSprite.prototype.makeTextLink = function (str, value) {
     LzTextSprite.addLinkID(this.owner);

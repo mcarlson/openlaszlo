@@ -601,7 +601,7 @@ override function toString() /*:String*/ {
 override function __LZcheckChange (chgpkg:Object) :Boolean {
     if ( !super.__LZcheckChange(chgpkg) ){
         if ( chgpkg.who.childOfNode( this.p , true ) && this.onDocumentChange.ready){
-            this.onDocumentChange.sendEvent( chgpkg );
+            if (this.onDocumentChange.ready) this.onDocumentChange.sendEvent( chgpkg );
         }
     }
     

@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzbrowser
@@ -403,7 +403,7 @@ public dynamic final class LzFocusService extends LzEventable {
             }
         }
 
-        if (sendEsc && escape) {
+        if (sendEsc && escape && this.onescapefocus.ready) {
             this.onescapefocus.sendEvent();
         }
 

@@ -107,6 +107,7 @@ override function construct ( parent , args ){
     this.resize = ('resize' in args) ? (!! args.resize) : false;
     this.focusable = true;
     super.construct(parent, args);
+    if ( this.__LZdeleted ) return;
     this._onfocusDel = new LzDelegate( this , "_gotFocusEvent" , this,
                                             "onfocus" );
     this._onblurDel = new LzDelegate( this , "_gotBlurEvent" , this,

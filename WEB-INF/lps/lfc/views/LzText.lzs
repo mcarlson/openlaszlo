@@ -946,6 +946,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.multiline = ('multiline' in args) ? args.multiline : null;
 
     super.construct(parent, args);
+    if ( this.__LZdeleted ) return;
 
     // Attributes that should cascade
     var cascadeattrs:Object = {font: null, 

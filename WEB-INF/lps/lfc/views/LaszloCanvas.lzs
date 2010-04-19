@@ -575,7 +575,7 @@ function $lzc$set_framerate( fps:Number ) {
 function __fullscreenEventCallback (result:Boolean, isFullscreen) : void {
     // Set canvas.displaystate to current value of stage.displayState
     this.fullscreen = isFullscreen;
-    this.onfullscreen.sendEvent(result);
+    if (this.onfullscreen.ready) this.onfullscreen.sendEvent(result);
 }
 
  /**
