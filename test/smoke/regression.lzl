@@ -1,6 +1,6 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <include href="lzunit/lzunit.lzx" />
@@ -1217,8 +1217,8 @@
 <class name="bug_3285" extends="TestCase">
         <attribute name="someval" value="9"/>
         <node name="dmap" datapath="bug3285:/datanode">
-            <attribute name="attroneplusone" value="${ Number(attrone) + 1 }"/>
-            <attribute name="attrone" value="null"/>
+            <attribute name="attroneplusone" value="${ attrone + 1 }"/>
+            <attribute name="attrone" type="number" value="0"/>
 
             <attribute name="datamapped" value="false"/>
 

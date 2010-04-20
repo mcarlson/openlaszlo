@@ -1931,7 +1931,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     String functionName = null;
     SimpleNode params;
     SimpleNode stmts;
-    SimpleNode depExpr = null;
     if (children.length == 3) {
       ASTIdentifier functionNameIdentifier = (ASTIdentifier)children[0];
       params = children[1];
@@ -1985,34 +1984,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     if (explicitUserFunctionName != null) {
       userFunctionName = explicitUserFunctionName;
     }
-    if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
-//       assert (functionName != null);
-      if (ReferenceCollector.DebugConstraints) {
-        System.err.println("stmts: " + stmts);
-      }
-      // Find dependencies.
-      //
-      // Compute this before any transformations on the function body.
-      //
-      // The job of a constraint function is to compute a value.
-      // The current implementation inlines the call to set the
-      // attribute that the constraint is attached to, within the
-      // constraint function it  Walking the statements of
-      // the function will process the expression that computes
-      // the value; it will also process the call to
-      // setAttribute, but ReferenceCollector knows to ignore
-      //
-      ReferenceCollector dependencies = new ReferenceCollector(options.getBoolean(Compiler.COMPUTE_METAREFERENCES));
-      // Only visit original body
-      for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
-        SimpleNode stmt = (SimpleNode)i.next();
-        dependencies.visit(stmt);
-      }
-      depExpr = dependencies.computeReferences(userFunctionName);
-      if (options.getBoolean(Compiler.PRINT_CONSTRAINTS)) {
-        (new ParseTreePrinter()).print(depExpr);
-      }
-    }
+    assert (! options.getBoolean(Compiler.CONSTRAINT_FUNCTION));
     boolean isStatic = isStatic(node);
     // Analyze local variables (and functions)
     VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY), false, this);
@@ -2460,9 +2432,6 @@ public class CodeGenerator extends CommonGenerator implements Translator {
         collector.push(lineno);
         collector.emit(Instructions.SetMember);
       }
-    }
-    if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
-      return depExpr;
     }
     return null;
   }

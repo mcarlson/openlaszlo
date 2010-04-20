@@ -145,3 +145,51 @@ var $lzsc$issubclassof = function (one:Class, other:Class) {
     return (one === other) || (one.prototype is other);
   }
 }
+
+// Runtime support for debugging reference dependencies (only called
+// in debug mode
+if ($debug) {
+  var $lzc$validateReferenceDependencies = function (dependencies:Array, referenceNames:Array) {
+    for (var i = 0, l = referenceNames.length; i < l; i++) {
+      var j = i + i;
+      var dc = dependencies[j];
+      var dp = dependencies[j + 1];
+      if (! (dc is LzEventable)) {
+        // We return an invalid dependency that applyConstraintMethod
+        // will convert to a more useful warning.
+        dependencies[j] = new Error("Invalid dependency context");
+        dependencies[j + 1] = Debug.formatToString("Unable to create dependency on %=s.%s", dc, referenceNames[i], dp);
+      }
+    }
+    return dependencies;
+  }
+}
+
+// Runtime support for computing function dependencies
+var $lzc$getFunctionDependencies = function (fnnm:String, self, context, args:Array, ctnm:String=null):Array {
+  var deps = [], depfn = null;
+  try {
+    depfn = context["$lzc$" + fnnm + "_dependencies"];
+  } catch (e) {}
+  if (! (depfn is Function)) {
+    // This is a missing dependency.  If debugging, we contrive to get
+    // a useful message back to the user, otherwise, for backwards
+    // compatibility, we ignore it and keep going.
+    if ($debug) {
+      // We return an invalid dependency that applyConstraintMethod
+      // will convert to a more useful warning.
+      return [new Error("Invalid dependency method"),  Debug.formatToString("Unable to create dependency on %=s.%s", context, ctnm, fnnm)];
+    }
+  } else {
+    try {
+      deps = depfn.apply(context, [self, context].concat(args));
+    } catch (e) {
+      // This is just plain an error.  Warn about it, but for
+      // backwards compatibility, ignore it and keep going.
+      if ($debug) {
+        Debug.warn("Error: %w computing dependencies of %.64w.%s", e, context, fnnm);
+      }
+    }
+  }
+  return deps;
+}

@@ -23,6 +23,7 @@ import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.CompilerException;
 import org.openlaszlo.sc.CompilerImplementationError;
+import org.openlaszlo.sc.ReferenceCollector;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.ListFormat;
@@ -388,13 +389,16 @@ public class NodeModel implements Cloneable {
         pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + name + " dependencies");
         // Silence reference errors in dependency methods
         pragmas += "\n#pragma " + ScriptCompiler.quote("warnUndefinedReferences=false");
+        // But percolate them up to applyConstraintExpr
+        pragmas += "\n#pragma " + ScriptCompiler.quote("throwsError=true");
       }
-      String body = "";
-      try {
-        body = "return (" + getCompiler().dependenciesForExpression(srcloc + value) + ")";
-      } catch (CompilerException e) {
-        env.warn(e, source);
-      }
+      ReferenceCollector collector = getCompiler().dependenciesForExpression(srcloc + value, debug);
+      String depExpr = collector.computeReferencesAsExpression();
+      String depAnnotation = collector.computeReferencesDebugAnnoration();
+      String body =
+        debug ?
+        "return $lzc$validateReferenceDependencies(" + depExpr + ", " + depAnnotation + ");\n" :
+        "return " + depExpr + ";\n";
       Function dependencies;
       if (canHaveMethods) {
           dependencies = new Method(dependenciesname, "", "", pragmas, body, srcloc, null);
@@ -416,7 +420,7 @@ public class NodeModel implements Cloneable {
         String debugDescription = "";
         // debug inacessible to inner class, doh!
         if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
-          debugDescription = ", " + ScriptCompiler.quote("$" + when + "{" + value + "}");
+          debugDescription = ", " + ScriptCompiler.quote(name + "='$" + (when.equals(WHEN_ALWAYS) ? "" : when) + "{...}'");
         }
         if (when.equals(WHEN_ONCE) || when.equals(WHEN_PATH)) {
           // default

@@ -419,10 +419,9 @@ public class Compiler {
    * @param source javascript source for a function (including function keyword, etc.)
    * @param name name, will get name_dependencies as name of function
    */
-  public String dependenciesForExpression(String estr) {
+  public ReferenceCollector dependenciesForExpression(String estr, boolean debug) {
     String fname = "$lsc$dependencies";
     String source = "function " + fname + " () {" +
-      "\n#pragma 'constraintFunction'\n" +
       "\n#pragma 'withThis'\n" +
       // Use this.setAttribute so that the compiler
       // will recognize it for inlining.
@@ -430,32 +429,31 @@ public class Compiler {
                     "\n#beginAttribute\n" + estr +
                     "\n#endAttribute\n)}";
 
-    return dependenciesForFunction(source);
+    return dependenciesForFunction(source, debug);
   }
 
   /**
    * @param source javascript source for a function
    */
-  private String dependenciesForFunction(String source) {
+  private ReferenceCollector dependenciesForFunction(String source, boolean debug) {
     SimpleNode node = new Parser().parse(source);
     // Expect ASTProgram -> ASTModifiedDefinition -> ASTFunctionDeclaration
     SimpleNode fcn = node.get(0).get(0);
     if (!(fcn instanceof ASTFunctionDeclaration))
       throw new CompilerError("Internal error: bad AST for constraints");
 
-    ReferenceCollector dependencies = new ReferenceCollector(options.getBoolean(Compiler.COMPUTE_METAREFERENCES));
+    ReferenceCollector dependencies = new ReferenceCollector(debug);
 
     SimpleNode[] children = fcn.getChildren();
     int stmtpos = (children.length - 1);
     for (;stmtpos < children.length; stmtpos++) {
       dependencies.visit(children[stmtpos]);
     }
-    SimpleNode depExpr = dependencies.computeReferencesAsExpression();
-    String result = new ParseTreePrinter().text(depExpr);
     if (options.getBoolean(Compiler.PRINT_CONSTRAINTS)) {
-      System.out.println(result);
+      String depExpr = dependencies.computeReferencesAsExpression();
+      System.out.println(depExpr);
     }
-    return result;
+    return dependencies;
   }
 
   //

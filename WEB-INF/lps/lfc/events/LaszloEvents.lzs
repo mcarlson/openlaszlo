@@ -93,46 +93,56 @@ public final class LzDelegate {
    * new delegate for.
    * @param String eventName: (Optional, but required if eventSender is used) The name
    * of the event to register the new delegate for.
+   *
+   * @devnote [20010-04-06 ptw] (LPP-7344) We intentionally do not
+   * declare the type of context and eventSender so that we can offer
+   * a more helpful diagnositic when they are not LzEventable's (e.g.,
+   * a generated constraint on a property of a non-node).
    */
-  public function LzDelegate (context:LzEventable, methodName:String, eventSender:LzEventable = null, eventName:String = null) {
+  public function LzDelegate (context/*:LzEventable*/, methodName:String, eventSender/*:LzEventable*/ = null, eventName:String = null) {
     super();
+
+    if (! (context is LzEventable)) {
+      if ($swf8) {
+        if (context is Object) {
+          // We proceed anyways, for back-compatibility with the swf8
+          // kernel
+        } else if ($debug) {
+          Debug.error('Not creating delegate:  invalid context: %.64w.%s', context, methodName);
+          return;
+        }
+      } else if ($debug) {
+        Debug.error("Not creating delegate: invalid context: %.64w.%s", context, methodName);
+        return;
+      }
+    }
+
     if ((context == null) || (context['__LZdeleted'])) {
         if ($debug) {
-            Debug.warn('Ignoring an attempt to create a delegate with a null or deleted context.', context, methodName, eventSender, eventName);
+          Debug.warn('Not creating delegate:  %s context %.64w.%s', ((context == null) ? 'null' : 'deleted'), context, methodName);
         }
         return;
     }
-    if ($as3) {
-      // This type-check is superfluous in JS2, but we want it as an
-      // aid to portability in JS1
-    } else if (context is LzEventable) {
-      // Ok
-    } else if (! (context is Object)) {
-      if ($debug) {
-        Debug.error('Invalid context: %w (for method %s)', context, methodName);
-      }
-      return;
-    } else if ($debug) {
-      // This causes too many warnings right now
-//       Debug.error("Invalid context: %w (for method %s)", context, methodName);
-      // We proceed anyways below, for back-compatibility
-    }
+
     this.c = context;
     var m:* = context[methodName];
-    if (m is Function) {
-      this.m = m;
-      if (m.length != 1) {
-        if ($debug) {
-          Debug.warn("Invalid delegate: %s.%s => %w (must accept one argument)", context, methodName, m);
-        }
-        if ($as3) {
-          var a:Array = new Array(m.length);
-          this.m = function (ignore:*) :* { return m.apply(this, a); }
-        }
+    if (! (m is Function)) {
+      if ($debug) {
+        Debug.error("Not creating delegate:  invalid method %.64w.%=s (must be a Function)", context, m, methodName);
       }
-    } else if ($debug) {
-      Debug.error("Invalid delegate: %s.%s => %w (must be a Function)", context, methodName, m);
+      return;
     }
+    this.m = m;
+    if (m.length != 1) {
+      if ($debug) {
+        Debug.warn("Invalid delegate method %.64w.%=s (must accept one argument)", context, m, methodName);
+      }
+      if ($as3) {
+        var a:Array = new Array(m.length);
+        this.m = function (ignore:*) :* { return m.apply(this, a); }
+      }
+    }
+
     if (eventSender != null) {
       this.register( eventSender, eventName );
     }
@@ -203,31 +213,37 @@ public function execute (eventValue:*) :* {
   * @param LzEventable eventSender: The object which publishes the event.
   * @param String eventName: The name of the event to register for.
   *
+  * @devnote [20010-04-06 ptw] (LPP-7344) We intentionally do not
+  * declare the type of eventSender so that we can offer a more
+  * helpful diagnositic when they are not LzEventable's (e.g., a
+  * generated constraint on a property of a non-node).
   */
-  public function register (eventSender:LzEventable, eventName:String) :void {
-    if ($as3) {
-      // This type-check is superfluous in JS2, but we want it as an
-      // aid to portability in JS1
-    } else if (eventSender is LzEventable) {
-      // Ok
-    } else if (! (eventSender is Object)) {
-      if ($debug) {
-        Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
+  public function register (eventSender/*:LzEventable*/, eventName:String) :void {
+    var compatibilitymode = false;
+    if (! (eventSender is LzEventable)) {
+      if ($swf8) {
+        if (eventSender is Object) {
+          // We proceed anyways, for back-compatibility with the swf8
+          // kernel
+          compatibilitymode = true;
+        } else if ($debug) {
+          Debug.error('Not registering %.64w: invalid event sender: %.64w.%s', this, eventSender, eventName);
+          return;
+        }
+      } else if ($debug) {
+        Debug.error('Not registering %.64w: invalid event sender: %.64w.%s', this, eventSender, eventName);
+        return;
       }
-      return;
-    } else if ($debug) {
-      // This causes too many warnings right now
-//       Debug.error('Invalid event sender: %w (for event %s)', eventSender, eventName);
-      // We proceed anyways, for back-compatibility
     }
 
     if ((this.c == null) || (this.c['__LZdeleted'])) {
         // don't register to event when context is deleted
         return;
     }
+
     // Delegates between LzEventables can cause memory leaks.  We record these 
     // delegates so they can be cleaned up in destroy()
-    if ((eventSender is LzEventable) && (eventSender !== this.c)) {
+    if (eventSender !== this.c && (! compatibilitymode)) {
       // Don't track more than once
       if (this.__tracked == false) {
         this.__tracked = true;
@@ -242,10 +258,11 @@ public function execute (eventValue:*) :* {
 
     var anEvent:* = eventSender[ eventName ];
     if (! (anEvent is LzEvent)){
-      if ($debug) {
-        if (anEvent && (! (anEvent is LzDeclaredEventClass))) {
-          Debug.error("Invalid event: %w.%s => %w", eventSender, eventName, anEvent);
+      if (anEvent && (! (anEvent is LzDeclaredEventClass))) {
+        if ($debug) {
+          Debug.error("Not registering %.64w:  invalid event: %.64w.%=s", this, eventSender, anEvent, eventName);
         }
+        return;
       }
       anEvent = new LzEvent( eventSender, eventName, this );
     } else {
@@ -380,18 +397,21 @@ if ($debug) {
   * @access private
   */
   LzDelegate.prototype._dbg_name = function (){
-    var name:String = Debug.formatToString("%0.48w/<handler", this.c);
-    var ev0:LzEvent = this[0];
-    if (ev0) {
-      name += Debug.formatToString(" name='%s'", ev0._dbg_eventName);
-      if (ev0._dbg_eventSender !== this.c) {
-        name += Debug.formatToString(" reference='%w'", ev0._dbg_eventSender);
-      }
-      if (Debug.functionName(this.m).indexOf('$') != 0) {
-        name += Debug.formatToString(" method='%w'", this.m);
-      }
-      if (this[1]) {
-        name += " \u2026";
+    var name:String = Debug.formatToString("%.48w/<handler", this.c);
+    var method:String = Debug.functionName(this.m);
+    if (method.indexOf('$') != 0) {
+      name += " method=" + Debug.stringEscape(method, true);
+    }
+    if (this.__events is Array) {
+      var ev0:LzEvent = this.__events[0];
+      if (ev0) {
+        name += Debug.formatToString(" name='%s'", ev0._dbg_eventName);
+        if (ev0._dbg_eventSender !== this.c) {
+          name += Debug.formatToString(" reference='%.64w'", ev0._dbg_eventSender);
+        }
+        if (this.__events[1]) {
+          name += " \u2026";
+        }
       }
     }
     name += ">";

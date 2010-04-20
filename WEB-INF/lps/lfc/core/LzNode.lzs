@@ -1565,22 +1565,55 @@ public dynamic class LzNode extends LzEventable {
     }
     // Apply the constraint method
     var constraintMethodName:String = expr.methodName;
-    if ($debug) {
-      if (!(this[constraintMethodName] is Function)) {
-        Debug.debug("Bad constraint %w on %w", expr, this);
+    if (! (this[constraintMethodName] is Function)) {
+      if ($debug) {
+        Debug.error("Bad constraint %w on %w", expr, this);
       }
+      return;
     }
     var dependencies = null;
     // TODO: [2008-03-24 ptw] Use `switch type`...
     if (expr instanceof LzAlwaysExpr) {
       var c:LzAlwaysExpr = (expr cast LzAlwaysExpr);
       var dependenciesMethodName:String = c.dependenciesName;
-      if ($debug) {
-        if (!(this[dependenciesMethodName] is Function)) {
-          Debug.debug("Bad constraint dependencies %w on %w", expr, this);
+      if (! (this[dependenciesMethodName] is Function)) {
+        if ($debug) {
+          Debug.error("Bad dependencies for constraint %.64w.%w", this, expr);
+        }
+        // Fall through and try to at least apply the initial constraint
+      } else {
+        try {
+          dependencies = this[dependenciesMethodName]();
+          // Make up for the compiler's inability to detect LzEventable's
+          // at compile time by removing any dependencies that you
+          // can't actually install.
+          for (var i = 0, l = dependencies.length; i < l; i += 2) {
+            var dp = dependencies[i];
+            if ((dp != null) && (! (dp is LzEventable))) {
+              // TODO: [2010-04-12 ptw] We're not ready to implement this warning
+              // yet as there is no way to silence the warning from
+              // user land.
+//               if ($debug) {
+//                 if (dp is Error) {
+//                   // Error propagated back from dependency
+//                   // computation, reported here so we can relate it to
+//                   // the appropriate constraint.  The 'property' is
+//                   // the formatted error string.
+//                   Debug.warn("%s for constraint %.64w.%w", dependencies[i + 1], this, expr);
+//                 } else {
+//                   Debug.warn("Ignoring invalid dependency %.32w.%s for constraint %.64w.%w", dp, "on" + dependencies[i + 1], this, expr);
+//                 }
+//               }
+              dependencies[i] = null;
+            }
+          }
+        } catch (e) {
+          if ($debug) {
+            Debug.error("Error: %w computing dependencies for constraint %.64w.%w", e, this, expr);
+          }
+          // Fall through and try to at least apply the initial constraint
         }
       }
-      dependencies = this[dependenciesMethodName]();
     }
     this.applyConstraintMethod(constraintMethodName , dependencies);
   }
