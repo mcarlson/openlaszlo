@@ -16,6 +16,7 @@ import java.util.*;
 
 import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.sc.Compiler;
+import org.openlaszlo.utils.LZUtils;
 
 public class JavascriptCompressor extends GenericVisitor implements Translator {
   // TODO: [2009-10-30 ptw]
@@ -133,8 +134,8 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
       value = key.substring(equals + 1);
       key = key.substring(0, equals);
     }
-    if ("false".equalsIgnoreCase(value) ||
-        "true".equalsIgnoreCase(value)) {
+    if (LZUtils.equalsIgnoreCase("false", value) ||
+        LZUtils.equalsIgnoreCase("true", value)) {
       options.putBoolean(key, value);
     } else {
       options.put(key, value);
@@ -341,7 +342,7 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
 }
 
 /**
- * @copyright Copyright 2006-2007, 2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2006-2007, 2009, 2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */
 

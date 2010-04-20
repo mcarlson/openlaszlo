@@ -17,6 +17,7 @@ import java.text.DecimalFormat;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.sc.Translator;
+import org.openlaszlo.utils.LZUtils;
 
 // Values
 import org.openlaszlo.sc.Values;
@@ -30,7 +31,14 @@ public class Compiler {
   // The parse tree is stored with the key (fname) and the
   // value (ASTProgram, hasIncludes).
   // It doesn't save any time to persist this cache to disk.
+  //
+  // DANGER: you must make sure that if this cache is enabled, that
+  // script cache is also enabled, because the compiler for SWF10 and
+  // Javascript side-effects the cached AST nodes. If you grab the
+  // cached contents and let the ParseTreePrinter use it again you
+  // will get incorrect code (like try{try{}}} wrapped around things).
   public static ScriptCompilerCache CachedParses;
+
   // The instructions are stored with the keys (fname).  The checksum
   // in both cases is the file content string.  It costs 10s to
   // persist this to disk, but speeds up subsequent compiles.
@@ -117,7 +125,7 @@ public class Compiler {
       }
       if (value != null) {
         if (value instanceof String) {
-          result = "true".equalsIgnoreCase((String)value);
+          result = LZUtils.equalsIgnoreCase("true", (String)value);
         } else if (value instanceof Integer) {
           result = (! Integer.valueOf("0").equals(value));
         } else {
@@ -486,6 +494,7 @@ public class Compiler {
   public static String GENERATE_PREDICTABLE_TEMPS = "generatePredictableTemps";
   public static String INCREMENTAL_COMPILE = "incrementalCompile";
   public static String EMIT_AS3_ONLY = "emitAS3Only";
+  public static String CHECK_MATCHING_OPTIONS = "checkMatchingOptions";
   public static String INCLUDES = "processIncludes";
   public static String INSTR_STATS = "instrStats";
   public static String LINK = "link";

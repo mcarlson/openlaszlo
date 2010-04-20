@@ -45,7 +45,9 @@ public class lzsc  {
     "--option compilerOption[=value]",
     "   set a compiler option",
     "--incremental",
-    "   for LFC debugging, not supported",
+    "   only implemented for SWF10",
+    "--persist",
+    "   do not exit after compiling, for LFC debugging, not supported",
     "--delete",
     "   for LFC debugging, not supported",
     "",
@@ -87,6 +89,10 @@ public class lzsc  {
 
     String resolve(String pathname) {
       return (new File(this.base, pathname)).getPath();
+    }
+
+    public String toString() {
+      return "Resolver "+(base == null ? "" : base.toString());
     }
   }
 
@@ -205,6 +211,7 @@ public class lzsc  {
     boolean deleteFile = false;
     String scriptFile = null;
     boolean incremental = false;
+    boolean persist = false;
 
     String defaultRuntime = LPS.getProperty("compiler.runtime.default", "swf8");
     // default constants
@@ -214,7 +221,9 @@ public class lzsc  {
 
     // default options
     compilerOptions.put(Compiler.CONDITIONAL_COMPILATION, Boolean.TRUE);
-    compilerOptions.put(Compiler.CACHE_COMPILES, Boolean.TRUE);
+
+    boolean scache = "true".equals(LPS.getProperty("compiler.scache.enabled"));
+    compilerOptions.put(Compiler.CACHE_COMPILES, new Boolean(scache));
 
     // set default runtime
     if (! setRuntime(defaultRuntime)) { return 1; }
@@ -274,10 +283,13 @@ public class lzsc  {
         scriptFile = arg;
       } else if ("--delete".equals(opt)) {
         deleteFile = true;
+      } else if ("--persist".equals(opt)) {
+        persist = true;
       } else if ("--incremental".equals(opt)) {
         incremental = true;
-        compilerOptions.put("cacheCompiles", Boolean.TRUE);
-        compilerOptions.put("progress", Boolean.TRUE);
+        compilerOptions.put(Compiler.PROGRESS, Boolean.TRUE);
+        compilerOptions.put(Compiler.INCREMENTAL_COMPILE, Boolean.TRUE);
+
       } else if ("--option".equals(opt)) {
         int eq = arg.indexOf("=");
         if (eq < 0) { 
@@ -329,6 +341,17 @@ public class lzsc  {
       }
       long time = System.currentTimeMillis();
       try {
+
+        // For swf9/10, set up a known location for tmp .as files, so
+        // they can be reused next time by incremental compile
+        ScriptCompilerInfo scInfo = new ScriptCompilerInfo();
+        compilerOptions.put(Compiler.COMPILER_INFO, scInfo);
+        // Working directory path prefix to place intermediate .as3 files
+        scInfo.buildDirPathPrefix = "buildlfc";
+        File workdir = SWF9External.createCompilationWorkDir(false, scInfo);
+        scInfo.workDir = scInfo.mainAppWorkDir = workdir;
+        compilerOptions.put(Compiler.REUSE_WORK_DIRECTORY, "true");
+        compilerOptions.put(Compiler.CHECK_MATCHING_OPTIONS, "true");
         compile(outf, ((String[])args.toArray(new String[0]))[0], compilerOptions);
       }
       catch (Exception e) {
@@ -339,13 +362,16 @@ public class lzsc  {
         }
       }
       time = System.currentTimeMillis() - time;
-      if (! incremental) {
+      if (! persist) {
         break;
       }
       System.err.println("Compiled " + outf + " in " + secondsFormatter.format(time/1000.0) + " seconds");
       System.err.println("Compile again [Enter | q + Enter]: ");
+
       // TODO [2007-01-22 ptw]
-      String response = ""; // = new String(System.in.read()).toLower();
+      byte b[] = new byte[1];
+      try { System.in.read(b); } catch (IOException e) { break; }
+      String response = new String(b).toLowerCase(Locale.ENGLISH);
       if ("q".equals(response)) {
         break;
       }
@@ -373,6 +399,6 @@ public class lzsc  {
 }
 
 /**
- * @copyright Copyright 2008, 2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2008, 2009, 2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

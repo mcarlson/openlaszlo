@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import org.openlaszlo.utils.FileUtils;
+import org.openlaszlo.utils.LZUtils;
 import org.openlaszlo.cache.Cache;
 import org.apache.log4j.Logger;
 
@@ -35,14 +36,14 @@ public final class ResponderSETCACHESIZE extends ResponderAdmin
             String k = req.getParameter("k"); 
             boolean inMem = true;
             Cache cache;
-            if (t != null && t.equalsIgnoreCase("data")) {
+            if (t != null && LZUtils.equalsIgnoreCase(t, "data")) {
                 cache = ResponderDATA.getCache();
-            } else if (t != null && t.equalsIgnoreCase("compiler")) {
+            } else if (t != null && LZUtils.equalsIgnoreCase(t, "compiler")) {
                 cache = ResponderCompile.getCompilationManager();
             } else {
                 throw new RuntimeException("unknown cache type "+t);
             }
-            if (k != null && k.equalsIgnoreCase("disk")) {
+            if (k != null && LZUtils.equalsIgnoreCase(k, "disk")) {
                 inMem = false; 
             }
 

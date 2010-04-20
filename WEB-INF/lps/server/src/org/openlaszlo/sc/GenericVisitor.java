@@ -14,6 +14,7 @@
 package org.openlaszlo.sc;
 import java.io.*;
 import java.util.*;
+import org.openlaszlo.server.LPS;
 
 import org.openlaszlo.sc.parser.*;
 
@@ -107,31 +108,44 @@ public class GenericVisitor implements ASTVisitor {
     }
     String sourceKey = file.getAbsolutePath();
     String sourceChecksum = "" + file.lastModified(); // source;
-    ParseResult entry = (ParseResult)Compiler.CachedParses.get(sourceKey, sourceChecksum);
+    ParseResult entry = null;
+    boolean enableScriptCache = options.getBoolean(Compiler.CACHE_COMPILES);
+
+    // N.B.: If we're using AST nodes pulled from the CachedParses
+    // cache, we had better be sure the script cache is enabled, so
+    // they are only processed once.  The compile side-effects these
+    // nodes, so passing them through the compiler again will cause
+    // bad artifacts in the generated code.
+    if (enableScriptCache) {
+      entry = (ParseResult)Compiler.CachedParses.get(sourceKey, sourceChecksum);
+    }
     if ((entry == null)
         || options.getBoolean(Compiler.VALIDATE_CACHES)
         ) {
-      boolean hasIncludes = includePattern.matcher(source).matches();
-      if (options.getBoolean(Compiler.PROGRESS)) {
-        // Even though code generation is re-run
-        // for every file, just print this for
-        // files that are re-parsed, to indicate
-        // what's being changed.
-        System.err.println("Compiling " + userfname + "...");
-      }
-      SimpleNode program = (new Compiler.Parser()).parse(source);
-      // We could not cache if we knew we were only compiling once...
-      ParseResult realentry = new ParseResult(program, hasIncludes);
-      Compiler.CachedParses.put(sourceKey, sourceChecksum, realentry);
-      if ((entry != null) && options.getBoolean(Compiler.VALIDATE_CACHES)) {
-        if (! realentry.equals(entry)) {
-          System.err.println("Bad parse cache for " + sourceKey + ": " + entry + " != " + realentry);
+        boolean hasIncludes = includePattern.matcher(source).matches();
+        if (options.getBoolean(Compiler.PROGRESS)) {
+          // Even though code generation is re-run
+          // for every file, just print this for
+          // files that are re-parsed, to indicate
+          // what's being changed.
+          System.err.println("Compiling " + userfname + "...");
         }
+        SimpleNode program = (new Compiler.Parser()).parse(source);
+        // We could not cache if we knew we were only compiling once...
+        ParseResult realentry = new ParseResult(program, hasIncludes);
+        if (enableScriptCache) {
+          Compiler.CachedParses.put(sourceKey, sourceChecksum, realentry);
+          if ((entry != null) && options.getBoolean(Compiler.VALIDATE_CACHES)) {
+            if (! realentry.equals(entry)) {
+              System.err.println("Bad parse cache for " + sourceKey + ": " + entry + " != " + realentry);
+            }
+          }
+        }
+        entry = realentry;
       }
-      entry = realentry;
-    }
     return entry;
   }
+
 
   File includeNameToFile(String userfname) {
     try {

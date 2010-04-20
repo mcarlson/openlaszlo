@@ -550,7 +550,7 @@ mLogger.error(
             if (lzres != null) {
                 lzres.respondWithMessage(res, message);
             } else {
-                if ("swf".equalsIgnoreCase(lzt)) {
+                if (LZUtils.equalsIgnoreCase("swf", lzt)) {
                     Responder.respondWithMessageSWF(res, "LPS initialization error: " + message);
                 } else {
                     Responder.respondWithErrorHTML(res, "LPS initialization error: " + message);

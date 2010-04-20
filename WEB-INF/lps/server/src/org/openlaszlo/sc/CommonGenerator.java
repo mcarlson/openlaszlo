@@ -31,6 +31,7 @@ import java.nio.ByteBuffer;
 import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.sc.Instructions;
 import org.openlaszlo.sc.Instructions.Instruction;
+import org.openlaszlo.utils.LZUtils;
 
 import org.openlaszlo.cache.PersistentMap;
 
@@ -293,8 +294,8 @@ public abstract class CommonGenerator extends GenericVisitor {
       value = key.substring(equals + 1);
       key = key.substring(0, equals);
     }
-    if ("false".equalsIgnoreCase(value) ||
-        "true".equalsIgnoreCase(value)) {
+    if (LZUtils.equalsIgnoreCase("false", value) ||
+        LZUtils.equalsIgnoreCase("true", value)) {
       options.putBoolean(key, value);
     } else {
       options.put(key, value);

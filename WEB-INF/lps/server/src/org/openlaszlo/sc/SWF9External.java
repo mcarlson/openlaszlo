@@ -131,14 +131,16 @@ public class SWF9External {
     public SWF9External(Compiler.OptionMap options, boolean buildSharedLibrary) {
       this.options = options;
       mInfo = (ScriptCompilerInfo) options.get(Compiler.COMPILER_INFO);
+
       if (mInfo == null) {
         mInfo = new ScriptCompilerInfo();
       }
       if (options.getBoolean(Compiler.REUSE_WORK_DIRECTORY)) {
         // Re-use the previous working directory from the ScriptCompilerInfo
         workdir = mInfo.workDir;
+
       } else {
-        workdir = createCompilationWorkDir(options, buildSharedLibrary);
+        workdir = createCompilationWorkDir(buildSharedLibrary, mInfo);
         // Copy pointer to working directory to the ScriptCompilerInfo,
         // so any subsequent <import> library compilations can use it.
         mInfo.workDir = workdir;
@@ -146,7 +148,7 @@ public class SWF9External {
 
       // If this is not an incremental compile, erase all files in the working directory
       if (!options.getBoolean(Compiler.DEBUG_EVAL)) {
-        if (!options.getBoolean(Compiler.REUSE_WORK_DIRECTORY)) {
+        if (!options.getBoolean(Compiler.REUSE_WORK_DIRECTORY) || options.getBoolean(Compiler.CHECK_MATCHING_OPTIONS)) {
           if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
             // If the compiler options changed from the last compile, then clean the directory
             if (compilerOptionsChanged()) {
@@ -221,7 +223,7 @@ public class SWF9External {
      * and return a File for it.
      * @throw CompilerError when directory creation fails
      */
-    private File createCompilationWorkDir(Compiler.OptionMap options, boolean buildSharedLibrary)
+  public static File createCompilationWorkDir(boolean buildSharedLibrary, ScriptCompilerInfo scInfo)
     {
       // TODO: [2007-11-20 dda] Need some provisions for file
       // cleanup on error, and on success too.
@@ -231,7 +233,7 @@ public class SWF9External {
         String tmpdirstr = System.getProperty("java.io.tmpdir");
         String swf9tmpdirstr = tmpdirstr + File.separator + WORK_DIR_PARENT;
         (new File(swf9tmpdirstr)).mkdirs();
-        String appDirPrefix = mInfo.buildDirPathPrefix;
+        String appDirPrefix = scInfo.buildDirPathPrefix;
 
         // For Windows, we need to strip any "disk drive" prefix from
         // the path. e.g., "C:"
@@ -256,8 +258,6 @@ public class SWF9External {
       catch (IOException ioe) {
         throw new CompilerError("getCompilationWorkDir: cannot get temp directory: " + ioe);
       }
-      // Copy the pointer to our work directory to the ScriptCompilerInfo object
-      this.mInfo.workDir = f;
       return f;
     }
 
@@ -1227,15 +1227,10 @@ public class SWF9External {
     public void writeFile(TranslationUnit tunit, String pre, String post) {
       String name = tunit.getName();
       String body = tunit.getContents();
+
       String infilename = getFileNameForClassName(name, tunit.isClass());
       tunit.setSourceFileName(infilename);
       tunit.setLineOffset(countLines(pre));
-
-      
-
-      if (options.getBoolean(Compiler.PROGRESS)) {
-        System.err.println("Creating: " + infilename);
-      }
 
       FileOutputStream fos = null;
 
@@ -1244,6 +1239,7 @@ public class SWF9External {
       long startTime = System.nanoTime();
 
       if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
+
         if (diskfile.exists()) {
           long lastWritten = diskfile.lastModified();
           long classModified = tunit.getLastModified();
@@ -1254,9 +1250,9 @@ public class SWF9External {
             //System.err.print("!");
             //System.err.println(" MODIFIED: "+tunit.getLZXFilename()+" asfile: "+tunit.getSourceFileName() + ":: "+new Date(lastWritten)+", lzxfile: "+new Date(classModified)+"\n");
           } else {
+            // File was unmodified
             long elapsedTime = System.nanoTime() - startTime;
             mElapsed += (elapsedTime/1000);
-            //            System.err.println("unmodified: "+tunit.getLZXFilename()+" asfile: "+tunit.getSourceFileName() + ":: "+new Date(lastWritten)+", lzxfile: "+new Date(classModified)+"\n");
             return;
           }
         } else {
@@ -1265,7 +1261,7 @@ public class SWF9External {
       }
 
       try {
-        fos = new FileOutputStream(infilename);
+        fos = new FileOutputStream(diskfile);
         fos.write(pre.getBytes());
         fos.write(body.getBytes());
         fos.write(post.getBytes());
