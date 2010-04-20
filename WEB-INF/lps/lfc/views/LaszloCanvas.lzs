@@ -374,13 +374,13 @@ override function __makeSprite(args) {
     this.sprite = new LzSprite(this, true);
 }
 
-/** Sent whenever the mouse is dragged out of the application window
+/** Sent whenever the mouse is moved off the canvas
   * @access public
   * @lzxtype event
   */
 var onmouseleave = LzDeclaredEvent;
 
-/** Sent whenever the mouse is dragged into the application window
+/** Sent whenever the mouse is moved over the canvas
   * @access public
   * @lzxtype event
   */

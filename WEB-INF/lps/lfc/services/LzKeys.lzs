@@ -447,8 +447,10 @@ public final class LzKeysService extends LzEventable {
 
     /** @access private */
     function __mousewheelEvent (d:Number) :void {
-        this.mousewheeldelta = d;
-        if (this.onmousewheeldelta.ready) this.onmousewheeldelta.sendEvent(d);
+        if (lz.GlobalMouse.__mouseactive) {
+            this.mousewheeldelta = d;
+            if (this.onmousewheeldelta.ready) this.onmousewheeldelta.sendEvent(d);
+        }
     }
 
     /** Called when the last focusable element is reached

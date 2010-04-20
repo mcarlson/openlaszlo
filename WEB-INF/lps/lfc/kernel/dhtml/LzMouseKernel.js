@@ -134,6 +134,8 @@ var LzMouseKernel = {
         if (ison == LzMouseKernel.__mousecontrol) return;
         //Debug.write('mousecontrol', ison);
         LzMouseKernel.__mousecontrol = ison;
+        // Send appropriate global mouse event
+        LzMouseKernel.__sendEvent(ison ? 'onmouseenter' : 'onmouseleave');
         var lzembed = lz.embed;
         if (ison) {
             lzembed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');

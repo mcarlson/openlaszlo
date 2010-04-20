@@ -123,9 +123,9 @@ class LzMouseKernel  {
         handleMouseEvent(null, 'onmouseleave');
     }
 
-    static function __mouseWheelHandler (event:MouseEvent) :void {
-        lz.Keys.__mousewheelEvent(event.delta);
-    }
+//    static function __mouseWheelHandler (event:MouseEvent) :void {
+//        lz.Keys.__mousewheelEvent(event.delta);
+//    }
 
 
     //////////////////

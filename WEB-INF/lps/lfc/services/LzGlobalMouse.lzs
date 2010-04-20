@@ -152,13 +152,13 @@ public final class LzGlobalMouseService extends LzEventable {
      */
     var onmousedragout :LzDeclaredEventClass = LzDeclaredEvent;
 
-    /** Sent whenever the mouse is dragged out of the application window
+    /** Sent whenever the mouse is moved off the canvas
      * @access public
      * @lzxtype event
      */
     var onmouseleave :LzDeclaredEventClass = LzDeclaredEvent;
 
-    /** Sent whenever the mouse is dragged in the application window
+    /** Sent whenever the mouse is moved over the canvas
      * @access public
      * @lzxtype event
      */
@@ -180,10 +180,22 @@ public final class LzGlobalMouseService extends LzEventable {
     /** @access private */
     var __movecounter:int = 0;
 
+    /** True if the mouse is over the canvas 
+      * @access private */
+    var __mouseactive:Boolean = true;
+
     /** @access private */
     function __mouseEvent (eventname:String, view:*) :void {
         if (eventname == 'onmouseleave') {
-            if (canvas.onmouseleave.ready) canvas.onmouseleave.sendEvent();
+            this.__mouseactive = false;
+            if (canvas.onmouseleave.ready) {
+                canvas.onmouseleave.sendEvent(null);
+            }
+        } else if (eventname == 'onmouseenter') {
+            this.__mouseactive = true;
+            if (canvas.onmouseenter.ready) {
+                canvas.onmouseenter.sendEvent(null);
+            }
         } else if (eventname == 'onmousemove') {
             this.__movecounter++;
         }
