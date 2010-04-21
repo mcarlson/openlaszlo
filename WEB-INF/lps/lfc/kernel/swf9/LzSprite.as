@@ -593,24 +593,28 @@ public class LzSprite extends Sprite {
                     this.owner.resourceevent('loadratio', lr);
                 }
 
-                // look for frame properties
-                try {
-                    // accessing LoaderInfo.content may throw security exceptions
-                    var info:LoaderInfo = event.target as LoaderInfo;
-                    var content:DisplayObject = info.content;
-                    if (content is MovieClip) {
-                        var loaderMC = MovieClip(content);
-                        if (loaderMC) {
-                            var total = loaderMC.totalFrames;
-                            if (this.totalframes != total) {
-                                // this calls a setter to send the resourceevent
-                                this.totalframes = total;
+                if (LzSprite.quirks.loaderinfoavailable) {
+                    // look for frame properties where available
+                    try {
+                        // accessing LoaderInfo.content may throw security 
+                        // exceptions
+                        var info:LoaderInfo = event.target as LoaderInfo;
+                        var content:DisplayObject = info.content;
+                        if (content is MovieClip) {
+                            var loaderMC = MovieClip(content);
+                            if (loaderMC) {
+                                var total = loaderMC.totalFrames;
+                                if (this.totalframes != total) {
+                                    // this calls a setter to send the 
+                                    // resourceevent
+                                    this.totalframes = total;
+                                }
+                                this.owner.resourceevent('framesloadratio', loaderMC.framesLoaded / total);
                             }
-                            this.owner.resourceevent('framesloadratio', loaderMC.framesLoaded / total);
                         }
+                    } catch (error:SecurityError) {
+                        // ignore for now
                     }
-                } catch (error:SecurityError) {
-                    // ignore for now
                 }
             } else if (event.type == Event.OPEN) {
                 this.owner.resourceevent('loadratio', 0);
@@ -1921,6 +1925,8 @@ public class LzSprite extends Sprite {
         // workaround FF3.6 Mac bug - see LPP-8831
         ignorespuriousmouseevents: false
         ,fixtextselection:false
+        // See http://www.actionscript.org/forums/showthread.php3?t=137599
+        ,loaderinfoavailable:false
     };
 
     /** Update browser quirks
@@ -1930,6 +1936,9 @@ public class LzSprite extends Sprite {
         if (browser.isFirefox && browser.OS == 'Mac') {
             LzSprite.quirks.ignorespuriousff36events = browser.version == 3.6;
             LzSprite.quirks.fixtextselection = browser.version < 3.5;
+        }
+        if ($swf10) {
+            LzSprite.quirks.loaderinfoavailable = true;
         }
     }
 
