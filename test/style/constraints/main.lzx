@@ -1,19 +1,10 @@
-<!-- Copyright 2007-2008 Laszlo Systems -->
+<!-- Copyright 2007-2008, 2010 Laszlo Systems -->
 <canvas debug="true"  bgcolor="#AAAAAA">
     <include href="lzunit"/>
     <script>
     Debug.write("This test file exercises compiler and runtime support for $style constraints");
     </script>
     <debug/>
-    <include href="contention.lzx" />
-    <include href="constraint-test.lzx" />
-    <include href="speedtest.lzx" />
-    <include href="subclassing.lzx" />
-    
-    <TestSuite>
-        <ContentionTestCase />
-        <StyleConstraintTestCase />
-        <ConstraintSpeedTestCase />
-        <CSSSubclassingTestCase />
-    </TestSuite>
+
+    <include href="library.lzx" />
 </canvas>

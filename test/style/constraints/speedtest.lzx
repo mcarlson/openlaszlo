@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <library>    
     <include href="lzunit" />
     <stylesheet>
@@ -81,7 +81,7 @@
             }
             var tt = (new Date()).getTime() - t ;
             assertTrue(1 < tt );
-            Debug.write( 'Lookup test took: ' + tt );
+            Debug.info( 'Lookup test took %dms ', tt );
         ]]></method>
 
         <method name="makeSomeNodes">

@@ -1,4 +1,4 @@
-<!-- Copyright 2007, 2008, 2009 Laszlo Systems --> 
+<!-- Copyright 2007, 2008, 2009, 2010 Laszlo Systems --> 
 <library>
 
 
@@ -15,7 +15,6 @@
     <handler name="onconstruct" method="applyStyle" /> 
     
     <method name="applyStyle" args="ignore">
-        Debug.write("this is not simple bbbb");
         var style = LzCSSStyle.getComputedStyle( this );
         var bgc = style.getPropertyValue( "bgcolor" );
         this.setAttribute('bgcolor', bgc);

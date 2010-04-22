@@ -1,0 +1,8 @@
+<!-- Copyright 2010 Laszlo Systems, Inc. -->
+<library>
+  <include href="resource-not-found.lzx" />
+
+  <TestSuite>
+    <ResourceTestCase />
+  </TestSuite>
+</library>

@@ -1,0 +1,9 @@
+<!-- Copyright 2010 Laszlo Systems, Inc. -->
+<library>
+  <include href="../designerview.lzx" />
+  <include href="stylesheetelement-test.lzx" />
+
+  <TestSuite>
+    <StylesheetTestCase />
+  </TestSuite>
+</library>

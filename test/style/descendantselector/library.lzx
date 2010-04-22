@@ -1,0 +1,12 @@
+<!-- Copyright 2010 Laszlo Systems, Inc. -->
+<library>
+  <include href="simplerdescendant-test.lzx" />
+  <include href="descendantselector-test.lzx" />
+  <include href="complex-descendant-selector-test.lzx" />
+
+  <TestSuite>
+    <SimplerDescendantSelectorTestCase />
+    <DescendantSelectorTestCase />
+    <ComplexDescendantSelectorTestCase />
+  </TestSuite>
+</library>

@@ -288,13 +288,21 @@ public class NodeModel implements Cloneable {
       this.name = name;
       this.type = type;
       this.value = value;
-      // Only approximate.  Current only used for WHEN_STYLE
+      // Current only used for WHEN_STYLE
+      //
+      // Only approximate -- A CSS property name has to be a CSS
+      // identifier (optional leading -, followed by an alphabetic
+      // character, followed by any number of alphanumeric or -.  See
+      // http://www.w3.org/TR/CSS2/syndata.html#syntax.
       this.constantValue = (value != null && value.matches("\\s*['\"]\\S*['\"]\\s*"));
       this.when = when;
       this.source = source;
       this.env = env;
       this.srcloc = CompilerUtils.sourceLocationDirective(source, true);
-      if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE) && (!constantValue)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
+      if (when.equals(WHEN_STYLE) && (!constantValue)) {
+        throw new CompilationError("The attribute '" + name +"' has a non-constant $style binding, which is not supported" 
+                                   , source);
+      } else if (when.equals(WHEN_PATH) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
         this.bindername =  env.methodNameGenerator.next();
         if (when.equals(WHEN_ALWAYS)) {
           this.dependenciesname =  env.methodNameGenerator.next();

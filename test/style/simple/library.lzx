@@ -1,0 +1,11 @@
+<!-- Copyright 2010 Laszlo Systems, Inc. -->
+<library>
+  <include href="simple.lzx" />
+  <include href="undefineds.lzx" />
+
+  <TestSuite>
+    <SimpleTestCase />
+    <IdsTestCase />
+    <UndefinedsTestCase />
+  </TestSuite>
+</library>

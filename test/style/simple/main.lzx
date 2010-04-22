@@ -1,14 +1,9 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true" >
     <include href="lzunit" />
     <script>
     Debug.write("This test file exercises simple support for CSS.");    
     </script>
-    <include href="simple.lzx" />
-    <include href="undefineds.lzx" />    
-    <TestSuite>
-        <SimpleTestCase />
-        <IdsTestCase />
-    </TestSuite>
-    
+
+    <include href="library.lzx" />
 </canvas>

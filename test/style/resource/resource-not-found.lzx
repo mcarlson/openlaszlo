@@ -20,9 +20,10 @@
 
     <view id="gBonk" source="$style{'styledresource'}" />
 
-    <!-- BUG LPP-3024 this should give a warning, but does not  
-         [bshine 08.03.2007] -->     
-    <view id="gMissing" source="$style{'nostyledefined'}" />
+    <!-- Test that we can silence warnings about missing styles with a default -->
+    <view id="gMissing">
+      <attribute name="source" style="nostyledefined" value="null" />
+    </view>
 
     <resource name="niceresource" src="test.png" />
     <view id="gMarsh" resource="niceresource" />
@@ -31,9 +32,9 @@
          indeed, we do get an error if this line is uncommented. -->         
     <!-- resource name="monkresource" src="$style{'monkimagefile'}" -->
     <!-- if we give a null value for the resource's src attribute, we
-       get a compiler warning, which is correct behavior. -->
-    <resource name="monkresource" src="" />
-    <view id="gMonk" resource="monkresource" />
+       get a compiler warning, which is correct behavior.  Uncomment to test -->
+    <!-- resource name="monkresource" src="" -->
+    <!-- view id="gMonk" resource="monkresource" -->
 
     <resource name="jimresource" src="test.png" />
     <view id="gJim" resource="jimresource" />
@@ -45,7 +46,7 @@
     
     <!-- it is correct to get a compilation warning here 
     "The resource named 'sillyresource' has not been declared" -->
-    <view id="gSilly" resource="sillyresource" />
+    <!-- view id="gSilly" resource="sillyresource" -->
     
     <class name="ResourceTestCase" extends="TestCase">
         <!-- Descendant selectors test -->
@@ -64,7 +65,6 @@
         <!-- This test has to wait -->
         <handler name="onload" reference="gBonk">
             // gBonk should be just like gJason, but gBonk is styled with CSS
-            Debug.info("Checking %s", gBonk);
             assertEquals( "test.png", gBonk["resource"] );
             assertEquals( 77, gBonk["resourceheight"] );
             assertEquals( 206, gBonk["resourcewidth"] );             
@@ -76,5 +76,5 @@
     </class>
 
 </library>
-<!-- Copyright 2007, 2008 Laszlo Systems -->       
+<!-- Copyright 2007, 2008, 2010 Laszlo Systems -->       
    

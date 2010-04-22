@@ -1,0 +1,7 @@
+<!-- Copyright 2010 Laszlo Systems, Inc. -->
+<library>
+    <include href="neighborhoodclasses.lzx" />
+    <include href="kennedyfamily.lzx" />
+    <include href="thestreet.lzx" />
+</library>
+

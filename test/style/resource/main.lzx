@@ -1,13 +1,9 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true">
     <include href="lzunit" />
     <script>
     Debug.write("This test file exercises loading and styling resources");
     </script>
 
-    <include href="resource-not-found.lzx" />
-    
-    <TestSuite>
-        <ResourceTestCase />
-    </TestSuite>
+    <include href="library.lzx" />
 </canvas>

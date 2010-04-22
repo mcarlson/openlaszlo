@@ -1,5 +1,4 @@
-
-<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <!-- Remember: attribute selectors win over element selectors. --> 
     
@@ -22,14 +21,14 @@
         text {
             x:3;
         }
-        text[name="title"] {
+        text[name="mytitle"] {
             x:100;
         }
         
         
     </stylesheet>
     
-    <text name="title" id="mytitle" y="10" text="the title is here" resize="true"
+    <text name="mytitle" id="mytitle" y="10" text="the title is here" resize="true"
         x="$style{'x'}"/>
         
     <view name="thename" id="joseph">
@@ -109,7 +108,6 @@
         </method>
         
         <method name="testBigParty">
-            Debug.write("testBigParty");
             // This tests LPP-4063, CSS name attribute selector doesn't work in Flash 6
             assertEquals(100, mytitle["x"] );
         </method>

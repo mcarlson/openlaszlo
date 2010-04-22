@@ -1,0 +1,11 @@
+<!-- Copyright 2010 Laszlo Systems, Inc. -->
+<library>
+  <include href="../designerview.lzx" />
+  <include href="elementselector-test.lzx" />
+  <include href="specialclassnames-test.lzx" />
+
+  <TestSuite>
+    <ElementTestCase />
+    <SpecialClassNamesTestCase />
+  </TestSuite>
+</library>

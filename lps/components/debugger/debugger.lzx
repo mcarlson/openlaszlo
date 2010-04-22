@@ -1020,8 +1020,8 @@
 <method name="ensureVisible">
     if (! this.visible) {
         this.setAttribute('visible', true );
-        this.bringToFront();
     }
+    this.bringToFront();
 </method>
 
 <method name="loaded" >

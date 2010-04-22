@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true">
     <include href="lzunit" />
     <script>
@@ -7,12 +7,5 @@
     </script>
     <debug/>
 
-    <include href="../designerview.lzx" />
-    <include href="elementselector-test.lzx" />
-    <include href="specialclassnames-test.lzx" />    
-    
-    <TestSuite>
-        <ElementTestCase />
-        <SpecialClassNamesTestCase />
-    </TestSuite>
+    <include href="library.lzx" />
 </canvas>

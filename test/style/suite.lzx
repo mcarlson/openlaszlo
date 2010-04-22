@@ -3,9 +3,7 @@
 
 <include href="/test"/>
 <include href="/designerview.lzx" />
-<include href="neighborhood/neighborhoodclasses.lzx" />
-<include href="neighborhood/kennedyfamily.lzx" />
-<include href="neighborhood/thestreet.lzx" />    
+<include href="neighborhood" />
 <include href="fake/html-fake-elements.lzx" />
 
 <stylesheet>
@@ -1042,4 +1040,4 @@ dezignerview {
 
 </canvas>
 
-<!-- Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2007, 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->

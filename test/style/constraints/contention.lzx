@@ -1,17 +1,16 @@
-<!-- Copyright 2007-2008 Laszlo Systems -->
+<!-- Copyright 2007-2008, 2010 Laszlo Systems -->
 <library>
     
     <class name="mtext" extends="text" resize="false">
         <!--- Style name 'textx'. -->
-        <attribute name="x" value="$style{'textx'}"/>
+        <attribute name="x" style="textx" value="0" />
     </class>
     
     <text id="gene" />
     
     <mtext id="perry" />
 
-    <!-- We should see a warning here, and we do:
-        WARNING: No CSS value found for node #lana for property name textx  -->
+    <!-- We should NOT see a warning here because there is a fallback -->
     <mtext id="lana" />
     
     <!-- We should not see a warning about textx here, because we override the 

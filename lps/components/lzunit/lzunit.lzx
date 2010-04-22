@@ -1016,7 +1016,7 @@
       Below the progress bar a textual presentation of the test status
       and any failures is given.
     -->
-    <view name="display" width="100%" height="100%" oninit="bringToFront()">
+    <view name="display" x="0" y="0" width="100%" height="100%">
         <simplelayout axis="y" spacing="15" />
         <text>Test Progress</text>
         <view name="progress" bgcolor="black" width="${parent.width}" height="10">
@@ -1031,6 +1031,26 @@
     </view>
 
 </class>
+
+<!-- Name the debug console so we can ensure it is visible -->
+<debug name="debugConsoleWindow" />
+<!--
+  A single control panel on the canvas that is used to display the
+  results of any number of test suites
+-->
+<view name="lzunitControlPanel" x="0" y="0" height="100%" width="100%" options="ignorelayout">
+  <handler name="oninited" reference="canvas">
+    <!-- Ensure we are visible, but do not obscure the Debug console window -->
+    canvas.debugConsoleWindow.bringToFront();
+    this.sendBehind(canvas.debugConsoleWindow);
+  </handler>
+  <simplelayout axis="y" spacing="10" />
+  <!-- for testing -->
+  <!--          <button onclick="parent.parent.run()">Run</button> -->
+  <TestResult name="theTestResult"
+              width="100%" height="100%"
+              />
+</view>
 
 <!--
   A TestSuite is a view with any number of children.  The children
@@ -1203,7 +1223,6 @@
       @keywords private
     -->
     <method name="run"><![CDATA[
-        this.controlPanel.bringToFront(); // make sure we can see the control panel
         dw("TestSuite.run()");
         // bleah
         this.setResult(controlPanel.theTestResult);
@@ -1259,11 +1278,6 @@
         }
         var c = new LzDelegate( this , "runNextTest" )
         lz.Idle.callOnIdle(c);
-            // This fix papers over a difference between swf and dhtml, and I'm not sure
-            // why this fixes it. In dhtml, without this change, the control panel
-            // becomes invisible when the tests fail, but in swf, we don't see that problem.
-            // in any case, this fixes bug LPP-4109 [bshine 2007.06.29]
-        this.controlPanel.bringToFront(); // make sure we can see the control panel
         return true;
       ]]>
     </method>
@@ -1287,14 +1301,8 @@
       -->
 
     <!-- default view of the TestResult -->
-    <view name="controlPanel" height="100%" width="100%">
-        <simplelayout axis="y" spacing="10" />
-        <!-- for testing -->
-<!--          <button onclick="parent.parent.run()">Run</button> -->
-        <TestResult name="theTestResult"
-          width="100%" height="100%"
-         />
-    </view>
+    <attribute name="controlPanel" value="${canvas.lzunitControlPanel}" />
+
     <doc>
         <tag name="shortdesc">
             <text>A view that comprises a suite of LZUnit tests.</text>
@@ -1384,6 +1392,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

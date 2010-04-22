@@ -1,6 +1,7 @@
-<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>    
     <stylesheet src="../neighborhood/kennedy.css" />
+    <include href="../neighborhood" />
     
     <class name="DescendantSelectorTestCase" extends="TestCase" >
 

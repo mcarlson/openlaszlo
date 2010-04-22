@@ -62,11 +62,11 @@
            x="$style{ 'nicexpos' }" height="50" options="ignorelayout" />
         <view id="gAfter" bgcolor="#3300BB" width="50" height="50" />
 
-        <view id="gComplicatedView" width="$style{ mystyleval1 }">
-            <text name="txt" text="$style{ mystyleval2 }" >
-                 <attribute name="mystyleval2" value="indirect2" type="string"/>
+        <view id="gComplicatedView">
+            <text name="txt" >
+                 <attribute name="text" style="indirect2"/>
             </text>
-            <attribute name="mystyleval1" value="indirect1" type="string"/>
+            <attribute name="width" style="indirect1"/>
         </view>
 
 
@@ -120,4 +120,4 @@
         </method> 
 </class>
 </library>
-<!-- Copyright 2007-2008 Laszlo Systems -->
+<!-- Copyright 2007-2008, 2010 Laszlo Systems -->

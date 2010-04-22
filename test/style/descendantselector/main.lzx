@@ -1,19 +1,7 @@
-<!-- Copyright 2007-2008 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2007-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true"  bgcolor="#AAAAAA">
-    <include href="lzunit"/>
-    <debug/>
-    <include href="../neighborhood/neighborhoodclasses.lzx" />
-    <include href="../neighborhood/kennedyfamily.lzx" />
-    <include href="../neighborhood/thestreet.lzx" />
-    
-    <include href="simplerdescendant-test.lzx" />
-    <include href="descendantselector-test.lzx" />    
-    <include href="complex-descendant-selector-test.lzx" />
+  <include href="lzunit"/>
+  <include href="../neighborhood" />
 
-    
-    <TestSuite>
-        <SimplerDescendantSelectorTestCase />
-        <DescendantSelectorTestCase />        
-        <ComplexDescendantSelectorTestCase />
-    </TestSuite>
+  <include href="library.lzx" />
 </canvas>

@@ -1,13 +1,10 @@
-<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true" >
     <include href="lzunit" />
     <include href="../designerview.lzx" />
     <script>
     Debug.write("This test file exercises compiler support for CSS and id tags.");    
     </script>
-    <include href="ids.lzx" />
-    <TestSuite>
-        <IdsTestCase />
-    </TestSuite>
-    
+
+    <include href="library.lzx" />
 </canvas>

@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <!-- [2007.05.25] These tests are failing and are probably ROTTEN
     because the way rules are exported as javascript by the compiler 
@@ -17,9 +17,7 @@ compiler output for these rules.
     
     </stylesheet>
 -->
-<include href="../neighborhood/neighborhoodclasses.lzx" />
-<include href="../neighborhood/kennedyfamily.lzx" />
-<include href="../neighborhood/thestreet.lzx" />    
+<include href="../neighborhood" />
 
     <script>       
     
