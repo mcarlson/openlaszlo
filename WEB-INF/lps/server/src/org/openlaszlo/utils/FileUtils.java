@@ -419,30 +419,25 @@ mLogger.warn(
      * @param subdir a string
      */
     public static String insertSubdir(String pathname, String subdir) {
-        boolean hasDrive = false;
-        if (pathname.length() > 1) {
-            hasDrive = (":".equals(pathname.substring(1,2)));
-        }
-        String driveSpecifier ="";
-        if (hasDrive) {
-            driveSpecifier = pathname.substring(0,2);
-            pathname=pathname.substring(2);
-        }
-        char fSep=File.separatorChar;
-        int slashIndex = pathname.lastIndexOf(fSep);
-        if (slashIndex == -1) {
-            return (driveSpecifier + subdir + fSep + pathname);
-        }
-        else {
-            if (hasDrive | (slashIndex == 0)) {
-                return (driveSpecifier + fSep + subdir + pathname);
-            }
-            else {
-                String dir = pathname.substring(0, slashIndex);
-                String name = pathname.substring(slashIndex, pathname.length());
-                return (driveSpecifier + dir + fSep + subdir + name);
+        File f = new File(pathname);
+        File result = null;
+        int lastOff = (pathname.length() - 1);
+        if (lastOff != -1) {
+            // NOTE [20100421 anba]:
+            // If the last character is the file separator or '/', "subdir" is
+            // not inserted in between the path of the file denoted by pathname.
+            // Yepp, that means insertSubdir("a/b", "c") => "a/c/b",
+            // whereas insertSubdir("a/b/", "c") => "a/b/c".
+            // This doesn't make sense to me, but it is required :-/
+            char lastChar = pathname.charAt(lastOff);
+            if ((lastChar == File.separatorChar) || (lastChar == '/')) {
+                result = new File(pathname, subdir);
             }
         }
+        if (result == null) {
+            result = new File(new File(f.getParentFile(), subdir), f.getName());
+        }
+        return result.getPath();
     }
 
     public static String insertSuffix(String pathname, String suffix) {
