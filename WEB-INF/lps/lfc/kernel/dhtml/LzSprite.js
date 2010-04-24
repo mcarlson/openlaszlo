@@ -618,6 +618,7 @@ LzSprite.quirks = {
     ,use_filter_for_dropshadow: false
     ,keyboardlistentotop_in_frame: false
     ,forcemeasurescrollheight: false
+    ,resize2dcanvas: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -687,7 +688,11 @@ LzSprite.__updateQuirks = function () {
                     // Does Windows7 behave like Vista?
                     quirks['ie_alpha_image_loader'] = true;
                 }
-
+                if (browser.version > 7) {
+                    // See LPP-8932
+                    // excanvas needs a little help to show the context at first
+                    quirks['resize2dcanvas'] = true;
+                }
             }
 
             quirks['ie_opacity'] = true;
@@ -3092,6 +3097,11 @@ LzSprite.prototype.__docanvascallback = function() {
     var callback = this.__canvascallbackscope[this.__canvascallbackname];
     if (callback) {
         callback.call(this.__canvascallbackscope, this.__LZcanvas.getContext("2d"));
+        if (LzSprite.quirks.resize2dcanvas) {
+            var canvassize = this.__LZcanvas.firstChild;
+            canvassize.style.width = this._w;
+            canvassize.style.height = this._h;
+        }
     }
 }
 

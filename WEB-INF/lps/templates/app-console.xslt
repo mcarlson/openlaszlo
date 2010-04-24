@@ -60,7 +60,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:template match="/">
     <html>
       <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
         <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"/>
         <link rel="stylesheet" href="{$lps}/lps/includes/console.css" type="text/css"/>
         <xsl:comment>[if IE]&gt;
@@ -82,6 +81,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <script src="{/canvas/request/@lps}/lps/includes/embed-compressed.js" type="text/javascript"/>
         <xsl:choose>
           <xsl:when test="/canvas/@runtime = 'dhtml'">
+            <xsl:comment>[if IE]&gt;&lt;script type="text/javascript" src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/excanvas.js"&gt;&lt;/script&gt;&lt;![endif]</xsl:comment>
             <script type="text/javascript">
               lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
             </script>
