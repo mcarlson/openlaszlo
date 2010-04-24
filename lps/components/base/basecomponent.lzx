@@ -411,6 +411,10 @@
         <!--- @access private -->
         <method name="destroy">
             <![CDATA[
+            // prevent destroyed stylable objects from applying
+            this.styleable = false;
+            // prevent other things from being applied
+            this._initcomplete = false;
             if (this['isdefault'] && this.isdefault) {
                 lz._componentmanager.service.unmakeDefault( this );
             } 
