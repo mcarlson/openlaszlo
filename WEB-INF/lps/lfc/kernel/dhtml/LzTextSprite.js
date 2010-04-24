@@ -183,8 +183,10 @@ LzTextSprite.prototype.setScrolling = function (on) {
     } else if (scrolldiv.style.clip) {
         scrolldiv.style.clip = this.quirks['fix_ie_css_syntax'] ? 'rect(auto auto auto auto)' : '';
     }
-    this.applyCSS('width', wp, 'scrolldiv');
-    this.applyCSS('height', hp, 'scrolldiv');
+    scrolldiv.style.width = wp;
+    scrolldiv.style.height = hp;
+    //this.applyCSS('width', wp, 'scrolldiv');
+    //this.applyCSS('height', hp, 'scrolldiv');
   }
   // Scrolling was requested, and granted!
   return on && this.scrolling;
@@ -301,9 +303,10 @@ LzTextSprite.prototype.setMultiline = function(m) {
         }
         this.applyCSS('overflow', 'hidden', 'scrolldiv');
     } else {
-        if (this._whiteSpace != 'nowrap') {
-            this._whiteSpace = 'nowrap';
-            this.scrolldiv.style.whiteSpace = 'nowrap';
+        var wrap = this.className == 'lzswfinputtextmultiline' ? 'pre-wrap' : 'nowrap';
+        if (this._whiteSpace != wrap) {
+            this._whiteSpace = wrap;
+            this.scrolldiv.style.whiteSpace = wrap;
         }
         this.applyCSS('overflow', '', 'scrolldiv');
     }
@@ -485,15 +488,14 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
   // Now create a cache key limited to the styles that can affect the
   // height/width
   // Turn off `overflow: scroll; width: 100%; height:100%` so that does not interfere with measurements
-  var sds = scrolldiv.style;
   var style = ("overflow: visible; width: " + width + "; height: auto; " +
-           ((sds.fontSize) ? ("font-size: " + sds.fontSize + "; ") : "") +
-           ((sds.fontWeight) ? ("font-weight: " + sds.fontWeight + "; ") : "") +
-           ((sds.fontStyle) ? ("font-style: " + sds.fontStyle + "; ") : "") +
-           ((sds.fontFamily) ? ("font-family: " + sds.fontFamily + "; ") : "") +
-           ((sds.lineHeight) ? ("line-height: " + sds.lineHeight + "; ") : "") +
-           ((sds.letterSpacing) ? ("letter-spacing: " + sds.letterSpacing + "; ") : "") +
-           ((sds.whiteSpace) ? ("white-space: " + sds.whiteSpace + "; ") : ""));
+           ((this._fontSize) ? ("font-size: " + this._fontSize + "; ") : "") +
+           ((this._fontWeight) ? ("font-weight: " + this._fontWeight + "; ") : "") +
+           ((this._fontStyle) ? ("font-style: " + this._fontStyle + "; ") : "") +
+           ((this._fontFamily) ? ("font-family: " + this._fontFamily + "; ") : "") +
+           ((this._fontSize) ? ("font-size: " + this._fontSize + "; ") : "") +
+           ((this._letterSpacing) ? ("letter-spacing: " + this._letterSpacing + "; ") : "") +
+           ((this._whiteSpace) ? ("white-space: " + this._whiteSpace + "; ") : ""));
   this._cachevalue = LzFontManager.getSize(dimension, className, style, this.scrolldivtagname, string);
   return this._cachevalue[dimension];
 }
@@ -804,7 +806,8 @@ LzTextSprite.prototype.setWidth = function (w){
     var scrolldivcss = cdim(scrolldivwidth);
     if (this.__csscache.scrolldivwidth != scrolldivcss) {
       // Debug.debug('%w.style.width = %s', this.scrolldiv, this.CSSDimension(wt));
-      this.applyCSS('width', scrolldivcss, 'scrolldiv');
+      //this.applyCSS('width', scrolldivcss, 'scrolldiv');
+      scrolldiv.style.width = scrolldivcss;
       // Hide the scrollbar
       if (this.scrolling) {
         // initial value for 'height' is null
@@ -839,7 +842,8 @@ LzTextSprite.prototype.setHeight = function (h) {
     var hp = cdim(ht);
     if (this.__csscache.scrolldivheight != hp) {
       // Debug.debug('%w.style.height = %s', this.scrolldiv, cdim(ht));
-      this.applyCSS('height', cdim(ht), 'scrolldiv');
+      scrolldiv.style.height = cdim(ht);
+      //this.applyCSS('height', cdim(ht), 'scrolldiv');
       // Hide the scrollbar
       if (this.scrolling) {
         // initial value for 'width' is null

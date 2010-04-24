@@ -750,6 +750,7 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @access private */
   function $lzc$set_maxlength(val) {
     if (val == null) { val = Infinity; }
+    if (this.maxlength === val) return;
     if (isNaN(val)) {
       if ($debug) {
         Debug.warn("Invalid value for %w.maxlength: %w", this, val);

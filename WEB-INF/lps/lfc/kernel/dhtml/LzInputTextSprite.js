@@ -158,6 +158,8 @@ LzInputTextSprite.prototype.__createInputDiv = function(type) {
     if (this.quirks.emulate_flash_font_metrics) {
         if (this.multiline) {
             this.className = this.__LzInputDiv.className = 'lzswfinputtextmultiline';
+            // Update cached value
+            this._whiteSpace = 'pre-wrap';
         } else {
             this.className = this.__LzInputDiv.className = 'lzswfinputtext';
         }
@@ -1132,7 +1134,7 @@ LzInputTextSprite.prototype.setWidth = function (w) {
     // call the super method
     var nw = LzTextSprite.prototype.setWidth.call(this, w);
     if (this.quirks.fix_clickable && nw != null) {
-        this.applyCSS('width', nw, '__LZinputclickdiv');
+        this.__LZinputclickdiv.style.width = nw;
     }   
 }
 
@@ -1141,7 +1143,7 @@ LzInputTextSprite.prototype.setHeight = function (h) {
     // call the super method
     var nh = LzTextSprite.prototype.setHeight.call(this, h);
     if (this.quirks.fix_clickable && nh != null) {
-        this.applyCSS('height', nh, '__LZinputclickdiv');
+        this.__LZinputclickdiv.style.height = nh;
     }
 }   
 

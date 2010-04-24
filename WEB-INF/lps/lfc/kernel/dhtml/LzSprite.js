@@ -1388,8 +1388,10 @@ LzSprite.prototype.setClickable = function(c) {
             }
             this.__LZclick.owner = this;
             this.__LZclick.className = 'lzclickdiv';
-            this.applyCSS('width', this._w, '__LZclick');
-            this.applyCSS('height', this._h, '__LZclick');
+            this.__LZclick.style.width = this._w;
+            //this.applyCSS('width', this._w, '__LZclick');
+            this.__LZclick.style.height = this._h;
+            //this.applyCSS('height', this._h, '__LZclick');
             if (this.quirks.fix_clickable) {
                 this.__LZclickcontainerdiv.appendChild(this.__LZclick);
             } else {
@@ -1402,10 +1404,13 @@ LzSprite.prototype.setClickable = function(c) {
             if (this.quirks.fix_ie_clickable) {
                 //note: views with resources (__LZimg!) cannot have subviews (SWF-policy)
                 var clickstyle = c && this.visible ? '' : 'none'
-                this.applyCSS('display', clickstyle, '__LZclickcontainerdiv');
-                this.applyCSS('display', clickstyle, '__LZclick');
+                this.__LZclickcontainerdiv.style.display = clickstyle;
+                //this.applyCSS('display', clickstyle, '__LZclickcontainerdiv');
+                this.__LZclick.style.display = clickstyle;
+                //this.applyCSS('display', clickstyle, '__LZclick');
             } else {
-                this.applyCSS('display', c ? '' : 'none', '__LZclick');
+                this.__LZclick.style.display = c ? '' : 'none';
+                //this.applyCSS('display', c ? '' : 'none', '__LZclick');
             }
         }
     } else {
@@ -1419,17 +1424,21 @@ LzSprite.prototype.setClickable = function(c) {
                 }
                 this.__LZclick.owner = this;
                 this.__LZclick.className = 'lzclickdiv';
-                this.applyCSS('width', this._w, '__LZclick');
-                this.applyCSS('height', this._h, '__LZclick');
+                this.__LZclick.style.width = this._w;
+                //this.applyCSS('width', this._w, '__LZclick');
+                this.__LZclick.style.height = this._h;
+                //this.applyCSS('height', this._h, '__LZclick');
                 //this.__LZclick.style.backgroundColor = '#ff00ff';
                 //this.__LZclick.style.opacity = .2;
                 this.__LZclickcontainerdiv.appendChild(this.__LZclick);
             }
             this.__setClickable(c, this.__LZclick);
             if (this.quirks.fix_ie_clickable) {
-                this.applyCSS('display', c && this.visible ? '' : 'none', '__LZclick');
+                this.__LZclick.style.display = c && this.visible ? '' : 'none';
+                //this.applyCSS('display', c && this.visible ? '' : 'none', '__LZclick');
             } else {
-                this.applyCSS('display', c ? '' : 'none', '__LZclick');
+                this.__LZclick.style.display = c ? '' : 'none';
+                //this.applyCSS('display', c ? '' : 'none', '__LZclick');
             }
         } else {
             this.__setClickable(c, this.__LZdiv);
@@ -1702,8 +1711,8 @@ LzSprite.prototype.setWidth = function ( w ) {
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.backgroundrepeat) this.__updateBackgroundRepeat();
-        if (this.__LZclick) this.applyCSS('width', w, '__LZclick');
-        if (this.__LZcontext) this.applyCSS('width', w, '__LZcontext');
+        if (this.__LZclick) this.__LZclick.style.width = w; //applyCSS('width', w, '__LZclick');
+        if (this.__LZcontext) this.__LZcontext.style.width = w; //applyCSS('width', w, '__LZcontext');
         if (this.__LZcanvas) this.__resizecanvas();
         if (this.isroot && quirks.container_divs_require_overflow) {
             LzSprite.__rootSpriteOverflowContainer.style.width = w;
@@ -1754,8 +1763,10 @@ LzSprite.prototype.setHeight = function ( h ){
         if (this.clip) this.__updateClip();
         if (this.stretches) this.__updateStretches();
         if (this.backgroundrepeat) this.__updateBackgroundRepeat();
-        if (this.__LZclick) this.applyCSS('height', h, '__LZclick');
-        if (this.__LZcontext) this.applyCSS('height', h, '__LZcontext');
+        if (this.__LZclick) this.__LZclick.style.height = h; //applyCSS('width', w, '__LZclick');
+        //if (this.__LZclick) this.applyCSS('height', h, '__LZclick');
+        if (this.__LZcontext) this.__LZcontext.style.height = h; //applyCSS('width', w, '__LZcontext');
+        //if (this.__LZcontext) this.applyCSS('height', h, '__LZcontext');
         if (this.__LZcanvas) this.__resizecanvas();
         if (this.isroot && quirks.container_divs_require_overflow) {
             LzSprite.__rootSpriteOverflowContainer.style.height = h;
@@ -1782,15 +1793,19 @@ LzSprite.prototype.setVisible = function ( v ){
     if (this.visible === v) return;
     //Debug.info('setVisible', v, this.owner.getUID());
     this.visible = v;
-    this.applyCSS('display', (v && this.opacity != 0) ? '' : 'none');
+    this.__LZdiv.style.display = (v && this.opacity != 0) ? '' : 'none';
+    //this.applyCSS('display', (v && this.opacity != 0) ? '' : 'none');
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
-            this.applyCSS('display', v && this.clickable ? '' : 'none', '__LZclick');
+            this.__LZclick.style.display = v && this.clickable ? '' : 'none'
+            //this.applyCSS('display', v && this.clickable ? '' : 'none', '__LZclick');
         }
         var vis = v ? '' : 'none';
-        this.applyCSS('display', vis, '__LZclickcontainerdiv');
+        this.__LZclickcontainerdiv.style.display = vis;
+        //this.applyCSS('display', vis, '__LZclickcontainerdiv');
         if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
-            this.applyCSS('display', vis, '__LZcontextcontainerdiv');
+            this.__LZcontextcontainerdiv.style.display = vis;
+            //this.applyCSS('display', vis, '__LZcontextcontainerdiv');
         }
     }
 }
@@ -2845,8 +2860,10 @@ LzSprite.prototype.setContextMenu = function( cmenu ){
     cxdiv.className = 'lzcontext';
     this.__LZcontextcontainerdiv.appendChild(cxdiv);
     this.__LZcontext = cxdiv;
-    this.applyCSS('width', this._w, '__LZcontext');
-    this.applyCSS('height', this._h, '__LZcontext');
+    //this.applyCSS('width', this._w, '__LZcontext');
+    this.__LZcontext.style.width = this._w;
+    //this.applyCSS('height', this._h, '__LZcontext');
+    this.__LZcontext.style.height = this._h;
     cxdiv.owner = this;
 }
 
@@ -3244,7 +3261,7 @@ LzSprite.prototype.applyCSS = function(name, value, divname) {
     if (cache[key] === value) {
 //        var csshit = LzSprite.prototype.csshit;
 //        if (csshit[key] == null) {
-//            csshit[key] = 0;
+//            csshit[key] = 1;
 //        } else {
 //            csshit[key]++;
 //        }
@@ -3254,7 +3271,7 @@ LzSprite.prototype.applyCSS = function(name, value, divname) {
 
 //    var cssmiss = LzSprite.prototype.cssmiss;
 //    if (cssmiss[key] == null) {
-//        cssmiss[key] = 0;
+//        cssmiss[key] = 1;
 //    } else {
 //        cssmiss[key]++;
 //    }
