@@ -19,8 +19,12 @@
     <handler name="ondata" reference="parent">
         //setup listener
         this.changeDel.unregisterAll();
-        this.setAttribute( "rootnode", parent.data );
-        this.changeDel.register( rootnode.ownerDocument , "onDocumentChange" );
+
+        var pdata = parent.data;
+        this.setAttribute( "rootnode", pdata );
+        if ( pdata != null ) {
+            this.changeDel.register( pdata.ownerDocument , "onDocumentChange" );
+        }
 
         this.rebuildList();
     </handler>
@@ -41,8 +45,11 @@
         if ( _locked || _running ) return;
         this._running = true;
         this.nodelist = [ ];
-        rootnode.setAttr( parent.depthattr , "-1" );
-        this.addNodesToList( rootnode );
+        var rnode = this.rootnode;
+        if ( rnode != null ) {
+            rnode.setAttr( parent.depthattr , "-1" );
+            this.addNodesToList( rnode );
+        }
         this.setAttribute( "nodelist" , nodelist );
         this._running = false;
     </method>
@@ -103,7 +110,7 @@
     </method>
 </node>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006, 2009 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006, 2009, 2010 Laszlo Systems, Inc. All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
