@@ -197,6 +197,7 @@ LzInputTextSprite.prototype.setMultiline = function(ml) {
             newdiv.style.fontWeight = olddiv.style.fontWeight;
             newdiv.style.fontSize = olddiv.style.fontSize;
             newdiv.style.fontFamily = olddiv.style.fontFamily;
+            newdiv.style.color = olddiv.style.color;
         }
         //Debug.debug('replacing %w with %w', olddiv, newdiv);
         var oldleft = olddiv.scrollLeft;
@@ -1167,6 +1168,12 @@ LzInputTextSprite.findSelection = function ( ){
         && LzInputTextSprite.__focusedSprite.owner) {
         return LzInputTextSprite.__focusedSprite.owner;
     }
+}
+
+LzTextSprite.prototype.setTextColor = function ( c ){
+    if (this.textcolor === c) return;
+    this.textcolor = c;
+    this.scrolldiv.style.color = LzColorUtils.inttohex(c);
 }
 
 // prevent text selection in IE

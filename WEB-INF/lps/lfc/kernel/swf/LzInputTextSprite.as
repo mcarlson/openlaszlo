@@ -85,6 +85,7 @@ LzInputTextSprite.prototype.__initTextProperties = function (args) {
     this.fontname = args.font;
     this.fontsize = args.fontsize;
     this.fontstyle = args.fontstyle;
+    this.textcolor = args.fgcolor;
     this.__setFormat();
 
     textclip.htmlText = this.text;
