@@ -25,6 +25,9 @@ var LzSprite = function(newowner, isroot) {
         }
         this.__LZmovieClipRef = is;
         this.__LZsvdepth = 1;
+        // for bgcolor
+        this.__LZisBackgrounded = true;
+        this.__LZbgRef = _root.attachMovie( "swatch", "$bcanvas", 999);
     } else {
         this.__LZdepth = newowner.immediateparent.sprite.__LZsvdepth++;
         this.__LZsvdepth = 0;
@@ -530,7 +533,6 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
     if (this.isroot) {
         // Don't apply background colors to the root sprite - interferes with splash/preloaders - see LPP-7509
         if (this.__contextmenu) _root.menu = this.__contextmenu.kernel.__LZcontextMenu();
-        return;
     }
     if (bgc != null) {
         if ($debug) {
@@ -562,6 +564,8 @@ LzSprite.prototype.setBGColor = function ( bgc ) {
   * @access private
   */
 LzSprite.prototype.removeBG = function () {
+    // can't delete the root bg
+    if (this.isroot) return;
     if (this.__LZisBackgrounded) {
         this.__LZbgRef.removeMovieClip();
         this.__LZbgRef = null;
