@@ -133,8 +133,8 @@
         <item title="lz.DataRequest" href="lz.DataRequest.html" />
         <item title="&amp;lt;dataselectionmanager&amp;gt;" href="lz.dataselectionmanager.html" />
         <item title="&amp;lt;dataset&amp;gt;" href="lz.dataset.html" />
-        <item title="&amp;lt;httpdataprovider&amp;gt;" href="lz.httpdataprovider.html" />
-        <item title="&amp;lt;httpdatarequest&amp;gt;" href="lz.httpdatarequest.html" />
+        <item title="lz.HTTPDataProvider" href="lz.HTTPDataProvider.html" />
+        <item title="lz.HTTPDataRequest" href="lz.HTTPDataRequest.html" />
         <item title="lz.Param" href="lz.params.html" />
         <item title="lz.DataElement" href="lz.DataElement.html" />
         <item title="lz.DataElementMixin" href="lz.DataElementMixin.html" />

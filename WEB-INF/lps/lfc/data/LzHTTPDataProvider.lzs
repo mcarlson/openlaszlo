@@ -16,13 +16,12 @@
   * <p>
   * Requests are submitted using the <method>doRequest</method>, passing a  request
   * object of type <class>lz.HTTPDataRequest</class>. And instance of <class>lz.HTTPDataProvider</class> is the default
-  * data provider for the runtime, and is what is used by <class>lz.dataset</class> to load data.
+  * data provider for the runtime, and is what is used by <tagname>dataset</tagname> to load data.
   * </p>
   * <p>
   * <event>onstatus</event>: Sent to a datarequest to update the status of the request.</p>
   *
   * @shortdesc DataProvider which implements HTTP request transport
-  * @lzxname httpdataprovider
   *
   */
 class LzHTTPDataProvider extends LzDataProvider {

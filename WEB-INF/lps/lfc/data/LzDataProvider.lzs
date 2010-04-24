@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -13,7 +13,7 @@
 /**
   * <p>
   * <class>lz.Dataprovider</class> is an abstract class that can be extended to create new kinds 
-  * of dataproviders, such as <sgmltag class="element" role="LzHTTPDataProvider">&lt;HTTPDataProvider&gt;</sgmltag>. These dataproviders 
+  * of dataproviders, such as <sgmltag class="element" role="LzHTTPDataProvider">lz.HTTPDataProvider</sgmltag>. These dataproviders 
   * are the client's representation of a backend entity. There is no tag that 
   * corresponds to this class.
   * </p>
@@ -22,15 +22,14 @@
   *  or changing Datasets.  Dataproviders are type-specific, i.e. http, jdbc or 
   *  soap.
   *  Dataproviders manage connections to the server,  and process requests which are submitted
-  *  via the <method>doRequest</method> method. The request is generated in an instance of <sgmltag class="element" role="LzDataRequest">&lt;datarequest&gt;</sgmltag>. 
+  *  via the <method>doRequest</method> method. The request is generated in an instance of <sgmltag class="element" role="LzDataRequest">lz.DataRequest</sgmltag>. 
   *
-  * A Dataprovider updates the <sgmltag class="element" role="LzDataRequest">&lt;datarequest&gt;</sgmltag> with loading and status information via the <event>onstatus</event> event of the <sgmltag class="element" role="LzDataRequest">&lt;datarequest&gt;</sgmltag>.
+  * A Dataprovider updates the <sgmltag class="element" role="LzDataRequest">lz.DataRequest</sgmltag> with loading and status information via the <event>onstatus</event> event of the <sgmltag class="element" role="LzDataRequest">lz.DataRequest</sgmltag>.
   * </p>
   *
   * @shortdesc An abstract class to represent backend data sources.
-  * @lzxname dataprovider
   */
-/* abstract */ class LzDataProvider extends LzEventable {
+class LzDataProvider extends LzEventable {
 
     function LzDataProvider () {
         super();

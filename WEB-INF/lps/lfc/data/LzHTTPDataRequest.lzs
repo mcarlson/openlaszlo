@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -10,11 +10,10 @@
 
 /**
   * <p>
-  * <class>lz.httpdatarequest</class> implements the DataProvider interface, to support HTTP data requests.
+  * <class>lz.HTTPDataRequest</class> implements the DataRequest interface, to support HTTP data requests.
   * </p>
   *
   * @shortdesc A class to represent HTTP data requests.
-  * @lzxname httpdatarequest
   */
 class LzHTTPDataRequest extends LzDataRequest {
 
