@@ -244,6 +244,9 @@ public class Canvas implements java.io.Serializable {
     }
     
     String getElementAsString(Element e) {
+        if (e == null) {
+            return "";
+        }
         org.jdom.output.XMLOutputter outputter =
             new org.jdom.output.XMLOutputter();
         outputter.getFormat().setTextMode(TextMode.NORMALIZE);
