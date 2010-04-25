@@ -1270,6 +1270,20 @@ solution =
         }
     }
 
+
+    // Recursively removes the namespace if it matches the specified namespace.
+    static void removeNamespace(Element elt, Namespace ns) {
+      if (ns != null && ns == elt.getNamespace()) {
+        elt.setNamespace(null);
+      }
+
+      for (Iterator iter = elt.getChildren().iterator(); iter.hasNext(); ) {
+        Element child = (Element) iter.next();
+        removeNamespace(child, ns);
+      }
+    }
+
+
     // Recursively trim out the whitespace on text nodes
     static void trimWhitespace(Content elt) {
         if (elt instanceof Text) {

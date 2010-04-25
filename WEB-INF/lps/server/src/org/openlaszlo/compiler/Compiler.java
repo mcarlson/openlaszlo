@@ -677,6 +677,8 @@ public class Compiler {
             return new InterfaceCompiler(env);
         } else if (DebugCompiler.isElement(element)) {
             return new DebugCompiler(env);
+        } else if (WrapperHeaders.isElement(element)) {
+            return new WrapperHeaders(env);
         } else if (StyleSheetCompiler.isElement(element)) {
             return new StyleSheetCompiler(env);
             // The following test tests true for everything, so call

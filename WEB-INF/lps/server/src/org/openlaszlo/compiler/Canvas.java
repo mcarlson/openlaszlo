@@ -156,6 +156,17 @@ public class Canvas implements java.io.Serializable {
     private String mCompilationWarningXML = null;
     private Element mInfo = new org.jdom.Element("stats");
     
+    /** Content to be passed through to auto-generated HTML wrapper page */
+    private Element mWrapperHeaders = null;
+
+    public void setWrapperHeaders(Element e) {
+        mWrapperHeaders = e;
+    }
+
+    public Element getWrapperHeaders() {
+        return mWrapperHeaders;
+    }
+
     public void setCompilationWarningText(String text) {
         mCompilationWarningText = text;
     }
@@ -232,11 +243,11 @@ public class Canvas implements java.io.Serializable {
         mFontInfo = info;
     }
     
-    public String getInfoAsString() {
+    String getElementAsString(Element e) {
         org.jdom.output.XMLOutputter outputter =
             new org.jdom.output.XMLOutputter();
         outputter.getFormat().setTextMode(TextMode.NORMALIZE);
-        return outputter.outputString(mInfo);
+        return outputter.outputString(e);
     }
 
     /** @return file path */
@@ -499,7 +510,8 @@ public class Canvas implements java.io.Serializable {
             "history='" + XMLUtils.escapeXml(getHistory() + "") +"' " +
             ">");
         buffer.append(content);
-        buffer.append(getInfoAsString());
+        buffer.append(getElementAsString(mWrapperHeaders));
+        buffer.append(getElementAsString(mInfo));
         if (mCompilationWarningXML != null)
             buffer.append("<warnings>" + mCompilationWarningXML + "</warnings>");
         buffer.append("</canvas>");
