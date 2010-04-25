@@ -1,7 +1,7 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights
  *            Reserved.  Use is subject to license terms.
  *
  * @access public
@@ -25,6 +25,16 @@ class LzDebugConsole {
   // file or console, respectively), or text (that is already
   // formatted HTML, sent via addHTMLText).
   var saved_msgs:Array;
+
+  /**
+   * The lz.view on the canvas that represents the debugger console
+   * (if any, otherwise null)
+   *
+   * @access private
+   */
+  function canvasConsoleWindow () {
+    return null;
+  }
 
   /**
    * Adds literal output to the console, ensuring HTML markup is
@@ -381,6 +391,11 @@ dynamic class LzBootstrapDebugService {
     this.logger = logger;
     this.console = console;
   }
+
+  /**
+   * @access private
+   */
+  function ensureVisible () { }
 
   /**
    * Log a message to the runtime logger

@@ -175,16 +175,9 @@ public final class LzModeManagerService extends LzEventable {
             }
             // exclude the debugger from the mode
             if ($debug) {
-              if (view) {
-                if ($as2 || $as3) {
-                  if (this.remotedebug == null) {
-                    this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
-                  }
-                }
-                if (!this.remotedebug && view.childOf(Debug.console.window)) {
+                if (Debug.canvasConsoleWindow && view.childOf(Debug.canvasConsoleWindow)) {
                   break;
                 }
-              }
             }
 
             if (view && view.childOf( mView )) {
@@ -226,12 +219,7 @@ public final class LzModeManagerService extends LzEventable {
     /** @access private */
     function __LZallowInput (modalview:LzView, input:LzInputText) :Boolean {
         if ($debug) {
-            if ($as2 || $as3) {
-                if (this.remotedebug == null) {
-                    this.remotedebug = (lz.Browser.getInitArg("lzconsoledebug") == "true");
-                }
-            }
-            if (!this.remotedebug && input.childOf(Debug.console.window)) {
+            if (Debug.canvasConsoleWindow && input.childOf(Debug.canvasConsoleWindow)) {
               return true;
             }
         }

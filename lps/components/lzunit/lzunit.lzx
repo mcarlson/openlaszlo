@@ -1032,8 +1032,6 @@
 
 </class>
 
-<!-- Name the debug console so we can ensure it is visible -->
-<debug name="debugConsoleWindow" />
 <!--
   A single control panel on the canvas that is used to display the
   results of any number of test suites
@@ -1041,8 +1039,10 @@
 <view name="lzunitControlPanel" x="0" y="0" height="100%" width="100%" options="ignorelayout">
   <handler name="oninited" reference="canvas">
     <!-- Ensure we are visible, but do not obscure the Debug console window -->
-    canvas.debugConsoleWindow.bringToFront();
-    this.sendBehind(canvas.debugConsoleWindow);
+    this.bringToFront();
+    if ($debug) {
+      Debug.ensureVisible();
+    }
   </handler>
   <simplelayout axis="y" spacing="10" />
   <!-- for testing -->

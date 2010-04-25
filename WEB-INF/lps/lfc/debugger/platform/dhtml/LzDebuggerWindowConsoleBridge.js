@@ -3,7 +3,7 @@
 /*
  * Bridge to forward console API calls to the GUI debugger window view
  *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
 
  */
@@ -15,6 +15,11 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
   function LzDebuggerWindowConsoleBridge (view) {
     super();
     this.DebugWindow = view;
+  }
+
+  /** @access private */
+  override function canvasConsoleWindow () {
+    return this.DebugWindow;
   }
 
   /** @access private */
@@ -61,7 +66,7 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
       var tip = Debug.formatToString("Inspect %0.32#w", obj).toString().toHTML();
       // This ends up being inserted into the debugger output div.
       // `$modules.lz` should be visible as a global there
-      return '<span style="cursor: pointer; text-decoration: ' + decoration + '; color: ' + color + '" title="' + tip + '" onclick="javascript:$modules.lz.Debug.displayObj(' + id + ')">' + rep +"</span>";
+      return '<span style="cursor: pointer; text-decoration: ' + decoration + '; color: ' + color + '" title="' + tip + '" onclick="$modules.lz.Debug.objectLinkHandler(event, ' + id + ')">' + rep +"</span>";
     }
     return rep;
   };

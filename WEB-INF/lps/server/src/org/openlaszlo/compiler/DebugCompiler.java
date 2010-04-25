@@ -44,8 +44,10 @@ class DebugCompiler extends ViewCompiler {
         // Or, if lzconsoledebug=true, don't compile the debugger window view, we will be using
         // a remote connection instead. 
         if (!mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)
-            || mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW)
             || mEnv.getBooleanProperty(mEnv.CONSOLEDEBUG_PROPERTY)) {
+            return;
+        } else if (mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW)) {
+            mEnv.warn("Duplicate <debug> tag.  There can be only one <debug> tag in an application.", element);
             return;
         } else {
             mEnv.setProperty(mEnv.USER_DEBUG_WINDOW, true);

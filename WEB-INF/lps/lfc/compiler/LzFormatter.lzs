@@ -3,12 +3,42 @@
 /**
  * Formatted output
  *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  */
 
 {
 #pragma "warnUndefinedReferences=true"
+
+  /**
+   * Wrapper that creates a general callback in place of the normal
+   * object inspection.
+   *
+   * @devnote NOTE: Yes this looks surprisingly like a LzDelegate, but
+   * we don't want it to be a delegate, since we want delegates to be
+   * inspectable.  This special wrapper object is not inspectable
+   * because it gets special handling in the object-link handler.  If
+   * callbacks were the more common case, we'd turn this upside down
+   * and make the object-links the distinguished case.  Since
+   * object-links are the most common case, we optimize them.
+   *
+   * @access private
+   */
+  class LzFormatCallback {
+    var callback:Function;
+
+    function LzFormatCallback (callback:Function) {
+      this.callback = callback;
+    }
+
+    // TODO: [2010-04-25 ptw] Maybe the event that caused the callback
+    // should be passed, so you can dispatch on the mouse gesture,
+    // etc.
+    function call () {
+      return this.callback.call(null);
+    }
+  }
+
 
 /**
  * <p>See <xref linkend="LzText" /> and <xref linkend="LzDebugService+debug"
@@ -472,6 +502,12 @@ mixin LzFormatter {
           case '=':
             // Take the next argument to be the object represented
             object = getarg(argno);
+            consumearg(argno++);
+            break;
+          case '^':
+            // Take the next argument as a callback to be invoked when
+            // the representation is clicked on
+            object = new LzFormatCallback(getarg(argno));
             consumearg(argno++);
             break;
 //           case '{':

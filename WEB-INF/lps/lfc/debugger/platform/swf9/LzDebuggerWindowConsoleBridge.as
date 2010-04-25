@@ -3,7 +3,7 @@
 /*
  * Bridge to forward console API calls to the GUI debugger window view
  *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  */
 
@@ -14,6 +14,11 @@ class LzDebuggerWindowConsoleBridge extends LzDebugConsole {
     function LzDebuggerWindowConsoleBridge (view) {
       super();
       this.window = view;
+    }
+
+    /** @access private */
+    override function canvasConsoleWindow () {
+      return this.window;
     }
 
     /**

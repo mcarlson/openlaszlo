@@ -1,7 +1,7 @@
 /* -*- mode: JavaScript; c-basic-offset: 2; -*- */
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -98,7 +98,6 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
     }
   }
 
-
   /**
    * @access private
    */
@@ -109,7 +108,7 @@ class LzDHTMLDebugConsole extends LzBootstrapDebugConsole {
       var tip = Debug.formatToString("Inspect %0.32#w", obj).toString().toHTML();
       // This ends up being inserted into the debugger output iframe.
       // We look up $modules in the parent it shares with the app.
-      return '<span class="' + type + '" title="' + tip + '" onclick="javascript:window.parent.$modules.lz.Debug.displayObj(' + id + ')">' + rep +"</span>";
+      return '<span class="' + type + '" title="' + tip + '" onclick="window.parent.$modules.lz.Debug.objectLinkHandler(event, ' + id + ')">' + rep +"</span>";
     }
     return rep;
   };
@@ -206,6 +205,20 @@ class LzDHTMLDebugService extends LzDebugService {
   /**
    ** Platform-specific extensions to presentation and inspection
    **/
+
+  /**
+   * Ensures inspection event stops bubbling
+   *
+   * @access private
+   */
+  function objectLinkHandler (event, id) {
+    event.cancelBubble = true;
+    if (event.stopPropagation) { event.stopPropagation(); }
+    this.displayObj(id);
+    return false;
+  }
+
+  /** @access private */
   function hasFeature(feature:String, level:String) {
     return (document.implementation &&
             document.implementation.hasFeature &&
@@ -213,7 +226,7 @@ class LzDHTMLDebugService extends LzDebugService {
   }
 
   /**
-   * Adds handling of DOM nodes to describer for DHTML
+   * Adds handling of DOM nodes and MouseEvents to describer for DHTML
    *
    * @access private
    */

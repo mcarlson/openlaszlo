@@ -247,6 +247,21 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    **/
 
   /**
+   * If the debugger console window is implemented as an lz.view in
+   * canvas.subviews, this is that view.  If the debugger is using a
+   * remote console (I/O goes anywhere other than to a subview of the
+   * canvas), this will be null.
+   *
+   * @devnote NOTE: This attribute is only used internally to the LFC
+   * to avoid tripping over the debug console window when navigating
+   * the canvas subviews.  User programs must use the abstract console
+   * operations or <debug /> tag to access this window.
+   * 
+   * @access private
+   */
+  var canvasConsoleWindow = null
+
+  /**
    * Attaches the real debug console once it is available, and replays
    * any messages saved in the bootstrap console.  Typically called
    * from makeDebugWindow
@@ -256,6 +271,8 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   function attachDebugConsole (console:LzDebugConsole) {
     var old = this.console;
     this.console = console;
+    // Cache this for quick checking
+    this.canvasConsoleWindow = this.console.canvasConsoleWindow();
     // Replay saved messages
     var sm = old.saved_msgs;
     var sml = sm.length;
@@ -265,6 +282,16 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     // Returns the debugger bridge for calling from the server back to
     // the client
     return this;
+  }
+
+  /**
+   * Ensure the debugger console is visible.  Any debugger output will
+   * implicitly call this, but may be needed if you just want to
+   * ensure the debugger console is visible without creating any
+   * ouput.
+   */
+  override function ensureVisible () {
+    this.console.ensureVisible();
   }
 
   /**
@@ -335,6 +362,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    */
   function displayObj(id:Number) {
     var obj = this.ObjectForID(id);
+    // Look for formatter callbacks
+    if (obj is LzFormatCallback) {
+      return obj.call();
+    }
     // Make it look like you executed a command, even though
     // you don't need to compile to do this
     this.freshPrompt();

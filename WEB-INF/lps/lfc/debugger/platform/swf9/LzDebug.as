@@ -9,19 +9,25 @@
  */
 
 class LzAS3DebugService extends LzDebugService {
-    #passthrough (toplevel:true) {
+  #passthrough (toplevel:true) {
     import flash.utils.describeType;
     import flash.utils.Dictionary;
     import flash.utils.getDefinitionByName
     import flash.utils.getQualifiedClassName
     import flash.system.Capabilities;
-    }#
+    import flash.net.URLRequest;
+    import flash.net.navigateToURL;
+  }#
+
+   /** @acces private */ 
+  var needDebugPlayerWarning:Boolean = false;
 
   /**
    * @access private
    */
   function LzAS3DebugService (base:LzBootstrapDebugService) {
     super(base);
+    needDebugPlayerWarning = (! Capabilities.isDebugger);
   }
 
   /**
@@ -37,7 +43,7 @@ class LzAS3DebugService extends LzDebugService {
     // Make the real console.  This is only called if the user code
     // did not actually instantiate a <debug /> tag
     var params:Object = LFCApplication.stage.loaderInfo.parameters;
-    var remote =( params[ "lzconsoledebug" ] ); 
+    var remote = params[ "lzconsoledebug" ];
     if (remote == 'true') {
       // Open the remote debugger socket
       this.attachDebugConsole(new LzFlashRemoteDebugConsole());
@@ -45,10 +51,24 @@ class LzAS3DebugService extends LzDebugService {
       // This will attach itself, once it is fully initialized.
       new lz.LzDebugWindow();
     }
-    if (! Capabilities.isDebugger) {
-      Debug.warn("Install the Flash debug player (http://www.adobe.com/support/flashplayer/downloads.html) for debugging.");
-    }
   }
+
+  /**
+   * Note if not using debug player
+   *
+   * @access private
+   */
+  override function ensureVisible() {
+    super.ensureVisible();
+    if (needDebugPlayerWarning) {
+      needDebugPlayerWarning = false;
+      Debug.debug("Install the Flash debug player (%^s) for additional debugging features.",
+                  function () {
+                    navigateToURL(new URLRequest("http://www.adobe.com/support/flashplayer/downloads.html"), "_blank");
+                  },
+                  "available here");
+    }
+  } 
 
   // Map of object=>id
   var swf9_object_table:Dictionary = new Dictionary();
