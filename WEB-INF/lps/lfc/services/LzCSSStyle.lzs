@@ -166,7 +166,7 @@ class LzCSSStyleClass {
   };
 
   function getPropertyCache ( node ) {
-    if ((!node) || (node === canvas)) return {};
+    if (!node) return {};
     var pc = node['__LZPropertyCache'];
     if ( pc ) { return pc; }
     // The cache is initialized from the parent, then our rules are

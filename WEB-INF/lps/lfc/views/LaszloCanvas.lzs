@@ -51,6 +51,21 @@ dynamic class LzCanvas extends LzView {
 /** @access private */
   static var attributes = new LzInheritedHash(LzView.attributes);
 
+/** @access private */
+    attributes.bgcolor = new LzStyleConstraintExpr("bgcolor","background-color","color",0xffffff,false);
+/** @access private */
+    attributes.font = new LzStyleConstraintExpr("font","font-family","string","Verdana,Vera,sans-serif",false);
+/** @access private */
+    attributes.fontsize = new LzStyleConstraintExpr("fontsize","font-size","number",11,false);
+/** @access private */
+    attributes.fontstyle = new LzStyleConstraintExpr("fontstyle","font-style","string","plain",false);
+/** @access private */
+    attributes.fgcolor = new LzStyleConstraintExpr("fgcolor","font-color","color",0,false);
+/** @access private */
+    attributes.width = new LzStyleConstraintExpr("width","width","string","100%",false);
+/** @access private */
+    attributes.height = new LzStyleConstraintExpr("height","height","string","100%",false);
+
     /**
       * @access private
       */
@@ -187,7 +202,38 @@ dynamic class LzCanvas extends LzView {
       // process timeouts
       if (! args['medialoadtimeout']) args.medialoadtimeout = this.medialoadtimeout;
       if (! args['mediaerrortimeout']) args.mediaerrortimeout = this.mediaerrortimeout;
+      // Use defaults from by compiler as fallback values on CSS styles 
+      if (args['fontsize'] != null) {
+        this.fontsize = LzCanvas.attributes.fontsize.fallback = args.fontsize; 
+        delete args.fontsize;
+      }
+      if (args['fontstyle'] != null) {
+        this.fontstyle = LzCanvas.attributes.fontstyle.fallback = args.fontstyle; 
+        delete args.fontstyle;
+      }
+      if (args['font'] != null) {
+        this.font = LzCanvas.attributes.font.fallback = args.font; 
+        delete args.font;
+      }
+      if (args['bgcolor'] != null) {
+        LzCanvas.attributes.bgcolor.fallback = args.bgcolor; 
+        delete args.bgcolor;
+      }
+      if (args['width'] != null) {
+        LzCanvas.attributes.width.fallback = args.width; 
+        delete args.width;
+      }
+      if (args['height'] != null) {
+        LzCanvas.attributes.height.fallback = args.height; 
+        delete args.height;
+      }
       super(parent, args, children, async);
+
+      // Set to sensible values so text style cascading will work
+      if (this.fgcolor == null) this.fgcolor = 0;
+      // Must be set to a number for swf9/10
+      if (this.fontsize == null) this.fontsize = 11;
+
       this.datasets = {};
       // Override values defined in LzView
       this.__LZcheckwidth = null;

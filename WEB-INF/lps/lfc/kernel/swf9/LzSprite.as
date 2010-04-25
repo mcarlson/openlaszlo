@@ -162,6 +162,7 @@ public class LzSprite extends Sprite {
             this.isroot = true;
             LzSprite.rootSprite = this;
             this.mouseEnabled = true;// @devnote: see LPP-6980
+            id = LFCApplication.stage.loaderInfo.parameters['id'];
         } else {
             this.mouseEnabled = true;
             this.hitArea = LzSprite.emptySprite;
@@ -221,8 +222,6 @@ public class LzSprite extends Sprite {
         this.setVisible(v);
 
         if (this.isroot) {
-            // Initialize this
-            id = LFCApplication.stage.loaderInfo.parameters['id'];
             // The canvas should be as big as the stage
             this.setWidth(LFCApplication.stage.stageWidth);
             this.setHeight(LFCApplication.stage.stageHeight);
