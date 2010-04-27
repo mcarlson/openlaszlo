@@ -125,7 +125,9 @@ var $lzsc$issubclassof = function (one:Class, other:Class) {
       import flash.utils.getDefinitionByName;
     }#
     if (one === other) return true;
-    // The hard way
+    if ((other is Class) && (one['prototype'] instanceof other)) return true;
+    if ((one is Class) && (other['prototype'] instanceof one)) return false;
+    // The hard way (only works in debug mode?)
     var factory:XML = describeType(one).elements('factory')[0];
     // Look at superclasses and interfaces
     var elements = ['extendsClass', 'implementsInterface'];

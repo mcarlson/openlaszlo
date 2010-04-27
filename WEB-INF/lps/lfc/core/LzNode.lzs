@@ -391,6 +391,12 @@ public dynamic class LzNode extends LzEventable {
   var __LZUID = null;
   /** @access private */
   var __LZPropertyCache = null;
+  /** @access private */
+  var __LZCSSUpdateProperties = null;
+  /** @access private */
+  var __LZCSSPropToAttr = null;
+  /** @access private */
+  var __LZCSSType = null;
   if ($debug) {
     /** @access private */
     var __LZStyledProperties = null;
@@ -648,6 +654,66 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /**
+   * Dependencies computed by LzCSSStyle/getRulesCache().  Installed
+   * after all initial style bindings and on each reapply
+   *
+   * A hash of properties, each with an array of the nodes those
+   * properties need to be watched on.
+   *
+   * @access private
+   */
+  var __LZCSSDependencies = null;
+
+  /**
+   * Register/unregister for dynamic style dependencies
+   *
+   * @access private
+   */
+  function __applyCSSConstraints() {
+    var dependencies = this.__LZCSSDependencies;
+    if (dependencies) {
+      this.__LZCSSDependencies = null;
+      var cdel = this.__applyCSSConstraintDel;
+      if (cdel) {
+        cdel.unregisterAll();
+      } else {
+        if (! this.__LZconstraintdelegates) { 
+          this.__LZconstraintdelegates = [];
+        }
+        cdel = this.__applyCSSConstraintDel = new LzDelegate(this, '__reapplyCSS');
+        this.__LZconstraintdelegates.push(cdel);
+      }
+      // register new bindings
+      for (var prop in dependencies) {
+        var eventname = 'on' + prop;
+        var nodes = dependencies[prop];
+        for (var i = 0, l = nodes.length; i < l; i++) {
+          var node = nodes[i];
+          cdel.register(node, eventname);
+        }
+      }
+    }
+  }
+
+  /**
+   * Clear the property cache and reapply updated styles
+   */
+  function __reapplyCSS(ignore=null) {
+    // Force rebuild of rules and property cache
+    this.__LZRuleCache = null;
+    this.__LZPropertyCache = null;
+    this.__LZPropertyCache = LzCSSStyle.getPropertyCache(this);
+
+    // Verify the CSS bindings
+    for (var cssname:String in this.__LZPropertyCache) {
+      var attrname:String = this.__LZCSSPropToAttr[cssname];
+      var csstype:String = this.__LZCSSType[cssname];
+      this.__LZstyleBindAttribute(attrname, cssname, csstype);
+    }
+    this.__applyCSSConstraints();
+  }
+
+  /**
    * Bind an attribute to a (CSS) style property
    *
    * @param String attr: The name of the attribute to bind
@@ -671,11 +737,13 @@ public dynamic class LzNode extends LzEventable {
         // Cache negative values lazily to avoid excessive warnings
         pc[prop] = (void 0);
       }
-      // Note property for explainStyleBindings
-      var sp = this.__LZStyledProperties;
-      if (sp == null) { sp = this.__LZStyledProperties = []; }
-      sp.push(prop);
     }
+
+    // store mappings
+    if (! this.__LZCSSPropToAttr) { this.__LZCSSPropToAttr = {}; }
+    this.__LZCSSPropToAttr[prop] = attr;
+    if (! this.__LZCSSType) { this.__LZCSSType = {}; }
+    this.__LZCSSType[prop] = type;
 
     var styleValue = pc[prop];
 
@@ -1440,6 +1508,8 @@ public dynamic class LzNode extends LzEventable {
           if (this.__LZdeleted) return;
         }
       }
+      // Look for any CSS constraints and apply them
+      if (this.__LZCSSDependencies != null) { this.__applyCSSConstraints(); }
 
       if (this['__LZresolveOtherReferences']) {
         this.__LZresolveOtherReferences(rdict);

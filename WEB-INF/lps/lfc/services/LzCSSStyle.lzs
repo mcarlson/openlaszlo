@@ -137,6 +137,29 @@ class LzCSSStyleRule {
 };                                // End of LzCSSStyleRule
 lz.CSSStyleRule = LzCSSStyleRule; // publish
 
+class LzCSSStyleDependencies {
+  var count:Number = 0;
+  var deps;
+
+  function LzCSSStyleDependencies () {
+    this.deps = {};
+  }
+
+  function gather (node, attr) {
+    if (! (attr in this.deps)) {
+      this.deps[attr] = [ node ];
+      this.count++;
+    }
+    var nodes = this.deps[attr];
+    for (var i = 0, l = nodes.length; i < l; i++) {
+      if (node === nodes[i]) {
+        return;
+      }
+    }
+    this.deps[attr].push(node);
+    this.count++;
+  }
+}
 
 class LzCSSStyleClass {
 
@@ -151,8 +174,7 @@ class LzCSSStyleClass {
   // Hand-inlined in LzNode/__LZstyleBindAttribute
   // Must be kept in sync
   function getPropertyValueFor (node, pname) {
-    var pc = node['__LZPropertyCache'];
-    if (! pc) { pc = this.getPropertyCache(node); }
+    var pc = node['__LZPropertyCache'] || this.getPropertyCache(node);
     if (pname in pc) {
       return pc[pname];
     }
@@ -178,8 +200,7 @@ class LzCSSStyleClass {
     } else {
       var ipc = ip['__LZPropertyCache'] || this.getPropertyCache(ip);
     }
-    var rules = node['__LZRuleCache'];
-    if ( !rules ) { rules = this.getRulesCache(node); }
+    var rules = node['__LZRuleCache'] || this.getRulesCache(node);
 
     // If we have no rules, we just share the parent cache
     if (rules.length == 0) {
@@ -202,6 +223,9 @@ class LzCSSStyleClass {
   };
 
   // Will we ever use this cache more than once?
+  //
+  // Yes, if we fix this...
+  // TODO: [2010-04-27 ptw] (LPP-8945) Dynamic CSS rules need better caching
   function getRulesCache (node) {
     var rules = node['__LZRuleCache'];
     if (rules) { return rules; }
@@ -236,14 +260,19 @@ class LzCSSStyleClass {
     var ar = this._attrRules;
     for (var k in ar) {
       // Does this node have that attribute?
-      if (node[k]) {
-        // Get the rules for that attribute with the value the node has
-        var rs = ar[k][node[k]];
-        // Is this an attribute with rules?
-        if (rs is Array) {
-          // Could filter on property value now... but you have to worry
-          // about compound rules
-          tryRules = tryRules.concat(rs);
+      if (node[k] != (void 0)) {
+        // Get the rules for that attribute for all possible values
+        // (since value is dynamically matched)
+        var attrrules = ar[k];
+        // Get the ruleset for each value
+        for (var val in attrrules) {
+          var rs = attrrules[val];
+          // Is this an attribute with rules?
+          if (rs is Array) {
+            // This rules could be compound and/or dynamic, so we have
+            // to collect them and compute current applicability later
+            tryRules = tryRules.concat(rs);
+          }
         }
       }
     }
@@ -263,6 +292,11 @@ class LzCSSStyleClass {
     for (var i = rr.length - 1; i >= 0; i--) {
       tryRules.push(rr[i]);
     }
+
+    // The dependencies for the applicability of this rule cache.  If
+    // any of these dependencies change, the rules cache needs to be
+    // recomputed.
+    var deps = new LzCSSStyleDependencies();
 
     // Now winnow the rules by applicability, at the same time, see if
     // any sorting is needed
@@ -301,14 +335,39 @@ class LzCSSStyleClass {
       // if a rule has a class, id, or attrname, they have to apply,
       // and a 'star' rule has none of those
       if (((! rptn) || (rpc && node is rpc)) &&
-          ((! rpi) || (node['id'] == rpi)) &&
-          ((! rpa) || (node[rpa] == rp.attrvalue))) {
+          ((! rpi) || (node['id'] == rpi))) {
         if (! compound) {
-          rules.push(r);
+          if (! rpa) {
+            // No attr selector, done
+            rules.push(r);
+          } else {
+            // TODO: [2010-04-26 ptw] (LPP-8941) CSS dynamic attribute
+            // comparison needs to be able to test for the existence
+            // of an attribute efficiently
+//             try {
+              // Only add the rule to the cache if it is _currently_ applicable
+              // TODO: [2010-04-26 ptw] (LPP-8940) CSS dynamic attribute
+              // comparison needs to use presentAttribute
+              if ((node[rpa] + '') == rp.attrvalue) {
+                rules.push(r);
+              }
+              // name is not a dynamic attribute, but if the node
+              // otherwise has the attribute...
+              if ((rpa != 'name') && (node[rpa] !== (void 0))) {
+                // ...note the applicability dependency on this node
+                // and attribute
+                deps.gather(node, rpa);
+              }
+//             } catch (e) {
+//               // ignore error accessing non-existent attribute
+//             }
+          }
         } else {
           // Last selector applies, so verify that the whole rule
           // applies.  (Need to go back to original rule to do this.)
-          if (this._compoundSelectorApplies( r.parsed, node )) {
+          // At the same time, we accumulate any dependencies that
+          // could change the applicability of the compound rule.
+          if (this._compoundSelectorApplies( r.parsed, node, deps )) {
             rules.push(r);
           }
         }
@@ -329,6 +388,11 @@ class LzCSSStyleClass {
     }
 
     node.__LZRuleCache = rules;
+    // Note style dependencies
+    if (deps.count > 0) {
+        node.__LZCSSDependencies = deps.deps;
+    }
+    //Debug.info('found rules %w for %w, binders %w', rules, node, deps);
     return rules;
   };
 
@@ -443,7 +507,7 @@ class LzCSSStyleClass {
    * getPropertyValueFor(), make sure they stan in sync
    * @access private
    */
-  function _compoundSelectorApplies (parsedsel , startnode) {
+  function _compoundSelectorApplies (parsedsel , startnode, deps) {
     // loop through selectors, ensuring each applies to the current node or a parent
     for (var node = startnode, i = parsedsel.length - 1; i >= 0 && node !== canvas; i--, node = node.parent) {
       // Components of a parsed compound rule are parsed
@@ -466,23 +530,53 @@ class LzCSSStyleClass {
         // NB: The old code tested for a compound selector in a
         // compound selector, but that can't really happen, can it?
         if (((! rptn) || (rpc && node is rpc)) &&
-            ((! rpi) || (node.id == rpi)) &&
-            ((! rpa) || (node[rpa] == rp.attrvalue))) {
-          // Match
-          if ( i == 0 ){
-            // Total match
-            return true;
+            ((! rpi) || (node.id == rpi))) {
+          if (!rpa) {
+            // No attr selector, match
+            if ( i == 0 ){
+              // Total match
+              return true;
+            } else {
+              // Match next rule in the compound (next step in outer
+              // for loop)
+              break;
+            }
           } else {
-            // Match next
-            break;
+            // TODO: [2010-04-26 ptw] (LPP-8941) CSS dynamic attribute
+            // comparison needs to be able to test for the existence
+            // of an attribute efficiently
+//             try {
+              // Check if the rule is currently applicable
+              // TODO: [2010-04-26 ptw] (LPP-8940) CSS dynamic attribute
+              // comparison needs to use presentAttribute
+              if ((node[rpa] + '') == rp.attrvalue) {
+                // Match
+                if ( i == 0 ){
+                  // Total match
+                  return true;
+                } else {
+                  // Match next rule in the compound (next step in outer
+                  // for loop)
+                  break;
+                }
+              }
+              // name is not a dynamic attribute, but if the node
+              // otherwise has the attribute...
+              if ((rpa != 'name') && (node[rpa] !== (void 0))) {
+                // Note the applicability dependency on this node and attribute
+                deps.gather(node, rpa);
+              }
+//             } catch (e) {
+//               // ignore error accessing non-existent attribute
+//             }
           }
-        } else {
-          if (node === startnode) {
-            // If the selector can't be anchored here, then exit.  If it
-            // applied in a parent, it will have already been examined
-            // and cached
-            return false;
-          }
+        }
+        // We didn't match on this node
+        if (node === startnode) {
+          // If the selector can't be anchored here, then exit.  If it
+          // applied in a parent, it will have already been examined
+          // and cached
+          return false;
         }
         // Go up a node and try to match again
         // TODO: [2008-09-06 ptw] parent, not immediateparent?
@@ -591,8 +685,8 @@ class LzCSSStyleClass {
 
     // Sort rules into different cohorts to reduce the number of rules
     // we have to test for applicability in getRulesCache
-    if ( ( lastsel.type == this._sel_attribute ||
-           lastsel.type == this._sel_tagAndAttr ) ) {
+    if ( ( lastsel.type === this._sel_attribute ||
+           lastsel.type === this._sel_tagAndAttr ) ) {
       // Since an attr rule is higher specificity than a tag rule, we
       // put attr+tag rules here and filter on the attr first.
       var attr = lastsel.attrname;
@@ -625,8 +719,9 @@ class LzCSSStyleClass {
         if (sel.simpleselector) {
           sel.type = this._sel_tagAndAttr;
           sel.tagname = sel.simpleselector;
-        } else
+        } else {
           sel.type = this._sel_attribute;
+        }
         return sel;
         break;
       case "string":
