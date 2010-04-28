@@ -11,6 +11,7 @@
   <!-- to verify subclassof on LZX mixinx -->
   <mixin name="testmixin"/>
   <mixin name="testmixout"/>
+  <class name="testtextmix" extends="text" with="testmixin" />
   <view id="testview" with="testmixin" />
 
   <class name="TestCompiler" extends="TestCase">
@@ -246,6 +247,11 @@
      assertTrue(lz.text subclassof lz.text, "lz.text subclassof lz.text");
      assertTrue(lz.text subclassof LzFormatter, "lz.text subclassof LzFormatter");
      assertTrue(lz.text subclassof lz.view, "lz.text subclassof lz.view");
+     assertFalse(lz.testtextmix subclassof lz.testmixout, "lz.testtextmix subclassof lz.testmixout");
+     assertTrue(lz.testtextmix subclassof lz.testtextmix, "lz.testtextmix subclassof lz.testtextmix");
+     assertTrue(lz.testtextmix subclassof LzFormatter, "lz.testtextmix subclassof LzFormatter");
+     assertTrue(lz.testtextmix subclassof lz.view, "lz.testtextmix subclassof lz.view");
+     assertTrue(lz.testtextmix subclassof lz.testmixin, "lz.testtextmix subclassof lz.testmixin");
    ]]></method>
 
    <method name="testIsOperator"><![CDATA[
