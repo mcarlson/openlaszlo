@@ -624,7 +624,7 @@ public class ParseTreePrinter {
   public String visitPassthroughDirective(SimpleNode node, String[] children) {
     return "#passthrough {\n" +
       ((ASTPassthroughDirective)node).getText() +
-      "\n}";
+      "\n}\n";
   }
   public String visitPostfixExpression(SimpleNode node, String[] children) {
     int op = ((ASTOperator)node.get(1)).getOperator();
