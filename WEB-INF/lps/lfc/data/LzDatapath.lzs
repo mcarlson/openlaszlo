@@ -483,6 +483,7 @@ override function setDataContext (dc, implicit:Boolean = false) :void {
   * @access private
   */
 override function destroy(){
+    if ( this.__LZdeleted ) return;
     this.__LZupdateLocked = true; //so won't set data
 
     var context:* = this.context;
@@ -600,7 +601,7 @@ override function toString() /*:String*/ {
   */
 override function __LZcheckChange (chgpkg:Object) :Boolean {
     if ( !super.__LZcheckChange(chgpkg) ){
-        if ( chgpkg.who.childOfNode( this.p , true ) && this.onDocumentChange.ready){
+        if ( chgpkg.who.childOfNode( this.p , true ) ){
             if (this.onDocumentChange.ready) this.onDocumentChange.sendEvent( chgpkg );
         }
     }

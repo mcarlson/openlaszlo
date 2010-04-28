@@ -130,6 +130,7 @@ public dynamic class LzSelectionManager extends LzNode {
 
     /** @access private */
     override function destroy () {
+        if ( this.__LZdeleted ) return;
         this.__LZsetSelection([]);
         super.destroy();
     }
@@ -315,7 +316,11 @@ public dynamic class LzSelectionManager extends LzNode {
         } else {
             delete this.selectedHash[o.__LZUID];
         }
-        o[this.sel](sel);
+        if (o[this.sel]) {
+            o[this.sel](sel);
+        } else if ($debug) {
+            Debug.warn("Could not find method %w in %w", this.sel, o);
+        }
     }
 
     /**

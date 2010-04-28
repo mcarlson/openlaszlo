@@ -188,6 +188,7 @@ override function __LZapplyArgs ( args , constcall = null ){
   * @access private
   */
 override function destroy () {
+    if ( this.__LZdeleted ) return;
     this.releaseLayout(true);
     super.destroy();
 }

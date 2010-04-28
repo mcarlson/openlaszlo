@@ -296,10 +296,21 @@ public dynamic class LzNode extends LzEventable {
         delete iargs[key];
       }
     }
-    this.construct(  parent , iargs );
-    // Construct may, through many tangled webs of replication and
-    // placement, actually end up deleting us!  Bail out.
-    if (this.__LZdeleted) { return; }
+
+    try {
+      this.construct(  parent , iargs );
+     } catch(e) {
+      if (e === LzNode.__LzEarlyAbort) {
+        // Catch exception thrown due to placement changes, so construct() is 
+        // aborted for super() calls.  See LPP-8929
+        // Can also happen in __LZapplyArgs() - if a replicator was made, we're 
+        // deleted, if pooling is off.
+        return;
+      } else {
+        // Forward on...
+        throw(e);
+      }
+    }
 
     // Now put them back
     for (var key in cargs) {
@@ -337,6 +348,13 @@ public dynamic class LzNode extends LzEventable {
       this.__LZinstantiationDone( );
     }
   }
+
+  /**
+   * Used to determine if an exception was caused by construct or init bailing
+   * early because we were destroyed.
+   * @access private
+   */
+  static var __LzEarlyAbort = { toString: function () { return 'Early Abort'; } };
 
   /**
    * This event is sent after the <varname>node</varname>'s
@@ -900,18 +918,16 @@ public dynamic class LzNode extends LzEventable {
         }
         this.placement = thisplacement;
       }
+      if (this.__LZdeleted) {
+        // throw an exception to prevent the rest of construct()
+        throw(LzNode.__LzEarlyAbort);
+      }
 
-      // @devnote only add to subnodes if this node is not deleted which
-      // may happen as a side-effect of calling determinePlacement().
-      // We still need to set 'immediateparent' because legacy constructors
-      // expect to see this property.
-      if (! this.__LZdeleted) {
-        var ip_subnodes = ip.subnodes;
-        if (ip_subnodes == null) {
-          ip.subnodes = [this];
-        } else {
-          ip_subnodes[ip_subnodes.length] = this;
-        }
+      var ip_subnodes = ip.subnodes;
+      if (ip_subnodes == null) {
+        ip.subnodes = [this];
+      } else {
+        ip_subnodes[ip_subnodes.length] = this;
       }
 
       var nl = ip.nodeLevel; // nl == nodeLevel

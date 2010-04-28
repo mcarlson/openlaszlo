@@ -85,7 +85,7 @@ override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boo
   * @access private
   */
 override function destroy () {
-    if (this.__LZdeleted == true) return;
+    if (this.__LZdeleted) return;
     var dca:Array = this.pathparent.__LZdepChildren;
 
     if (dca != null) {

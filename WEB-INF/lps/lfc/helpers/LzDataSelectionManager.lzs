@@ -95,6 +95,7 @@ public dynamic class LzDataSelectionManager extends LzSelectionManager {
 
     /** @access private */
     override function destroy () {
+        if ( this.__LZdeleted ) return;
         this.manager = null;
         this.__LZsingleClone = null;
         super.destroy();

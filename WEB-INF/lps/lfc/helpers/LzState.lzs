@@ -419,6 +419,7 @@ dynamic class LzState extends LzNode {
    * @access private
    */
   override function destroy ( ) {
+    if ( this.__LZdeleted ) return;
     // stop pooling
     this.pooling = false;
     // clean up delegates and views

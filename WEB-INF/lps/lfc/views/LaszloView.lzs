@@ -430,7 +430,6 @@ var capabilities;
   */
 override function construct ( parent , args) {
     super.construct( (parent ? parent : canvas), args );
-    if ( this.__LZdeleted ) return;
 
     // Set applyArgs ordering kludges.  Overriding those of LzNode
     this.earlySetters = LzView.earlySetters;
