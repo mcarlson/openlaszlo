@@ -622,7 +622,18 @@ public class ParseTreePrinter {
     return "\n#pragma " + children[0] + "\n";
   }
   public String visitPassthroughDirective(SimpleNode node, String[] children) {
-    return "#passthrough {\n" +
+    ASTPassthroughDirective pt = (ASTPassthroughDirective)node;
+    String optString = "";
+    Map options = pt.getProperties();
+    for (Iterator i = options.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) i.next();
+      String key = (String) entry.getKey();
+      Boolean value = (Boolean)entry.getValue();
+      optString += key + ": " + value;
+      if (i.hasNext()) { optString += ", "; }
+    }
+    if (optString.length() > 0) { optString = " (" + optString + ")"; }
+    return "#passthrough" + optString + " {\n" +
       ((ASTPassthroughDirective)node).getText() +
       "\n}\n";
   }
