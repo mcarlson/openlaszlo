@@ -4,7 +4,6 @@
   -->
 <library>
   <include href="boxmodel.lzx"/>
-  <include href="boxview.lzx"/>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
