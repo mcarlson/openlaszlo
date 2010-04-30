@@ -83,9 +83,7 @@
       </xsl:if>
     </xsl:template>
 
-    <!-- TO DO: add mixin|interface -->
-
-    <xsl:template match="class|interface">
+    <xsl:template match="class|interface|mixin">
       <xsl:param name="unitid"/>
       <xsl:variable name="jsname" select="concat('lz.', @name)"/>
       <xsl:variable name="id" select="$jsname"/>
@@ -95,12 +93,14 @@
         <xsl:attribute name="unitid"><xsl:value-of select="$unitid"/></xsl:attribute>
         <xsl:call-template name="processcomment"/>
         <class>
-          <xsl:attribute name="extends">
-            <xsl:choose>
-              <xsl:when test="@extends"><xsl:value-of select="@extends"/></xsl:when>
-              <xsl:otherwise><xsl:text>LzView</xsl:text></xsl:otherwise>
-            </xsl:choose>
-          </xsl:attribute>
+          <xsl:if test="local-name(.)='class' or @extends">
+            <xsl:attribute name="extends">
+              <xsl:choose>
+                <xsl:when test="@extends"><xsl:value-of select="@extends"/></xsl:when>
+                <xsl:otherwise><xsl:text>LzView</xsl:text></xsl:otherwise>
+              </xsl:choose>
+            </xsl:attribute>
+          </xsl:if>
           <xsl:variable name="methods" select="method"/>
           <xsl:variable name="events" select="event"/>
           <xsl:variable name="switches" select="switch"/>

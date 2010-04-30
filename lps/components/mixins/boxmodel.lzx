@@ -11,25 +11,26 @@
     <doc>
       <tag name="shortdesc"><text>A mixin that adds CSS2 box model support to view.</text></tag>
       <text>
-        <p>The <tagname>boxmodel</tagname> mixin adds CSS2 box model support to<sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag></p>
+        <p>The <tagname>boxmodel</tagname> mixin adds CSS2 box model support to <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag></p>
 
-        <p><tagname>boxmodel</tagname> implements a subset of the CSS2 mox model spec
+        <p><tagname>boxmodel</tagname> implements a subset of the CSS2 box model spec
         <a href="http://www.w3.org/TR/CSS2/box.html">http://www.w3.org/TR/CSS2/box.html</a>
         </p>
+        <example title="Simple view with boxmodel" query-parameters="lzr=swf10"><programlisting><![CDATA[
+<canvas>
+    <include href="mixins/boxmodel.lzx"/>
+    <view with="boxmodel" bgcolor="yellow" margin="20" borderwidth="2" padding="5">
+        <text>text</text>
+    </view>
+</canvas>
+        ]]></programlisting></example>
 
-        <example><programlisting class="code">
-        &lt;canvas&gt; 
-            &lt;view with="boxmodel" bgcolor="yellow" margin="20" borderwidth="2" padding="5"&gt;
-                &lt;text&gt;text&lt;/text&gt;
-            &lt;/view&gt;
-        &lt;/canvas&gt;
-        </programlisting></example>
-
-        <p><classname>boxmodel</classname> is a mixin intended for use with <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag> and its subclasses,
+        <p><classname>boxmodel</classname> is a mixin intended for use with <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag> and its subclasses.
         </p>
       </text>
     </doc>
-    <!-- @access private -->
+
+    <!--- @access private -->
     <method name="construct" args="p, a">
         super.construct(p,a);
 
@@ -41,7 +42,7 @@
         style.padding = {capability: 'css2boxmodel', isdimension: true, affectsoffset: true}
     </method>
 
-    <!-- The margin of the view, in pixels -->
+    <!--- The margin of the view, in pixels -->
     <attribute name="margin" type="number" value="0" style="margin"/>
     <event name="onmargin"/>
     <setter name="margin" args="margin">
@@ -53,7 +54,7 @@
         if (this.onmargin.ready) this.onmargin.sendEvent(margin);
     </setter>
 
-    <!-- The borderwidth of the view, in pixels -->
+    <!--- The borderwidth of the view, in pixels -->
     <attribute name="borderwidth" type="number" value="0" style="border-width"/>
     <event name="onborderwidth"/>
     <setter name="borderwidth" args="borderwidth">
@@ -65,7 +66,7 @@
         if (this.onborderwidth.ready) this.onborderwidth.sendEvent(borderwidth);
     </setter>
 
-    <!-- The bordercolor of the view -->
+    <!--- The bordercolor of the view -->
     <attribute name="bordercolor" type="color" value="black" style="border-color"/>
     <event name="onbordercolor"/>
     <setter name="bordercolor" args="bordercolor">
@@ -76,7 +77,7 @@
         if (this.onbordercolor.ready) this.onbordercolor.sendEvent(bordercolor);
     </setter>
 
-    <!-- The padding of the view, in pixels-->
+    <!--- The padding of the view, in pixels-->
     <attribute name="padding" type="number" value="0" style="padding"/>
     <event name="onpadding"/>
     <setter name="padding" args="padding">

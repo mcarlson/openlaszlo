@@ -503,7 +503,7 @@
       <xsl:if test="$executable">
         <programlisting language="lzx">
           <textobject><textdata fileref="{$lzxdir}{$fname}"/></textobject>
-          <parameter><xsl:value-of select="@query-parameters"/></parameter>
+          <parameter role="query"><xsl:value-of select="@query-parameters"/></parameter>
         </programlisting>
       </xsl:if>
 

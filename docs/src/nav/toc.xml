@@ -18,7 +18,8 @@
         <item title="&amp;lt;inputtext&amp;gt;" href="lz.inputtext.html" />
 <!-- TODO [dda 3.29.2008] is this defined in includes/source/excanvas.js?      <item title="LzCanvasGradient" href="lz.CanvasGradient.html" />         -->
         <item title="&amp;lt;text&amp;gt;" href="lz.text.html" />
-        <item title="&amp;lt;view&amp;gt;" href="lz.view.html"/>              
+        <item title="&amp;lt;view&amp;gt;" href="lz.view.html"/>
+        <item title="&amp;lt;boxmodel&amp;gt;" href="lz.boxmodel.html"/>
     </category>
     <category title="Components">       
         <item title="&amp;lt;alert&amp;gt;" href="lz.alert.html" />
