@@ -101,6 +101,11 @@
               </xsl:choose>
             </xsl:attribute>
           </xsl:if>
+          <xsl:if test="@with">
+            <xsl:attribute name="inherits">
+              <xsl:value-of select="@with"/>
+            </xsl:attribute>
+          </xsl:if>
           <xsl:variable name="methods" select="method"/>
           <xsl:variable name="events" select="event"/>
           <xsl:variable name="switches" select="switch"/>
