@@ -79,7 +79,7 @@
     This is what we get from startup.var:
 
     <params ping_url="http://localhost:8080/lps-@V ERSIONID@/lps/utils/test.lzx?lzt=xml"
-            succ_url="http://localhost:8080/lps-@V ERSIONID@/laszlo-explorer/index.jsp"
+            succ_url="http://localhost:8080/lps-@V ERSIONID@/laszlo-explorer/"
             fail_url="startup_error.html" timeout="360000" ping_interval="5000" pad="pad"
     />
 
@@ -87,7 +87,7 @@
   -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 

@@ -2,7 +2,7 @@
 <!-- Laszlo Explorer index.jsp                                             -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
@@ -10,7 +10,7 @@
 <%@ page import="java.io.*" %>
 
 <%    
-    response.sendRedirect("../laszlo-explorer/index.jsp?navset=nav10.xml&bookmark=Introduction");
+    response.sendRedirect("../laszlo-explorer/index.html#_lzbookmark=Laszlo in 10 Minutes");
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
