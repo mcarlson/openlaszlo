@@ -116,16 +116,6 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @access private */
   static var attributes = new LzInheritedHash(LzView.attributes);
   LzText.attributes.pixellock = true;
-
-  /**
-   * If true, the text is selectable
-   *
-   * @lzxtype booleanLiteral
-   * @type Boolean
-   * @modifiers virtual
-   // no var decl since this is a virtual field
-   * @access private
-   */
   LzText.attributes.selectable = false;
 
   /*

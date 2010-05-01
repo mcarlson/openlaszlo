@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <js2doc>
@@ -212,7 +212,7 @@ a complete discussion.
           tag.</p>
       </text>
     </doc>
-  <class extends="LzView">
+  <class extends="LzNode">
     <property name="__ivars__" access="public">
       <object>
         <property name="href" type="String">
@@ -419,10 +419,10 @@ numbers.</p>
   </p>
 </div>
 <script type="text/javascript">
-  Lz.dhtmlEmbed({url: 'copy-of-hello.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp'});
-  Lz.lzapp.onload = function loaded() {
-  var s = document.getElementById('lzsplash');
-  if (s) LzSprite.prototype.__discardElement(s);
+  lz.embed.dhtml({url: 'copy-of-hello.lzx?lzt=object&lzr=dhtml', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp'});
+  lz.embed['lzapp'].onload = function loaded() {
+    var s = document.getElementById('lzsplash');
+    if (s) LzSprite.prototype.__discardElement(s);
   }
 </script>]]></programlisting>
       </note>
@@ -449,7 +449,7 @@ these <a href="tag.splash-view.html">"splash view"</a> elements, although they a
 For example, the following program positions an image on the canvas during the "splash" loading portion of the program's execution and removes it once the application has loaded. The example below executes too quickly to be demonsrate the splash view; try it in a larger application to see how it works.</p>
 
 <!--<example extract="false" title="using 'splash view' tag">--><programlisting class="code">
-&lt;canvas height="100"&gt;
+&lt;canvas height="120"&gt;
   &lt;splash&gt;
     &lt;view resource="../images/logo.png"/&gt;
   &lt;/splash&gt;
@@ -460,7 +460,7 @@ For example, the following program positions an image on the canvas during the "
 You can position more than one image by specifying its coordinates. The <attribute>persistent</attribute> attribute  on <tagname>splash</tagname> tag causes the "splash" views contained within the splash element to remain on the canvas once the
 load process is complete.</p>
 <example title="persisting splash views">
-&lt;canvas height="100"&gt;
+&lt;canvas height="120"&gt;
   &lt;splash persistent="true"&gt;
     &lt;view x="5" resource="../images/logo.png" /&gt;
     &lt;view x="50" resource="../images/logo.png" /&gt;
@@ -481,7 +481,7 @@ load process is complete.</p>
         </property>
         <property name="persistent">
           <doc>
-            <tag name="lzxtype"><text>xsd:boolean</text></tag>
+            <tag name="lzxtype"><text>boolean</text></tag>
             <tag name="lzxdefault"><text>"false"</text></tag>
             <text>If true, the splash views remain on the canvas after the
               preload is complete.
@@ -509,53 +509,57 @@ of the system is present.</p>
     </text>
   </doc>
   <class>
-  <property name="name" type="String">
-    <doc>
-      <text>This defines both a resource with this name, and a view.</text>
-    </doc>
-  </property>
-  <property name="resource" type="String">
-    <doc>
-      <text>This must be a pathname.  If the target contains text, the
-            text should be converted to outlines.</text>
-    </doc>
-  </property>
-  <property name="ratio" type="Number">
-    <doc>
-      <tag name="lzxtype"><text>xsd:double</text></tag>
-      <text>If this attribute is present, the resource is synchronized
-            to loading progress.  Its value should be either a number
-            between 0.0 and 1.0, or a percentage between 0% and 100%
-            (inclusive).  If the resource is a multiframe resource, the
-            value is the proportion of the frames to play during the
-            preload phase of application load; the remainder is played
-            during the initialization phase.
-      </text>
-    </doc>
-  </property>
-  <property name="x" type="Number">
-    <doc>
-      <tag name="lzxtype"><text>xsd:double</text></tag>
-      <tag name="lzxdefault"><text>"0"</text></tag>
-      <text>x position of this view relative to the canvas</text>
-    </doc>
-  </property>
-  <property name="y" type="Number">
-    <doc>
-      <tag name="lzxtype"><text>xsd:double</text></tag>
-      <tag name="lzxdefault"><text>"0"</text></tag>
-      <text>y position of this view relative to the canvas</text>
-    </doc>
-  </property>
-  <property name="center" type="Boolean">
-    <doc>
-      <tag name="lzxtype"><text>xsd:boolean</text></tag>
-      <tag name="lzxdefault"><text>"false"</text></tag>
-      <text>If true, this view is centered within the canvas.  This
-            overrides the @a{x} and @a{y} attributes.
-      </text>
-    </doc>
-  </property>
+    <property name="__ivars__" access="public">
+      <object>
+        <property name="name" type="String" modifiers="final">
+          <doc>
+            <text>This defines both a resource with this name, and a view.</text>
+          </doc>
+        </property>
+        <property name="resource" type="String" modifiers="final">
+          <doc>
+            <text>This must be a pathname.  If the target contains text, the
+                  text should be converted to outlines.</text>
+          </doc>
+        </property>
+        <property name="ratio" type="Number" modifiers="read-only">
+          <doc>
+            <tag name="lzxtype"><text>number</text></tag>
+            <text>If this attribute is present, the resource is synchronized
+                  to loading progress.  Its value should be either a number
+                  between 0.0 and 1.0, or a percentage between 0% and 100%
+                  (inclusive).  If the resource is a multiframe resource, the
+                  value is the proportion of the frames to play during the
+                  preload phase of application load; the remainder is played
+                  during the initialization phase.
+            </text>
+          </doc>
+        </property>
+        <property name="x" type="Number">
+          <doc>
+            <tag name="lzxtype"><text>number</text></tag>
+            <tag name="lzxdefault"><text>"0"</text></tag>
+            <text>x position of this view relative to the canvas</text>
+          </doc>
+        </property>
+        <property name="y" type="Number">
+          <doc>
+            <tag name="lzxtype"><text>number</text></tag>
+            <tag name="lzxdefault"><text>"0"</text></tag>
+            <text>y position of this view relative to the canvas</text>
+          </doc>
+        </property>
+        <property name="center" type="Boolean">
+          <doc>
+            <tag name="lzxtype"><text>boolean</text></tag>
+            <tag name="lzxdefault"><text>"false"</text></tag>
+            <text>If true, this view is centered within the canvas.  This
+                  overrides the x and y attributes.
+            </text>
+          </doc>
+        </property>
+      </object>
+    </property>
   </class>
 </property>
 

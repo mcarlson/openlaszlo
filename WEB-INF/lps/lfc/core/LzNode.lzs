@@ -381,7 +381,7 @@ public dynamic class LzNode extends LzEventable {
   var ondata = LzDeclaredEvent;
   /**
    * If replicated, the index of this clone
-   * @lzxtype event
+   * @lzxtype number
    * @access private
    */
   var clonenumber = null;

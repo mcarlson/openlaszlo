@@ -1,7 +1,7 @@
 /**
   * LzDefs.lzs
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   * @todo 2006-04-07 hqm This machinery could be removed if all
   * callers to sendEvent can be guaranteed to check if the event slot
@@ -266,7 +266,7 @@ function LzInheritedHash (parent)  {
   *                         {name:'foo', visible:true, options: {ignorelayout:true}})
   * </example>
   *
-  * @short-desc Pseudo-package for all LZX globals
+  * @shortdesc Pseudo-package for all LZX globals
   * @access public
   */
 var lz;
