@@ -715,6 +715,8 @@ public dynamic class LzNode extends LzEventable {
 
   /**
    * Clear the property cache and reapply updated styles
+   *
+   * @access private
    */
   function __reapplyCSS(ignore=null) {
     // Force rebuild of rules and property cache
