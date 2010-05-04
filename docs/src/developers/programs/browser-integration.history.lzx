@@ -1,0 +1,59 @@
+<canvas history="true">
+  <!-- Click on blob START, STATE_2, STATE_3, END, then click browser back button -->
+
+  <!-- a blob you can click on to select -->
+  <class name="blob" extends="drawview" width="100" height="100">
+    <attribute name="title" type="text"/>
+    <attribute name="lineStyle" value="black" type="color"/>
+    <attribute name="lineWidth" value="4" type="number"/>
+    <text align="center" valign="middle" fontsize="16" text="${parent.title}"/>
+    <handler name="onclick">
+      main.selectBlob(this);
+    </handler>
+    <method name="select" args="val">
+      clear();
+      rect(2, 2, 96, 96, 5);
+      if (val) {
+        // draw a border to select
+        stroke();
+      }
+      fill();
+    </method>
+  </class>
+
+  <!-- A view with four states -->
+  <view id="main" x="10" y="10" layout="axis: x; spacing: 10">
+    <attribute name="mystate" type="string" value="START"/>
+    <blob fillStyle="#ffcccc" name="s1" title="START"/>
+    <blob fillStyle="#ccccff" name="s2" title="STATE_2"/>
+    <blob fillStyle="#ccffcc" name="s3" title="STATE_3"/>
+    <blob fillStyle="#cccccc" name="s4" title="END"/>
+
+    <method name="selectBlob" args="blob">
+      var oldstate = this.mystate;
+      var newstate = blob.title;
+      if (oldstate != newstate) {
+        // save the old state
+        lz.History.save('main', 'mystate', oldstate);
+        // create new history context
+        lz.History.next();
+
+        setAttribute('mystate', newstate);
+      }
+    </method>
+
+    <!-- update blobs' appearance -->
+    <handler name="oninit" method="gotoState"/>
+    <handler name="onmystate" method="gotoState"/>
+    <method name="gotoState" args="ignore=null">
+      for (var i = subviews.length - 1; i >= 0; --i) {
+        var blob = subviews[i];
+        blob.select(blob.title == this.mystate);
+      }
+    </method>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

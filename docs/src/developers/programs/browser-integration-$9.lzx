@@ -2,9 +2,9 @@
 <canvas width="100%" height="56">
   <simplelayout/>
   <button onclick="lz.Browser.loadURL('http://www.openlaszlo.org','newOpenLaszloWindow');" text="OpenLaszlo Homepage"/>
-  <button onclick="lz.Browser.loadURL('http://www.mylaszlo.com','newOpenLaszloWindow');" text="myLaszlo.com"/>
+  <button onclick="lz.Browser.loadURL('http://forum.openlaszlo.org','newOpenLaszloWindow');" text="OpenLaszlo Forum"/>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

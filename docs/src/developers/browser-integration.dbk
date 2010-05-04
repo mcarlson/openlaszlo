@@ -77,18 +77,18 @@
       example, there is a method called 
       <indexterm>
         <primary>
-          <literal>swfEmbed()</literal>
+          <literal>lz.embed.swf()</literal>
                     </primary>
                 </indexterm>
-                <methodname>swfEmbed()</methodname> for embedding SWF OL
+                <methodname>lz.embed.swf()</methodname> for embedding SWF OL
       applications into the HTML page; this generates an HTML
       &lt;embed&gt; tag. Similarly, there is an 
       <indexterm>
         <primary>
-          <literal>dhtmlEmbed()</literal>
+          <literal>lz.embed.dhtml()</literal>
                     </primary>
                 </indexterm>
-                <methodname>dhtmlEmbed()</methodname> for placing an OL
+                <methodname>lz.embed.dhtml()</methodname> for placing an OL
       application compiled to DHTML within a web page. In this case
       there is no &lt;embed&gt; generated or required, but the
       methods have similar names because they perform analogous
@@ -109,17 +109,17 @@
       from the browser "into" the OpenLaszlo application, the 
       <indexterm>
         <primary>
-          <literal>setCanvasAttribute()</literal>
+          <literal>lz.embed['lzapp'].getCanvasAttribute()</literal>
                     </primary>
                 </indexterm>
-                <methodname>setCanvasAttribute()</methodname> and 
+                <methodname>lz.embed['lzapp'].getCanvasAttribute()</methodname> and 
       <indexterm>
         <primary>
-          <literal>setCanvasAttribute()</literal>
+          <literal>lz.embed['lzapp'].setCanvasAttribute()</literal>
                     </primary>
                 </indexterm>
-                <methodname>setCanvasAttribute()</methodname> methods are
-      used.</para>
+                <methodname>lz.embed['lzapp'].setCanvasAttribute()</methodname> methods are
+      used, where 'lzapp' denotes the application ID.</para>
             <para>These are discussed below.</para>
             <para>Although OpenLaszlo applications deployed on the Flash
       runtime are not dependent on the browser or operating system
@@ -159,7 +159,7 @@
         OpenLaszlo application and the JavaScript of the
         browser.</para>
                 <para>The 
-        <literal>lz.Browser</literal> is always running.</para>
+        <literal>lz.Browser</literal> service is always running.</para>
                 <para />
             </section>
         </section>
@@ -178,7 +178,7 @@
       <!--unknown tag: canvas-->
       element, which, when compiled to DHTML, becomes an object.
       When you embed an LZX application compiled to DHTML into an
-      HTML page, it just becomes part of that page's DOM,and you
+      HTML page, it just becomes part of that page's DOM, and you
       can address it directly. The "foo" object of the LZX
       application becomes canvas.foo of the DOM. If there is a swf
       embedded in that (DHTML) Openlaszlo application, you can
@@ -190,10 +190,10 @@
       use 
       <indexterm>
         <primary>
-          <literal>setCanvasAttribute()</literal>
+          <literal>getCanvasAttribute()</literal>
                     </primary>
                 </indexterm>
-                <methodname>setCanvasAttribute()</methodname> or 
+                <methodname>getCanvasAttribute()</methodname> or 
       <indexterm>
         <primary>
           <literal>setCanvasAttribute()</literal>
@@ -215,39 +215,44 @@
         compiled to DHTML, therefore the LFC must be downloaded
         explicitly. To make the LFC available to DHTML
         applications, include the following call in the page
-        head:</para>
+        head: <indexterm>
+        <primary>
+          <literal>lz.embed.lfc(url, serverroot)</literal>
+                    </primary>
+                </indexterm>
+                <methodname>lz.embed.lfc(url, serverroot)</methodname></para>
                 <para />
             </section>
         </section>
     </section>
     <section>
-        <title>The lz Class</title>
+        <title>The lz.embed Class</title>
         <para>For both applications compiled to SWF and applications
     compiled to DHTML, the methods used for bidirectional
     communication with the browser are in the class 
     <indexterm>
-      <primary>lz</primary>
+      <primary>lz.embed</primary>
             </indexterm>
-            <classname>lz</classname>.</para>
+            <classname>lz.embed</classname>.</para>
         <para>Unlike other OpenLaszlo classes which you use to build
     LZX applications, the 
     <indexterm>
-      <primary>lz</primary>
+      <primary>lz.embed</primary>
             </indexterm>
-            <classname>lz</classname> is designed to be incorporated into
+            <classname>lz.embed</classname> is designed to be incorporated into
     the HTML page in which your LZX application runs. That is to
     say, your LZX application is designed to be executed in the
     &lt;body&gt; section of the page, but the 
     <indexterm>
-      <primary>lz</primary>
+      <primary>lz.embed</primary>
             </indexterm>
-            <classname>lz</classname> must be include in the &lt;head&gt;
+            <classname>lz.embed</classname> must be include in the &lt;head&gt;
     section of the page.</para>
         <para>The 
     <indexterm>
-      <primary>lz</primary>
+      <primary>lz.embed</primary>
             </indexterm>
-            <classname>lz</classname> class is defined in</para>
+            <classname>lz.embed</classname> class is defined in</para>
         <programlisting>
     lps/includes/source/embednew.js</programlisting>
         <para>The source for 
@@ -258,12 +263,12 @@
     the class is documented in the Reference Manual.</para>
         <para>To have access to the 
     <indexterm>
-      <primary>lz</primary>
+      <primary>lz.embed</primary>
             </indexterm>
-            <classname>lz</classname> class, your application must include a
+            <classname>lz.embed</classname> class, your application must include a
     line like</para>
         <programlisting>&lt;script type="text/javascript"
-    src="/legals/lps/includes/embed-compressed.js"&gt;&lt;/script&gt;</programlisting>
+    src="/lps-@VERSIONID@/lps/includes/embed-compressed.js"&gt;&lt;/script&gt;</programlisting>
         <para>If you generate wrappers using the developer's console,
     the correct &lt;script&gt; tag will be generated for you
     automatically.</para>
@@ -271,12 +276,12 @@
     Developer's Console, the wrapper pages generated include the
     proper calls to the 
     <indexterm>
-      <primary>lz</primary>
+      <primary>lz.embed</primary>
             </indexterm>
-            <classname>lz</classname> class. It "just works" and you don't
+            <classname>lz.embed</classname> class. It "just works" and you don't
     have to do anything special. If you craft your HTML pages "by
     hand", of course, you will need to make sure that you
-    incorporate the lz class.</para>
+    incorporate the lz.embed class.</para>
         <para />
     </section>
     <section>
@@ -292,9 +297,8 @@
     SWF, add this line:</para>
         <example role="live-example">
             <title>The lz Class</title>
-            <programlisting>&lt;script src="/embed-compressed.js"
-      language="JavaScript"
-      type="text/javascript"/&gt;</programlisting>
+            <programlisting>
+&lt;script src="/lps-@VERSIONID@/lps/includes/embed-compressed.js" language="JavaScript" type="text/javascript"/&gt;</programlisting>
         </example>
         <para condition="swf">At the location within the
     &lt;html&gt;&lt;body&gt; where the application is to be
@@ -302,10 +306,11 @@
         <example role="live-example">
             <title>Placing the LZX (SWF) application within an HTML
       page</title>
-            <programlisting>&lt;script language="JavaScript"
-      type="text/javascript"&gt; lz.swfEmbed({url: '?lzt=swf',
-      bgcolor: '#000000', width: '', height: ''});
-      &lt;/script&gt;</programlisting>
+            <programlisting>
+&lt;script language="JavaScript" type="text/javascript"&gt;
+  lz.embed.swf({url: url + '?lzt=swf&amp;lzr=swf8',
+    bgcolor: '#000000', width: '', height: ''});
+&lt;/script&gt;</programlisting>
         </example>
         <para>where the url matches the URI that the application is
     served from, and the other properties match the attributes of
@@ -316,10 +321,11 @@
         <example role="live-example">
             <title>Placing the LZX (DHTML) application within an HTML
       page</title>
-            <programlisting>&lt;script language="JavaScript"
-      type="text/javascript"&gt; lz.dhtmlEmbed({url: '?lzt=swf',
-      bgcolor: '#000000', width: '', height: ''});
-      &lt;/script&gt;</programlisting>
+            <programlisting>
+&lt;script language="JavaScript" type="text/javascript"&gt;
+  lz.embed.dhtml({url: url + '?lzt=object&amp;lzr=dhtml',
+    bgcolor: '#000000', width: '', height: ''});
+&lt;/script&gt;</programlisting>
         </example>
         <para>where the url matches the URI that the application is
     served from, and the other properties match the attributes of
@@ -335,20 +341,20 @@
       be passed in to 
       <indexterm>
         <primary>
-          <literal>swfEmbed()</literal>
+          <literal>lz.embed.swf()</literal>
                     </primary>
                 </indexterm>
-                <methodname>swfEmbed()</methodname> or 
+                <methodname>lz.embed.swf()</methodname> or 
       <indexterm>
         <primary>
-          <literal>dhtmlEmbed()</literal>
+          <literal>lz.embed.dhtml()</literal>
                     </primary>
                 </indexterm>
-                <methodname>dhtmlEmbed()</methodname> method to specify the id
+                <methodname>lz.embed.dhtml()</methodname> method to specify the id
       of a div whose contents should be replaced with the LZX
       application. If a div with that ID doesn't exist, one will be
       written into the document where 
-      <literal>swf/dhtmlEmbed()</literal> is called. If appenddivid
+      <literal>lz.embed.{swf,dhtml}()</literal> is called. If appenddivid
       is not specified, the div written will be based on the id
       property + 'Container'.</para>
             <para>Alternatively, you can generate wrappers by using the
@@ -372,11 +378,11 @@
           necessary for deployment.</para>
                 </listitem>
                 <listitem>
-                    <para>paste to wherever you want the OpenLaszlo
+                    <para>Paste to wherever you want the OpenLaszlo
           application to appear in HTML page</para>
                 </listitem>
                 <listitem>
-                    <para>verify by running HTML file in your browser.</para>
+                    <para>Verify by running HTML file in your browser.</para>
                 </listitem>
             </orderedlist>
             <?ignore <p>
@@ -496,6 +502,8 @@
             <title>Detecting which flash player is running</title>
             <para>The default wrapper page contains logic to detect the
       version of flash running on the client.</para>
+<!-- NOTE [20100402 anba] this example is wrong, the html page looks quite different today -->
+<?ignore
             <para>This page that will look something like the
       following:</para>
             <example role="live-example">
@@ -526,6 +534,7 @@
 &lt;/html&gt;
                 </programlisting>
             </example>
+?>
             <para>Depending on which version is running, you may wish to
       use some LZX features that run in some, but not all, versions
       of the Flash Player.</para>
@@ -539,6 +548,8 @@
         wrappers for lzt=html and the SOLO deployment wizard</para>
                 <para />
             </section>
+<!-- NOTE [20100402 anba] Flash Player 7 is no longer of interest, is it? -->
+<?ignore
             <section>
                 <title>Features available only in Flash 7 or later</title>
                 <para>The following features are available only in the
@@ -553,6 +564,7 @@
                 </itemizedlist>
                 <para />
             </section>
+?>
         </section>
     </section>
     <section>
@@ -569,24 +581,25 @@
       this:</para>
             <example role="live-example">
                 <title>example frameset</title>
-                <programlisting>&lt;html&gt; &lt;frameset cols="128,*"&gt;
-        &lt;frame name="navBar" src="myOpenLaszloNav.lzx?lzt=html"
-        /&gt; &lt;frame name="contentArea"
-        src="myOpenLaszloContent.lzx?lzt=html" /&gt;
-        &lt;/frameset&gt; &lt;/html&gt;</programlisting>
+                <programlisting>
+&lt;html&gt;
+  &lt;frameset cols="128,*"&gt;
+    &lt;frame name="navBar" src="myOpenLaszloNav.lzx?lzt=html"/&gt;
+    &lt;frame name="contentArea" src="myOpenLaszloContent.lzx?lzt=html"/&gt;
+  &lt;/frameset&gt;
+&lt;/html&gt;</programlisting>
             </example>
             <para>Inside your application use the target parameter of 
       <indexterm>
         <primary>
-          <literal>lz.Browser.LoadURL()</literal>
+          <literal>lz.Browser.loadURL()</literal>
                     </primary>
                 </indexterm>
-                <methodname>lz.Browser.LoadURL()</methodname> to load pages in
+                <methodname>lz.Browser.loadURL()</methodname> to load pages in
       the target frame.</para>
             <example role="live-example">
                 <title>target in loadURL</title>
-                <programlisting>
-        lz.Browser.loadURL('http://www.laszlosystems.com','contentArea');</programlisting>
+                <programlisting>lz.Browser.loadURL('http://www.openlaszlo.org','contentArea');</programlisting>
             </example>
             <para />
         </section>
@@ -599,12 +612,17 @@
       OpenLaszlo application.</para>
             <example role="live-example">
                 <title>iframes and applications</title>
-                <programlisting>&lt;html&gt; &lt;body&gt; &lt;h1&gt;Here is
-        a header&lt;/h1&gt; &lt;div align="center"&gt; &lt;iframe
-        src="myOpenLaszloApplication.lzx?lzt=html" width="200"
+                <programlisting>
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Here is a header&lt;/h1&gt;
+    &lt;div align="center"&gt;
+      &lt;iframe src="myOpenLaszloApplication.lzx?lzt=html" width="200"
         height="200" frameborder="0" name="inlineApplication"
-        scrolling="no"/&gt; &lt;/div&gt; &lt;/body&gt;
-        &lt;/html&gt;</programlisting>
+        scrolling="no"/&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</programlisting>
             </example>
             <para>Bear in mind that the iframe will contain a canvas, and
       unless you want the browser to provide scrollbars, you should
@@ -615,7 +633,7 @@
         <section>
             <title>Popping and reusing browser windows</title>
             <para>The same way you would target content to a frame, you
-      can target the loadUrl to new window.</para>
+      can target the loadURL to new window.</para>
             <example role="live-example">
                 <title>new blank browser window</title>
                 <programlisting language="lzx">
@@ -642,27 +660,31 @@
     <section>
         <title>Passing startup Data to Embedded Applications</title>
         <para>Any query parameters that you add to the end of your url
-    to load the application get passed into the application as
-    globals.</para>
+    to load the application are available through the <indexterm>
+        <primary>
+          <literal>lz.Browser.getInitArg()</literal>
+                    </primary>
+                </indexterm>
+                <methodname>lz.Browser.getInitArg()</methodname> method.</para>
         <example role="live-example">
             <title>Passing query parameters to LZX application</title>
               <programlisting>
 &lt;script type="text/javascript"&gt;
-   lzEmbed({url: 'mainApplication'+screenW+'.lzx?lzt=swf', bgcolor: '#394660', width: screenW, height: screenH});
-&lt;/script&gt;
-
-</programlisting>
+  // pass 'myData' with value 'myValue' to the application
+  lz.embed.swf({url: 'mainApplication.lzx?lzt=swf&amp;myData=myValue', bgcolor: '#394660', width: 1024, height: 768});
+&lt;/script&gt;</programlisting>
         </example>
   
         <section>
-            <title>Query Parameters and Global Variables</title>
+            <title>Query Parameters</title>
             <para>Once the data has been passed in you can simply access
-      it as a global variable from within the OpenLaszlo
+      it by calling getInitArg() from within the OpenLaszlo
       application.</para>
             <example role="live-example">
                 <title>Accessing parameters</title>
-                <programlisting>&lt;canvas debug="true"
-        oninit="Debug.debug("%w", globalVar)"/&gt;</programlisting>
+                <programlisting>
+&lt;canvas debug="true"
+    oninit="Debug.debug("%w", lz.Browser.getInitArg('myData'))"/&gt;</programlisting>
             </example>
             <para>In many cases you will have full control of the HTML
       content that is embedding your application. In many other
@@ -670,7 +692,7 @@
       query parameters so it is wise to provide sane defaults for
       those values:</para>
             <example role="live-example">
-                <title>setting defaluts</title>
+                <title>setting defaults</title>
                 <programlisting language="lzx">
                     <textobject>
                         <textdata fileref="programs/browser-integration.setting-defaults.lzx" />
@@ -679,14 +701,14 @@
             </example>
   
             <para>The above application is requested without a 
-      <literal>globalVar</literal> query parameter. The debugger
+      <literal>myData</literal> query parameter. The debugger
       therefore displays the default value 
       <literal>bar</literal>. If this application is requested with
       the 
-      <literal>globalVar=foo</literal> query parameter, it will
-      display the default value 'bar'. Click 
+      <literal>myData=foo</literal> query parameter, it will
+      display the value <literal>foo</literal>. Click 
       <ulink type="onclick"
-                        url="javascript:window.open('programs/browser-integration.setting-defaults.lzx?lzt=swf&amp;globalVar=foo','example','resizable=0,width=200,height=200,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
+                        url="javascript:window.open('programs/browser-integration.setting-defaults.lzx?lzt=swf&amp;myData=foo','example','resizable=0,width=640,height=480,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
       here</ulink> to see the application in a popup window with the
       query parameter applied.</para>
             <para />
@@ -700,7 +722,7 @@
       open to the tab specified on the query parameter, and if one
       isn't provided, open to the first element.</para>
             <example role="live-example">
-                <title>setting defaluts</title>
+                <title>setting defaults</title>
                 <programlisting language="lzx">
                     <textobject>
                         <textdata fileref="programs/browser-integration.restoring-state.lzx" />
@@ -710,7 +732,7 @@
  
             <para>Click 
       <ulink type="onclick"
-                        url="javascript:window.open('programs/browser-integration.restoring-state.lzx?lzt=swf&amp;tab=two','example','resizable=0,width=200,height=250,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
+                        url="javascript:window.open('programs/browser-integration.restoring-state.lzx?lzt=swf&amp;tab=two','example','resizable=0,width=640,height=480,menubar=0,location=0,status=0,scrollbars=0,toolbar=0,address=0')">
       here</ulink> to see this application in a popup with a
       different initial state applied. This is useful when creating
       links from outside the application, or for creating a
@@ -720,6 +742,7 @@
             <para />
         </section>
     </section>
+<?ignore
     <section>
         <title>Supporting Multiple Resolutions</title>
         <para>Most web surfers have discovered the merits of high
@@ -733,30 +756,42 @@
     elements relative to the canvas.</para>
         <example role="live-example">
             <title>Multi-canvas application library</title>
-            <programlisting>mainApplication.lzx: &lt;library&gt;
-      &lt;tabslider width="$once{canvas.width - 20}" x="10" y="10"
+            <programlisting>
+mainApplication.lzx:
+&lt;library&gt;
+  &lt;tabslider width="$once{canvas.width - 20}" x="10" y="10"
       height="$once{canvas.height - 20}" spacing="2"
-      slideduration="300"&gt; &lt;tabelement name="one"
-      text="Tabelement One"/&gt; &lt;tabelement name="two"
-      text="Tabelement Two"/&gt; &lt;tabelement name="three"
-      text="Tabelement Three"/&gt; &lt;/tabslider&gt;
-      &lt;/library&gt;</programlisting>
+      slideduration="300"&gt;
+    &lt;tabelement name="one" text="Tabelement One"/&gt;
+    &lt;tabelement name="two" text="Tabelement Two"/&gt;
+    &lt;tabelement name="three" text="Tabelement Three"/&gt;
+  &lt;/tabslider&gt;
+&lt;/library&gt;</programlisting>
         </example>
         <para>Then create multiple files, one for each canvas area you
     wish to support.</para>
         <example role="live-example">
             <title>Multi-canvas application files</title>
-            <programlisting>mainApplication640.lzx: &lt;canvas
-      width="640" height="480"&gt; &lt;include
-      href="mainApplication.lzx"/&gt; &lt;/canvas&gt;
-      mainApplication800.lzx: &lt;canvas width="800"
-      height="600"&gt; &lt;include href="mainApplication.lzx"/&gt;
-      &lt;/canvas&gt; mainApplication1024.lzx: &lt;canvas
-      width="1024" height="768"&gt; &lt;include
-      href="mainApplication.lzx"/&gt; &lt;/canvas&gt;
-      mainApplication1280.lzx: &lt;canvas width="1280"
-      height="1024"&gt; &lt;include href="mainApplication.lzx"/&gt;
-      &lt;/canvas&gt;</programlisting>
+            <programlisting>
+mainApplication640.lzx:
+&lt;canvas width="640" height="480"&gt;
+  &lt;include href="mainApplication.lzx"/&gt;
+&lt;/canvas&gt;
+
+mainApplication800.lzx:
+&lt;canvas width="800" height="600"&gt;
+  &lt;include href="mainApplication.lzx"/&gt;
+&lt;/canvas&gt;
+
+mainApplication1024.lzx:
+&lt;canvas width="1024" height="768"&gt;
+  &lt;include href="mainApplication.lzx"/&gt;
+&lt;/canvas&gt;
+
+mainApplication1280.lzx:
+&lt;canvas width="1280" height="1024"&gt;
+  &lt;include href="mainApplication.lzx"/&gt;
+&lt;/canvas&gt;</programlisting>
         </example>
         <para>For real world deployments, you will want to set the size
     of your canvas to account for screen area occupied by browser
@@ -768,20 +803,28 @@
         <example role="live-example">
             <title>Selecting the Correct Canvas</title>
             <programlisting>
-      &lt;script type="text/javascript"&gt; var screenW =
-      screen.width; var screenH =0; switch (true) { case (screenW
-      &gt;= 1280): screenW = 1280; screenH = 1024; break; case
-      (screenW &gt;= 1024): screenW = 1024; screenH = 768; break;
-      case (screenW &gt;= 800): screenW = 800; screenH = 600;
-      break; default: screenW = 640; screenH = 480; break; }
-      lzEmbed({url: 'mainApplication'+screenW+'.lzx?lzt=swf',
-      bgcolor: '#394660', width: screenW, height: screenH});
-      &lt;/script&gt;</programlisting>
+&lt;script type="text/javascript"&gt;
+  var screenW = screen.width;
+  var screenH = 0;
+  if (screenW &gt;= 1280) {
+    screenW = 1280;
+    screenH = 1024;
+  } else if (screenW &gt;= 1024) {
+    screenW = 1024;
+    screenH = 768;
+  } else if (screenW &gt;= 800) {
+    screenW = 800;
+    screenH = 600;
+  } else {
+    screenW = 640;
+    screenH = 480;
+  }
+  lz.embed.swf({url: 'mainApplication'+screenW+'.lzx?lzt=swf',
+    bgcolor: '#394660', width: screenW, height: screenH});
+&lt;/script&gt;</programlisting>
         </example>
-        <!-- move title to the next example. title is hot valid here -->
-        <!-- <title>Example: building a URL</title> -->
         <para>The 
-    <methodname role="lz.Browser.prototype.loadURL">
+    <methodname role="lz.BrowserService.prototype.loadURL">
     loadURL()</methodname> method is used to create a URL based on
     user input. This URL is then communicated to browser, where a
     JavaScript function is used to unpack it and fill in a form.
@@ -790,36 +833,56 @@
     <!--         <informalexample role="live-example"> -->
         <example role="live-example">
             <title>Example: building a URL</title>
-            <programlisting>&lt;canvas width="200" height="400"&gt;
-      &lt;attribute name="appear" type="number" value="0" /&gt;
-      &lt;handler name="onappear"&gt; win.show.doStart();
-      &lt;/handler&gt; &lt;window id="win" title="Create and
-      Account" y="-300" width="180" height="300"&gt; &lt;animator
-      name="show" attribute="y" from="-300" to="50" start="false"
-      relative="false" duration="500" /&gt; &lt;animator
-      name="hide" attribute="y" from="50" to="-300" start="false"
-      relative="false" duration="500" /&gt; &lt;simplelayout
-      axis="y" spacing="4" /&gt; &lt;state name="question"
-      apply="true"&gt; &lt;text multiline="true" width="160"
-      align="center"&gt; It looks like you don't have an account.
-      Would you like to create one now? &lt;/text&gt;
-      &lt;button&gt;Go &lt;handler name="onclick"&gt;
-      parent.question.remove(); parent.signup.apply();
-      &lt;/handler&gt; &lt;/button&gt; &lt;/state&gt; &lt;state
-      name="signup"&gt; &lt;text&gt;Name:&lt;/text&gt; &lt;edittext
-      /&gt; &lt;text&gt;Email:&lt;/text&gt; &lt;edittext /&gt;
-      &lt;text&gt;Username:&lt;/text&gt; &lt;edittext
-      name="uname"/&gt; &lt;text&gt;Password:&lt;/text&gt;
-      &lt;edittext name="pass" /&gt; &lt;button&gt;Create Account
-      &lt;handler name="onclick"&gt; var s =
-      "javascript:fillFormValues('" + parent.uname.getText() + "',
-      '" + parent.pass.getText() + "')"; lz.Browser.loadURL(s);
-      parent.hide.doStart(); &lt;/handler&gt; &lt;/button&gt;
-      &lt;/state&gt; &lt;/window&gt;
-      &lt;/canvas&gt;</programlisting>
+            <programlisting>
+&lt;canvas width="200" height="400"&gt;
+  &lt;attribute name="appear" type="number" value="0" /&gt;
+  &lt;handler name="onappear"&gt;
+    win.show.doStart();
+  &lt;/handler&gt;
+  &lt;window id="win" title="Create and Account"
+      y="-300" width="180" height="300"&gt;
+    &lt;animator name="show" attribute="y" from="-300" to="50"
+        start="false" relative="false" duration="500" /&gt;
+    &lt;animator name="hide" attribute="y" from="50" to="-300"
+        start="false" relative="false" duration="500" /&gt;
+    &lt;simplelayout axis="y" spacing="4" /&gt;
+    &lt;state name="question" apply="true"&gt;
+      &lt;text multiline="true" width="160" align="center"&gt;
+        It looks like you don't have an account.
+        Would you like to create one now?
+      &lt;/text&gt;
+      &lt;button text="Go"&gt;
+        &lt;handler name="onclick"&gt;
+          parent.question.remove();
+          parent.signup.apply();
+        &lt;/handler&gt;
+      &lt;/button&gt;
+    &lt;/state&gt;
+    &lt;state name="signup"&gt;
+      &lt;text&gt;Name:&lt;/text&gt;
+      &lt;edittext/&gt;
+      &lt;text&gt;Email:&lt;/text&gt;
+      &lt;edittext /&gt;
+      &lt;text&gt;Username:&lt;/text&gt;
+      &lt;edittext name="uname"/&gt;
+      &lt;text&gt;Password:&lt;/text&gt;
+      &lt;edittext name="pass" /&gt;
+      &lt;button&gt;Create Account
+        &lt;handler name="onclick"&gt;
+          var s = "javascript:fillFormValues('" 
+            + parent.uname.getText() + "',
+            '" + parent.pass.getText() + "')";
+          lz.Browser.loadURL(s);
+          parent.hide.doStart();
+        &lt;/handler&gt;
+      &lt;/button&gt;
+    &lt;/state&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;</programlisting>
         </example>
         <para />
     </section>
+?>
     <section>
         <title>Using the browser's "back" button</title>
         <para>The 
@@ -832,63 +895,24 @@
         <para>The default wrapper page enables the back button and
     browser-to-LZX communication. Once you've got this, you can
     call the browser javascript method</para>
-        <programlisting>javascript:lzSetCanvasAttribute(attributeName,
-    value)</programlisting>
+        <programlisting>javascript:lz.embed.setCanvasAttribute(attributeName, value)</programlisting>
         <para>to set a canvas attribute and send an event. The
     following example shows the way the 
     <indexterm>
       <primary>lz.History</primary>
             </indexterm>
             <classname>lz.History</classname> service works to move among
-    states. To see the program in action, copy this code to your
-    applications directory.</para>
-        <example role="live-example">
-            <title>Communicating with Back button</title>
-            <programlisting>&lt;canvas width="1400" height="600"
-      debug="true"&gt; &lt;debug width="500" height="500"
-      fontsize="12" x="450"/&gt; &lt;!-- Click on blob START,
-      STATE_2, STATE_3, END, then click browser back button --&gt;
-      &lt;!-- a blob you can click on to select --&gt; &lt;class
-      name="blob" extends="drawview" width="100" height="100"&gt;
-      &lt;attribute name="title" type="text"/&gt; &lt;attribute
-      name="selected" type="boolean" /&gt; &lt;text y="20" x="4"
-      fontsize="16" text="${parent.title}"/&gt; &lt;handler
-      name="onclick"&gt; this.setAttribute('selected', true);
-      main.selectBlob(this); &lt;/handler&gt; &lt;method
-      name="select" args="val"&gt; if (val) { // draw a border to
-      select this.lineStyle = 0x000000; this.lineWidth = 4;
-      moveTo(0,0); lineTo(0,100); lineTo(100,100); lineTo(100,0);
-      lineTo(0,0); stroke(); } else { clear(); } &lt;/method&gt;
-      &lt;/class&gt; &lt;!-- A view with four states --&gt;
-      &lt;view id="main" x="10" y="10" layout="axis: x; spacing:
-      10"&gt; &lt;attribute name="mystate" type="string"
-      value="START"/&gt; &lt;blob bgcolor="#ffcccc" id="s1"
-      title="START"/&gt; &lt;blob bgcolor="#ccccff" id="s2"
-      title="STATE_2"/&gt; &lt;blob bgcolor="#ccffcc" id="s3"
-      title="STATE_3"/&gt; &lt;blob bgcolor="#cccccc" id="s4"
-      title="END"/&gt; &lt;method name="unselectAll"&gt;
-      s1.select(false); s2.select(false); s3.select(false);
-      s4.select(false); &lt;/method&gt; &lt;method
-      name="selectBlob" args="blob"&gt; 
-      <emphasis role="em">// save the old state
-      lz.History.next();</emphasis> setAttribute('mystate',
-      blob.title); unselectAll(); blob.select(true);
-      recordState(blob.title); &lt;/method&gt; &lt;handler
-      name="oninit"&gt; unselectAll(); recordState("START");
-      selectBlob(s1); &lt;/handler&gt; &lt;handler
-      name="onmystate"&gt; Debug.debug("got onmystate event: ",
-      this.mystate); gotoState(this.mystate); &lt;/handler&gt;
-      &lt;method name="recordState" args="newstate"&gt;
-      this.mystate = newstate; 
-      <emphasis role="em">lz.History.save(this,'mystate',
-      this.mystate);</emphasis> Debug.debug("recordState %w", newstate)
-      &lt;/method&gt; &lt;method name="gotoState" args="ns"&gt;
-      unselectAll(); if (ns == "START") { s1.select(true); } else
-      if (ns == "STATE_2") { s2.select(true); } else if (ns ==
-      "STATE_3") { s3.select(true); } else if (ns == "END") {
-      s4.select(true); } &lt;/method&gt; &lt;/view&gt;
-      &lt;/canvas&gt;</programlisting>
-        </example>
+    states. To see the program in action, follow <ulink type="onclick"
+                        url="javascript:window.open('programs/browser-integration.history.lzx?lzt=html','example','resizable=0,width=640,height=480,menubar=0,location=0,status=0,scrollbars=0,toolbar=1')">
+      this link</ulink> to open a popup window.</para>
+            <example>
+                <title>history enabled application</title>
+                <programlisting language="lzx">
+                    <textobject>
+                        <textdata fileref="programs/browser-integration.history.lzx" />
+                    </textobject>
+                </programlisting>
+            </example>
         <para />
     </section>
     <section>
