@@ -333,8 +333,27 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     // to add multi-dimensional arrays some day...
     thisPrec = prec(Ops.COMMA, false);
     children[1] = maybeAddParens(thisPrec, node.get(1), children[1]);
-    return children[0] + "[" + children[1] + "]";
+    if (node.get(0) instanceof ASTArrayLiteral) {
+      // add parenthesis around array literal
+      return "(" + children[0] + ")[" + children[1] + "]";
+    } else {
+      return children[0] + "[" + children[1] + "]";
+    }
   }
 
+  public String visitPropertyIdentifierReference(SimpleNode node, String[] children) {
+    // These have prec of 0 even though they don't have ops
+    int thisPrec = 0;
+    for (int i = 0; i < children.length; i++) {
+      children[i] = maybeAddParens(thisPrec, node.get(i), children[i], true);
+    }
+    assert node.get(1) instanceof ASTIdentifier;
+    if (node.get(0) instanceof ASTArrayLiteral) {
+      // add parenthesis around array literal
+      return "(" + children[0] + ")." + children[1];
+    } else {
+      return children[0] + "." + children[1];
+    }
+  }
 }
   
