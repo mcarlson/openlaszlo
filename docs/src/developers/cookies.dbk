@@ -59,7 +59,7 @@ calling a JSP. The JSP will parse and display the cookie value from the
 application and return the data to the application as XML. The application will
 then display the information using a text datapath.</para>
 
-<informalexample role="live-example"><programlisting>
+<informalexample><programlisting>
 &lt;canvas width="500" height="200"&gt;
 
     &lt;dataset name="request" type="http" src="cookie.jsp" request="true" /&gt;
@@ -87,7 +87,7 @@ the JSP.</para>
 that you can access by URL. Make sure the LZX code's dataset is pointing to this
 URL, that is, replace the <literal>src</literal> value with your URL.</para>
 
-<example role="live-example"><title>jsp code for generating cookie</title><programlisting>
+<example><title>jsp code for generating cookie</title><programlisting>
 &lt;%@ page import="java.util.*" %&gt;
 
 &lt;%
@@ -118,14 +118,14 @@ Explain how it works
 </remark>
 </para>
 
-<example role="live-example">
+<example>
    <title>Combobox that creates a cookie</title>
    <programlisting language="lzx">
    <textobject><textdata fileref="programs/cookies-$3.lzx"/></textobject> 
    </programlisting>
 </example>
 
-<example role="live-example"><title>cookie.jsp</title><programlisting>
+<example><title>cookie.jsp</title><programlisting>
 
 
 &lt;%@ page import="java.util.*,java.io.*" contentType="text/xml" %&gt;
