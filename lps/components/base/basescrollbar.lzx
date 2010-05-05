@@ -515,6 +515,8 @@
         <attribute name="trackscroll" value="0" type="number" />
         <!--- @keywords private -->
         <attribute name="targetscroll" value="0" type="number" />
+        <!--- @keywords private -->
+        <attribute name="dragging" value="false" type="boolean" />
 
         <!--- @keywords private -->
         <method name="init">
@@ -537,6 +539,8 @@
 
         <!--- @keywords private -->
         <method name="startDrag" args="ignore=null"><![CDATA[
+            if (this.dragging) return;
+            this.dragging = true;
             var croot = this.classroot;
             // disable targetpos delegate while dragging
             croot.targetPosDel.disable();
@@ -552,6 +556,8 @@
 
         <!--- @keywords private -->
         <method name="stopDrag" args="ignore=null"><![CDATA[
+            if (! this.dragging) return;
+            this.dragging = false;
             // remove thumbdrag state
             this[this.axis + 'thumbdrag'].setAttribute('applied', false);
             // re-enable targetpos delegate
