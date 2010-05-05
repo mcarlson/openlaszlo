@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @access public
@@ -31,15 +31,15 @@
  *   &lt;![CDATA[
  *     // Add a find method to Array
  *     Array.prototype.find = function ( what ) {
- *       for (i in this ) {
+ *       for (var i = 0; i &lt; this.length; ++i) {
  *         if (this[i] === what) {
  *           return i;
  *         }
  *       }
  *     }
  *
- *     sneaky = {example: 'sneaky'};
- *     tryit = ['foo', 42, sneaky, Math.PI, false];
+ *     var sneaky = {example: 'sneaky'};
+ *     var tryit = ['foo', 42, sneaky, Math.PI, false];
  *
  *     Debug.format("42 is at: %s\n", tryit.find(42));
  *     Debug.format("false is at: %s\n", tryit.find(false));
