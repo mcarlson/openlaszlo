@@ -215,12 +215,11 @@
         compiled to DHTML, therefore the LFC must be downloaded
         explicitly. To make the LFC available to DHTML
         applications, include the following call in the page
-        head: <indexterm>
-        <primary>
-          <literal>lz.embed.lfc(url, serverroot)</literal>
-                    </primary>
-                </indexterm>
-                <methodname>lz.embed.lfc(url, serverroot)</methodname></para>
+        head:
+            <programlisting>&lt;script type="text/javascript"&gt;
+    lz.embed.lfc('/lps-@VERSIONID@/lps/includes/lfc/LFCdhtml.js', '/lps-@VERSIONID@/'); 
+&lt;/script&gt;</programlisting>
+                </para>
                 <para />
             </section>
         </section>
@@ -298,7 +297,7 @@
         <example role="live-example">
             <title>The lz Class</title>
             <programlisting>
-&lt;script src="/lps-@VERSIONID@/lps/includes/embed-compressed.js" language="JavaScript" type="text/javascript"/&gt;</programlisting>
+&lt;script src="/lps-@VERSIONID@/lps/includes/embed-compressed.js" language="JavaScript" type="text/javascript"&gt;&lt;/script&gt;</programlisting>
         </example>
         <para condition="swf">At the location within the
     &lt;html&gt;&lt;body&gt; where the application is to be
@@ -309,7 +308,7 @@
             <programlisting>
 &lt;script language="JavaScript" type="text/javascript"&gt;
   lz.embed.swf({url: url + '?lzt=swf&amp;lzr=swf8',
-    bgcolor: '#000000', width: '', height: ''});
+    bgcolor: '#000000', width: '100%', height: '100%'});
 &lt;/script&gt;</programlisting>
         </example>
         <para>where the url matches the URI that the application is
@@ -324,7 +323,7 @@
             <programlisting>
 &lt;script language="JavaScript" type="text/javascript"&gt;
   lz.embed.dhtml({url: url + '?lzt=object&amp;lzr=dhtml',
-    bgcolor: '#000000', width: '', height: ''});
+    bgcolor: '#000000', width: '100%', height: '100%'});
 &lt;/script&gt;</programlisting>
         </example>
         <para>where the url matches the URI that the application is
@@ -883,7 +882,7 @@ mainApplication1280.lzx:
         <para />
     </section>
 ?>
-    <section>
+    <section id="browser-integration.history">
         <title>Using the browser's "back" button</title>
         <para>The 
     <indexterm>
