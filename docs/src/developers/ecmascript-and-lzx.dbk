@@ -51,7 +51,7 @@
                 <informalexample role="live-example">
                     <programlisting>
 &lt;canvas&gt;
-  &lt;include href="script.js"/&gt;
+  &lt;script src="script.js"/&gt;
   &lt;!-- — --&gt;
 &lt;/canvas&gt;
 </programlisting>
@@ -65,7 +65,7 @@
         <title>Differences between ECMA-262 and LZX</title>
 
         <para>The syntax and behaviour of LZX script is intended to be as specified by the ECMA-262
-            standard. However, there are some differences to be aware of, especially in the SWF
+            standard. However, there are some differences to be aware of, especially in the SWF8
             runtime.</para>
 
         <section>
@@ -73,20 +73,16 @@
 
             <para>
                 <!-- fix LPP-4996: Remove "try-catch" from list of unsupported javascript thingies. IORIO 30 oct 2007 -->
-                There are no exceptions, and no exception handling in the SWF runtime: the SWF
+                There are no exceptions, and no exception handling in the SWF8 runtime: the SWF8
                 runtime does not signal any runtime errors. </para>
             <para> Errors such as <literal>1/0</literal>, <literal><varname>u</varname>()</literal>,
                         <literal><varname>k</varname>()</literal>,
                         <literal><varname>u</varname>.<varname>p</varname></literal>, and
-                        <literal><varname>o</varname>.<varname>u</varname></literal> (where <literal>
-                    <varname>u</varname>
-                </literal> is an undeclared variable, <literal>
-                    <varname>k</varname>
-                </literal> is defined but isn't a function, and <literal>
-                    <varname>o</varname>
-                </literal> is an object with property <literal>
-                    <varname>p</varname>
-                </literal>) are silently ignored in the SWF runtime. (If debugging is enabled, all
+                        <literal><varname>o</varname>.<varname>u</varname></literal> (where 
+                        <literal><varname>u</varname></literal> is an undeclared variable, 
+                        <literal><varname>k</varname></literal> is defined but isn't a function, and 
+                        <literal><varname>o</varname></literal> is an object with property 
+                        <literal><varname>p</varname></literal>) are silently ignored in the SWF8 runtime. (If debugging is enabled, all
                 but the first of these will generate a warning message in the debugger window when
                 evaluated.) </para>
 
@@ -102,14 +98,14 @@
 
             <para>In JavaScript, you can access the properties of an object in two ways:</para>
             <programlisting>
-                foo.length  
-                foo.['length'] </programlisting>
+foo.length  
+foo['length'] </programlisting>
             <para>In Javascript, these two expressions have identical meaning. The second form is
                 normally used if you are trying to access a property whose name is stored in a
                 variable. For instance, to enumerate the properties of an object you can say: </para>
 
             <programlisting>
-                for (var key in myobject) ... myobject[key] ...</programlisting>
+for (var key in myobject) ... myobject[key] ...</programlisting>
 
             <para>But in LZX script, there is one other subtle difference. When you use <literal>.</literal> to
                 access a property, if the property does not exist, you will get a warning. If you
@@ -123,16 +119,18 @@
                     <literal>window</literal>, <literal>document</literal>, etc.) are not available
                 to the LZX developer. </para>
         </section>
+<!-- NOTE [20100505 anba] works for me, section no longer valid? -->
+<?ignore
         <section>
             <title>Forward references</title>
             <para> Forward references to functions are not supported. </para>
-
         </section>
+?>
         <section>
             <title>ECMAScript object support</title>
             <para>LZX does not support the ECMAScript objects, attributes and methods presented in
                     <literal role="unsupported">this font</literal> in the following table in the
-                SWF runtime.</para>
+                SWF8 runtime.</para>
 
             <table id="ecmascript.object-table" rowsep="1" width="80%">
                 <title>Supported ECMAScript Properties</title>
@@ -368,7 +366,7 @@
                                     <literal role="supported">setYear(year)</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported">todateString()</literal>
+                                    <literal role="unsupported">toDateString()</literal>
                                 </para>
                                 <para>
                                     <literal role="unsupported">toGMTSting()</literal>
@@ -399,32 +397,32 @@
                         <row>
                             <entry>
                                 <para>
-                                    <literal role="unsupported">Error</literal>
+                                    <literal role="supported">Error</literal>
                                 </para>
                             </entry>
                             <entry>
                                 <para>
-                                    <literal role="unsupported">Error.prototype</literal>
+                                    <literal role="supported">Error.prototype</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported">constructor</literal>
+                                    <literal role="supported">constructor</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported">message</literal>
+                                    <literal role="supported">message</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported">name</literal>
+                                    <literal role="supported">name</literal>
                                 </para>
                             </entry>
                             <entry>
                                 <para>
-                                    <literal role="unsupported">Error(message)</literal>
+                                    <literal role="supported">Error(message)</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported">new Error(message)</literal>
+                                    <literal role="supported">new Error(message)</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported">toString()</literal>
+                                    <literal role="supported">toString()</literal>
                                 </para>
                             </entry>
                         </row>
@@ -493,6 +491,10 @@
                                 </para>
                                 <para>
                                     <literal role="unsupported">toString()</literal>
+                                    <footnote>
+                                        <para><literal>Function.toString</literal> always returns
+                                            "<literal>[type Function]</literal>".</para>
+                                    </footnote>
                                 </para>
                             </entry>
                         </row>
@@ -518,13 +520,13 @@
                                     <literal role="unsupported">decodeURI()</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported">decodeURIComponent()</literal>
+                                    <literal role="supported">decodeURIComponent()</literal>
                                 </para>
                                 <para>
                                     <literal role="unsupported">encodeURI(uri)</literal>
                                 </para>
                                 <para>
-                                    <literal role="unsupported"
+                                    <literal role="supported"
                                     >encodeURIComponent(component)</literal>
                                 </para>
                                 <para>
@@ -1272,8 +1274,8 @@
             example, is a syntax error. In this case <literal>object['default']</literal> can be
             used instead.</para>
 
-        <para> LZX script implements a subset of class declarations, as specified by <ulink
-                url="http://developer.mozilla.org/es4/spec/chapter_9_classes.html">the ECMAScript 4
+        <para> LZX script implements a subset of class declarations, as proposed by <ulink
+                url="http://wiki.ecmascript.org/doku.php?id=strawman:classes">the ES-Harmony
                 committee wiki</ulink>. This extension is used in the LZX runtime implementation,
             but is not yet supported in user code. </para>
 

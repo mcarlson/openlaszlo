@@ -226,7 +226,7 @@
       <para>This will make more sense when we look at the js2doc output from the containsPt code
         above:
         <programlisting>
-            &lt;property id=&quot;lz.view.prototype.containsPt&quot; name=&quot;containsPt&quot;&gt;
+            &lt;property id=&quot;LzView.prototype.containsPt&quot; name=&quot;containsPt&quot;&gt;
               &lt;doc&gt;
                 &lt;text&gt;returns true if the point is contained within the view.&lt;/text&gt;
               &lt;/doc&gt;
@@ -264,12 +264,12 @@
           </thead>      
           <tbody>
             <row>
-              <entry><literal>id="lz.view"</literal></entry>
+              <entry><literal>id="LzView"</literal></entry>
               <entry>The <literal>lz.view</literal> class</entry>
               <entry>The use of capital "Lz" indicates that the class lz.view is part of the LFC. </entry>
             </row>            
             <row>
-              <entry><literal>id="lz.view.prototype.containsPt"</literal></entry>
+              <entry><literal>id="LzView.prototype.containsPt"</literal></entry>
               <entry>The <literal>containsPt</literal> method of <literal>lz.view</literal></entry>
               <entry>The presence of <literal>prototype</literal> means that the property being identified is present on all instances of the class. The use of capital "Lz" indicates that the class lz.view is part of the LFC. </entry>
             </row>
