@@ -18,7 +18,7 @@ Sources for LZ components are <ulink url="../../lps/components/">here.</ulink>
 </para>
 
 <para>
-This chapter is a tutorial explains how
+This chapter is a tutorial which explains how
 components are used to create a simple survey tool.
 </para>
 
@@ -27,12 +27,12 @@ components are used to create a simple survey tool.
 
 <para/><section><title>Overview</title>
 <para>
-The following short tutorial shows how the <ulink url="../demos/vacation-survey/">vacation survey </ulink>application works.  In this tutorial we show how various components
-such as <indexterm><primary>radiobuttons</primary></indexterm><sgmltag class="element">&lt;radiobuttons&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: radiobuttons-->
+The following short tutorial shows how the <ulink url="../demos/vacation-survey/">vacation survey</ulink> application works.  In this tutorial we show how various components
+such as <indexterm><primary>radiobutton</primary></indexterm><sgmltag class="element">&lt;radiobutton&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
+<!--unknown tag: radiobutton-->
  and <indexterm><primary>radiogroup</primary></indexterm><sgmltag class="element">&lt;radiogroup&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
 <!--unknown tag: radiogroup-->
-s nest inside the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> component, and how these and other components can be bound to data to collect
+ nest inside the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> component, and how these and other components can be bound to data to collect
 and display survey results.
 </para>
 <para>
@@ -94,11 +94,11 @@ Note the <indexterm><primary>submit</primary></indexterm><sgmltag class="element
  tag in the example (just below the <indexterm><primary>form</primary></indexterm><sgmltag class="element">&lt;form&gt;</sgmltag> tag.)
 </para>
 <programlisting><literal>
-                &lt;submit id="surveysubmit" data="${surveydataset}"/&gt;
+    &lt;submit id="surveysubmit" dataset="${surveydataset}"/&gt;
 </literal>
 </programlisting>
 <para>
-The function of this tag is to associate the form with the dataset.  Later, when the <methodname role="LzDataset.prototype.submit">submit()</methodname> is invoked,
+The function of this tag is to associate the form with the dataset.  Later, when the <methodname role="lz.submit.prototype.submit">submit()</methodname> is invoked,
 the data will be sent to the server.
 </para>
 <para/></section></section><section><title>Extending the &lt;alert&gt; component</title>
