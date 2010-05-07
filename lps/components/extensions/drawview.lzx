@@ -2053,16 +2053,18 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     // save state to the bitmap
                     this.__saveToBitmap();
                     // get a copy of the current bitmap
+                    if (w == null) w = this.width;
+                    if (h == null) h = this.height;
                     image = copyBitmap(this.__bitmapdata, w, h);
                 } else if (typeof image == 'string') {
                     image = this.getImage(image);
+                    if (w == null) w = image.width;
+                    if (h == null) h = image.height;
                 }
                 if (! image) return;
 
                 this.__dirty = true;
                 // default to image size per http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage
-                if (w == null) w = image.width;
-                if (h == null) h = image.height;
 
                 var matrix:Matrix = this.getIdentityMatrix();
 
@@ -2070,16 +2072,14 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 var scalewidth:Number = w ? w / image.width : 1;
                 var scaleheight:Number = h ? h / image.height : 1;
                 matrix.scale(scalewidth * this.__sx, scaleheight * this.__sy);
-
-                if (r != 0) matrix.rotate(r + this.__tr);
-
+                matrix.rotate(r + this.__tr);
                 var tx:Number = x + this.__tx;
                 var ty:Number = y + this.__ty;
                 matrix.translate(tx, ty);
+
                 if (! this.__bitmapdata) {
                     this.rebuildBitmap();
                 }
-
                 this.copyBitmap(image, this.width, this.height, this.__bitmapdata, matrix);
             }
             
