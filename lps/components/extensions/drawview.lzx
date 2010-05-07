@@ -538,6 +538,10 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     this.__strokeStyle = null;
                     this.__globalAlpha = null;
                 }
+                // Add capability so folks know if they can use canvas text APIs
+                if (context['fillText']) {
+                    this.capabilities['2dcanvastext'] = true;
+                }
                 super.$lzc$set_context(context);
             }
 
@@ -562,17 +566,31 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 return cache[url];
             }
 
-            function drawImage(image, x, y, w, h, r) {
-                this.__dirty = true;
+            function drawImage(image, x=0, y=0, w=null, h=null, r=0) {
                 if ($debug) this.__checkContext();
-                if (typeof image == 'string') {
+                if (image == null) {
+                    // use a copy of this canvas
+                    image = this.sprite.__LZcanvas;
+                } else if (typeof image == 'string') {
+                    // load the image
                     image = this.getImage(image);
                 }
-                if (! (image && image.nodeType == 1 && image.nodeName == 'IMG')) {
+                if (! image) return;
+                this.__dirty = true;
+                // default to image size per http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage
+                if (w == null) w = image.width;
+                if (h == null) h = image.height;
+
+                var nodename = image.nodeName;
+                // canvas and img tags are valid
+                var valid = (image && image.nodeType == 1 && (nodename == 'IMG') || nodename == 'CANVAS'); 
+                // canvas is always complete
+                var complete = (image && image.complete) || nodename == 'CANVAS';
+                if (! valid) {
                     if ($debug) {
                         Debug.warn("Invalid image for lz.drawview.drawImage(): %w", image);
                     }
-                } else if (! image.complete) {
+                } else if (! complete) {
                     // TODO [20090308 anba] drawImage needs to be defered,
                     // maybe emit a debug-message to inform user
                     var fname = '__drawImage' + (this.__drawImageCnt++);
@@ -586,17 +604,101 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     // defer until image is completely loaded
                     lz.embed.attachEventHandler(image, 'load', this, fname);
                 } else {
-                    var tr = r ? r : 0;
-                    this.context.save();
-                    this.clear();
-                    var tx = x ? x : 0;
-                    var ty = y ? y : 0;
-                    this.context.translate(tx, ty);
-                    this.context.rotate(tr);
+                    this.__updateFillStyle();
+
+                    var dotransform = x || y || r;
+                    if (dotransform) {
+                        this.context.save();
+                        if (x || y) {
+                            this.context.translate(x, y);
+                        }
+                        if (r) {
+                            this.context.rotate(r);
+                        }
+                    }
+
+                    if (w == null) w = image.width;
+                    if (h == null) h = image.height;
+
                     this.context.drawImage(image, 0, 0, w, h);
-                    this.context.restore();
+
+                    if (dotransform) {
+                        this.context.restore();
+                    }
                 }
             }
+
+            //Fills or strokes (respectively) the given text at the given position. If a maximum width is provided, the text will be scaled to fit that width if necessary.
+            function fillText(text, x, y, maxWidth = null) {
+                if (! this.capabilities['2dcanvastext']) {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.fillText() is not currently supported in %w.', $runtime);
+                    }
+                    return;
+                }
+                this.__styleText();
+                this.__dirty = true;
+                this.__updateFillStyle();
+                if (maxWidth) {
+                    this.context.fillText(text,x,y,maxWidth);
+                } else {
+                    this.context.fillText(text,x,y);
+                }
+            }
+            function strokeText(text, x, y, maxWidth = null) {
+                if (! this.capabilities['2dcanvastext']) {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.strokeText() is not currently supported in %w.', $runtime);
+                    }
+                    return;
+                }
+                this.__styleText();
+                this.__dirty = true;
+                this.__updateLineStyle();
+                if (maxWidth) {
+                    this.context.strokeText(text,x,y,maxWidth);
+                } else {
+                    this.context.strokeText(text,x,y);
+                }
+            }
+
+            function measureText(text) {
+                if (! this.capabilities['2dcanvastext']) {
+                    if ($debug) {
+                        Debug.warn('lz.drawview.measureText() is not currently supported in %w.', $runtime);
+                    }
+                    return;
+                }
+                this.__styleText();
+                return this.context.measureText(text);
+            }
+
+            // Applies this view's styling to the html5 canvas
+            function __styleText() {
+                var font = this.font || canvas.font;
+                var fontsize = (this.fontsize || canvas.fontsize) + 'px';
+                var fontstyle = this.fontstyle || 'plain';
+
+                if (fontstyle == "plain") {
+                    var fweight = "normal";
+                    var fstyle = "normal";
+                } else if (fontstyle == "bold") {
+                    var fweight = "bold";
+                    var fstyle = "normal";
+                } else if (fontstyle == "italic") {
+                    var fweight = "normal";
+                    var fstyle = "italic";        
+                } else if (fontstyle == "bold italic" || fontstyle == "bolditalic") {
+                    var fweight = "bold";
+                    var fstyle = "italic";        
+                }
+
+                // Assemble CSS font attribute per HTML5 canvas styling rules
+                var css = fstyle + ' ' + fweight + ' ' + fontsize + ' ' + font;
+                //Debug.debug('css', css);
+                this.context.font = css;
+            }
+            
 
             function __checkContext() {
                 if ($debug) {
@@ -749,7 +851,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             function clipButton() {
                 if ($debug) {
-                    Debug.warn('lz.drawview.clipButton() is not currently supported in DHTML.');
+                    Debug.warn('lz.drawview.clipButton() is not currently supported in %w.', $runtime);
                 }
             }
 
@@ -767,7 +869,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             function clearMask() {
                 if ($debug) {
-                    Debug.warn('lz.drawview.clearMask() is not currently supported in DHTML.');
+                    Debug.warn('lz.drawview.clearMask() is not currently supported in %w.', $runtime);
                 }
             }
 
@@ -1242,15 +1344,16 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 return g;
             }
 
-            // accumulate rotation, r is clockwise rotation measured in radians
+            var __tr:Number = 0;
+            // accumulate rotation, radians is expected to be clockwise
             function rotate(radians) {
                 this.__saveToBitmap();
 
-                var degrees = radians * this.__radtodegfactor;
+                this.__tr += radians * this.__radtodegfactor;
                 if ($as2) {
-                    this.__drawcontext._rotation += degrees;
+                    this.__drawcontext._rotation = this.__tr;
                 } else {
-                    this.__drawcontext.rotation += degrees;
+                    this.__drawcontext.rotation = this.__tr;
                 }
             }
  
@@ -1462,6 +1565,23 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
             }
 
+            function fillText(text, x, y, maxWidth = null) {
+                if ($debug) {
+                    Debug.warn('lz.drawview.fillText() is not currently supported in %w.', $runtime);
+                }
+            }
+
+            function strokeText(text, x, y, maxWidth = null) {
+                if ($debug) {
+                    Debug.warn('lz.drawview.strokeText() is not currently supported in %w.', $runtime);
+                }
+            }
+            function measureText(text) {
+                if ($debug) {
+                    Debug.warn('lz.drawview.measureText() is not currently supported in %w.', $runtime);
+                }
+            }
+
             if ($as3) {
                 function clearMask() {
                     if (this.clipcontext) {
@@ -1609,8 +1729,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
                 function save() {
                     this.__contextstates.push({fillStyle: this.fillStyle, strokeStyle: this.strokeStyle, globalAlpha: this.globalAlpha, lineWidth: this.lineWidth, lineCap: this.lineCap, lineJoin: this.lineJoin, miterLimit: this.miterLimit});
+                    // reset accumulated transforms
                     this.__sx = this.__sy = 1;
-                    this.__tx = this.__ty = 0;
+                    this.__tr = this.__tx = this.__ty = 0;
 
                     // Store this.context:MovieClip
                     this.__contexts.push(this.__drawcontext);
@@ -1926,24 +2047,34 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 return new flash.geom.Matrix();
             }
 
-            function drawImage(image, x, y, w, h, r) {
+            function drawImage(image=null, x:Number=0, y:Number=0, w=null, h=null, r:Number=0) {
                 // TODO: deal with runtime-loaded images
-                if (typeof image == 'string') {
+                if (image == null) {
+                    // save state to the bitmap
+                    this.__saveToBitmap();
+                    // get a copy of the current bitmap
+                    image = copyBitmap(this.__bitmapdata, w, h);
+                } else if (typeof image == 'string') {
                     image = this.getImage(image);
                 }
                 if (! image) return;
+
                 this.__dirty = true;
+                // default to image size per http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage
+                if (w == null) w = image.width;
+                if (h == null) h = image.height;
 
                 var matrix:Matrix = this.getIdentityMatrix();
 
-                var tw:Number = w ? w / image.width : 1;
-                var th:Number = h ? h / image.height : 1;
-                matrix.scale(tw, th);
+                // Apply accumulated translations
+                var scalewidth:Number = w ? w / image.width : 1;
+                var scaleheight:Number = h ? h / image.height : 1;
+                matrix.scale(scalewidth * this.__sx, scaleheight * this.__sy);
 
-                if (r != null) matrix.rotate(r);
+                if (r != 0) matrix.rotate(r + this.__tr);
 
-                var tx:Number = x ? x : 0;
-                var ty:Number = y ? y : 0;
+                var tx:Number = x + this.__tx;
+                var ty:Number = y + this.__ty;
                 matrix.translate(tx, ty);
                 if (! this.__bitmapdata) {
                     this.rebuildBitmap();
