@@ -96,11 +96,10 @@ var LzSprite = function(owner, isroot) {
             quirks.use_css_master_sprite = options.usemastersprite;
             var mastersprite = LzResourceLibrary && LzResourceLibrary.__allcss && LzResourceLibrary.__allcss.path;
             if (mastersprite) {
-                LzSprite.__masterspriteurl = mastersprite;
-                //precache
-                var masterspriteimg = new Image();
-                masterspriteimg.src = mastersprite;
+                LzSprite.__masterspriteurl = LzSprite.__rootSprite.options.approot + mastersprite;
                 if ($debug) {
+                    var masterspriteimg = new Image();
+                    masterspriteimg.src = mastersprite;
                     masterspriteimg.onerror = function() {
                         Debug.warn('Error loading master sprite:', mastersprite);
                     }
@@ -489,6 +488,9 @@ LzSprite.__defaultStyles = {
     lzgraphicscanvas: {
         position: 'absolute'
     },
+    '#lzTextSizeCache': {position: 'absolute', top: '-20000px', left: '-20000px'},
+
+    
     // Blarg.  Why do we have these in here?
     writeCSS: function(isIE) {
         var rules = [];
@@ -517,8 +519,7 @@ LzSprite.__defaultStyles = {
             var o = document.createElement('style');
             lz.embed.__setAttr(o, 'type', 'text/css');
             o.appendChild( document.createTextNode( css ) );
-            var heads = document.getElementsByTagName("head");
-            heads[0].appendChild(o);
+            document.getElementsByTagName("head")[0].appendChild(o);
         }
     },
     __re: new RegExp('[A-Z]', 'g'),
@@ -769,7 +770,7 @@ LzSprite.__updateQuirks = function () {
             quirks['forcemeasurescrollheight'] = true;
             capabilities['dropshadows'] = true;
             // Force hasLayout for lzTextSizeCache in IE
-            defaultStyles['#lzTextSizeCache'] = {zoom: 1};
+            defaultStyles['#lzTextSizeCache'].zoom = 1;
         } else if (browser.isSafari || browser.isChrome) {
             LzSprite.__styleNames.borderRadius = 'WebkitBorderRadius';
             LzSprite.__styleNames.boxShadow = 'WebkitBoxShadow';
@@ -1041,7 +1042,7 @@ LzSprite.prototype.__LZimg = null;
 LzSprite.prototype.__LZclick = null;
 LzSprite.prototype.x = null;
 LzSprite.prototype.y = null;
-LzSprite.prototype.opacity = null;
+LzSprite.prototype.opacity = 1;
 LzSprite.prototype.width = null;
 LzSprite.prototype.height = null;
 LzSprite.prototype.playing = false;
@@ -1051,8 +1052,7 @@ LzSprite.prototype.frames = null;
 LzSprite.blankimage = 'lps/includes/blank.gif';
 LzSprite.prototype.resource = null;
 LzSprite.prototype.source = null;
-LzSprite.prototype.visible = null;
-LzSprite.prototype.text = null;
+LzSprite.prototype.visible = true;
 LzSprite.prototype.clip = null;
 LzSprite.prototype.stretches = null;
 LzSprite.prototype.resourceWidth = null;
