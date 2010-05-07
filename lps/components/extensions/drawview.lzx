@@ -2056,12 +2056,13 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     if (w == null) w = this.width;
                     if (h == null) h = this.height;
                     image = copyBitmap(this.__bitmapdata, w, h);
+                    if (! image) return;
                 } else if (typeof image == 'string') {
                     image = this.getImage(image);
+                    if (! image) return;
                     if (w == null) w = image.width;
                     if (h == null) h = image.height;
                 }
-                if (! image) return;
 
                 this.__dirty = true;
                 // default to image size per http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#dom-context-2d-drawimage
