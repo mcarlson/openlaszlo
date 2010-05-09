@@ -214,13 +214,15 @@ public class ParseTreePrinter {
       SimpleNode child = children[i];
       if ((child instanceof ASTProgram) ||
           (child instanceof ASTStatementList) ||
-          (child instanceof ASTDirectiveBlock)) {
+          (child instanceof ASTDirectiveBlock) ||
+          (child instanceof ASTClassDirectiveBlock)) {
         List newChildren = new ArrayList();
         for (i = 0; i < len; i++) {
           child = children[i];
           if ((child instanceof ASTProgram) ||
               (child instanceof ASTStatementList) ||
-              (child instanceof ASTDirectiveBlock)) {
+              (child instanceof ASTDirectiveBlock) ||
+              (child instanceof ASTClassDirectiveBlock)) {
             newChildren.addAll(Arrays.asList(flatten(child.getChildren())));
           } else {
             newChildren.add(child);
@@ -246,7 +248,8 @@ public class ParseTreePrinter {
     }
     else if ((node instanceof ASTProgram) ||
              (node instanceof ASTStatementList) ||
-             (node instanceof ASTDirectiveBlock)) {
+             (node instanceof ASTDirectiveBlock) ||
+             (node instanceof ASTClassDirectiveBlock)) {
       node.setChildren(flatten(node.getChildren()));
     }
     return node;
@@ -274,7 +277,8 @@ public class ParseTreePrinter {
     // Are we doing OOP yet?
     if (node instanceof ASTProgram ||
         node instanceof ASTStatementList ||
-        node instanceof ASTDirectiveBlock) {
+        node instanceof ASTDirectiveBlock ||
+        node instanceof ASTClassDirectiveBlock) {
       // Conditional join
       StringBuffer sb = new StringBuffer();
       String sep = "";
@@ -356,7 +360,9 @@ public class ParseTreePrinter {
     if (node instanceof ASTNewExpression) {
       return lnum(node, visitNewExpression(node, children));
     }
-    if (node instanceof ASTIfStatement || node instanceof ASTIfDirective) {
+    if (node instanceof ASTIfStatement ||
+        node instanceof ASTIfDirective ||
+        node instanceof ASTClassIfDirective) {
       return lnum(node, visitIfStatement(node, children));
     }
     if (node instanceof ASTPragmaDirective) {

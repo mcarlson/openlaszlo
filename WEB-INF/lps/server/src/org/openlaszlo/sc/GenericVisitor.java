@@ -252,7 +252,8 @@ public class GenericVisitor implements ASTVisitor {
       return visitSwitchStatement(node, children);
     } else if (node instanceof ASTModifiedDefinition) {
       return visitModifiedDefinition(node, children);
-    } else if (node instanceof ASTIfDirective) {
+    } else if (node instanceof ASTIfDirective ||
+               node instanceof ASTClassIfDirective) {
       return visitIfDirective(node, children);
     } else if (node instanceof ASTIncludeDirective) {
       return visitIncludeDirective(node, children);
@@ -260,7 +261,8 @@ public class GenericVisitor implements ASTVisitor {
       return node;
     } else if (node instanceof ASTPragmaDirective) {
       return visitPragmaDirective(node, children);
-    } else if (node instanceof ASTDirectiveBlock) {
+    } else if (node instanceof ASTDirectiveBlock ||
+               node instanceof ASTClassDirectiveBlock) {
       // Not sure why this isn't just a statement list
       return visitDirectiveBlock(node, children);
     } else if (node instanceof ASTPassthroughDirective) {

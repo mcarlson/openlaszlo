@@ -88,6 +88,32 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
     return this.context;
   }
 
+  class CompressorParseTreePrinter extends ParseTreePrinter {
+
+    public CompressorParseTreePrinter(ParseTreePrinter.Config config) {
+      super(config);
+    }
+
+    // Passthrough's need to be preserved for the linker
+    public String visitPassthroughDirective(SimpleNode node, String[] children) {
+      ASTPassthroughDirective pt = (ASTPassthroughDirective)node;
+      String optString = "";
+      Map options = pt.getProperties();
+      for (Iterator i = options.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        String key = (String) entry.getKey();
+        Boolean value = (Boolean)entry.getValue();
+        optString += key + ": " + value;
+        if (i.hasNext()) { optString += ", "; }
+      }
+      if (optString.length() > 0) { optString = " (" + optString + ")"; }
+      return "#passthrough" + optString + " {" +
+        ((ASTPassthroughDirective)node).getText() +
+        "}#\n";
+    }
+  }
+
+
   public void compress(SimpleNode program, OutputStream out) {
     // Here is your opportunity to set any sort of flags you might
     // want to to neuter translations that are not needed.
@@ -97,7 +123,7 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
     config.setObfuscate(compress || options.getBoolean(Compiler.OBFUSCATE));
     config.setTrackLines(options.getBoolean(Compiler.TRACK_LINES));
     // One small step towards a stream compiler...
-    (new ParseTreePrinter(config)).print(translate(program), out);
+    (new CompressorParseTreePrinter(config)).print(translate(program), out);
   }
 
   public SimpleNode translate(SimpleNode program) {
