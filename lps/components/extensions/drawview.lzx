@@ -539,7 +539,8 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     this.__globalAlpha = null;
                 }
                 // Add capability so folks know if they can use canvas text APIs
-                if (context['fillText']) {
+                // disable for iPad for now...
+                if (context['fillText'] && lz.embed.browser.browser !== 'iPad') {
                     this.capabilities['2dcanvastext'] = true;
                 }
                 super.$lzc$set_context(context);

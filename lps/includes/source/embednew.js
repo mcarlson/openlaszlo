@@ -588,9 +588,11 @@ lz.embed = {
             } else if (this.browser == 'Explorer') {
                 // true if we're on ie and not being spoofed
                 this.isIE = true;
-            } else if (this.browser == 'iPhone') {
+            } else if (this.browser == 'iPhone' || this.browser == 'iPad') {
                 this.isSafari = true;
                 this.isIphone = true;
+            } else if (this.OS == 'Android') {
+                this.isSafari = true;
             } else if (this.browser == 'Chrome') {
                 this.isChrome = true;
             }
@@ -629,6 +631,18 @@ lz.embed = {
                 string: navigator.userAgent,
                 subString: "iPhone",
                 identity: "iPhone",
+                versionSearch: "WebKit"
+            },
+            {
+                string: navigator.userAgent,
+                subString: "iPad",
+                identity: "iPad",
+                versionSearch: "WebKit"
+            },
+            {
+                string: navigator.userAgent,
+                subString: "Android",
+                identity: "Android",
                 versionSearch: "WebKit"
             },
             {
@@ -720,7 +734,17 @@ lz.embed = {
             {
                    string: navigator.userAgent,
                    subString: "iPhone",
-                   identity: "iPhone/iPod"
+                   identity: "iPhone/iPod/iPad"
+            },
+            {
+                   string: navigator.userAgent,
+                   subString: "iPad",
+                   identity: "iPhone/iPod/iPad"
+            },
+            {
+                   string: navigator.userAgent,
+                   subString: "Android",
+                   identity: "Android"
             },
             {
                 string: navigator.platform,
@@ -937,8 +961,9 @@ lz.embed = {
         var parent = null;
         var pos = {};
         var box;
+        var browser = lz.embed.browser;
 
-        if (!(lz.embed.browser.isFirefox && el == document.body) && el.getBoundingClientRect ) { // IE and FF3
+        if (!(browser.isFirefox && el == document.body) && el.getBoundingClientRect ) { // IE and FF3
             if (! el.parentNode) {
                 // IE throws 'Unspecified error' if an element isn't attached to the DOM - see LPP-8759
                 return {x: 0, y:0};
@@ -962,13 +987,13 @@ lz.embed = {
             }
 
             // look up computed style for Safari
-            if (lz.embed.browser.isSafari && document.defaultView && document.defaultView.getComputedStyle) {
+            if (browser.isSafari && document.defaultView && document.defaultView.getComputedStyle) {
                 var styles = document.defaultView.getComputedStyle(el, '');
             }
                 
             // opera & (safari absolute) incorrectly account for body offsetTop
             // used quirks.absolute_position_accounts_for_offset before...
-            if ( lz.embed.browser.isOpera || (lz.embed.browser.isSafari && styles && styles['position'] == 'absolute' ) ) {
+            if ( browser.isOpera || browser.isSafari) { //&& styles && styles['position'] == 'absolute' ) ) {
                 pos.y -= document.body.offsetTop;
             }
         }

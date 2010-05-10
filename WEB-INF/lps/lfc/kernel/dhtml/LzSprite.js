@@ -48,6 +48,8 @@ var LzSprite = function(owner, isroot) {
         rootcontainer.style.padding = 0;
         rootcontainer.style.border = "0 none";
         rootcontainer.style.overflow = "hidden";
+        // For IE 7, in case the container inherits another value
+        rootcontainer.style.textAlign = "left";
 
         if (quirks['container_divs_require_overflow']) {
             // create a container div that has overflow: hidden and a physical pixel size that lives inside the app container div. 
