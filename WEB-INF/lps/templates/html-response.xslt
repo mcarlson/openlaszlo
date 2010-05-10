@@ -101,9 +101,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <xsl:choose>
           <xsl:when test="/canvas/@runtime = 'dhtml'">
             <xsl:comment>[if IE]&gt;&lt;script type="text/javascript" src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/excanvas.js"&gt;&lt;/script&gt;&lt;![endif]</xsl:comment>
-            <script type="text/javascript">
-              lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
-            </script>
           </xsl:when>
         </xsl:choose>
         <style type="text/css">

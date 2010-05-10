@@ -3438,13 +3438,13 @@ function $lzc$set_cachebitmap( cache ) {
     }
 }
 
-/** Sent when the context is ready to use, which can take some time in IE DHTML.
+/** Sent when the drawing context is ready to use, which can take some time in IE DHTML.
  * @lzxtype event 
  * @access public
  */
 var oncontext = LzDeclaredEvent;
 
-/** Contains a reference to the raw drawview context.  The oncontext event is sent when the context is ready to use, which can take some time in IE DHTML.
+/** Contains a reference to the raw drawing context.  The oncontext event is sent when the context is ready to use, which can take some time in IE DHTML.
  * @access public
  * @type Object
  * @lzxtype expression

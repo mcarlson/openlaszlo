@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -18,9 +18,7 @@
         <arg value="dev-console.lzx" />
       </exec>
       <move file="dev-console.swf10.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
-      <concat destfile="dev-console.lzx.js" force="yes">
-        <filelist dir="."  files="../includes/lfc/LFCdhtml.js,dev-console.js"/>
-      </concat>
+      <copy file="../includes/lfc/LFCdhtml.js" tofile="lps/includes/lfc/LFCdhtml.js" overwrite="yes"/>
     </sequential>
   </target>
 </project>

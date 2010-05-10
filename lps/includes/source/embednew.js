@@ -216,10 +216,10 @@ lz.embed = {
             //this.__dhtmlLoadScript(serverroot + 'lps/includes/excanvas.js';)
             if (lz.embed.browser.version < 7) {
               // load chrome frame
-              this.__dhtmlLoadScript('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
+              this.__dhtmlLoadLibrary('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
             }
         }
-        this.__dhtmlLoadScript(url)
+        this.__dhtmlLoadLibrary(url, lz.embed.__lfcloaded);
     }
 
     ,/**
@@ -326,9 +326,14 @@ lz.embed = {
         if (properties.cancelmousewheel == true) {
             lz.embed.mousewheel.setEnabled(false);
         }
-        this.__dhtmlLoadLibrary(url)
         // Make sure we have focus (see LPP-8242)
         if (lz.embed.browser.OS == 'Windows' && lz.embed.browser.isFirefox) { window.focus(); }
+
+        if (! lz.embed.lfcloaded) {
+            lz.embed.__appqueue.push(url);
+        } else {
+            this.__dhtmlLoadLibrary(url)
+        }
     }
     ,/** A hash of applications installed on the page keyed by id */
     applications: {}
@@ -341,13 +346,26 @@ lz.embed = {
         return o;
     }
 
-    ,__dhtmlLoadLibrary: function (url) {
-        var o = document.createElement('script');
-        this.__setAttr(o, 'type', 'text/javascript');
-        this.__setAttr(o, 'src', url);
-        document.getElementsByTagName("head")[0].appendChild(o);
-        //alert(o);
-        return o;
+    ,__dhtmlLoadLibrary: function (url, callback) {
+        var script = document.createElement('script');
+        this.__setAttr(script, 'type', 'text/javascript');
+        if (callback) {
+            if (script.readyState){ //IE 
+                script.onreadystatechange = function(){
+                    if (script.readyState == "loaded" || script.readyState == "complete"){ 
+                        script.onreadystatechange = null;
+                        callback();
+                    }
+                }
+            } else { //Others 
+                script.onload = function(){
+                    callback();
+                }
+            }
+        }
+
+        this.__setAttr(script, 'src', url);
+        document.getElementsByTagName("head")[0].appendChild(script);
     }
 
     ,/** @access private */
@@ -1043,6 +1061,20 @@ lz.embed = {
             return result;
         }
     }
+    ,/** @access private 
+         called by the LFC to tell us it's loaded */
+    __lfcloaded: function() {
+        lz.embed.lfcloaded = true;
+        var queue = lz.embed.__appqueue;
+        if (queue.length) {
+            for (var i = 0, l = queue.length; i < l; i++) {
+                lz.embed.__dhtmlLoadLibrary(queue[i]);
+            }
+        }
+    }
+    ,/** @access private 
+         apps waiting for startup */
+    __appqueue: []
 };
 
 // init browser detection
