@@ -151,7 +151,7 @@
   var dp=canvas.datasets.dset.getPointer();   // 1
   dp.selectChild();                           // 2
   dp.addNodeFromPointer(parent.datapath);     // 3
-  parent.setAttribute('visible', "new:/contact");         // 4
+  parent.setAttribute('datapath', "new:/contact");         // 4
 &lt;/handler&gt;
 </programlisting></example>
 
