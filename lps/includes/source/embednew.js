@@ -349,6 +349,7 @@ lz.embed = {
     ,__dhtmlLoadLibrary: function (url, callback) {
         var script = document.createElement('script');
         this.__setAttr(script, 'type', 'text/javascript');
+        this.__setAttr(script, 'defer', 'defer');
         if (callback) {
             if (script.readyState){ //IE 
                 script.onreadystatechange = function(){

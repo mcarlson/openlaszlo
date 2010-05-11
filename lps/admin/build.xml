@@ -19,6 +19,7 @@
       </exec>
       <move file="dev-console.swf10.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
       <copy file="../includes/lfc/LFCdhtml.js" tofile="lps/includes/lfc/LFCdhtml.js" overwrite="yes"/>
+      <echo message="Please test the rebuilt developer's console in DHTML and Flash"/>
     </sequential>
   </target>
 </project>
