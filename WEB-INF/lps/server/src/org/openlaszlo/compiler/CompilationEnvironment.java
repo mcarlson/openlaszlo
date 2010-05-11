@@ -59,7 +59,7 @@ public class CompilationEnvironment {
     public static final String CONSOLEDEBUG_PROPERTY  = "lzconsoledebug";
     public static final String EMBEDFONTS_PROPERTY    = "embedfonts";
     public static final String SOURCELOCATOR_PROPERTY = "sourcelocators";
-
+    public static final String INTERMEDIATE_PROPERTY  = "emitIntermediateJS";
 
     // AS3-specific options
     public static final String INCREMENTAL_MODE = "incremental";
@@ -106,7 +106,7 @@ public class CompilationEnvironment {
     /** A ViewSchema object, to allow adding of user defined classes
      * during compilation.
      */
-    private final ViewSchema mSchema;
+    private ViewSchema mSchema;
 
     /**
      * CompilerMediaCache
@@ -128,15 +128,15 @@ public class CompilationEnvironment {
     /** Keep track of all named resources, so we can check if a view references a defined resource. */
     private Set mResourceNames = new HashSet();
 
-    private final Parser mParser;
+    private Parser mParser;
     private Canvas mCanvas = null;
 
     /** Keep a list of assigned global id's, so we can warn when one
      * is redefined */
-    private final Map idTable = new LinkedHashMap();
+    private Map idTable = new LinkedHashMap();
     /** Keep a list of tag to class maps so we can generate the
      * entries in a batch */
-    private final Map tagTable = new LinkedHashMap();
+    private Map tagTable = new LinkedHashMap();
 
     /** Holds a set of unresolved references to resources, so we can
         check for undefined (possibly forward) references after all
@@ -871,6 +871,24 @@ public class CompilationEnvironment {
         mProperties.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
         mProperties.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
         mProperties.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
+    }
+
+    // This is to try to reclaim as much memory as possible before calling the flash 10 compiler.
+    public void releaseParserAndSchema(){
+        mParser = null;
+        // TODO [hqm 05-2010] Something is keeping the ViewSchema
+        // alive even when I null the pointer to it, and it's class
+        // map is what takes up all the memory for a large app, so I'm
+        // clearing it manually for now. If I can find what's still
+        // holding a pointer to the ViewSchema, then this won't be
+        // needed.
+        mSchema.clearClassmap();
+        mSchema = null;
+        parsedLibraryCache = null;
+        classFontInfoTable = null;
+        mMediaCache = null;
+        tagTable = null;
+        idTable = null;
     }
 
 }

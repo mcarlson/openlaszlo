@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -340,7 +340,8 @@ abstract class ToplevelCompiler extends ElementCompiler {
     static boolean includesDebuggerWindow(CompilationEnvironment env) {
         return (env.getBooleanProperty(env.DEBUG_PROPERTY) &&
                 !env.getBooleanProperty(env.CONSOLEDEBUG_PROPERTY) &&
-                !env.getBooleanProperty(env.REMOTEDEBUG_PROPERTY));
+                !env.getBooleanProperty(env.REMOTEDEBUG_PROPERTY) &&
+                !env.getBooleanProperty(env.INTERMEDIATE_PROPERTY));
     }
 
     static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded, Set visited) {

@@ -1170,7 +1170,7 @@ public class SWF9External {
      * @throw CompilerError for class/var names used previously.
      */
     private String getFileNameForClassName(String name, boolean isClass) {
-      String lower = name.toLowerCase();
+      String lower = name.toLowerCase(Locale.ENGLISH);
       List list = (List)uniqueFileNames.get(lower);
 
       if (list == null) {

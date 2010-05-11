@@ -11,7 +11,7 @@ package org.openlaszlo.compiler;
 
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptCompilerInfo;
-import org.openlaszlo.sc.Compiler;
+import org.openlaszlo.sc.SWF10Compiler;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
@@ -42,10 +42,6 @@ import org.apache.log4j.*;
  */
 class SWF9Writer extends ObjectWriter {
 
-    // Accumulate script here, to pass to script compiler
-    protected PrintWriter scriptWriter = null;
-    protected StringWriter scriptBuffer = null;
-
     private FontManager mFontManager = new FontManager();
     private Map mDeviceFontTable = new HashMap();
 
@@ -72,8 +68,8 @@ class SWF9Writer extends ObjectWriter {
                 CompilationEnvironment env) {
 
         super(props, stream, cache, importLibrary, env);
-        scriptBuffer = new StringWriter();
-        scriptWriter= new PrintWriter(scriptBuffer);
+        makeScriptCompiler();
+
     }
 
 
@@ -84,7 +80,7 @@ class SWF9Writer extends ObjectWriter {
      * 
      */
     void setCanvas(Canvas canvas, String canvasConstructor) {
-        scriptWriter.println(canvasConstructor);
+        addScript(canvasConstructor);
         // Pass canvas dimensions through the script compiler to the Flex compiler
         mProperties.put("canvasWidth", Integer.toString(canvas.getWidth()));
         mProperties.put("canvasHeight", Integer.toString(canvas.getHeight()));
@@ -95,11 +91,13 @@ class SWF9Writer extends ObjectWriter {
 
 
 
-    public int addScript(String script) {
-        scriptWriter.println(script);
-        return script.length();
-    }
+    org.openlaszlo.sc.SWF10Compiler mSCompiler = null;
 
+    public int addScript(String script) {
+        // For swf9, this emits one or more .as3 files to the temp working dir
+        mSCompiler.compileSWF10Block(script);
+        return 1;
+    }
 
     public void importPreloadResource(File fileName, String name) 
         throws ImportResourceError
@@ -399,6 +397,23 @@ class SWF9Writer extends ObjectWriter {
         addScript(sbuf.toString());
     }
 
+    ScriptCompilerInfo compilerInfo;
+
+    Properties mScriptCompilerProps;
+
+    void makeScriptCompiler() {
+        Properties props = (Properties)mProperties.clone();
+
+        mScriptCompilerProps = props;
+        // Set up the boilerplate code needed for the main swf9 application class
+        props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeApplicationPreamble());
+        props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, MAIN_APP_CLASSNAME);
+        props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, EXEC_APP_CLASSNAME);
+
+        mSCompiler = new org.openlaszlo.sc.SWF10Compiler(props);
+        mSCompiler.startSWF10App();
+    }
+
     public void close() throws IOException { 
         //Should we emit javascript or SWF?
         //boolean emitScript = mEnv.isSWF9();
@@ -428,31 +443,9 @@ class SWF9Writer extends ObjectWriter {
         // Tell the canvas we're done loading.
         addScript("canvas.initDone()");
 
-        Properties props = (Properties)mProperties.clone();
-
-        // Set up the boilerplate code needed for the main swf9 application class
-        props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeApplicationPreamble());
-        props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, MAIN_APP_CLASSNAME);
-        props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, EXEC_APP_CLASSNAME);
-
-        /*
-          System.err.println(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE));
-        System.err.println(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME));
-        System.err.println(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME));
-
-        */
-
-        ScriptCompilerInfo compilerInfo = new ScriptCompilerInfo();
-        props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
-
-        // Working directory path to place intermediate .as3 files
-        compilerInfo.buildDirPathPrefix = mEnv.getLibPrefix();
-
         try { 
-            scriptWriter.close();
-         
-            byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
-            InputStream input = new ByteArrayInputStream(objcode);
+            InputStream input = mSCompiler.finishSWF10App();
+            compilerInfo = mEnv.getScriptCompilerInfo();
 
             // Make a note of the location of the as3 working file dir
             // used for compiling the main app. This is needed so the
@@ -460,7 +453,6 @@ class SWF9Writer extends ObjectWriter {
             // (<import>'s) against it.
             File workdir = compilerInfo.workDir;
             compilerInfo.mainAppWorkDir = workdir;
-            mEnv.setScriptCompilerInfo(compilerInfo);
 
             FileUtils.send(input, mStream);
         } catch (org.openlaszlo.sc.CompilerException e) {
@@ -477,6 +469,24 @@ class SWF9Writer extends ObjectWriter {
 
     public void openSnippet(String url) throws IOException {
         this.liburl = url;
+
+
+        Properties props = (Properties)mProperties.clone();
+
+        // Pass in the table of lzx class defs
+        props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
+        props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, LIBRARY_CLASSNAME);
+        props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, LIBRARY_CLASSNAME);
+        props.put(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
+
+        // This will contain a pointer to the working dir created by compiling the main app
+        ScriptCompilerInfo compilerInfo = mEnv.getMainCompilationEnv().getScriptCompilerInfo();
+        props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
+
+        // Set snippets options into a new script compiler.
+        mSCompiler = new org.openlaszlo.sc.SWF10Compiler(props);
+        mSCompiler.startSWF10App();
+
     }
 
     /** The user 'main' class, which extends LFCApplication */
@@ -565,30 +575,9 @@ class SWF9Writer extends ObjectWriter {
             throw new IllegalStateException("SWF9Writer.close() called twice");
         }
 
-        Properties props = (Properties)mProperties.clone();
-
-        // Pass in the table of lzx class defs
-        props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
-        props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, LIBRARY_CLASSNAME);
-        props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, LIBRARY_CLASSNAME);
-        props.put(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
-
-        /*
-          System.err.println(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE));
-        System.err.println(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME));
-        System.err.println(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME + "="+props.get( org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME));
-
-        */
-
-        // This will contain a pointer to the working dir created by compiling the main app
-        ScriptCompilerInfo compilerInfo = mEnv.getMainCompilationEnv().getScriptCompilerInfo();
-        props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
-
         try { 
-            scriptWriter.close();
-            byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
-            InputStream input = new ByteArrayInputStream(objcode);
-            mLogger.debug("compiled SWF9 code is "+new String(objcode));
+
+            InputStream input = mSCompiler.finishSWF10App();
             FileUtils.send(input, mStream);
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(e);

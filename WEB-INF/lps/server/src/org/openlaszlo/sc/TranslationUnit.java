@@ -69,7 +69,7 @@ public class TranslationUnit
   }
 
   public void setName(String name) {
-    this.name = name;
+    this.name = name != null ? name.intern() : name;
   }
 
   public String getSourceFileName() {
@@ -214,7 +214,7 @@ public class TranslationUnit
     if (cur == null) {
       cur = new SourceFileLine();
       cur.sourcefile = srcf;
-      lzxFilename = srcf.name;
+      lzxFilename = srcf.name != null ? srcf.name.intern() : srcf.name;
       cur.line = inputLinenum;
       lnums.put(key, cur);
     }

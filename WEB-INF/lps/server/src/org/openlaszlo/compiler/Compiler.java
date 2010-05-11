@@ -249,8 +249,12 @@ public class Compiler {
     }
 
   ObjectWriter createObjectWriter(Properties props,  OutputStream ostr, CompilationEnvironment env, Element root) {
+        if ("true".equals(props.getProperty(env.INTERMEDIATE_PROPERTY))) {
+            return new IntermediateWriter(props, ostr, mMediaCache, true, env, root);
+        }
+
         if ("false".equals(props.getProperty(env.LINK_PROPERTY))) {
-          return new LibraryWriter(props, ostr, mMediaCache, true, env, root);
+            return new LibraryWriter(props, ostr, mMediaCache, true, env, root);
         }
 
         String runtime = props.getProperty(env.RUNTIME_PROPERTY);
@@ -337,7 +341,7 @@ public class Compiler {
                 throw new ChainedException(e);
             }
 
-            Map props = env.getProperties();
+            Properties props = env.getProperties();
 
             props.put("$debug", new Boolean(
                                          env.getBooleanProperty(CompilationEnvironment.DEBUG_PROPERTY)));
@@ -409,7 +413,20 @@ public class Compiler {
                 );
             }
 
-            Properties nprops = (Properties) env.getProperties().clone();
+
+            if (env.isAS3()) {
+                // For AS3, we need to keep the info about the location of
+                // the as3 files working dir, in case we need to call the
+                // compiler again to compile "<import>" loadable
+                // libraries.
+                ScriptCompilerInfo compilerInfo = new ScriptCompilerInfo();
+                // Working directory path to place intermediate .as3 files
+                compilerInfo.buildDirPathPrefix = env.getLibPrefix();
+                props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
+                env.setScriptCompilerInfo(compilerInfo);
+            }
+
+            Properties nprops = (Properties) props.clone();
             // [todo: 2006-04-17 hqm] These compileTimeConstants will be used by the script compiler
             // at compile time, but they won't be emitted into the object code for user apps. Only
             // the compiled LFC emits code which defines these constants. We need to have some
@@ -430,8 +447,15 @@ public class Compiler {
 
             compileElement(root, env);
 
+            // Free up some memory
             root = null;
             doc = null;
+            // We can free up the schema and class info now, unless there are <import> libs to compile.
+            if (env.libraryCompilationQueue().size() == 0 && linking) {
+                env.releaseParserAndSchema();
+            }
+            // Now would be a good time to GC
+            Runtime.getRuntime().gc();
 
             if (mLogger.isDebugEnabled()) {
                 mLogger.debug("done...");

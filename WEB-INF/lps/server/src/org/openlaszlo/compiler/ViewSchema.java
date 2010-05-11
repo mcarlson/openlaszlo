@@ -52,7 +52,7 @@ public class ViewSchema extends Schema {
      * attribute/types for each class, as well as pointer to the
      * superclass if any.
      */
-    private final Map mClassMap = new HashMap();
+    private Map mClassMap = new HashMap();
 
     /**
      * If true, requires class names to be valid javascript identifiers.
@@ -1004,6 +1004,12 @@ public class ViewSchema extends Schema {
         throw new ColorFormatException(str);
     }
 
+    public void clearClassmap() {
+        mClassMap = null;
+    };
+
+
+
     /* Check for unknown attributes on a <method> tag */
     static HashSet  methodAttributes = new HashSet();
     static HashSet  attributeAttributes = new HashSet();
@@ -1074,6 +1080,8 @@ public class ViewSchema extends Schema {
             }
         }
     }
+
+    
 
 
 }

@@ -21,12 +21,10 @@ import org.jdom.Element;
 class SplashCompiler extends ElementCompiler {
     /** Logger */
     private static Logger mLogger  = org.apache.log4j.Logger.getLogger(SplashCompiler.class);
-    private ViewSchema mSchema;
     private static final String VIEW_INSTANTIATION_FNAME = "_root.lzpreloader.create";
 
     SplashCompiler(CompilationEnvironment env) {
         super(env);
-        mSchema = env.getSchema();
     }
 
     /** Returns true iff this class applies to this element.
@@ -114,7 +112,7 @@ class SplashCompiler extends ElementCompiler {
                 child.removeAttribute("synchronized");
             }
         }
-        NodeModel model = NodeModel.elementAsModel(element, mSchema, mEnv);
+        NodeModel model = NodeModel.elementAsModel(element, mEnv.getSchema(), mEnv);
         script.append(VIEW_INSTANTIATION_FNAME + "(" +
                           model.asJavascript(mEnv) +
                           ");" );

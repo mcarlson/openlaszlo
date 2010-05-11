@@ -49,14 +49,11 @@ public class ViewCompiler extends ElementCompiler {
     private static final String WHEN_ALWAYS = "always";
     private static final String WHEN_PATH = "path";
 
-    private ViewSchema mSchema;
-
     private static Logger mLogger  = Logger.getLogger(ViewCompiler.class);
     private static Logger mTraceLogger  = Logger.getLogger("trace.xml");
 
     public ViewCompiler(CompilationEnvironment env) {
         super(env);
-        mSchema = env.getSchema();
         mTraceLogger.setLevel(Level.INFO);
     }
 
@@ -244,7 +241,7 @@ public class ViewCompiler extends ElementCompiler {
             mTraceLogger.info(outputter.outputString(element));
         }
 
-        NodeModel model = NodeModel.elementAsModel(element, mSchema, mEnv);
+        NodeModel model = NodeModel.elementAsModel(element, mEnv.getSchema(), mEnv);
         String script = VIEW_INSTANTIATION_FNAME + "(" +
           model.asJavascript(mEnv) + ", " + model.totalSubnodes() +
           ");";
@@ -611,6 +608,7 @@ public class ViewCompiler extends ElementCompiler {
                                              FontInfo fontInfo,
                                              Set classList) {
 
+        ViewSchema schema = env.getSchema();
 
         // Clone a copy of the font info
         fontInfo = new FontInfo(fontInfo);
@@ -623,9 +621,9 @@ public class ViewCompiler extends ElementCompiler {
         // If it inherits from text or inputttext, annotate it with font info
         String eltName = elt.getName();
         if ("text".equals(eltName) ||
-            "text".equals(mSchema.getBaseClassname(eltName)) ||
+            "text".equals(schema.getBaseClassname(eltName)) ||
             "inputtext".equals(eltName) ||
-            "inputtext".equals(mSchema.getBaseClassname(eltName))) {
+            "inputtext".equals(schema.getBaseClassname(eltName))) {
             compileTextMetrics(elt, env, fontInfo);
         }
 

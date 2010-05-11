@@ -73,8 +73,6 @@ public class Main {
         "  Writes the schema to standard output.",
         "-S | --script",
         "  Writes JavaScript to .lzs file.",
-        "-SS | --savestate",
-        "  Writes JavaScript to .lzs file, and ASTs to -astin.txt, -astout.txt",
         "--incremental",
         "  for as3 runtime, use incremental compiler mode",
         "--lzxonly",
@@ -151,8 +149,6 @@ public class Main {
         boolean enableScriptCache = "true".equals(LPS.getProperty("compiler.scache.enabled"));
         Boolean forceTransCode = null;
         String outFileArg = null;
-        boolean saveScriptOption = false;
-        boolean saveStateOption = false;
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i].intern();
@@ -201,9 +197,7 @@ public class Main {
                       return 1;
                     }
                 } else if (arg == "-S" || arg == "--script") {
-                    saveScriptOption = true;
-                } else if (arg == "-SS" || arg == "--scripts") {
-                    saveStateOption = true;
+                    compiler.setProperty(CompilationEnvironment.INTERMEDIATE_PROPERTY, "true");
                 } else if (arg == "--script-cache-dir") {
                     scriptCacheDir = safeArg("--script-cache-dir", args, ++i);
                     if (scriptCacheDir == null) {
@@ -340,33 +334,9 @@ public class Main {
         int status = 0;
         for (Iterator iter = files.iterator(); iter.hasNext(); ) {
             String sourceName = (String) iter.next();
-            String intermediateName = null;
             String sourceNameNoExt = sourceName.endsWith(".lzx") ?
                 sourceName.substring(0, sourceName.length()-4) : sourceName;
-
-            if (saveScriptOption || saveStateOption) {
-                intermediateName = sourceNameNoExt + ".lzs";
-            }
-            if (saveStateOption) {
-                // remove old
-                File dir = new File(sourceName).getCanonicalFile().getParentFile();
-                final String pat = new File(sourceNameNoExt).getName() +
-                    "-ast(?:in|out)-[0-9]*.txt";
-                String[] matches = dir.list(new FilenameFilter() {
-                        public boolean accept(File dir, String name) {
-                            return name.matches(pat);
-                        }
-                    });
-                for (int i=0; i<matches.length; i++) {
-                    System.out.println("Removing " + matches[i]);
-                    new File(matches[i]).delete();
-                }
-                compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_AST_INPUT, sourceNameNoExt + "-astin-*.txt");
-                compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_AST_OUTPUT, sourceNameNoExt + "-astout-*.txt");
-                compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_SRC_INPUT, sourceNameNoExt + "-src-*.txt");
-                compiler.setProperty(org.openlaszlo.sc.Compiler.DUMP_LINE_ANNOTATIONS, sourceNameNoExt + "-lineann-*.txt");
-            }
-            status += compile(compiler, logger, sourceName, intermediateName, outFileName, outDir);
+            status += compile(compiler, logger, sourceName, outFileName, outDir);
         }
         return status;
     }
@@ -394,7 +364,6 @@ public class Main {
     static private int compile(Compiler compiler,
                                 Logger logger,
                                 String sourcePath,
-                                String intermediateName,
                                 String outName,
                                 String outDir)
     {
@@ -402,7 +371,10 @@ public class Main {
         String objExtension = null;
         String finalExtension = null;
         String finalName = null;
-        if ("false".equals(compiler.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
+        
+        if ("true".equals(compiler.getProperty(CompilationEnvironment.INTERMEDIATE_PROPERTY))) {
+          objExtension = ".lzi";
+        } else if ("false".equals(compiler.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
           objExtension = ".gz";
           finalExtension = ".lzo";
         } else {
@@ -423,10 +395,6 @@ public class Main {
         Main.swfOutputFilename = objectFile.getAbsolutePath();
         BufferedWriter intermediate = null;
         try {
-          if (intermediateName != null) {
-            intermediate = new BufferedWriter(new FileWriter(intermediateName));
-            org.openlaszlo.sc.ScriptCompiler.setIntermediateWriter(intermediate);
-          }
 
           System.err.println("Compiling: " + sourceFile + " to " + objectFile);
             compiler.compile(sourceFile, objectFile, new Properties());
@@ -460,19 +428,6 @@ public class Main {
                     Main.class.getName(),"051018-259", new Object[] {e.getMessage()})
                 );
             return 3;
-        }
-        finally {
-            if (intermediate != null) {
-                org.openlaszlo.sc.ScriptCompiler.setIntermediateWriter(null);
-                try {
-                    // The output often does not end with a newline
-                    intermediate.write("\n");
-                    intermediate.close();
-                }
-                catch (IOException ioe) {
-                    throw new CompilationError("Could not create intermediate script file: " + ioe);
-                }
-            }
         }
         return 0;
     }

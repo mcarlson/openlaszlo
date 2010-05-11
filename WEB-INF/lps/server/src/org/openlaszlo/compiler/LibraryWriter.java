@@ -26,17 +26,16 @@ import org.openlaszlo.utils.*;
  *
  * Properties documented in Compiler.getProperties.
  */
-class LibraryWriter extends DHTMLWriter {
-
-  PrintStream out;
-  Element root;
+class LibraryWriter extends IntermediateWriter {
 
   LibraryWriter(Properties props, OutputStream stream,
                 CompilerMediaCache cache,
                 boolean importLibrary,
                 CompilationEnvironment env,
                 Element root) {
-    super(props, stream, cache, importLibrary, env);
+
+
+    super(props, stream, cache, importLibrary, env, root);
 
     try {
       this.out = new PrintStream(new java.util.zip.GZIPOutputStream(mStream));
@@ -57,130 +56,9 @@ class LibraryWriter extends DHTMLWriter {
   void setCanvas(Canvas canvas, String canvasConstructor) {
   }
 
-  private List resourceList = new LinkedList();
-
-  private class ResourceDescriptor {
-    String name;
-    String file = null;
-    List sources = null;
-    ResourceCompiler.Offset2D offset = null;
-
-    ResourceDescriptor (String name, String file, ResourceCompiler.Offset2D offset) {
-      this.name = name;
-      this.file = file;
-      this.offset = offset;
-    }
-
-    ResourceDescriptor (String name, List sources, ResourceCompiler.Offset2D offset) {
-      this.name = name;
-      this.sources = sources;
-      this.offset = offset;
-    }
-
-    String toLZX () {
-      String result = "<resource name='" + name + "'";
-      if (this.file != null) {
-        result += " src='" + adjustResourcePath(file) + "'";
-      }
-      if (offset != null) {
-        result += " offsetx='" + offset.offsetx + "' offsety='" + offset.offsety + "'";
-      }
-      if (this.sources == null) {
-        result += " />";
-      } else {
-        result += ">";
-        for (Iterator j = sources.iterator(); j.hasNext(); ) {
-          result += "\n  <frame src='" + adjustResourcePath((String)j.next()) + "' />";
-        }
-         result += "\n</resource>";
-      }
-      return result;
-    }
-  }
-
-
-  /** Import a resource file into the current movie.
-   * Using a name that already exists clobbers the
-   * old resource (for now).
-   *
-   * @param fileName file name of the resource
-   * @param name name of the MovieClip/Sprite
-   * @throws CompilationError
-   */
-  public void importResource(File inputFile, String name)
-    {
-      importResource(inputFile.toString(), name, null);
-    }
-
-  public void importResource(String fileName, String name)
-    {
-      importResource(fileName, name, null);
-    }
-
-  public void importResource(File inputFile, String name, ResourceCompiler.Offset2D offset)
-    {
-      importResource(inputFile.toString(), name, offset);
-    }
-
-  public void importResource(String fileName, String name, ResourceCompiler.Offset2D offset)
-    {
-      resourceList.add(new ResourceDescriptor(name, fileName, offset));
-    }
-
-  public void importResource(List sources, String name, File parent)
-    {
-      importResource(sources, name, parent, null);
-    }
-
-  public void importResource(List sources, String name, File parent, ResourceCompiler.Offset2D offset)
-    {
-      resourceList.add(new ResourceDescriptor(name, sources, offset));
-    }
-
-
-  private String adjustResourcePath(String src) {
-    try {
-      return new URL(src).toString();
-    } catch (MalformedURLException e) {
-      try {
-        String outdir = FileUtils.toURLPath(mEnv.getObjectFile().getCanonicalFile().getParentFile());
-        File file = new File(src).getCanonicalFile();
-        return FileUtils.adjustRelativePath(file.getName(),
-                                            outdir,
-                                            FileUtils.toURLPath(file.getParentFile()));
-      } catch (IOException f) {
-        return src;
-      }
-    }
-  }
-
-  private void exportAttributes() {}
-
-  private void exportResources() {
-    for (Iterator i = resourceList.iterator(); i.hasNext(); ) {
-      ResourceDescriptor resource = (ResourceDescriptor)i.next();
-      out.println(resource.toLZX());
-    }
-  }
-
   private void exportInterface() {
     out.println(mEnv.getSchema().toLZX());
   }
-
-  private void exportScript() {
-    out.println("<script when='immediate' type='LZBinary'>\n<![CDATA[\n");
-    // Write 'compressed' output
-    org.openlaszlo.sc.parser.SimpleNode program =
-      (new org.openlaszlo.sc.Compiler.Parser()).parse(scriptBuffer.toString());
-    // Cf., ScriptCompiler _compileToByteArray
-    JavascriptCompressor compressor = new JavascriptCompressor(mProperties);
-    compressor.compress(program, out);
-    out.println("\n]]>\n</script>");
-  } 
-  
-  // Must preserve visited order for output of includes
-  private Map autoIncludes = new LinkedHashMap();
-  private Map includes = new LinkedHashMap();
 
   private String libraries() {
     StringWriter writer = new StringWriter();
@@ -201,7 +79,7 @@ class LibraryWriter extends DHTMLWriter {
     return "";
   }
 
-  private void exportIncludes() {
+  void exportIncludes() {
     Set implicit = new HashSet();
     for (Iterator i = autoIncludes.keySet().iterator(); i.hasNext(); ) {
       File key = (File)i.next();
@@ -252,6 +130,6 @@ class LibraryWriter extends DHTMLWriter {
 }
 
 /**
- * @copyright Copyright 2008, 2009 Laszlo Systems, Inc.  All Rights
+ * @copyright Copyright 2008, 2009, 2010 Laszlo Systems, Inc.  All Rights
  * Reserved.  Use is subject to license terms.
  */

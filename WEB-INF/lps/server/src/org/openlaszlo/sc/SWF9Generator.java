@@ -60,7 +60,7 @@ public class SWF9Generator extends JavascriptGenerator {
   /**
    * Any classes are put here after translation.
    */
-  Map classes = new HashMap();
+  Map classConstructors = new HashMap();
 
   /**
    * The 'default' class is implicit and encompasses everything
@@ -346,7 +346,13 @@ public class SWF9Generator extends JavascriptGenerator {
         node = mixinInterface;  // the interface will appear in the final tree
         translateClassDefinition(node, classnameString, TranslateHow.AS_INTERFACE);
       } else {
-        classes.put(classnameString, node);
+        // Don't store constructor of anonymous instance classes
+        if (!classnameString.matches("[$]lzc[$]class_m\\d*")) {
+          // remove parent links, so we don't keep the whole AST in memory
+          SimpleNode cnode = getConstructor(node);
+          if (cnode != null) { cnode = cnode.deepCopy(); }
+          classConstructors.put(classnameString, cnode);
+        }
       }
     }
     finally {
@@ -499,16 +505,16 @@ public class SWF9Generator extends JavascriptGenerator {
       }
       // We need the actual super class because we need
       // a trampoline to any constructor that it has.
-      SimpleNode superClass = null;
+      SimpleNode superClassConst = null;
 
       if (ref.realsuper != null) {
-        superClass = (SimpleNode)classes.get(ref.realsuper);
+        superClassConst = (SimpleNode)classConstructors.get(ref.realsuper);
 
         // If superClass is null, then we don't know anything about
         // it: it may be in an included library, etc.  For that case,
         // we currently require the caller to provide a constructor.
       }
-      result.set(result.size(), createInterstitial(mixin, isname, ref, superClass));
+      result.set(result.size(), createInterstitial(mixin, isname, ref, superClassConst));
     }
     return result;
   }
@@ -598,8 +604,8 @@ public class SWF9Generator extends JavascriptGenerator {
    * @param supernode AST of 'real' superclass to match args
    * @return AST for constructor
    */
-  SimpleNode createInterstitialConstructor(String newname, SimpleNode supernode) {
-    SimpleNode constructor = getConstructor(supernode);
+  SimpleNode createInterstitialConstructor(String newname, SimpleNode superConstructor) {
+    SimpleNode constructor = superConstructor;
     SimpleNode result;
     if (constructor == null) {
       // make default constructor
@@ -908,7 +914,7 @@ public class SWF9Generator extends JavascriptGenerator {
 
     // to free up memory, drop any pointers to the AST
     glotunits = null;
-    classes = null;
+    classConstructors = null;
     savedSource = null;
     mixinRef = null;
     mixinDef = null;
@@ -920,6 +926,201 @@ public class SWF9Generator extends JavascriptGenerator {
       throw new CompilerError("Error running external compiler: " + ioe);
     }
   }
+
+  TranslationUnit defaultTunit;
+  TranslationUnit mainTunit;
+  SWF9ParseTreePrinter ptp;
+
+  // TODO do we really need to keep this, or can we just keep a list of
+  // classnames? I think this is just for back-pointers from compiler errors.
+  //  How much memory does a list of tunits with most fields nulled take up
+  // compared to just the list of class names?
+  List allTunits;
+
+
+  /** Implements CodeGenerator.
+   * Call the unparser to separate the program into translation units.
+   */
+  public void setupSWF9Parser(boolean compress, boolean obfuscate)
+  {
+    SWF9ParseTreePrinter.Config config = new SWF9ParseTreePrinter.Config();
+    config.compress = compress;
+    config.obfuscate = obfuscate;
+    config.islib = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
+    config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
+    config.forcePublicMembers = (options.getBoolean(Compiler.DEBUG) ||
+                                 options.getBoolean(Compiler.NAME_FUNCTIONS) ||
+                                 options.getBoolean(Compiler.DEBUG_SWF9))
+      && !options.getBoolean(Compiler.DISABLE_PUBLIC_FOR_DEBUG);
+
+    config.incremental = options.getBoolean(Compiler.INCREMENTAL_COMPILE);
+    config.mainClassName = (String) options.get(Compiler.SWF9_APP_CLASSNAME);
+    //System.err.println("mainClassName = "+config.mainClassName);
+    if (config.islib) {
+      // 
+    } else {
+      config.trackLines = true;        // needed to get error messages that relate to original source
+    }
+
+    ptp = new SWF9ParseTreePrinter(config);
+
+    defaultTunit = new TranslationUnit(true);
+    mainTunit = null;
+
+    // moved from postProcess
+    boolean hasErrors = false;
+    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    extCompiler = new SWF9External(options, buildSharedLibrary);
+
+    allTunits = new ArrayList();
+
+  }
+
+  
+  /**
+   * Intercept JavascriptGenerator version.
+   * We keep a copy of the original program so we can emit it
+   * for debugging purposes.
+   */
+  public SimpleNode translateBlock(SimpleNode program) {
+    //savedProgram = program;
+    SimpleNode result = super.translate(program);
+    return result;
+  }
+
+  // Collects all the mixins that need to be compiled, and compiles them
+  public void makeInterstitials(SimpleNode program) {
+
+    SimpleNode result = super.translate(program);
+
+    // Walk list of needed interstitials and emit them
+    for (Iterator iter = mixinRef.keySet().iterator(); iter.hasNext(); ) {
+      String isname = (String)iter.next();
+      MixinReference ref = (MixinReference)mixinRef.get(isname);
+      SimpleNode mixin = (SimpleNode)mixinDef.get(ref.mixinname);
+      if (mixin == null) {
+        throw new CompilerError("Missing definition for mixin: " + ref.mixinname);
+      }
+      // We need the actual super class because we need
+      // a trampoline to any constructor that it has.
+      SimpleNode superClassConst = null;
+
+      if (ref.realsuper != null) {
+        superClassConst = (SimpleNode)classConstructors.get(ref.realsuper);
+
+        // If superClass is null, then we don't know anything about
+        // it: it may be in an included library, etc.  For that case,
+        // we currently require the caller to provide a constructor.
+      }
+      result.set(result.size(), createInterstitial(mixin, isname, ref, superClassConst));
+    }
+
+    compileBlock(result);
+
+  }
+
+  public void compileBlock(SimpleNode translatedNode) {
+
+    String preamble = DEFAULT_FILE_PREAMBLE;
+    String epilog = DEFAULT_FILE_EPILOG;
+
+    // Loop over top level nodes in AST, calling makeTranslationUnits
+    // on each one, to keep heap size from growing too big.
+    SimpleNode[] children = translatedNode.getChildren();
+    // Write the class files out. This used to be in postProcess.
+    for (int i=0; i < children.length; i++) {
+      SimpleNode child = children[i];
+      //System.err.println((new ParseTreePrinter()).text(child));
+      List tunits = ptp.makeTranslationUnits(child, sources, defaultTunit);
+      for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
+        TranslationUnit tunit = (TranslationUnit)iter.next();
+
+        // If this is the main translation unit, we need to write it
+        // last, because the ParseTreePrinter needs to scan all the
+        // code to find any globals which have to go in the main tunit.
+        if (tunit.isMainTranslationUnit()) {
+          mainTunit = tunit;
+          continue;
+        } else {
+          extCompiler.writeFile(tunit, preamble, epilog);
+          // Clear out string data to avoid wasting memory. But leave
+          // class name because a list of all class names is needed when
+          // constructing the command line to call flex.
+          tunit.clearMost();
+        }
+      }
+
+       allTunits.addAll(tunits);
+    }
+  }
+
+  public void writeMainTranslationUnit() {
+    String preamble = DEFAULT_FILE_PREAMBLE;
+    String epilog = DEFAULT_FILE_EPILOG;
+
+    // write out the main translationunit last
+    if (mainTunit != null) {
+      extCompiler.writeFile(mainTunit, preamble, epilog);
+    } else {
+      throw new CompilerError("could not find a main translation unit in SWF9Generator.makeTranslationUnits");
+    }
+  }
+
+  
+  public InputStream callFlexCompiler() {
+    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    try {
+      System.err.println("callFlexCompiler alltunits#"+ allTunits.size());
+      byte[] objcode = extCompiler.compileTranslationUnits(allTunits, buildSharedLibrary);
+      InputStream input = new ByteArrayInputStream(objcode);
+      return input;
+    }
+    catch (IOException ioe) {
+      throw new CompilerError("Error running external compiler: " + ioe);
+    }
+  }
+
+
+  // This handles writing out a list of tunits as as3 files (code from
+  // postProcess), but does not call flex compiler
+  public void writeGlobalTUnitsToAS3()
+  {
+
+    SWF9External ex = extCompiler;
+
+    boolean hasErrors = false;
+    // For each global variable defined in programVars,
+    // write it to its own translation unit.
+
+    List glotunits = new ArrayList();
+    for (Iterator variter = programVars.keySet().iterator(); variter.hasNext(); ) {
+      String varname = (String)variter.next();
+      GlobalVariable glovar = (GlobalVariable)programVars.get(varname);
+
+      TranslationUnit tunit = new TranslationUnit();
+      tunit.setName(varname);
+      tunit.setIsClass(false);
+      String decl = "public var " + varname;
+      if (glovar.type != null)
+        decl += ":" + glovar.type;
+      if (glovar.initializer != null)
+        decl += " = " + glovar.initializer;
+      decl += ";";
+      tunit.addText(decl);
+      glotunits.add(tunit);
+    }
+
+    // Emit the global variable translation units, and
+    // add them to the final list.
+
+    for (Iterator iter = glotunits.iterator(); iter.hasNext(); ) {
+      TranslationUnit tunit = (TranslationUnit)iter.next();
+      ex.writeFile(tunit, DEFAULT_FILE_PREAMBLE, DEFAULT_FILE_EPILOG);
+      allTunits.add(tunit);
+    }
+  }
+
 }
 
 /**
