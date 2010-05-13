@@ -1072,6 +1072,72 @@ public class Compiler {
     }
   }
 
+  /** These are the persistent state vars that are used by successive
+   * calls to compileBlock
+   */
+  Parser mParser;
+  Translator cg;
+  Profiler profiler;
+
+  public void startApp() {
+    mParser = new Parser();
+  }
+
+  public void compileBlock(String source) {
+    try {
+
+      byte[] bytes;
+      boolean compress = (! options.getBoolean(NAME_FUNCTIONS));
+      boolean obfuscate = options.getBoolean(OBFUSCATE);
+
+      cg.setOriginalSource(source);
+      String srcDumpFile = (String)options.get(DUMP_SRC_INPUT);
+      if (srcDumpFile != null) {
+        String newname = emitFile(srcDumpFile, source);
+        System.err.println("Created " + newname);
+      }
+
+      profiler.enter("parse");
+      // Can we reuse the Parser object? 
+      SimpleNode program = mParser.parse(source);
+      String astInputFile = (String)options.get(DUMP_AST_INPUT);
+      if (astInputFile != null) {
+        String newname = emitFile(astInputFile, program);
+        System.err.println("Created " + newname);
+      }
+      //       profiler.phase("transform");
+      //       SimpleNode transformed = xformer.transform(program);
+      profiler.phase("generate");
+      SimpleNode translated = cg.translate(program /* transformed */);
+      program = null;
+      String astOutputFile = (String)options.get(DUMP_AST_OUTPUT);
+      if (astOutputFile != null) {
+        String newname = emitFile(astOutputFile, translated);
+        System.err.println("Created " + newname);
+      }
+
+      cg.compileBlock(translated);
+      translated = null;
+
+      profiler.exit();
+      if (options.getBoolean(PROFILE_COMPILER)) {
+        profiler.pprint();
+        System.err.println();
+      }
+      if (options.getBoolean(PROGRESS)) {
+        System.err.println("done.");
+      }
+    }
+    catch (CompilerImplementationError e) {
+      String ellipses = source.trim().length() > 80 ? "..." : "";
+      System.err.println("while compiling " +  source.trim().substring(0, 80) + ellipses);
+      throw(e);
+    }
+    catch (CompilerError e) {
+      throw(new CompilerException(e.toString()));
+    }
+  }
+
 }
 
 /**

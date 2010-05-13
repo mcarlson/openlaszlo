@@ -147,15 +147,17 @@ abstract class ToplevelCompiler extends ElementCompiler {
    */
   public void outputTagMap(CompilationEnvironment env) {
         // Output the tag->class map.
-        String tagmap = "";
-        for (Iterator v = env.getTags().entrySet().iterator(); v.hasNext(); ) {
+      StringBuffer tagmap = new StringBuffer();
+      for (Iterator v = env.getTags().entrySet().iterator(); v.hasNext(); ) {
           Map.Entry entry = (Map.Entry) v.next();
           String tagName = (String) entry.getKey();
           String className = (String) entry.getValue();
           // Install in constructor map
-          tagmap += ("lz[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n");
+          tagmap.append(("lz[" + ScriptCompiler.quote(tagName) + "] = " + className + ";\n"));
         }
-        env.compileScript(tagmap);
+      if (tagmap.length() > 0) {
+          env.compileScript(tagmap.toString());
+      }
   }
 
     /** Parses out user class definitions.

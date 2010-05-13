@@ -486,6 +486,19 @@ public class SWF9Generator extends JavascriptGenerator {
     return node;
   }
 
+  
+  /**
+   * Intercept JavascriptGenerator version.
+   * We keep a copy of the original program so we can emit it
+   * for debugging purposes.
+   */
+  public SimpleNode translateBlock(SimpleNode program) {
+    //savedProgram = program;
+    SimpleNode result = super.translate(program);
+    return result;
+  }
+
+
   /**
    * Intercept JavascriptGenerator version.
    * We keep a copy of the original program so we can emit it
@@ -937,11 +950,10 @@ public class SWF9Generator extends JavascriptGenerator {
   // compared to just the list of class names?
   List allTunits;
 
-
   /** Implements CodeGenerator.
    * Call the unparser to separate the program into translation units.
    */
-  public void setupSWF9Parser(boolean compress, boolean obfuscate)
+  public void setupParseTreePrinter(boolean compress, boolean obfuscate)
   {
     SWF9ParseTreePrinter.Config config = new SWF9ParseTreePrinter.Config();
     config.compress = compress;
@@ -975,18 +987,6 @@ public class SWF9Generator extends JavascriptGenerator {
 
     allTunits = new ArrayList();
 
-  }
-
-  
-  /**
-   * Intercept JavascriptGenerator version.
-   * We keep a copy of the original program so we can emit it
-   * for debugging purposes.
-   */
-  public SimpleNode translateBlock(SimpleNode program) {
-    //savedProgram = program;
-    SimpleNode result = super.translate(program);
-    return result;
   }
 
   // Collects all the mixins that need to be compiled, and compiles them
@@ -1031,7 +1031,6 @@ public class SWF9Generator extends JavascriptGenerator {
     // Write the class files out. This used to be in postProcess.
     for (int i=0; i < children.length; i++) {
       SimpleNode child = children[i];
-      //System.err.println((new ParseTreePrinter()).text(child));
       List tunits = ptp.makeTranslationUnits(child, sources, defaultTunit);
       for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
         TranslationUnit tunit = (TranslationUnit)iter.next();
@@ -1071,7 +1070,6 @@ public class SWF9Generator extends JavascriptGenerator {
   public InputStream callFlexCompiler() {
     boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
     try {
-      System.err.println("callFlexCompiler alltunits#"+ allTunits.size());
       byte[] objcode = extCompiler.compileTranslationUnits(allTunits, buildSharedLibrary);
       InputStream input = new ByteArrayInputStream(objcode);
       return input;

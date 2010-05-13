@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
- * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
  * Use is subject to license terms.                                            *
  * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -40,9 +40,6 @@ import org.apache.log4j.*;
 class DHTMLWriter extends ObjectWriter {
     static final String localResourceDir = "lps/resources";
 
-    // Accumulate script here, to pass to script compiler
-    protected StringBuffer scriptBuffer = null;
-
     // List of declarations of resources
     protected StringBuffer mResourceDefs = new StringBuffer();
 
@@ -55,16 +52,23 @@ class DHTMLWriter extends ObjectWriter {
     /** Logger */
     protected static Logger mLogger = org.apache.log4j.Logger.getLogger(DHTMLWriter.class);
 
+
+    protected org.openlaszlo.sc.DHTMLCompiler mSCompiler = null;
+
     DHTMLWriter(Properties props, OutputStream stream,
                 CompilerMediaCache cache,
                 boolean importLibrary,
                 CompilationEnvironment env) {
 
         super(props, stream, cache, importLibrary, env);
-
         scriptBuffer = new StringBuffer();
     }
 
+    void open(boolean compilingSnippet) {
+        Properties props = (Properties)mProperties.clone();
+        mSCompiler = new org.openlaszlo.sc.DHTMLCompiler(props);
+        mSCompiler.startApp();
+    }
 
     /**
      * Sets the canvas for the app
@@ -79,14 +83,12 @@ class DHTMLWriter extends ObjectWriter {
     void setCanvasDefaults(Canvas canvas, CompilerMediaCache mc) { };
 
     public int addScript(String script) {
-        scriptBuffer.append(script);
-        scriptBuffer.append("\n");
+        mSCompiler.compileBlock(script);
         return script.length();
     }
 
     public int addScript(StringBuffer script) {
-        scriptBuffer.append(script);
-        scriptBuffer.append("\n");
+        mSCompiler.compileBlock(script.toString());
         return script.length();
     }
 
@@ -252,7 +254,7 @@ class DHTMLWriter extends ObjectWriter {
     }
 
     public void addResourceDefs () {
-        scriptBuffer.insert(0, mResourceDefs);
+        addScript(mResourceDefs);
     }
     public void importResource(List sources, String sResourceName, File parent)
     {
@@ -468,10 +470,7 @@ class DHTMLWriter extends ObjectWriter {
         addScript("canvas.initDone()");
 
         try { 
-            Properties props = (Properties)mProperties.clone();
-            byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
-            InputStream input = new ByteArrayInputStream(objcode);
-            mLogger.debug("compiled DHTML code is "+new String(objcode));
+            InputStream input = mSCompiler.finishApp();
             FileUtils.send(input, mStream);
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(e);
@@ -497,10 +496,7 @@ class DHTMLWriter extends ObjectWriter {
         }
 
         try { 
-            Properties props = (Properties)mProperties.clone();
-            byte[] objcode = ScriptCompiler.compileToByteArray(scriptBuffer.toString(), props);
-            InputStream input = new ByteArrayInputStream(objcode);
-            mLogger.debug("compiled DHTML code is "+new String(objcode));
+            InputStream input = mSCompiler.finishApp();
             FileUtils.send(input, mStream);
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(e);

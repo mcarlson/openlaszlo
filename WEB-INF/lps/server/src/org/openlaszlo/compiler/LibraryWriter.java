@@ -45,6 +45,10 @@ class LibraryWriter extends IntermediateWriter {
     this.root = root;
   }
 
+  /** For an lzo library, we do not want to create a DHTMLCompiler and compile to JS1, we
+      just want to output the lzs code to our library */
+  void open(boolean compilingSnippet) {
+  }
 
   /**
    * Sets the canvas for the app

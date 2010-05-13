@@ -125,6 +125,9 @@ abstract class ObjectWriter {
         this.mEnv          = env;
     }
 
+    /** Initialize for compiling script to output object code */
+    void open(boolean compilingSnippet) { };
+
     /**
      * Sets the canvas for the app
      *

@@ -414,17 +414,13 @@ public class Compiler {
             }
 
 
-            if (env.isAS3()) {
-                // For AS3, we need to keep the info about the location of
-                // the as3 files working dir, in case we need to call the
-                // compiler again to compile "<import>" loadable
-                // libraries.
-                ScriptCompilerInfo compilerInfo = new ScriptCompilerInfo();
-                // Working directory path to place intermediate .as3 files
-                compilerInfo.buildDirPathPrefix = env.getLibPrefix();
-                props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
-                env.setScriptCompilerInfo(compilerInfo);
-            }
+            // Setup pointer to working directory, for backend compilers to use
+            ScriptCompilerInfo compilerInfo = new ScriptCompilerInfo();
+            // Working directory path to place intermediate .as3 files
+            compilerInfo.buildDirPathPrefix = env.getLibPrefix();
+            props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
+            env.setScriptCompilerInfo(compilerInfo);
+
 
             Properties nprops = (Properties) props.clone();
             // [todo: 2006-04-17 hqm] These compileTimeConstants will be used by the script compiler
@@ -434,6 +430,7 @@ public class Compiler {
             nprops.put("compileTimeConstants", env.getCompileTimeConstants());
 
             ObjectWriter writer = createObjectWriter(nprops, ostr, env, root);
+            writer.open(false);
 
             env.setObjectWriter(writer);
 
@@ -450,6 +447,7 @@ public class Compiler {
             // Free up some memory
             root = null;
             doc = null;
+
             // We can free up the schema and class info now, unless there are <import> libs to compile.
             if (env.libraryCompilationQueue().size() == 0 && linking) {
                 env.releaseParserAndSchema();

@@ -206,6 +206,9 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
   }
 
+  /** Implements CodeGenerator.
+   * Call the unparser to separate the program into translation units.
+   */
   public List makeTranslationUnits(SimpleNode translatedNode, boolean compress, boolean obfuscate)
   {
     ParseTreePrinter.Config config = new ParseTreePrinter.Config();
@@ -1916,6 +1919,56 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     }
 
     return new JavascriptReference(this, node, referenceCount);
+  }
+
+
+  /****************************************************************/
+
+  // Calls to compileBlock send output to this stream (usually a file open for append)
+  PrintWriter out;
+  JavascriptParseTreePrinter ptp;
+
+  /** set up persistent parser to compile successive blocks of script via
+   * calls to compileBlock.
+   */
+
+  public void setupParseTreePrinter(boolean compress, boolean obfuscate, PrintWriter out)
+  {
+    this.out = out;
+    ParseTreePrinter.Config config = new ParseTreePrinter.Config();
+    config.compress = compress;
+    config.obfuscate = obfuscate;
+    config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
+    config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
+    ptp = new JavascriptParseTreePrinter(config);
+  }
+
+  public void finish() {
+    out.close();
+  }
+
+  public void compileBlock(SimpleNode translatedNode) {
+    // Loop over top level nodes in AST, calling makeTranslationUnits
+    // on each one, to keep heap size from growing too big.
+    SimpleNode[] children = translatedNode.getChildren();
+
+    // Write the class files out. This used to be in postProcess.
+    for (int i=0; i < children.length; i++) {
+      SimpleNode child = children[i];
+      //System.err.println((new ParseTreePrinter()).text(child));
+
+      List tunits = ptp.makeTranslationUnits(child, sources);
+
+      for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
+        TranslationUnit tunit = (TranslationUnit)iter.next();
+        out.println(tunit.getContents());
+        // Clear out string data to avoid wasting memory. But leave
+        // class name because a list of all class names is needed when
+        // constructing the command line to call flex.
+        tunit.clearMost();
+      }
+    }
+
   }
 
 }

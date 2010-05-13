@@ -34,34 +34,40 @@ public class SWF10Compiler extends Compiler {
   //     + pass back InputStream to compile app .swf file 
   // 
 
-  SWF9Generator cg10;
-
-  Profiler profiler;
-
-  public void startSWF10App() {
+  public void startApp() {
+    super.startApp();
     profiler = new Profiler();
-    cg10 = new SWF9Generator();
-    cg10.setOptions(options);
-    mParser = new Parser();
+    cg = new SWF9Generator();
+    cg.setOptions(options);
 
     boolean compress = (! options.getBoolean(NAME_FUNCTIONS));
     boolean obfuscate = options.getBoolean(OBFUSCATE);
-    cg10.setupSWF9Parser(compress, obfuscate);
+    ((SWF9Generator)cg).setupParseTreePrinter(compress, obfuscate);
 
     // This creates the main app boilerplate code.
-    compileSWF10Block(cg10.preProcess(""));
+    compileBlock(cg.preProcess(""));
   }
 
-  Parser mParser;
+  // Returns byte stream of compiled app.swf file
+  public InputStream finishApp() {
 
-  public void compileSWF10Block(String source) {
+    ((SWF9Generator)cg).makeInterstitials(mParser.parse(""));
+
+    ((SWF9Generator)cg).writeGlobalTUnitsToAS3();
+    ((SWF9Generator)cg).writeMainTranslationUnit();
+    
+    return ((SWF9Generator)cg).callFlexCompiler();
+  }
+  
+
+  public void compileBlock(String source) {
     try {
 
       byte[] bytes;
       boolean compress = (! options.getBoolean(NAME_FUNCTIONS));
       boolean obfuscate = options.getBoolean(OBFUSCATE);
 
-      cg10.setOriginalSource(source);
+      cg.setOriginalSource(source);
       String srcDumpFile = (String)options.get(DUMP_SRC_INPUT);
       if (srcDumpFile != null) {
         String newname = emitFile(srcDumpFile, source);
@@ -80,7 +86,7 @@ public class SWF10Compiler extends Compiler {
       //       profiler.phase("transform");
       //       SimpleNode transformed = xformer.transform(program);
       profiler.phase("generate");
-      SimpleNode translated = cg10.translateBlock(program /* transformed */);
+      SimpleNode translated = ((SWF9Generator)cg).translateBlock(program /* transformed */);
       program = null;
       String astOutputFile = (String)options.get(DUMP_AST_OUTPUT);
       if (astOutputFile != null) {
@@ -88,7 +94,7 @@ public class SWF10Compiler extends Compiler {
         System.err.println("Created " + newname);
       }
 
-      cg10.compileBlock(translated);
+      cg.compileBlock(translated);
       translated = null;
 
       profiler.exit();
@@ -111,17 +117,8 @@ public class SWF10Compiler extends Compiler {
   }
 
 
-  // Returns byte stream of compiled app.swf file
-  public InputStream finishSWF10App() {
-
-    cg10.makeInterstitials(mParser.parse(""));
-
-    cg10.writeGlobalTUnitsToAS3();
-    cg10.writeMainTranslationUnit();
-
-    return cg10.callFlexCompiler();
-  }
 }
+
 
 /**
  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights

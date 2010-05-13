@@ -195,6 +195,7 @@ class ImportCompiler extends ToplevelCompiler {
                 } else if (Compiler.SCRIPT_RUNTIMES.contains(runtime)) {
                     writer = new DHTMLWriter(props, ostream,
                                              env.getMediaCache(), false, env);
+                    
                 } else if (Compiler.SWF_RUNTIMES.contains(runtime)) {
                     // Set the "SWF8_LOADABLE_LIB" flag to true for this compiler
                     props.setProperty(org.openlaszlo.sc.Compiler.SWF8_LOADABLE_LIB, "true");
@@ -206,6 +207,7 @@ class ImportCompiler extends ToplevelCompiler {
                     throw new CompilationError("runtime "+runtime+" not supported for generating an import library", element);
                 }
 
+                writer.open(true);
                 env.setObjectWriter(writer);
                 // Set the main SWFWriter so we can output resources
                 // to the main app

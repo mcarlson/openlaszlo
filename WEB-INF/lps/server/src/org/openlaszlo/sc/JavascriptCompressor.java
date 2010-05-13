@@ -365,6 +365,8 @@ public class JavascriptCompressor extends GenericVisitor implements Translator {
     }
   }
 
+  public void compileBlock(SimpleNode translatedNode) { };
+
 }
 
 /**

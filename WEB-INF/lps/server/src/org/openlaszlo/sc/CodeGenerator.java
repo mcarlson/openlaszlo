@@ -2897,6 +2897,8 @@ public class CodeGenerator extends CommonGenerator implements Translator {
 
     return new LiteralReference(this, node, referenceCount);
   }
+
+  public void compileBlock(SimpleNode translatedNode) { };
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
