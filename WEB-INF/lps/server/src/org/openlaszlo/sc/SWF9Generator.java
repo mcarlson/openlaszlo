@@ -516,18 +516,7 @@ public class SWF9Generator extends JavascriptGenerator {
       if (mixin == null) {
         throw new CompilerError("Missing definition for mixin: " + ref.mixinname);
       }
-      // We need the actual super class because we need
-      // a trampoline to any constructor that it has.
-      SimpleNode superClassConst = null;
-
-      if (ref.realsuper != null) {
-        superClassConst = (SimpleNode)classConstructors.get(ref.realsuper);
-
-        // If superClass is null, then we don't know anything about
-        // it: it may be in an included library, etc.  For that case,
-        // we currently require the caller to provide a constructor.
-      }
-      result.set(result.size(), createInterstitial(mixin, isname, ref, superClassConst));
+      result.set(result.size(), createInterstitial(mixin, isname, ref));
     }
     return result;
   }
@@ -657,10 +646,9 @@ public class SWF9Generator extends JavascriptGenerator {
    * @param mixin mixin that this interstitial implements
    * @param isname name for the interstitial
    * @param mixref the reference that caused this class to be created
-   * @param supernode the 'real' superclass, or null if none
    * @return the new interstitial class AST
    */
-  SimpleNode createInterstitial(SimpleNode mixin, String isname, MixinReference mixref, SimpleNode supernode)
+  SimpleNode createInterstitial(SimpleNode mixin, String isname, MixinReference mixref)
   {
     // At this point, the mixin has already been visited.
     // We just need to grab its contents and make a fresh class
@@ -680,12 +668,13 @@ public class SWF9Generator extends JavascriptGenerator {
     assert mixinchildren[3] instanceof ASTEmptyExpression;
     assert mixinchildren[4] instanceof ASTEmptyExpression;
     // The interstitial has no mixins, but does implement the mixin
-      ischildren[3] = new ASTEmptyExpression(0);
+    ischildren[3] = new ASTEmptyExpression(0);
     ischildren[4] = newIdentifier(mixref.mixinname);
     System.arraycopy(mixinchildren, 5, ischildren, 5, origlen - 5);
     if (mixinconstructor == null) {
-      if (supernode == null && mixref.realsuper != null) {
-
+      // We need the actual super class because we need
+      // a trampoline to any constructor that it has.
+      if (mixref.realsuper != null && !classConstructors.containsKey(mixref.realsuper)) {
         // For an unknown superclass, we require the mixin programmer
         // to provide a constructor that handles all the cases it
         // might be used.  This is a temporary measure - we currently
@@ -693,7 +682,7 @@ public class SWF9Generator extends JavascriptGenerator {
 
         throw new CompilerError("Superclass " + mixref.realsuper + " used by mixin not defined, and no constructor supplied for mixin: " + mixref.mixinname);
       }
-      ischildren[origlen] = createInterstitialConstructor(isname, supernode);
+      ischildren[origlen] = createInterstitialConstructor(isname, (SimpleNode) (classConstructors.get(mixref.realsuper)));
     }
     
     isnode.setChildren(ischildren);
@@ -1006,14 +995,7 @@ public class SWF9Generator extends JavascriptGenerator {
       // a trampoline to any constructor that it has.
       SimpleNode superClassConst = null;
 
-      if (ref.realsuper != null) {
-        superClassConst = (SimpleNode)classConstructors.get(ref.realsuper);
-
-        // If superClass is null, then we don't know anything about
-        // it: it may be in an included library, etc.  For that case,
-        // we currently require the caller to provide a constructor.
-      }
-      result.set(result.size(), createInterstitial(mixin, isname, ref, superClassConst));
+      result.set(result.size(), createInterstitial(mixin, isname, ref));
     }
 
     compileBlock(result);
