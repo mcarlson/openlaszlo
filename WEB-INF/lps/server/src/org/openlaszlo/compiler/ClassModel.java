@@ -539,10 +539,13 @@ public class ClassModel implements Comparable {
 
     // Build the class body
     String classBody = "";
-    if (nodeModel.passthroughBlock != null) {
-      classBody += "#passthrough (toplevel:true) {" +
-                   nodeModel.passthroughBlock +
-                   "}#\n";
+    String block = nodeModel.passthroughBlock;
+    if (block != null) {
+      block = "#passthrough (toplevel:true) {" + block + "}#\n";
+      if (nodeModel.passthroughBlockRuntime != null) {
+        block = "if ($" + nodeModel.passthroughBlockRuntime + ") {\n"+block+"}\n";
+      }
+      classBody += block;
     }
 
     // Various serializers depend on getting the tagname from the

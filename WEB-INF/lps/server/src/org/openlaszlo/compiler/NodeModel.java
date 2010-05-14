@@ -70,7 +70,7 @@ public class NodeModel implements Cloneable {
     NodeModel     datapath = null;
 
     String passthroughBlock = null;
-
+    String passthroughBlockRuntime = null;
 
     /** [eventName: String, methodName: String, Function] */
     List delegateList = new Vector();
@@ -1471,6 +1471,13 @@ solution =
      */
     void addPassthroughElement(Element element) {
       passthroughBlock = element.getText();
+      String ptr = element.getAttributeValue("runtime");
+      if (ptr != null) {
+        if ("".equals(ptr.trim())) {
+          throw new CompilationError("runtime attribute for passthrough element must be non-empty value", element);
+        }
+        passthroughBlockRuntime = ptr;
+      }
     }
 
     /** Defines an event handler.
