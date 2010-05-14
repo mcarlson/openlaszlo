@@ -28,6 +28,9 @@ public class LzInputTextSprite extends LzTextSprite {
 
     function LzInputTextSprite (newowner:LzView = null, args:Object = null) {
         super(newowner);
+
+        this.password = args && args.password ? true : false;
+        textfield.displayAsPassword = this.password;
     }
 
     var enabled :Boolean = true;
