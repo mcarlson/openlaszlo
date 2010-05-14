@@ -30,6 +30,7 @@ class IntermediateWriter extends DHTMLWriter {
 
   PrintStream out;
   Element root;
+  protected StringBuffer scriptBuffer;
 
   IntermediateWriter(Properties props, OutputStream stream,
                 CompilerMediaCache cache,
@@ -37,13 +38,23 @@ class IntermediateWriter extends DHTMLWriter {
                 CompilationEnvironment env,
                 Element root) {
     super(props, stream, cache, importLibrary, env);
-
+    scriptBuffer = new StringBuffer();
     try {
       this.out = new PrintStream(stream); 
     } catch (Exception e) {
       throw new ChainedException(e);
     }
     this.root = root;
+  }
+
+  public int addScript(String script) {
+    scriptBuffer.append(script);
+    return script.length();
+  }
+
+  public int addScript(StringBuffer script) {
+    scriptBuffer.append(script);
+    return script.length();
   }
 
   void setCanvas(Canvas canvas, String canvasConstructor) {

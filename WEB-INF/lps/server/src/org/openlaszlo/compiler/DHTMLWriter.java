@@ -61,7 +61,6 @@ class DHTMLWriter extends ObjectWriter {
                 CompilationEnvironment env) {
 
         super(props, stream, cache, importLibrary, env);
-        scriptBuffer = new StringBuffer();
     }
 
     void open(boolean compilingSnippet) {
