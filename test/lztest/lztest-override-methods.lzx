@@ -1,0 +1,501 @@
+<!--
+    Test method override for instance- and class-allocated methods.
+-->
+<canvas>
+    <include href="lztest/lztestmanager.lzx" />
+
+    <!-- this is the base class for our tests -->
+    <class name="classA" extends="node">
+        <method name="foo" > return "classA#foo" </method>
+        <method name="foo" allocation="class" > return "classA.foo" </method>
+        <method name="bar" allocation="instance" > return "classA#bar" </method>
+        <method name="bar" allocation="class" > return "classA.bar" </method>
+        <method name="baz" > return "classA#baz" </method>
+        <method name="baz" allocation="class" > return "classA.baz" </method>
+        <method name="zot" allocation="instance" > return "classA#zot" </method>
+        <method name="zot" allocation="class" > return "classA.zot" </method>
+    </class>
+
+    <!-- instance methods from classA our now overridden -->
+    <class name="classB" extends="classA">
+        <method name="foo" > return "classB#foo" </method>
+        <method name="foo" allocation="class" > return "classB.foo" </method>
+        <method name="bar" allocation="instance" > return "classB#bar" </method>
+        <method name="bar" allocation="class" > return "classB.bar" </method>
+        <method name="baz" allocation="instance" > return "classB#baz" </method>
+        <method name="baz" allocation="class" > return "classB.baz" </method>
+        <method name="zot" > return "classB#zot" </method>
+        <method name="zot" allocation="class" > return "classB.zot" </method>
+    </class>
+
+    <!-- should inherit all instance methods from classA -->
+    <class name="classC" extends="classA" />
+
+    <!-- ***************************** -->
+    <!-- tests for classes with mixins -->
+    <!-- ***************************** -->
+
+    <!-- test override with mixins -->
+    <mixin name="mixinD">
+        <method name="foo" > return "mixinD#foo" </method>
+        <method name="foo" allocation="class" > return "mixinD.foo" </method>
+        <method name="bar" allocation="instance" > return "mixinD#bar" </method>
+        <method name="bar" allocation="class" > return "mixinD.bar" </method>
+        <method name="baz" allocation="instance" > return "mixinD#baz" </method>
+        <method name="baz" allocation="class" > return "mixinD.baz" </method>
+        <method name="zot" > return "mixinD#zot" </method>
+        <method name="zot" allocation="class" > return "mixinD.zot" </method>
+    </mixin>
+
+    <mixin name="mixinE" />
+
+    <!-- simple class with mixin -->
+    <class name="classD" with="mixinD"/>
+
+    <!-- class extending classA with multiple mixins, mixins methods have higher priority -->
+    <class name="classE" extends="classA" with="mixinD"/>
+
+    <!-- tests multiple mixins -->
+
+    <!-- simple class with multiple mixins -->
+    <class name="classF" with="mixinD, mixinE"/>
+
+    <!-- simple class with multiple mixins -->
+    <class name="classG" with="mixinE, mixinD"/>
+
+    <!-- class extending classA with multiple mixins, mixins methods have higher priority -->
+    <class name="classH" extends="classA" with="mixinD, mixinE"/>
+
+    <!-- class extending classA with multiple mixins, mixins methods have higher priority -->
+    <class name="classI" extends="classA" with="mixinE, mixinD"/>
+
+    <!-- *************************** -->
+    <!-- tests for anonymous classes -->
+    <!-- *************************** -->
+
+    <!-- simple anonymous class -->
+    <classA id="anonA">
+        <method name="foo" > return "anonA#foo" </method>
+        <method name="bar" allocation="instance" > return "anonA#bar" </method>
+        <method name="baz" allocation="instance" > return "anonA#baz" </method>
+        <method name="zot" > return "anonA#zot" </method>
+    </classA>
+
+    <!-- mixin extending classA instance -->
+    <classA id="anonD" with="mixinD"/>
+
+    <!-- mixin extending anonymous class -->
+    <classA id="anonD2" with="mixinD">
+        <method name="stuff"/>
+    </classA>
+
+    <!-- mixin extending anonymous class, inner methods have higher priority -->
+    <classA id="anonD3" with="mixinD">
+        <method name="foo" > return "anonD3#foo" </method>
+        <method name="bar" allocation="instance" > return "anonD3#bar" </method>
+        <method name="baz" allocation="instance" > return "anonD3#baz" </method>
+        <method name="zot" > return "anonD3#zot" </method>
+    </classA>
+
+    <!-- tests multiple mixins -->
+
+    <!-- mixins extending classA instance -->
+    <classA id="anonD4" with="mixinD, mixinE"/>
+    <classA id="anonD5" with="mixinE, mixinD"/>
+
+    <!-- mixins extending anonymous class -->
+    <classA id="anonD6" with="mixinD, mixinE">
+        <method name="stuff"/>
+    </classA>
+    <classA id="anonD7" with="mixinE, mixinD">
+        <method name="stuff"/>
+    </classA>
+
+    <!-- mixins extending anonymous class, inner methods have higher priority -->
+    <classA id="anonD8" with="mixinD, mixinE">
+        <method name="foo" > return "anonD8#foo" </method>
+        <method name="bar" allocation="instance" > return "anonD8#bar" </method>
+        <method name="baz" allocation="instance" > return "anonD8#baz" </method>
+        <method name="zot" > return "anonD8#zot" </method>
+    </classA>
+    <classA id="anonD9" with="mixinE, mixinD">
+        <method name="foo" > return "anonD9#foo" </method>
+        <method name="bar" allocation="instance" > return "anonD9#bar" </method>
+        <method name="baz" allocation="instance" > return "anonD9#baz" </method>
+        <method name="zot" > return "anonD9#zot" </method>
+    </classA>
+
+    <script><![CDATA[
+        var overrideAllocation = new LzTestSuite("OverrideMethods");
+    ]]></script>
+
+    <script><![CDATA[
+        overrideAllocation.testClassA = function () {
+            var instA = new lz.classA(canvas, {});
+
+            LzTestManager.assertEquals("classA.foo", lz.classA.foo());
+            LzTestManager.assertEquals("classA#foo", instA.foo());
+            LzTestManager.assertEquals("classA.foo", instA.constructor.foo());
+            LzTestManager.assertSame(lz.classA.foo, instA.constructor.foo);
+            LzTestManager.assertEquals("classA.bar", lz.classA.bar());
+            LzTestManager.assertEquals("classA#bar", instA.bar());
+            LzTestManager.assertEquals("classA.bar", instA.constructor.bar());
+            LzTestManager.assertSame(lz.classA.bar, instA.constructor.bar);
+            LzTestManager.assertEquals("classA.baz", lz.classA.baz());
+            LzTestManager.assertEquals("classA#baz", instA.baz());
+            LzTestManager.assertEquals("classA.baz", instA.constructor.baz());
+            LzTestManager.assertSame(lz.classA.baz, instA.constructor.baz);
+            LzTestManager.assertEquals("classA.zot", lz.classA.zot());
+            LzTestManager.assertEquals("classA#zot", instA.zot());
+            LzTestManager.assertEquals("classA.zot", instA.constructor.zot());
+            LzTestManager.assertSame(lz.classA.zot, instA.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassA);
+
+        overrideAllocation.testClassB = function () {
+            var instB = new lz.classB(canvas, {});
+
+            LzTestManager.assertEquals("classB#foo", instB.foo());
+            LzTestManager.assertEquals("classB.foo", lz.classB.foo());
+            LzTestManager.assertEquals("classB.foo", instB.constructor.foo());
+            LzTestManager.assertSame(lz.classB.foo, instB.constructor.foo);
+            LzTestManager.assertEquals("classB#bar", instB.bar());
+            LzTestManager.assertEquals("classB.bar", lz.classB.bar());
+            LzTestManager.assertEquals("classB.bar", instB.constructor.bar());
+            LzTestManager.assertSame(lz.classB.bar, instB.constructor.bar);
+            LzTestManager.assertEquals("classB.baz", lz.classB.baz());
+            LzTestManager.assertEquals("classB#baz", instB.baz());
+            LzTestManager.assertEquals("classB.baz", instB.constructor.baz());
+            LzTestManager.assertSame(lz.classB.baz, instB.constructor.baz);
+            LzTestManager.assertEquals("classB.zot", lz.classB.zot());
+            LzTestManager.assertEquals("classB#zot", instB.zot());
+            LzTestManager.assertEquals("classB.zot", instB.constructor.zot());
+            LzTestManager.assertSame(lz.classB.zot, instB.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassB);
+
+        overrideAllocation.testClassC = function () {
+            var instC = new lz.classC(canvas, {});
+
+            LzTestManager.assertEquals("classA#foo", instC.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classC.foo);
+            LzTestManager.assertUndefined(instC.constructor.foo);
+            LzTestManager.assertEquals("classA#bar", instC.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classC.bar);
+            LzTestManager.assertUndefined(instC.constructor.bar);
+            LzTestManager.assertEquals("classA#baz", instC.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classC.baz);
+            LzTestManager.assertUndefined(instC.constructor.baz);
+            LzTestManager.assertEquals("classA#zot", instC.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classC.zot);
+            LzTestManager.assertUndefined(instC.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassC);
+
+        overrideAllocation.testClassD = function () {
+            var instD = new lz.classD(canvas, {});
+
+            LzTestManager.assertEquals("mixinD#foo", instD.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.foo);
+            LzTestManager.assertUndefined(instD.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", instD.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.bar);
+            LzTestManager.assertUndefined(instD.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", instD.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.baz);
+            LzTestManager.assertUndefined(instD.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", instD.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.zot);
+            LzTestManager.assertUndefined(instD.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassD);
+
+        overrideAllocation.testClassE = function () {
+            var instE = new lz.classE(canvas, {});
+
+            LzTestManager.assertEquals("mixinD#foo", instE.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.foo);
+            LzTestManager.assertUndefined(instE.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", instE.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.bar);
+            LzTestManager.assertUndefined(instE.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", instE.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.baz);
+            LzTestManager.assertUndefined(instE.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", instE.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.zot);
+            LzTestManager.assertUndefined(instE.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassE);
+
+        overrideAllocation.testClassF = function () {
+            var instF = new lz.classF(canvas, {});
+
+            LzTestManager.assertEquals("mixinD#foo", instF.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.foo);
+            LzTestManager.assertUndefined(instF.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", instF.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.bar);
+            LzTestManager.assertUndefined(instF.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", instF.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.baz);
+            LzTestManager.assertUndefined(instF.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", instF.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.zot);
+            LzTestManager.assertUndefined(instF.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassF);
+
+        overrideAllocation.testClassG = function () {
+            var instG = new lz.classG(canvas, {});
+
+            LzTestManager.assertEquals("mixinD#foo", instG.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.foo);
+            LzTestManager.assertUndefined(instG.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", instG.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.bar);
+            LzTestManager.assertUndefined(instG.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", instG.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.baz);
+            LzTestManager.assertUndefined(instG.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", instG.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classD.zot);
+            LzTestManager.assertUndefined(instG.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassG);
+
+        overrideAllocation.testClassH = function () {
+            var instH = new lz.classH(canvas, {});
+
+            LzTestManager.assertEquals("mixinD#foo", instH.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.foo);
+            LzTestManager.assertUndefined(instH.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", instH.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.bar);
+            LzTestManager.assertUndefined(instH.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", instH.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.baz);
+            LzTestManager.assertUndefined(instH.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", instH.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.zot);
+            LzTestManager.assertUndefined(instH.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassH);
+
+        overrideAllocation.testClassI = function () {
+            var instI = new lz.classI(canvas, {});
+
+            LzTestManager.assertEquals("mixinD#foo", instI.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.foo);
+            LzTestManager.assertUndefined(instI.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", instI.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.bar);
+            LzTestManager.assertUndefined(instI.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", instI.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.baz);
+            LzTestManager.assertUndefined(instI.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", instI.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected (2)"); }
+            LzTestManager.assertUndefined(lz.classE.zot);
+            LzTestManager.assertUndefined(instI.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassI);
+    ]]></script>
+
+    <script><![CDATA[
+        overrideAllocation.testAnonA = function() {
+            LzTestManager.assertEquals("anonA#foo", anonA.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonA.constructor.foo);
+            LzTestManager.assertEquals("anonA#bar", anonA.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonA.constructor.bar);
+            LzTestManager.assertEquals("anonA#baz", anonA.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonA.constructor.baz);
+            LzTestManager.assertEquals("anonA#zot", anonA.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonA.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonA);
+
+        // commented out tests which fail because of LPP-8998
+        overrideAllocation.testAnonD = function() {
+            LzTestManager.assertEquals("mixinD#foo", anonD.foo());
+            // if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", anonD.bar());
+            // if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", anonD.baz());
+            // if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", anonD.zot());
+            // if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD);
+
+        overrideAllocation.testAnonD2 = function() {
+            LzTestManager.assertEquals("mixinD#foo", anonD2.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonD2.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", anonD2.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonD2.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", anonD2.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonD2.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", anonD2.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonD2.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD2);
+
+        overrideAllocation.testAnonD3 = function() {
+            LzTestManager.assertEquals("anonD3#foo", anonD3.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonD3.constructor.foo);
+            LzTestManager.assertEquals("anonD3#bar", anonD3.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonD3.constructor.bar);
+            LzTestManager.assertEquals("anonD3#baz", anonD3.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonD3.constructor.baz);
+            LzTestManager.assertEquals("anonD3#zot", anonD3.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonD3.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD3);
+
+        // commented out tests which fail because of LPP-8998
+        overrideAllocation.testAnonD4 = function() {
+            LzTestManager.assertEquals("mixinD#foo", anonD4.foo());
+            // if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD4.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", anonD4.bar());
+            // if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD4.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", anonD4.baz());
+            // if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD4.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", anonD4.zot());
+            // if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            // LzTestManager.assertUndefined(anonD4.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD4);
+
+        overrideAllocation.testAnonD5 = function() {
+            LzTestManager.assertEquals("mixinD#foo", anonD5.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonD5.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", anonD5.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonD5.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", anonD5.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonD5.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", anonD5.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonD5.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD5);
+
+        overrideAllocation.testAnonD6 = function() {
+            LzTestManager.assertEquals("mixinD#foo", anonD6.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonD6.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", anonD6.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonD6.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", anonD6.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonD6.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", anonD6.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonD6.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD6);
+
+        overrideAllocation.testAnonD7 = function() {
+            LzTestManager.assertEquals("mixinD#foo", anonD7.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonD7.constructor.foo);
+            LzTestManager.assertEquals("mixinD#bar", anonD7.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonD7.constructor.bar);
+            LzTestManager.assertEquals("mixinD#baz", anonD7.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonD7.constructor.baz);
+            LzTestManager.assertEquals("mixinD#zot", anonD7.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonD7.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD7);
+
+        overrideAllocation.testAnonD8 = function() {
+            LzTestManager.assertEquals("anonD8#foo", anonD8.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonD8.constructor.foo);
+            LzTestManager.assertEquals("anonD8#bar", anonD8.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonD8.constructor.bar);
+            LzTestManager.assertEquals("anonD8#baz", anonD8.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonD8.constructor.baz);
+            LzTestManager.assertEquals("anonD8#zot", anonD8.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonD8.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD8);
+
+        overrideAllocation.testAnonD9 = function() {
+            LzTestManager.assertEquals("anonD9#foo", anonD9.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected"); }
+            LzTestManager.assertUndefined(anonD9.constructor.foo);
+            LzTestManager.assertEquals("anonD9#bar", anonD9.bar());
+            if ($swf8) { Debug.info("reference to undefined property 'bar' warning is expected"); }
+            LzTestManager.assertUndefined(anonD9.constructor.bar);
+            LzTestManager.assertEquals("anonD9#baz", anonD9.baz());
+            if ($swf8) { Debug.info("reference to undefined property 'baz' warning is expected"); }
+            LzTestManager.assertUndefined(anonD9.constructor.baz);
+            LzTestManager.assertEquals("anonD9#zot", anonD9.zot());
+            if ($swf8) { Debug.info("reference to undefined property 'zot' warning is expected"); }
+            LzTestManager.assertUndefined(anonD9.constructor.zot);
+        }
+        overrideAllocation.addTest(overrideAllocation.testAnonD9);
+    ]]></script>
+</canvas>
+<!--
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.               *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

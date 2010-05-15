@@ -1,0 +1,24 @@
+<!--
+LPP-8986 (Overriding final static method generates compiler warning)
+
+Expected:
+The compiler shouldn't warn for overriding final methods which are allocated on
+the class. Explanation from ptw:
+<classA> and <classB> are both instances of the <class> (meta)class, so their
+class-allocated properties do not intersect. `extends` pertains only to their
+instance-allocated properties.
+
+This test case won't work eventually in later releases, see LPP-8993.
+-->
+<canvas>
+  <class name="classA" extends="node">
+    <method name="foo" final="true" allocation="class"/>
+  </class>
+  <class name="classB" extends="classA">
+    <method name="foo" allocation="class"/>
+  </class>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

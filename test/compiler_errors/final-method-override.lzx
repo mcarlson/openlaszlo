@@ -1,0 +1,60 @@
+<!--
+LPP-8982 (It's possible to "de-finalize" a method)
+
+Expected:
+The compiler should warn for all methods overrides in all classes because the
+methods are declared final in <classA>.
+24 compiler warnings in total.
+
+-->
+<canvas>
+  <class name="classA" extends="node">
+    <method name="foo" final="true"/>
+    <method name="zot" final="true"/>
+    <method name="bar" final="true" allocation="instance"/>
+    <method name="baz" final="true" allocation="instance"/>
+  </class>
+  <class name="classB" extends="classA">
+    <method name="foo" final="false"/>
+    <method name="zot" final="false" allocation="instance"/>
+    <method name="bar" final="false" allocation="instance"/>
+    <method name="baz" final="false"/>
+  </class>
+  <class name="classC" extends="classA">
+    <method name="foo" final="true"/>
+    <method name="zot" final="true" allocation="instance"/>
+    <method name="bar" final="true" allocation="instance"/>
+    <method name="baz" final="true"/>
+  </class>
+  <class name="classD" extends="classA">
+    <method name="foo" />
+    <method name="zot" allocation="instance"/>
+    <method name="bar" allocation="instance"/>
+    <method name="baz" />
+  </class>
+  <mixin name="mixinE" >
+    <method name="foo" final="false"/>
+    <method name="zot" final="false" allocation="instance"/>
+    <method name="bar" final="false" allocation="instance"/>
+    <method name="baz" final="false"/>
+  </mixin>
+  <class name="classE" extends="classA" with="mixinE"/>
+  <mixin name="mixinF" >
+    <method name="foo" final="true"/>
+    <method name="zot" final="true" allocation="instance"/>
+    <method name="bar" final="true" allocation="instance"/>
+    <method name="baz" final="true"/>
+  </mixin>
+  <class name="classF" extends="classA" with="mixinF"/>
+  <mixin name="mixinG" >
+    <method name="foo" />
+    <method name="zot" allocation="instance"/>
+    <method name="bar" allocation="instance"/>
+    <method name="baz" />
+  </mixin>
+  <class name="classG" extends="classA" with="mixinG"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

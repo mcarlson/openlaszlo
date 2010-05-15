@@ -14,12 +14,8 @@ import org.apache.oro.text.regex.*;
 import org.jdom.Document;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.output.XMLOutputter;
-import org.jdom.input.SAXBuilder;
 import org.jdom.JDOMException;
 import org.openlaszlo.xml.internal.Schema;
-import org.openlaszlo.xml.internal.XMLUtils;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.server.*;
 
@@ -73,7 +69,7 @@ public class ViewSchema extends Schema {
 
     /** Type of tokens. */
     public static final Type TOKEN_TYPE               = newType("token");
-    public static final Type COLOR_TYPE               =  newType("color");
+    public static final Type COLOR_TYPE               = newType("color");
     public static final Type NUMBER_EXPRESSION_TYPE   = newType("numberExpression");
     public static final Type SIZE_EXPRESSION_TYPE     = newType("size");
     public static final Type CSS_TYPE                 = newType("css");
@@ -206,10 +202,12 @@ public class ViewSchema extends Schema {
         }
     }
 
-    /** Checks to do when declaring a method on a class;
-     * Does the class exist?
-     * Is this a duplicate of another method declaration on this class?
-     * Does the superclass allow overriding of this method?
+    /** Checks to do when declaring a method on a class:
+     * <ol>
+     * <li>Does the class exist?</li>
+     * <li>Is this a duplicate of another method declaration on this class?</li>
+     * <li>Does the superclass allow overriding of this method?</li>
+     * </ol>
      */
     public void checkMethodDeclaration (Element elt, String classname, String methodName,
                                         String allocation,
@@ -225,6 +223,9 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-168", new Object[] {classname})
                                        );
         }
+
+        // check for a duplicate local definition, setAttributeType() does the same
+        // test again, but it throws additionally a CompilationError
         AttributeSpec localAttr = classModel.getLocalAttribute(methodName, allocation);
         if ( localAttr != null) {
             if (localAttr.type == METHOD_TYPE) {
@@ -244,7 +245,11 @@ public class ViewSchema extends Schema {
             }
         }
 
-        if (!methodOverrideAllowed(classname, methodName, allocation)) {
+        // check the inheritance whether you can override this method, only
+        // applies to methods with allocation='instance', because class-
+        // allocated methods aren't inherited
+        if (NodeModel.ALLOCATION_INSTANCE.equals(allocation)
+                && ! isMethodDeclarationAllowed(classname, methodName)) {
             env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
                      + " of the same name which has been declared final" , elt);
         }
@@ -252,9 +257,12 @@ public class ViewSchema extends Schema {
 
 
 
-    /** Checks to do when declaring a method on an instance;
-     * Does the class exist?
-     * Does the superclass allow overriding of this method?
+    /** Checks to do when declaring a method on an instance:
+     * <ol>
+     * <li>Does the class exist?</li>
+     * <li>Is there an attribute with the same name, but a different type on a superclass?</li>
+     * <li>Does the superclass allow overriding of this method?</li>
+     * </ol>
      */
     public void checkInstanceMethodDeclaration (Element elt, String classname, String methodName,
                                         CompilationEnvironment env) {
@@ -269,19 +277,21 @@ public class ViewSchema extends Schema {
                 ViewSchema.class.getName(),"051018-168", new Object[] {classname})
                                        );
         }
+
+        // Search on the inheritance chain for an attribute with the same name.
+        // If such an attribute exists and it's not a method or it's a final method,
+        // emit a warning.
         AttributeSpec attrspec = classModel.getAttribute(methodName, NodeModel.ALLOCATION_INSTANCE);
-        if ( attrspec != null) {
+        if (attrspec != null) {
             if (attrspec.type != METHOD_TYPE) {
                 env.warn(
                     "Method named "+methodName+" on class "+classname+
                     " conflicts with attribute with named "+methodName+" and type "+attrspec.type,
                     elt);
+            } else if (! isOverrideAllowed(attrspec)) {
+                env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
+                    + " of the same name which has been declared final" , elt);
             }
-        }
-
-        if (!methodOverrideAllowed(classname, methodName, NodeModel.ALLOCATION_INSTANCE)) {
-            env.warn("Method "+classname+"."+methodName+" is overriding a superclass method"
-                     + " of the same name which has been declared final" , elt);
         }
     }
 
@@ -388,6 +398,7 @@ public class ViewSchema extends Schema {
                            CompilationEnvironment env)
     {
         if (!attributeDefs.isEmpty()) {
+            String superTagName = getSuperTagName(classname);
             for (Iterator iter = attributeDefs.iterator(); iter.hasNext();) {
                 AttributeSpec attr = (AttributeSpec) iter.next();
                 // If this attribute does not already occur someplace
@@ -396,16 +407,13 @@ public class ViewSchema extends Schema {
                 // While we're here, we need to check that we aren't
                 // redefining an attribute of a parent class with a
                 // different type.
-                String superTagName = getSuperTagName(classname);
-                if (superTagName != null && getClassAttribute(superTagName, attr.name, attr.allocation) != null) {
-                  // Does the parent attribute definition have final=false or final=null?
-                  // If not, we're not going to warn if the types mismatch.
-                  AttributeSpec parentAttrSpec = getAttributeSpec(superTagName, attr.name, attr.allocation);
+                if (superTagName != null && NodeModel.ALLOCATION_INSTANCE.equals(attr.allocation)
+                        && getClassAttribute(superTagName, attr.name, NodeModel.ALLOCATION_INSTANCE) != null) {
+                  // We're going to warn if the types mismatch.
+                  AttributeSpec parentAttrSpec = getAttributeSpec(superTagName, attr.name, NodeModel.ALLOCATION_INSTANCE);
                   if (parentAttrSpec != null) {
-                    Type parentType = getAttributeType(superTagName, attr.name, attr.allocation);
-                    boolean forceOverride = (! "true".equals(parentAttrSpec.isfinal));
+                    Type parentType = getAttributeType(superTagName, attr.name, NodeModel.ALLOCATION_INSTANCE);
                     if (parentType != attr.type) {
-                      // get the parent attribute, so we can see if it says override is allowed
                       env.warn(/* (non-Javadoc)
                                 * @i18n.test
                                 * @org-mes="In class '" + p[0] + "' attribute '" + p[1] + "' with type '" + p[2] + "' is overriding superclass attribute with same name but different type: " + p[3]
@@ -416,7 +424,7 @@ public class ViewSchema extends Schema {
                     }
                   }
                 }
-                if (attr.type == ViewSchema.METHOD_TYPE && !("false".equals(attr.isfinal))) {
+                if (attr.type == ViewSchema.METHOD_TYPE) {
                     checkMethodDeclaration(sourceElement, classname, attr.name, attr.allocation, env);
                 }
                 // Update the in-memory attribute type table
@@ -549,22 +557,33 @@ public class ViewSchema extends Schema {
     }
 
     /**
-     * checks whether a method with a given method is allowed to be overridden
-     * @param elt an Element name
+     * Checks whether the class <code>classname</code> can declare a method
+     * named <code>methodName</code>. It is not possible to declare the method
+     * iff a <code>final</code> method with the same name exists on
+     * <code>classname</code>'s superclass chain. 
+     * 
+     * @param classname a class name
      * @param methodName a method name
-     * @return boolean if the method exists on the class or superclass
+     * @return <code>true</code> if <code>classname</code> can declare the method
+     * @see #isOverrideAllowed(AttributeSpec)
      */
-    public boolean methodOverrideAllowed(String classname, String methodName, String allocation)
-    {
+    private boolean isMethodDeclarationAllowed (String classname, String methodName) {
         String superTagName = getSuperTagName(classname);
         if (superTagName == null) { return true; }
-        AttributeSpec methodspec = getClassAttribute(superTagName, methodName, allocation);
+        AttributeSpec methodspec = getClassAttribute(superTagName, methodName, NodeModel.ALLOCATION_INSTANCE);
+        return (methodspec != null ? isOverrideAllowed(methodspec) : true);
+    }
 
-        if (methodspec == null) {
-            return true;
-        } else {
-            return ! ("true".equals(methodspec.isfinal));
-        }
+    /**
+     * Tests whether the specification <code>methodspec</code> allows a
+     * subclass to override the method. A method is overridable if it is not
+     * set to <code>final</code>.
+     * 
+     * @param methodspec a method specification
+     * @return <code>true</code> if the method can be overriden
+     */
+    private boolean isOverrideAllowed (AttributeSpec methodspec) {
+        return ! ("true".equals(methodspec.isfinal));
     }
 
     boolean isMouseEventAttribute(String name) {

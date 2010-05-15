@@ -1,0 +1,195 @@
+<!--
+    Test method override for instance- and class-allocated methods in LZS.
+-->
+<canvas>
+    <include href="lztest/lztestmanager.lzx" />
+    <script when="immediate"><![CDATA[
+        /****************/
+        /* test classes */
+        /****************/
+
+        dynamic class classA {
+            function foo () { return "classA#foo" }
+            static function foo () { return "classA.foo" }
+        }
+
+        dynamic class classB extends classA {
+            override function foo () { return "classB#foo" }
+            static function foo () { return "classB.foo" }
+        }
+
+        dynamic class classC extends classA {
+        }
+
+        /***************/
+        /* test mixins */
+        /***************/
+
+        // compiler doesn't add override modifier automatically in LZS,
+        // so we need to create two almost identical mixins:
+        // - mixinD1 without override modifier
+        // - mixinD2 with override modifier
+        // mixin mixinD {
+        //     function foo () { return "mixinD#foo" }
+        //     static function foo () { return "mixinD.foo" }
+        // }
+
+        mixin mixinD1 {
+            function foo () { return "mixinD#foo" }
+            static function foo () { return "mixinD.foo" }
+        }
+
+        mixin mixinD2 {
+            override function foo () { return "mixinD#foo" }
+            static function foo () { return "mixinD.foo" }
+        }
+
+        mixin mixinE {
+        }
+
+        dynamic class classD with mixinD1 {
+        }
+
+        dynamic class classE extends classA with mixinD2 {
+        }
+
+        dynamic class classF with mixinD1, mixinE {
+        }
+
+        dynamic class classG with mixinE, mixinD1 {
+        }
+
+        dynamic class classH extends classA with mixinD2, mixinE {
+        }
+
+        dynamic class classI extends classA with mixinE, mixinD2 {
+        }
+    ]]></script>
+
+    <script><![CDATA[
+        var overrideAllocation = new LzTestSuite("OverrideMethods");
+
+        overrideAllocation.testClassA = function() {
+            var instA = new classA();
+
+            LzTestManager.assertEquals("classA.foo", classA.foo());
+            LzTestManager.assertEquals("classA#foo", instA.foo());
+            LzTestManager.assertEquals("classA.foo", instA.constructor.foo());
+            LzTestManager.assertSame(classA.foo, instA.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassA);
+
+        overrideAllocation.testClassB = function() {
+            var instB = new classB();
+
+            LzTestManager.assertEquals("classB#foo", instB.foo());
+            LzTestManager.assertEquals("classB.foo", classB.foo());
+            LzTestManager.assertEquals("classB.foo", instB.constructor.foo());
+            LzTestManager.assertSame(classB.foo, instB.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassB);
+
+        overrideAllocation.testClassC = function() {
+            var instC = new classC();
+
+            LzTestManager.assertEquals("classA#foo", instC.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            if ($as3) {
+                LzTestManager.assertUndefined(classC['foo']); // otherwise as3 compiler will warn
+            } else {
+                LzTestManager.assertUndefined(classC.foo);
+            }
+            LzTestManager.assertUndefined(instC.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassC);
+
+        overrideAllocation.testClassD = function() {
+            var instD = new classD();
+            LzTestManager.assertEquals("mixinD#foo", instD.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            if ($as3) {
+                LzTestManager.assertUndefined(classD['foo']); // otherwise as3 compiler will warn
+            } else {
+                LzTestManager.assertUndefined(classD.foo);
+            }
+            LzTestManager.assertUndefined(instD.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassD);
+
+        overrideAllocation.testClassE = function() {
+            var instE = new classE();
+
+            LzTestManager.assertEquals("mixinD#foo", instE.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            if ($as3) {
+                LzTestManager.assertUndefined(classE['foo']); // otherwise as3 compiler will warn
+            } else {
+                LzTestManager.assertUndefined(classE.foo);
+            }
+            LzTestManager.assertUndefined(instE.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassE);
+
+        overrideAllocation.testClassF = function() {
+            var instF = new classF();
+
+            LzTestManager.assertEquals("mixinD#foo", instF.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            if ($as3) {
+                LzTestManager.assertUndefined(classF['foo']); // otherwise as3 compiler will warn
+            } else {
+                LzTestManager.assertUndefined(classF.foo);
+            }
+            LzTestManager.assertUndefined(instF.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassF);
+
+        overrideAllocation.testClassG = function() {
+            var instG = new classG();
+
+            LzTestManager.assertEquals("mixinD#foo", instG.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            if ($as3) {
+                LzTestManager.assertUndefined(classG['foo']); // otherwise as3 compiler will warn
+            } else {
+                LzTestManager.assertUndefined(classG.foo);
+            }
+            LzTestManager.assertUndefined(instG.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassG);
+
+        overrideAllocation.testClassH = function() {
+            var instH = new classH();
+
+            LzTestManager.assertEquals("mixinD#foo", instH.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            if ($as3) {
+                LzTestManager.assertUndefined(classH['foo']); // otherwise as3 compiler will warn
+            } else {
+                LzTestManager.assertUndefined(classH.foo);
+            }
+            LzTestManager.assertUndefined(instH.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassH);
+
+        overrideAllocation.testClassI = function() {
+            var instI = new classI();
+
+            LzTestManager.assertEquals("mixinD#foo", instI.foo());
+            if ($swf8) { Debug.info("reference to undefined property 'foo' warning is expected (2)"); }
+            if ($as3) {
+                LzTestManager.assertUndefined(classI['foo']); // otherwise as3 compiler will warn
+            } else {
+                LzTestManager.assertUndefined(classI.foo);
+            }
+            LzTestManager.assertUndefined(instI.constructor.foo);
+        }
+        overrideAllocation.addTest(overrideAllocation.testClassI);
+    ]]></script>
+</canvas>
+<!--
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.               *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

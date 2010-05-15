@@ -1,0 +1,64 @@
+<!--
+Defining 'call' or 'apply' with allocation="class" is forbidden, because it'd
+override Function.prototype.call resp. Function.prototype.apply .
+Defining 'prototype' is forbidden, because it'd override Object.prototype .
+
+Expected:
++3 compiler warnings for 'call'
++3 compiler warnings for 'apply'
++9 compiler warnings for 'prototype'
+15 compiler warnings in total.
+
+-->
+<canvas>
+  <class name="classA" extends="node">
+    <method name="call" args="thisObj, ...args"/>
+    <method name="apply" args="thisObj, args"/>
+    <method name="prototype" />
+  </class>
+  <class name="classB" extends="node">
+    <method name="call" args="thisObj, ...args" allocation="instance"/>
+    <method name="apply" args="thisObj, args" allocation="instance"/>
+    <method name="prototype" allocation="instance"/>
+  </class>
+  <class name="classC" extends="node">
+    <method name="call" args="thisObj, ...args" allocation="class"/>
+    <method name="apply" args="thisObj, args" allocation="class"/>
+    <method name="prototype" allocation="class"/>
+  </class>
+  <mixin name="mixinD">
+    <method name="call" args="thisObj, ...args"/>
+    <method name="apply" args="thisObj, args"/>
+    <method name="prototype" />
+  </mixin>
+  <mixin name="mixinE">
+    <method name="call" args="thisObj, ...args" allocation="instance"/>
+    <method name="apply" args="thisObj, args" allocation="instance"/>
+    <method name="prototype" allocation="instance"/>
+  </mixin>
+  <mixin name="mixinF">
+    <method name="call" args="thisObj, ...args" allocation="class"/>
+    <method name="apply" args="thisObj, args" allocation="class"/>
+    <method name="prototype" allocation="class"/>
+  </mixin>
+  <class name="classD" extends="node" with="mixinD" />
+  <class name="classE" extends="node" with="mixinE" />
+  <class name="classF" extends="node" with="mixinF" />
+  <node>
+    <method name="call" args="thisObj, ...args"/>
+    <method name="apply" args="thisObj, args"/>
+    <method name="prototype" />
+  </node>
+  <node>
+    <method name="call" args="thisObj, ...args" allocation="instance"/>
+    <method name="apply" args="thisObj, args" allocation="instance"/>
+    <method name="prototype" allocation="instance"/>
+  </node>
+  <node with="mixinD"/>
+  <node with="mixinE"/>
+  <node with="mixinF"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

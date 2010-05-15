@@ -1,0 +1,61 @@
+<!--
+LPP-8983 (Compiler fails to detect overriden final methods on instance classes)
+
+Expected:
+The compiler should warn for all methods overrides in all instance classes
+because the methods are declared final in <classA>.
+24 compiler warnings in total.
+
+-->
+<canvas>
+  <class name="classA" extends="node">
+    <method name="foo" final="true"/>
+    <method name="zot" final="true"/>
+    <method name="bar" final="true" allocation="instance"/>
+    <method name="baz" final="true" allocation="instance"/>
+  </class>
+  <mixin name="mixinA">
+    <method name="foo" final="true"/>
+    <method name="zot" final="true"/>
+    <method name="bar" final="true" allocation="instance"/>
+    <method name="baz" final="true" allocation="instance"/>
+  </mixin>
+  <mixin name="mixinB">
+    <method name="foo" final="true"/>
+    <method name="zot" final="true" allocation="instance"/>
+    <method name="bar" final="true" allocation="instance"/>
+    <method name="baz" final="true"/>
+  </mixin>
+  <mixin name="mixinC">
+    <method name="foo" />
+    <method name="zot" allocation="instance"/>
+    <method name="bar" allocation="instance"/>
+    <method name="baz" />
+  </mixin>
+
+  <classA>
+    <method name="foo" final="false"/>
+    <method name="zot" final="false" allocation="instance"/>
+    <method name="bar" final="false" allocation="instance"/>
+    <method name="baz" final="false"/>
+  </classA>
+  <classA>
+    <method name="foo" final="true"/>
+    <method name="zot" final="true" allocation="instance"/>
+    <method name="bar" final="true" allocation="instance"/>
+    <method name="baz" final="true"/>
+  </classA>
+  <classA>
+    <method name="foo" />
+    <method name="zot" allocation="instance"/>
+    <method name="bar" allocation="instance"/>
+    <method name="baz" />
+  </classA>
+  <classA with="mixinA"/>
+  <classA with="mixinB"/>
+  <classA with="mixinC"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

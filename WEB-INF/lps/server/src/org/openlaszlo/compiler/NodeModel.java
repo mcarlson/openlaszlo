@@ -11,7 +11,6 @@
 package org.openlaszlo.compiler;
 
 import java.io.*;
-import java.text.ChoiceFormat;
 import java.util.*;
 import java.util.regex.*;
 
@@ -21,16 +20,13 @@ import org.openlaszlo.css.CSSParser;
 import org.openlaszlo.sc.Function;
 import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
-import org.openlaszlo.sc.CompilerException;
 import org.openlaszlo.sc.CompilerImplementationError;
 import org.openlaszlo.sc.ReferenceCollector;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.ChainedException;
-import org.openlaszlo.utils.ListFormat;
 import org.openlaszlo.xml.internal.MissingAttributeException;
 import org.openlaszlo.xml.internal.Schema;
 import org.openlaszlo.xml.internal.XMLUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.jdom.Attribute;
 import org.jdom.output.Format;
 import org.jdom.Element;
@@ -725,13 +721,29 @@ public class NodeModel implements Cloneable {
         return 0;
     }
 
+    /**
+     * Returns the tag-name used when defining this node, equal to
+     * {@link NodeModel#tagName} unless this is a NodeModel for an anonymous
+     * class, in which case the base class' tag-name is returned.
+     * 
+     * @return tag-name used when defining this node
+     */
+    private String getUserTagName () {
+       String tagName = this.tagName;
+       if ("anonymous".equals(tagName)) {
+           tagName = element.getAttributeValue("extends");
+       }
+       assert tagName != null;
+       return tagName;
+    }
+
     ClassModel getParentClassModel( ) {
       String parentName = this.tagName;
       return getParentClassModel(parentName, element, schema);
     }
 
     /** Gets the ClassModel for this element's parent class.  If this
-     * element is a <class> definition, the superclass; otherwise the
+     * element is a &lt;class&gt; definition, the superclass; otherwise the
      * class of the tag of this element. */
     static ClassModel getParentClassModel(String parentName, Element element, ViewSchema schema) {
       assert ("anonymous".equals(parentName) ? element.getAttributeValue("extends") != null : true);
@@ -1689,12 +1701,32 @@ solution =
   static String setterPrefix = "$lzc$set_";
   void addMethodInternal(String name, String args, String returnType, String body, Element element, String allocation) {
         ClassModel superclassModel = getParentClassModel();
+        boolean isdef = ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName));
         // Override will be required if there is an inherited method
         // of the same name.
         boolean override = false;
+        boolean explicitOverride = false;
+
+        // The user may know better than any of us
+        String overrideAttr = element.getAttributeValue("override");
+        if (overrideAttr != null) {
+            explicitOverride = true;
+            override = "true".equals(overrideAttr);
+        }
+
+        if (ALLOCATION_CLASS.equals(allocation)) {
+            // No additional override-check required for class-allocated methods,
+            // unless this is a definition (e.g. <class>), but see below
+        }
         // This gets methods from the schema, in particular, the
         // LFC interface
-        if (superclassModel.getAttribute(name, allocation) != null) {
+        else if (superclassModel.getAttribute(name, ALLOCATION_INSTANCE) != null) {
+          // This is not possible for setters, so we don't need this
+          // additional check for the other cases
+          if (explicitOverride && !override) {
+              env.warn("Method "+tagName+"."+name+" is overriding a superclass method"
+                  + " but was set to 'override=false'" , element);
+          }
           override = true;
         }
         // This gets methods the compiler has added, in
@@ -1702,28 +1734,27 @@ solution =
         else if (superclassModel.getMergedMethods().containsKey(name)) {
           override = true;
         }
-        // And the user may know better than any of us
-        else if ("true".equals(element.getAttributeValue("override"))) {
-          override = true;
-        }
         // We have to be a little tricky to find potential setters
         // from <interface><attribute setter="..."></interface>
         else if (name.startsWith(setterPrefix)) {
           String baseName = name.substring(setterPrefix.length());
-          AttributeSpec superAttr = superclassModel.getAttribute(name, allocation);
+          AttributeSpec superAttr = superclassModel.getAttribute(name, ALLOCATION_INSTANCE);
           if ((superAttr != null) && (superAttr.setter != null)) {
             override = true;
           }
         }
         boolean isfinal = "true".equals(element.getAttributeValue("final"));
 
-        if (!override) {
-            // Just check method declarations on regular node.
-            // Method declarations inside of class definitions will be already checked elsewhere,
-            // in the call from ClassCompiler.updateSchema to schema.addElement
-            if ("class".equals(tagName) || "interface".equals(tagName) || "mixin".equals(tagName)) {
-                schema.checkInstanceMethodDeclaration(element, tagName, name, env);
-            }
+        // Just check method declarations on regular node (if an override
+        // was detected!).
+        // Method declarations inside of class definitions will be already
+        // checked elsewhere,
+        // in the call from ClassCompiler.updateSchema to schema.addElement
+        // But user classes are instances of the meta-class <class>, that means
+        // class-allocated methods are methods on those instances, so we need
+        // to check method declarations in this case, too.
+        if (isdef ? ALLOCATION_CLASS.equals(allocation) : override) {
+            schema.checkInstanceMethodDeclaration(element, getUserTagName(), name, env);
         }
 
         String name_loc =
@@ -1735,8 +1766,7 @@ solution =
         body = body + "\n#endContent";
         if (canHaveMethods) {
             String adjectives = "";
-            // LPP-8062 script compiler will give an error if you declare 'override' on a static method
-            if (override && ALLOCATION_INSTANCE.equals(allocation)) { adjectives += " override"; }
+            if (override) { adjectives += " override"; }
             if (isfinal) { adjectives += " final"; }
             fndef = new Method(name, args, returnType, pragmas, body, name_loc, adjectives);
         } else {
