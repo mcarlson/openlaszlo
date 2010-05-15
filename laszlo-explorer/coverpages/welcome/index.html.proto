@@ -79,15 +79,15 @@ As an open source project, we rely on the goodwill of our users. You can support
 <h3>
 Play and See
 </h3>
-This OpenLaszlo Explorer contains several demos compiled for both Flash and DHTML. <a href="../../index.jsp?bookmark=Demos" target="_top">As you will see</a>, their behavior and appearance are identical across runtimes and browsers.
+This OpenLaszlo Explorer contains several demos compiled for both Flash and DHTML. <a href="../../index.html#_lzbookmark=Demos" target="_top">As you will see</a>, their behavior and appearance are identical across runtimes and browsers.
 </div>
 </div>
 
 <div class="column-in" style="margin-top: 40px;">
 <h3 style="float: left">Reload OpenLaszlo Explorer</h3>
-<a href="../../index.jsp?lzr=swf8" target="_top" style="margin-left: 10px;"><img src="images/launch_flash8.png" border="0"/></a>
-<a href="../../index.jsp?lzr=swf10" target="_top"><img src="images/launch_flash10.png" border="0"/></a>
-<a href="../../index.jsp?lzr=dhtml" target="_top"><img src="images/launch_dhtml.png" border="0"/></a>
+<a href="../../index.html?lzr=swf8" target="_top" style="margin-left: 10px;"><img src="images/launch_flash8.png" border="0"/></a>
+<a href="../../index.html?lzr=swf10" target="_top"><img src="images/launch_flash10.png" border="0"/></a>
+<a href="../../index.html?lzr=dhtml" target="_top"><img src="images/launch_dhtml.png" border="0"/></a>
 </div>
 
 </body>
