@@ -20,7 +20,7 @@
         </method>
     </class>
 
-    <class name="lzcontextmenutext" extends="text">
+    <class name="lzcontextmenutext" extends="text" fgcolor="black" fontsize="11" fontstyle="plain">
         <handler name="onmouseover">
             this.parent.__overnow = this.data;
             this.parent.registerRedraw(this);
@@ -41,7 +41,7 @@
         </method>
     </class>
 
-    <class name="lzcontextmenudisabled" extends="text" fgcolor="0xCCCCCC"/>
+    <class name="lzcontextmenudisabled" extends="text" fgcolor="0xCCCCCC" fontsize="11" fontstyle="plain"/>
 
     <class name="lzcontextmenu" visible="false" options="ignorelayout">
         <attribute name="defaultplacement" value="container" type="string"/>
