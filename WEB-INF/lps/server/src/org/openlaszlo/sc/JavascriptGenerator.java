@@ -1961,7 +1961,7 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
       for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
         TranslationUnit tunit = (TranslationUnit)iter.next();
-        out.println(tunit.getContents());
+        out.write(tunit.getContents()+";");
         // Clear out string data to avoid wasting memory. But leave
         // class name because a list of all class names is needed when
         // constructing the command line to call flex.
