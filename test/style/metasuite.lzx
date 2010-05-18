@@ -7,6 +7,8 @@
     <include href="lzunit" />
     <include href="designerview.lzx" />
 
+    <debug x="20%" width="75%" y="5%" height="90%" />
+
     <!-- Include the library file of each of the sub-suites which in
          turn includes each of the tests and a suite thus running all
          the suites at once -->
@@ -14,6 +16,7 @@
     <include href="attrselector" />
     <include href="compiler" />
     <include href="constraints" />
+    <include href="dynamic" />
     <include href="descendantselector" />
     <include href="elementselector" />
     <include href="idselector" />

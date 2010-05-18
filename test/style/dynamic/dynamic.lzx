@@ -1,0 +1,113 @@
+<!-- Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+
+  <!-- Note [2010-05-17 ptw] We use the color 'lime' for the green
+       swatch because that is the HTML color name for rgb(0,255,0).
+       See http://en.wikipedia.org/wiki/Lime_(color) -->
+
+  <stylesheet>
+    /* default, should only be seen if things are broken */
+    colorswatch { background-color: orange }
+
+    /* Static for buttons */
+    colorbutton[color=red] {background-color: red }
+    colorbutton[color=green] {background-color: lime }
+    colorbutton[color=blue] {background-color: blue }
+
+    /* dynamic single selectors, should be overridden by compound */
+    [red=off] colorswatch { background-color: cyan; opacity: 0.2 }
+    [red=on] colorswatch { background-color: red; opacity: 0.95 }
+    [green=off] colorswatch { background-color: magenta; opacity: 0.2 }
+    [green=on] colorswatch { background-color: lime; opacity: 0.95 }
+    [blue=off] colorswatch { background-color: yellow; opacity: 0.2 }
+    [blue=on] colorswatch { background-color: blue; opacity: 0.95 }
+
+    /* dynamic compound should apply to mixer colorswatch */
+    [red=off] [green=off] [blue=off] [name=mixer] colorswatch { background-color: black; opacity: 1 }
+    [red=off] [green=off] [blue=on] [name=mixer] colorswatch { background-color: blue; opacity: 1 }
+    [red=off] [green=on] [blue=off] [name=mixer] colorswatch { background-color: lime; opacity: 1 }
+    [red=off] [green=on] [blue=on] [name=mixer] colorswatch { background-color: cyan; opacity: 1 }
+    [red=on] [green=off] [blue=off] [name=mixer] colorswatch { background-color: red; opacity: 1 }
+    [red=on] [green=off] [blue=on] [name=mixer] colorswatch { background-color: magenta; opacity: 1 }
+    [red=on] [green=on] [blue=off] [name=mixer] colorswatch { background-color: yellow; opacity: 1 }
+    [red=on] [green=on] [blue=on] [name=mixer] colorswatch { background-color: white; opacity: 1 }
+  </stylesheet>
+
+  <!-- button to toggle an attribute which should trigger style change -->
+  <class name="colorbutton" width="40" height="20" align="center">
+    <attribute name="bgcolor" style="background-color" />
+    <attribute name="color" type="string" />
+    <text fgcolor="white" text="${this.parent.on}" align="center" />
+    <attribute name="on" type="string" value="off" />
+    <handler name="onclick">
+      this.setAttribute('on', this.on === 'on' ? 'off' : 'on' );
+    </handler>
+  </class>
+
+  <class name="colorswatch" height="60" width="60" bgcolor="gray">
+    <attribute name="swatchcolor" style="background-color" type='color' />
+    <attribute name="swatchopacity" style="opacity" value="1" />
+    <handler name="onclick">
+      Debug.clear();
+      Debug.explainStyleBindings(this);
+    </handler>
+    <view name="swatch" x="5" y="5" height="50" width="50">
+      <attribute name="bgcolor" value="${parent.swatchcolor}" />
+      <attribute name="opacity" value="${parent.swatchopacity}" />
+    </view>
+  </class>
+
+  <!-- test harness that should notice changing compound dynamic constraint -->
+  <view id="dynamicTest" x="10%" y="10%" width="80%" height="80%" layout="axis: y; spacing: 5">
+    <attribute name="red" value="${this.toggle.on}" type="string" />
+    <colorbutton id="redbutton" name="toggle" color="red" />
+    <colorswatch id="redswatch" />
+    <view layout="axis: y; spacing: 5">
+      <attribute name="green" value="${this.toggle.on}" type="string" />
+      <colorbutton id="greenbutton" name="toggle" color="green" />
+      <colorswatch id="greenswatch" />
+      <view layout="axis: y; spacing: 5">
+        <attribute name="blue" value="${this.toggle.on}" type="string" />
+        <colorbutton id="bluebutton" name="toggle" color="blue" />
+        <colorswatch id="blueswatch" />
+        <view name="mixer" layout="axis: y; spacing: 5">
+          <text align="center">Mixer</text>
+          <colorswatch id="mixer"/>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <class name="DynamicSelectorTestCase" extends="TestCase">
+    <method name="testDynamic"><![CDATA[
+        var values = { on: true, off: false };
+        for (var redon in values) {
+          var red = values[redon];
+          for (var greenon in values) {
+            var green = values[greenon];
+            for (var blueon in values) {
+              var blue = values[blueon];
+              redbutton.setAttribute('on', redon);
+              greenbutton.setAttribute('on', greenon);
+              bluebutton.setAttribute('on', blueon);
+
+              assertEquals(ColorPresentationType.accept(red ? 'red' : 'cyan'), redswatch.swatchcolor, "Red swatch color");
+              assertEquals(ColorPresentationType.accept(green ? 'lime' : 'magenta'), greenswatch.swatchcolor, "Green swatch color");
+              assertEquals(ColorPresentationType.accept(blue ? 'blue' : 'yellow'), blueswatch.swatchcolor, "Blue swatch color");
+
+              var mix = (red ? 0xff0000 : 0) + (green ? 0x00ff00 : 0) + (blue ? 0x0000ff : 0);
+
+              assertEquals(mix, mixer.swatchcolor, "Dynamic mixer color");
+            }
+          }
+        }
+    ]]></method>
+
+    <method name="addTests">
+      this.addTest('testDynamic');
+    </method>
+  </class>
+
+  <DynamicSelectorTestCase />
+</library>
+
