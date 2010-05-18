@@ -129,7 +129,7 @@
           <xsl:if test="$attrs | $switches">
             <xsl:variable name="attrs-id" select="concat($id, '.__ivars__')"/>
             <property name="__ivars__">
-              <attribute name="id" select="$attrs-id"/>
+              <xsl:attribute name="id"><xsl:value-of select="$attrs-id"/></xsl:attribute>
               <object>
                 <xsl:apply-templates select="$attrs">
                   <xsl:with-param name="parent-id" select="$attrs-id"/>
@@ -237,8 +237,10 @@
         </comment>
       </xsl:if>
       <doc>
-        <xsl:if test="@name">
-          <tag name="lzxname"><text><xsl:value-of select="@name"/></text></tag>
+        <xsl:if test="self::class|self::interface|self::mixin">
+          <xsl:if test="@name">
+            <tag name="lzxname"><text><xsl:value-of select="@name"/></text></tag>
+          </xsl:if>
         </xsl:if>
         <xsl:if test="@value">
           <xsl:choose>
@@ -260,9 +262,9 @@
           <xsl:when test="self::event">
             <tag name="lzxtype"><text>event</text></tag>
           </xsl:when>
-          <xsl:otherwise>
+          <xsl:when test="self::attribute">
             <tag name="lzxtype"><text>expression</text></tag>
-          </xsl:otherwise>
+          </xsl:when>
         </xsl:choose>
         <xsl:if test="doc">
           <xsl:copy-of select="doc/*"/>
