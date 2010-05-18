@@ -12,11 +12,8 @@
 package org.openlaszlo.sc;
 import java.io.*;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.openlaszlo.sc.parser.*;
-import org.openlaszlo.server.LPS;
 
 /**
  * The SWF9Generator generates ECMAScript 4 compliant code as
@@ -224,7 +221,10 @@ public class SWF9Generator extends JavascriptGenerator {
       }
     }
     if (inTry && (forInContext != null)) {
-      String label = forInContext.label = newTemp();
+      String label = forInContext.label;
+      if (label == null) {
+          label = forInContext.label = newTemp();
+      }
       // StatementList is a block, ensuring that the single statement
       // is replaced by a single statement.
       SimpleNode replNode = new ASTStatementList(0);
