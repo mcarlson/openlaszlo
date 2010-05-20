@@ -211,7 +211,7 @@ class DHTMLWriter extends ObjectWriter {
          }
 
         StringBuffer sbuf = new StringBuffer("LzResourceLibrary." + 
-                                             name + "={ptype: \"" + pType + "\", frames:[");
+                                             name + "={ptype:\"" + pType + "\",frames:[");
         sbuf.append("'"+relPath+"'");
 
         Resource res =  (Resource)mResourceMap.get(inputFile.toString());
@@ -253,7 +253,9 @@ class DHTMLWriter extends ObjectWriter {
     }
 
     public void addResourceDefs () {
-        addScript(mResourceDefs);
+        PrintStream out = new PrintStream(mStream);
+        out.print(mResourceDefs);
+        out.flush();
     }
     public void importResource(List sources, String sResourceName, File parent)
     {
@@ -293,7 +295,7 @@ class DHTMLWriter extends ObjectWriter {
             relPath = fileInfo[1];
 
             if (first == true) {
-                sbuf.append("LzResourceLibrary." + sResourceName + "={ptype: \"" + pType + "\", frames:[");
+                sbuf.append("LzResourceLibrary." + sResourceName + "={ptype:\"" + pType + "\",frames:[");
                 first = false;
             }
 

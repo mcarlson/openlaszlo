@@ -59,7 +59,7 @@ public class DHTMLCompiler extends Compiler {
     }
   }
 
-  // Returns byte stream of compiled app.swf file
+  // Returns byte stream of compiled JS file
   public InputStream finishApp() {
     try {
       ((JavascriptGenerator)cg).finish();
