@@ -1933,7 +1933,7 @@ public class LzSprite extends Sprite {
     */
     static function __updateQuirks(browser){
         if (browser.isFirefox && browser.OS == 'Mac') {
-            LzSprite.quirks.ignorespuriousff36events = browser.version == 3.6;
+            LzSprite.quirks.ignorespuriousff36events = browser.version == 3.6 && browser.subversion < 2;
             LzSprite.quirks.fixtextselection = browser.version < 3.5;
         }
         if ($swf10) {
