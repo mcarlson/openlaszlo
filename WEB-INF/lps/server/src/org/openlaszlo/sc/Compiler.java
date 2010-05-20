@@ -419,7 +419,7 @@ public class Compiler {
    * @param source javascript source for a function (including function keyword, etc.)
    * @param name name, will get name_dependencies as name of function
    */
-  public ReferenceCollector dependenciesForExpression(String estr, boolean debug) {
+  public ReferenceCollector dependenciesForExpression(String estr) {
     String fname = "$lsc$dependencies";
     String source = "function " + fname + " () {" +
       "\n#pragma 'withThis'\n" +
@@ -429,20 +429,20 @@ public class Compiler {
                     "\n#beginAttribute\n" + estr +
                     "\n#endAttribute\n)}";
 
-    return dependenciesForFunction(source, debug);
+    return dependenciesForFunction(source);
   }
 
   /**
    * @param source javascript source for a function
    */
-  private ReferenceCollector dependenciesForFunction(String source, boolean debug) {
+  private ReferenceCollector dependenciesForFunction(String source) {
     SimpleNode node = new Parser().parse(source);
     // Expect ASTProgram -> ASTModifiedDefinition -> ASTFunctionDeclaration
     SimpleNode fcn = node.get(0).get(0);
     if (!(fcn instanceof ASTFunctionDeclaration))
       throw new CompilerError("Internal error: bad AST for constraints");
 
-    ReferenceCollector dependencies = new ReferenceCollector(debug);
+    ReferenceCollector dependencies = new ReferenceCollector();
 
     SimpleNode[] children = fcn.getChildren();
     int stmtpos = (children.length - 1);

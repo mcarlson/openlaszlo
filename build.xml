@@ -465,6 +465,7 @@
       <ant target="clean-classes" />
       <ant dir="${webapp-lps-home}/lfc"      target="clean" />
       <ant dir="lps/includes/source"         target="clean" />
+      <ant dir="laszlo-explorer"             target="clean" />
       <ant dir="lps/components"              target="clean" />
       <ant dir="${webapp-lps-home}/schema"   target="clean" />
       <ant dir="${webapp-lps-home}/server"   target="clean" />
@@ -617,6 +618,7 @@
       <ant dir="${webapp-lps-home}/lfc" target="build"/>
       <!-- Also uses server script compiler -->
       <ant dir="lps/includes/source"    target="build" />
+      <ant dir="laszlo-explorer"        target="build" />
       <ant dir="lps/components"         target="build" />
 
       <property name="build.done" value="true" />

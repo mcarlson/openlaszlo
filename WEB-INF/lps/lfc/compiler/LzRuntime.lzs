@@ -161,11 +161,6 @@ if ($debug) {
     }
     return dependencies;
   }
-} else {
-  // used by LZOs, e.g. contextmenu.lzx and contextmenu.js
-  var $lzc$validateReferenceDependencies = function (dependencies:Array, referenceNames:Array) {
-    return dependencies;
-  }
 }
 
 // Runtime support for computing function dependencies

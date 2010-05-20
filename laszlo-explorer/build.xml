@@ -6,6 +6,15 @@
 
 
 <project name="laszlo-explorer" default="build" basedir=".">
+  <target name="clean">
+    <delete failonerror="false">
+      <fileset dir=".">
+        <include name="explore-nav.*" />
+        <exclude name="explore-nav.lzx" />
+      </fileset>
+    </delete>
+  </target>
+
   <target name="build" description="Recompile the SOLO laszlo-explorer app">
      <sequential>
        <exec executable="../WEB-INF/lps/server/bin/lzc" >

@@ -23,8 +23,6 @@ public class ReferenceCollector {
     immutableProperties.add("canvas");
   }
 
-  // For generating debug annotation
-  boolean debug = false;
   boolean computeMetaReferences = false;
   Set references;
   Set functions;
@@ -36,15 +34,10 @@ public class ReferenceCollector {
   static ParseTreePrinter ptp = new ParseTreePrinter();
 
   public ReferenceCollector() {
-    this(false, false);
+    this(false);
   }
 
-  public ReferenceCollector(boolean debugging) {
-    this(debugging, false);
-  }
-
-  public ReferenceCollector(boolean debugging, boolean computeMetaReferences) {
-    this.debug = debugging;
+  public ReferenceCollector(boolean computeMetaReferences) {
     this.computeMetaReferences = computeMetaReferences;
     // Linked Hash Set so debug info will correspond
     this.references = new LinkedHashSet();
@@ -109,7 +102,7 @@ public class ReferenceCollector {
     args.setChildren(node.get(1).getChildren());
     map.put("_2", args);
 
-    return parser.substitute(fn, "$lzc$getFunctionDependencies(" + fnnm + ", this, _1, _2" + (debug ? (", " + ctnm) : "") + ")", map);
+    return parser.substitute(fn, "$lzc$getFunctionDependencies(" + fnnm + ", this, _1, _2, ($debug ? (" + ctnm + ") : null))", map);
   }
 
   // Used to seed the pureFunctions table to avoid trying to get dependencies

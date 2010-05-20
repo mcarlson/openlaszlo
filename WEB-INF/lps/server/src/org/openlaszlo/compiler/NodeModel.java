@@ -76,7 +76,6 @@ public class NodeModel implements Cloneable {
     final CompilationEnvironment env;
     // Used to freeze the definition for generation
     protected boolean frozen = false;
-    final boolean debug;
     // Datapaths and States don't have methods because they "donate"
     // their methods to other instances.  Where we would normally make
     // a method, we make a closure instead
@@ -105,7 +104,6 @@ public class NodeModel implements Cloneable {
         this.element = element;
         this.schema = schema;
         this.env = env;
-        this.debug = env.getBooleanProperty(env.DEBUG_PROPERTY);
 
         this.tagName = element.getName();
         // Cache ClassModel for parent
@@ -317,7 +315,7 @@ public class NodeModel implements Cloneable {
       this.fallbackexpression = fallback;
     }
 
-    public Function getBinderMethod(boolean canHaveMethods, boolean debug) {
+    public Function getBinderMethod(boolean canHaveMethods) {
       if (! (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS))) {
         return null;
       }
@@ -369,9 +367,8 @@ public class NodeModel implements Cloneable {
       Function binder;
       prettyBinderName += "{...}'";
       String pragmas = "";
-      if (debug) {
-        pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + prettyBinderName);
-      }
+      // Note: for debugging, will be ignored by non-debug
+      pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + prettyBinderName);
       // Binders are called by LzDelegate.execute, which passes the
       // value sent by sendEvent, so we have to accept it, but we
       // ignore it
@@ -384,25 +381,26 @@ public class NodeModel implements Cloneable {
       return binder;
     }
 
-    public Function getDependenciesMethod(boolean canHaveMethods, boolean debug) {
+    public Function getDependenciesMethod(boolean canHaveMethods) {
       if (! when.equals(WHEN_ALWAYS)) {
         return null;
       }
       String pragmas = "";
-      if (debug) {
-        pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + name + " dependencies");
-        // Silence reference errors in dependency methods
-        pragmas += "\n#pragma " + ScriptCompiler.quote("warnUndefinedReferences=false");
-        // But percolate them up to applyConstraintExpr
-        pragmas += "\n#pragma " + ScriptCompiler.quote("throwsError=true");
-      }
-      ReferenceCollector collector = getCompiler().dependenciesForExpression(srcloc + value, debug);
+      // Note: for debugging, will be ignored by non-debug
+      pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=" + name + " dependencies");
+      // Silence reference errors in dependency methods
+      pragmas += "\n#pragma " + ScriptCompiler.quote("warnUndefinedReferences=false");
+      // But percolate them up to applyConstraintExpr
+      pragmas += "\n#pragma " + ScriptCompiler.quote("throwsError=true");
+      ReferenceCollector collector = getCompiler().dependenciesForExpression(srcloc + value);
       String depExpr = collector.computeReferencesAsExpression();
       String depAnnotation = collector.computeReferencesDebugAnnoration();
       String body =
-        debug ?
-        "return $lzc$validateReferenceDependencies(" + depExpr + ", " + depAnnotation + ");\n" :
-        "return " + depExpr + ";\n";
+        "if ($debug) {\n" +
+        "  return $lzc$validateReferenceDependencies(" + depExpr + ", " + depAnnotation + ");\n" +
+        "} else {\n" +
+        "  return " + depExpr + ";\n" +
+        "}\n";
       Function dependencies;
       if (canHaveMethods) {
           dependencies = new Method(dependenciesname, "", "", pragmas, body, srcloc, null);
@@ -422,10 +420,7 @@ public class NodeModel implements Cloneable {
       if (when.equals(WHEN_PATH) || (when.equals(WHEN_STYLE)) || when.equals(WHEN_ONCE) || when.equals(WHEN_ALWAYS)) {
         String kind = "LzOnceExpr";
         String debugDescription = "";
-        // debug inacessible to inner class, doh!
-        if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
-          debugDescription = ", " + ScriptCompiler.quote(name + "='$" + (when.equals(WHEN_ALWAYS) ? "" : when) + "{...}'");
-        }
+        debugDescription = ", ($debug ? (" + ScriptCompiler.quote(name + "='$" + (when.equals(WHEN_ALWAYS) ? "" : when) + "{...}'") + ") : null)";
         if (when.equals(WHEN_ONCE) || when.equals(WHEN_PATH)) {
           // default
         } else if (when.equals(WHEN_STYLE)) {
@@ -889,26 +884,24 @@ public class NodeModel implements Cloneable {
      * bindings in a table `global` to support the `globalValue` API for
      * looking up global ID's at runtime.
      */
-    private static String buildIdBinderBody (String symbol, boolean setId, boolean debug) {
+    private static String buildIdBinderBody (String symbol, boolean setId) {
         return
-            (debug ?
-             "#pragma " + ScriptCompiler.quote("userFunctionName=bind #" + symbol) + "\n" :
-             "") +
-            "if ($lzc$bind) {\n" +
-            (debug ?
-             "    if (" + symbol + " && (" + symbol + " !== $lzc$node)) {\n" +
-             "      Debug.warn('Redefining #" + symbol + " from %w to %w', \n" +
-             "        " + symbol + ", $lzc$node);\n" +
-             "    }\n" :
-             "") +
-            (setId ? ("  $lzc$node.id = " + ScriptCompiler.quote(symbol) + ";\n") : "") +
-            "  " + symbol + " = $lzc$node;\n" +
-            "  if ($as3) { global[" + ScriptCompiler.quote(symbol) + "] = $lzc$node; }\n" +
-            "} else if (" + symbol + " === $lzc$node) {\n" +
-            "  " + symbol + " = null;\n" +
-            "  if ($as3) { global[" + ScriptCompiler.quote(symbol) + "] = null; }\n" +
-            (setId ? ("  $lzc$node.id = null;\n") : "") +
-            "}\n";
+          "#pragma " + ScriptCompiler.quote("userFunctionName=bind #" + symbol) + "\n" +
+          "if ($lzc$bind) {\n" +
+          "  if ($debug) {\n" +
+          "    if (" + symbol + " && (" + symbol + " !== $lzc$node)) {\n" +
+          "      Debug.warn('Redefining #" + symbol + " from %w to %w', \n" +
+          "        " + symbol + ", $lzc$node);\n" +
+          "    }\n" +
+          "  }\n" +
+          (setId ? ("  $lzc$node.id = " + ScriptCompiler.quote(symbol) + ";\n") : "") +
+          "  " + symbol + " = $lzc$node;\n" +
+          "  if ($as3) { global[" + ScriptCompiler.quote(symbol) + "] = $lzc$node; }\n" +
+          "} else if (" + symbol + " === $lzc$node) {\n" +
+          "  " + symbol + " = null;\n" +
+          "  if ($as3) { global[" + ScriptCompiler.quote(symbol) + "] = null; }\n" +
+          (setId ? ("  $lzc$node.id = null;\n") : "") +
+          "}\n";
     }
 
     /**
@@ -1080,7 +1073,7 @@ solution =
                         String symbol = value;
                         Function idbinder = new Function(
                             "$lzc$node:LzNode, $lzc$bind:Boolean=true",
-                            buildIdBinderBody(symbol, true, debug));
+                            buildIdBinderBody(symbol, true));
                         addProperty("$lzc$bind_id", idbinder, ALLOCATION_INSTANCE);
                     }
                     // Ditto for top-level name "name"
@@ -1094,7 +1087,7 @@ solution =
                         // done with it.
                         Function namebinder = new Function (
                             "$lzc$node:LzNode, $lzc$bind:Boolean=true",
-                            buildIdBinderBody(symbol, false, debug));
+                            buildIdBinderBody(symbol, false));
                         addProperty("$lzc$bind_name", namebinder, ALLOCATION_INSTANCE);
                     }
 
@@ -1160,10 +1153,10 @@ solution =
       // replicator, so must be compiled as closures
       boolean chm = "datapath".equals(name) ? false : canHaveMethods;
       if (cattr.bindername != null) {
-        lattrs.put(cattr.bindername, cattr.getBinderMethod(chm, debug));
+        lattrs.put(cattr.bindername, cattr.getBinderMethod(chm));
       }
       if (cattr.dependenciesname != null) {
-        lattrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(chm, debug));
+        lattrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(chm));
       }
       lattrs.put(name, cattr.getInitialValue());
     } else {
@@ -1579,21 +1572,17 @@ solution =
             // times
             referencename = env.methodNameGenerator.next();
             String pragmas = "";
-            if (debug) {
-              pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=get " + reference);
-            }
+            // Note: for debugging, will be ignored by non-debug
+            pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=get " + reference);
             String refbody = "var $lzc$reference = (" +
-                "#beginAttribute\n" +
-                reference + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n);\n" +
-                (debug ?
-                 "if ($lzc$reference is LzEventable) {\n" :
-                 "") +
-                "  return $lzc$reference;\n" +
-                (debug ?
-                 "} else {\n" +
-                 "  Debug.error('Invalid event sender: " + reference + " => %w (for event " + event + ")', $lzc$reference);\n" +
-                 "}" :
-                 "");
+              "#beginAttribute\n" +
+              reference + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n);\n" +
+              "if ($debug) {\n" +
+              "  if (! ($lzc$reference is LzEventable)) {\n" +
+              "    Debug.error('Invalid event sender: " + reference + " => %w (for event " + event + ")', $lzc$reference);\n" +
+              "  }\n" +
+              "}\n" +
+              "return $lzc$reference;\n";
             Function referencefn;
             if (canHaveMethods) {
                 referencefn = new Method(referencename, "", "", pragmas, refbody, srcloc, null);
@@ -1610,11 +1599,11 @@ solution =
             String pragmas = "#beginContent\n";
             if (method == null) {
                 method = env.methodNameGenerator.next();
-                if (debug) {
-                  pragmas += "#pragma " + ScriptCompiler.quote(
-                    "userFunctionName=handle " + ((reference != null) ? (reference + ".") : "") + event
-                                                               ) +"\n";
-                }
+                // Note: for debugging, will be ignored by non-debug
+                pragmas += "#pragma " + ScriptCompiler.quote(
+                  "userFunctionName=handle " +
+                  ((reference != null) ? (reference + ".") : "") +
+                  event) +"\n";
             }
             body = body + "\n#endContent\n";
             Function fndef;
@@ -2135,10 +2124,10 @@ solution =
 
               // add dependancy methods
               if (cattr.bindername != null) {
-                lattrs.put(cattr.bindername, cattr.getBinderMethod(false, debug));
+                lattrs.put(cattr.bindername, cattr.getBinderMethod(false));
               }
               if (cattr.dependenciesname != null) {
-                lattrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(false, debug));
+                lattrs.put(cattr.dependenciesname, cattr.getDependenciesMethod(false));
               }
 
               origvalueexpression = ((NodeModel.BindingExpr)origvalue).getExpr();
@@ -2223,9 +2212,8 @@ solution =
       // #setAttribute depend on this convention to find setters
       String settername = "$lzc$" + "set_" + attribute;
       String pragmas = "";
-      if (debug) {
-        pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=set " + attribute) + "\n";
-      }
+      // Note: for debugging, will be ignored by non-debug
+      pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=set " + attribute) + "\n";
       addMethodInternal(settername, args, "", pragmas + body, element, allocation);
       // This is just for nice error messages
       if (setters.get(attribute) != null) {

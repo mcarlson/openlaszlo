@@ -554,7 +554,7 @@ public class ClassModel implements Comparable {
       assert tagName != null;
       // Set the tag name
       nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
-    } else if (nodeModel.debug) {
+    } else {
       String with = "";
       if (debugWith.length() > 0) {
         with = " with='" + debugWith + "'";
