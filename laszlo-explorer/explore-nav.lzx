@@ -165,7 +165,8 @@
                 this.header.doaction();
             }
             if (seq.length > 1) {
-                this.nextOpenList = seq.splice(1);
+                //seq.splice(1) requires the second argument in IE8
+                this.nextOpenList = seq.splice(1, seq.length - 1);
                 if (this.dataloaded) {
                     // data loaded already, search children now.
                     this.searchChildren();
