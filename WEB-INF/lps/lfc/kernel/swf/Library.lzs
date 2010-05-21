@@ -1,14 +1,13 @@
 /**
   * Library.js
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
   * @subtopic AS2
   */
 
-#include "kernel/swf/LzRequires.as"
 #include "kernel/swf/LzTimeKernel.as"
 #include "kernel/swf/LzSprite.as"
 #include "kernel/swf/LzTextSprite.as"

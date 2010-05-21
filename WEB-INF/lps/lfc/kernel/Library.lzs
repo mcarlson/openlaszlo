@@ -1,11 +1,16 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
   */
+
+// Resource library
+// contains {ptype, class(as3), frames: [], width, height}
+// ptype is one of "ar" (app relative) or "sr" (system relative)
+var LzResourceLibrary:Object = {};
 
 #include "kernel/LzKernelUtils.lzs"
 
@@ -16,9 +21,6 @@ if ($as3) {
 
 #include "kernel/LzLibraryCleanup.lzs"
 
-
-
-//#include "kernel/LzRequires.lzs"
 if ($as3) {
     #include "kernel/swf9/Library.lzs"
 } else if ($dhtml) {
@@ -28,10 +30,3 @@ if ($as3) {
 } else if ($debug) {
     Debug.error('kernel/Library.lzs unsupported runtime %s', $runtime);
 }
-
-/*
-if ($debug) {
-    // Check requires against provides
-    $modules.runtime.__warnRequires();
-}
-*/

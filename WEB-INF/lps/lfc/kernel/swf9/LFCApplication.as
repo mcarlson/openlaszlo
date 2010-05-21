@@ -1,7 +1,7 @@
 /**
   * LFCApplication.as
   *
-  * @copyright Copyright 2007, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -100,10 +100,5 @@ public class LFCApplication {
     }
 
 }
-
-// Resource library
-// contains {ptype, class, frames, width, height}
-// ptype is one of "ar" (app relative) or "sr" (system relative)
-var LzResourceLibrary :Object = {};
 
 } // end #pragma block

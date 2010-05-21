@@ -1389,8 +1389,8 @@ class SWFWriter extends ObjectWriter {
          Iterator resources = sset.iterator();
          while(resources.hasNext()) {
              Resource res = (Resource)resources.next();
-             String str = "canvas.resourcetable[\"" + res.getName() +
-                    "\"]={ width : " + res.getWidth() + ", height :" +
+             String str = "LzResourceLibrary." + res.getName() +
+                    "={ width : " + res.getWidth() + ", height :" +
                            res.getHeight() + "};\n";
              buf.append(str);
          }

@@ -351,6 +351,9 @@ LzSprite.prototype.setResource = function ( resourceName ) {
         this.setMovieClip( mc, resourceName );
     }
 
+    // start out stopped on the first frame (important for multiframe resources included with directory syntax - they have no built-in stop actions
+    this.stop(1);
+
     // We may have queued an action due to setter ordering
     if (this.queuedplayaction) { this.doQueuedPlayAction(null); }
 
@@ -764,7 +767,7 @@ LzSprite.prototype.updateResourceSize = function (skipsend){
     var mc = this.getMCRef();
     this.setWidth(this.hassetwidth?this.width:null);
     this.setHeight(this.hassetheight?this.height:null);
-    var rt = canvas.resourcetable[ this.resource ];
+    var rt = LzResourceLibrary[ this.resource ];
     if ( rt ){
         this.resourcewidth = rt.width;
         this.resourceheight = rt.height;
@@ -1520,8 +1523,7 @@ LzSprite.prototype.stop = function (f, rel){
     // would break it's contract with the rest of the world...
     var m = this.getMCRef();
     if ( m == null || this.resource == "empty" ) {
-        // always stop on the first frame
-        this.queuePlayAction( "stop" , 0);
+        this.queuePlayAction( "stop" , f, rel);
         return;
     }
 

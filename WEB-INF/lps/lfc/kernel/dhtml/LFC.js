@@ -1,16 +1,14 @@
 /**
   * LFC.js
   *
-  * @copyright Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2006-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
   * @subtopic DHTML
   */
 
-// Resource library
-var LzResourceLibrary = {};
-
+// backward compatibility with Flash
 {
 #pragma "profile=false"
     var getTimer = function() {

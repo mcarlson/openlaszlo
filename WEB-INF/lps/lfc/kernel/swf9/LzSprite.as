@@ -1160,7 +1160,15 @@ public class LzSprite extends Sprite {
 
             this.owner.resourceevent('play', null, true);
         } else if (this.__isinternalresource) {
-            stop(framenumber, rel);
+            // start playing at the specified frame
+            if (framenumber != null) {
+                this.__setFrame(framenumber);
+            }
+            if (this.playing == false && this.totalframes > 1) {
+                this.playing = this.owner.playing = true;
+                LzIdleKernel.addCallback(this, '__incrementFrame');
+            }
+            this.owner.resourceevent('play', null, true);
         } else if (this.loaderMC) {
             this.owner.resourceevent('play', null, true);
             this.updateResourcePlay(true, framenumber, rel);
@@ -1168,14 +1176,25 @@ public class LzSprite extends Sprite {
             if ($debug) {
                 var info:LoaderInfo = this.imgLoader.contentLoaderInfo;
                 if (info.contentType == LzSprite.MIME_SWF && info.swfVersion < SWFVersion.FLASH9) {    
-                    Debug.warn("Playback control will not work for the resource. Please update or recompile the resource for Flash 9.", this.resource);
+                    Debug.warn("Playback control will not work for the resource %w because it is compiled for Flash %w. Please update or recompile the resource for Flash 9 or greater.", this.resource, info.swfVersion);
                 }
             }
         } else {
-            //Debug.write('unhandled play', framenumber, rel);
+            if ($debug) {
+                Debug.write('unhandled play', framenumber, rel);
+            }
         }
     }
 
+    public function __incrementFrame (ignore = null) :void {
+        // go to the next frame
+        var frame = this.frame + 1;
+        if (frame > this.totalframes) {
+            // wrap around
+            frame = 1;
+        }
+        this.__setFrame(frame);
+    }
 
     /** stop( Number:framenumber )
         o Stops a multiframe resource at the specified framenumber
@@ -1189,84 +1208,13 @@ public class LzSprite extends Sprite {
 
             if (p) this.owner.resourceevent('stop', null, true);
         } else if (this.__isinternalresource) {
-            var resinfo:Object = LzResourceLibrary[this.resource];
-
-            // Frames are one based not zero based
-            var frames:Array = resinfo.frames;
-            var origfn:* = fn;
-            if (fn == null || fn < 1) {
-                origfn = fn = 1;
-            } else if (fn > frames.length) {
-                fn = frames.length;
+            if (this.playing == true) {
+                this.playing = this.owner.playing = false;
+                this.owner.resourceevent('stop', null, true);
+                LzIdleKernel.removeCallback(this, '__incrementFrame');
             }
-            var framenumber:int = fn - 1;
-
-            var assetclass:Class;
-            // single frame resources get an entry in LzResourceLibrary which has
-            // 'assetclass' pointing to the resource Class object.
-            if (resinfo.assetclass is Class) {
-                assetclass = resinfo.assetclass;
-            } else {
-                // Multiframe resources have an array of Class objects in frames[]
-                assetclass = frames[framenumber];
-            }
-
-            if (assetclass) {
-                if (this.resourceCache == null) {
-                    this.resourceCache = [];
-                }
-                var asset:DisplayObject = this.resourceCache[framenumber];
-                if (asset == null) {
-                    //Debug.write('CACHE MISS, new ',assetclass);
-                    asset = new assetclass();
-                    if (asset is Bitmap) {
-                        (asset as Bitmap).smoothing = true;
-                    }
-                    asset.scaleX = 1.0;
-                    asset.scaleY = 1.0;
-                    this.resourceCache[framenumber] = asset;
-                }
-
-                var oRect:Rectangle = asset.getBounds( asset );
-                if (oRect.width == 0 || oRect.height == 0) {
-                    // store the frame number passed in to prevent it from being reset
-                    this.frame = origfn;
-                    // it can take a while for new resources to show up.  Call back on the next frame, when we have a valid size.
-                    LzIdleKernel.addCallback(this, '__resetframe');
-                    return;
-                }
-
-                if (this.resourceContainer != null) {
-                    this.removeChild(this.resourceContainer);
-                }
-
-                if (asset is InteractiveObject) InteractiveObject(asset).mouseEnabled = false;
-                if (asset is DisplayObjectContainer) DisplayObjectContainer(asset).mouseChildren = false;
-
-                this.resourceContainer = asset;
-                this.addChildAt(asset, IMGDEPTH);
-
-                this.applyStretchResource();
-
-                if (asset is MovieClip && this.totalframes == 1) {
-                  var loader:Loader = MovieClip(asset).getChildAt(0) as Loader;
-                  if (loader.content is AVM1Movie) {
-                      //no playback control for AVM1 movies...
-                  } else {
-                      // treat as a loader...
-                      // could they make this any less obvious?
-                      // see http://www.bit-101.com/blog/?p=1435 
-                      this.__isinternalresource = false;
-                      this.loaderMC = MovieClip(loader.content);
-                      this.totalframes = this.loaderMC.totalFrames;
-                      this.loaderMC.gotoAndStop(origfn);
-                  }
-                } else {
-                  // Set later, to prevent movieclip resources from being forced to frame 1 - see LPP-7534
-                  this.frame = fn;
-                }
-            } else {
-                // bad resource?
+            if (fn != null) {
+                this.__setFrame(fn);
             }
         } else if (this.loaderMC) {
             if ( this.playing ) this.owner.resourceevent('stop', null, true);
@@ -1283,6 +1231,95 @@ public class LzSprite extends Sprite {
             //Debug.write('unhandled stop', fn, rel);
         }
         if (this.backgroundrepeat) this.drawBackground();
+    }
+
+    /** Used to update the frame number for internal resources.  Called by stop() and __incrementFrame() */
+    private function __setFrame(fn:Number) :void {
+        var resinfo:Object = LzResourceLibrary[this.resource];
+
+        // Frames are one based not zero based
+        var frames:Array = resinfo.frames;
+        var origfn:* = fn;
+        if (fn < 1) {
+            origfn = fn = 1;
+        } else if (fn > frames.length) {
+            fn = frames.length;
+        }
+        var framenumber:int = fn - 1;
+
+        var assetclass:Class;
+        // single frame resources get an entry in LzResourceLibrary which has
+        // 'assetclass' pointing to the resource Class object.
+        if (resinfo.assetclass is Class) {
+            assetclass = resinfo.assetclass;
+        } else {
+            // Multiframe resources have an array of Class objects in frames[]
+            assetclass = frames[framenumber];
+        }
+
+        if (assetclass) {
+            if (this.resourceCache == null) {
+                this.resourceCache = [];
+            }
+            var asset:DisplayObject = this.resourceCache[framenumber];
+            if (asset == null) {
+                //Debug.write('CACHE MISS, new ',assetclass);
+                asset = new assetclass();
+                if (asset is Bitmap) {
+                    (asset as Bitmap).smoothing = true;
+                }
+                asset.scaleX = 1.0;
+                asset.scaleY = 1.0;
+                this.resourceCache[framenumber] = asset;
+            }
+
+            var oRect:Rectangle = asset.getBounds( asset );
+            if (oRect.width == 0 || oRect.height == 0) {
+                // store the frame number passed in to prevent it from being reset
+                this.frame = origfn;
+                // it can take a while for new resources to show up.  Call back on the next frame, when we have a valid size.
+                LzIdleKernel.addCallback(this, '__resetframe');
+                return;
+            }
+
+            if (this.resourceContainer != null) {
+                this.removeChild(this.resourceContainer);
+            }
+
+            if (asset is InteractiveObject) InteractiveObject(asset).mouseEnabled = false;
+            if (asset is DisplayObjectContainer) DisplayObjectContainer(asset).mouseChildren = false;
+
+            this.resourceContainer = asset;
+            this.addChildAt(asset, IMGDEPTH);
+
+            this.applyStretchResource();
+
+            if (asset is MovieClip && this.totalframes == 1) {
+                var loader:Loader = MovieClip(asset).getChildAt(0) as Loader;
+                if (loader.content is AVM1Movie) {
+                    //no playback control for AVM1 movies...
+                } else {
+                    // treat as a loader...
+                    // could they make this any less obvious?
+                    // see http://www.bit-101.com/blog/?p=1435 
+                    this.__isinternalresource = false;
+                    this.loaderMC = MovieClip(loader.content);
+                    this.totalframes = this.loaderMC.totalFrames;
+                    this.loaderMC.gotoAndStop(origfn);
+                }
+            } else {
+                // Set later, to prevent movieclip resources from being forced to frame 1 - see LPP-7534
+                this.frame = fn;
+            }
+        } else {
+            if ($debug) {
+                Debug.write('Bad resource for %w', this.resource);
+            }
+        }
+
+        if (this.frame == this.totalframes) {
+            this.owner.resourceevent('lastframe', null, true);
+        }
     }
 
     private function updateResourcePlay (play:Boolean, framenumber:*, rel:Boolean) :void {

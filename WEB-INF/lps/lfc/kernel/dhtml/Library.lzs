@@ -1,13 +1,12 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   */
 
 #include "kernel/dhtml/LFC.js"
-//#include "kernel/dhtml/LzRequires.js"
 #include "kernel/dhtml/LzBrowserUtils.js"
 #include "kernel/dhtml/LzPool.js"
 #include "kernel/dhtml/LzKeyboardKernel.js"

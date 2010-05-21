@@ -74,10 +74,6 @@ dynamic class LzCanvas extends LzView {
     /**
       * @access private
       */
-    var resourcetable:*;
-    /**
-      * @access private
-      */
     var _lzinitialsubviews:Array = [];
     /**
       * @access private
@@ -317,7 +313,6 @@ dynamic class LzCanvas extends LzView {
         this.fullscreen = false;
 
         this.viewLevel = 0;
-        this.resourcetable = {};
 
         // percentcreated support
         this.totalnodes = 0;
