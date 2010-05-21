@@ -2045,7 +2045,7 @@ LzSprite.prototype.__processHiddenParents = function(method) {
     // restore original display values from CSS cache
     for (var n = 0; n < l; n++) {
         var sprite = sprites[n];
-        sprite.__LZdiv.style.display = sprite.__csscache.__LZdivdisplay;
+        sprite.__LZdiv.style.display = sprite.__csscache.__LZdivdisplay || '';
     }
     return result;
 }
