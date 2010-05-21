@@ -68,6 +68,10 @@ lz.embed = {
         // Upgrade to flash player 10 for security reasons
         if (minimumVersion == null) minimumVersion = 10;
 
+        if (! properties.id) {
+            // Generate a unique ID
+            properties.id = 'lzapp' + Math.round(Math.random() * 1000000);
+        }
 
         var url = properties.url;
 
@@ -139,6 +143,7 @@ lz.embed = {
             ,_setCanvasAttributeDequeue: embed._setCanvasAttributeDequeue
             ,_sendPercLoad: embed._sendPercLoad
             ,setGlobalFocusTrap: embed.__setGlobalFocusTrapSWF
+            ,initargs: queryvals.initargs
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
@@ -248,12 +253,18 @@ lz.embed = {
      * LFC.
      */
     dhtml: function (properties) {
-        /*
-        if (window.LzCanvas == null) {
-            alert('Warning: lz.embed.lfc() must be called before lz.embed.dhtml() to load the LFC.');
+        if (lz.embed.dhtmlapploaded) {
+            // TODO: generate an iframe
+            alert('Warning: skipping lz.embed.dhtml() call for ' + properties.url + '. Only one DHTML application can be loaded per window.  Use iframes to load more than one DHTML application.');
             return;
-        }*/
-        var queryvals = this.__getqueryurl(properties.url, true);
+        }
+
+        if (! properties.id) {
+            // Generate a unique ID
+            properties.id = 'lzapp' + Math.round(Math.random() * 1000000);
+        }
+
+        var queryvals = this.__getqueryurl(properties.url);
 
         // allow query string options to override properties hash values
         for (var i in queryvals.options) {
@@ -317,6 +328,7 @@ lz.embed = {
             ,getCanvasAttribute: lz.embed._getCanvasAttributeDHTML
             ,callMethod: lz.embed._callMethodDHTML
             ,_sendAllKeysUp: lz.embed._sendAllKeysUpDHTML
+            ,initargs: queryvals.initargs
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
@@ -332,6 +344,7 @@ lz.embed = {
         if (! lz.embed.lfcloaded) {
             lz.embed.__appqueue.push(url);
         } else {
+            lz.embed.dhtmlapploaded = true;
             this.__dhtmlLoadLibrary(url)
         }
     }
@@ -370,9 +383,8 @@ lz.embed = {
     }
 
     ,/** @access private */
-    __getqueryurl: function (url, setglobals) {
+    __getqueryurl: function (url) {
         // strip query string to only args required by the compiler
-        // if setglobals == true, set browser globals
         // return 'flashvars' property args not required by LPS
 
         // TODO Henry: We need to ask the canvas info what the value of the debug flag really is. Don't just trust the query arg, since it can be overriden by the canvas attributes.
@@ -385,6 +397,8 @@ lz.embed = {
         var query = '';
         var flashvars = '';
         var options = {};
+        // track init args for LzBrowserKernel.getInitArgs()
+        var initargs = {};
         var re = new RegExp('\\+', 'g');
         for (var i in queryvals) {
             if (i == '' || i == null) continue;
@@ -409,13 +423,9 @@ lz.embed = {
                 options[i.substring(2)] = v;
             }
 
-            // set globals for all query args per LPP-2781
-            if (setglobals) {
-                if (window[i] == null) {
-                    // sometimes URLs contain '+' - change to spaces
-                    window[i] = unescape(v.replace(re, ' '));
-                    //alert(i + ' = ' + v);
-                }
+            if (initargs[i] == null) {
+                // only the first copy of an arg should be added
+                initargs[i] = unescape(v.replace(re, ' '));
             }
 
             // store for passing in via flashvars
@@ -424,7 +434,7 @@ lz.embed = {
         query = query.substr(0, query.length - 1);
         flashvars = flashvars.substr(0, flashvars.length - 1);
 
-        return {url: url, flashvars: flashvars, query: query, options: options};
+        return {url: url, flashvars: flashvars, query: query, options: options, initargs: initargs};
     }
 
     ,/** @access private */

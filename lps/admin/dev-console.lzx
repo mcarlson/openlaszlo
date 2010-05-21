@@ -67,6 +67,7 @@
        setAttribute('app_opt_exists', appdata.getPointer().xpathQuery("/request/@opt-exists"));
        setAttribute('app_lps_root', appdata.getPointer().xpathQuery("/request/@lps"));
        setAttribute('app_lzt', null);
+       setAttribute('lzr', lz.Browser.getInitArg('lzr'));
        // Use the url pathname as the uid to rendevouz with the app, the app will be listening on
        // a LocalConnection there.
        setAttribute('app_uid', app_fullpath);

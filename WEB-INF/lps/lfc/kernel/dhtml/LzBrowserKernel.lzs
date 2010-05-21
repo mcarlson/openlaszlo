@@ -152,15 +152,24 @@ static function getLoadURL () {
 
 
 /**
-  * This function returns the value of a key in the request string that 
-  * requested the the lzx app. This can be used to communicate server to an lzx
-  * app without forcing the app to make a request
-  * 
-  * @return String: The value for a key that appears in the request to the lps
-  * server
-  */
+ * This function returns values from the the request string that
+ * loaded the the lzx app. This can be used to communicate initialization 
+ * arguments to an lzx app without forcing it to load data.
+ *
+ * @param name: The name of the key whose value to return.  If null, 
+ * returns an Object containing all initialization arguments.
+ *
+ * @return: The value for a key that appears in the request string 
+ * that loaded the the lzx app or an Object containing all values 
+ */
 static function getInitArg (name) {
-    return global[name];
+    var initargs = global;
+    var id = LzSprite.__rootSprite._id
+    if (id) {
+        initargs = lz.embed.applications[id].initargs;
+    }
+    if (name == null) return initargs;
+    return initargs[name];
 }
 
 /**

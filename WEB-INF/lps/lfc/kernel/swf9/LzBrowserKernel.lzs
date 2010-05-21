@@ -183,20 +183,36 @@ static function getLoadURL () :String {
 }
 
 
-/**
-  * This function returns the value of a key in the request string that 
-  * requested the the lzx app. This can be used to communicate server to an lzx
-  * app without forcing the app to make a request
-  * 
-  * @return String: The value for a key that appears in the request to the lps
-  * server
-  */
-static function getInitArg (name:String) :* {
-  var parameters = LFCApplication.stage.loaderInfo.parameters;
-  if (parameters == null)
-    return null;
+static var __initargs:Object = null;
 
-  return parameters[name];
+/**
+ * This function returns values from the the request string that
+ * loaded the the lzx app. This can be used to communicate initialization 
+ * arguments to an lzx app without forcing it to load data.
+ *
+ * @param name: The name of the key whose value to return.  If null, 
+ * returns an Object containing all initialization arguments.
+ *
+ * @return: The value for a key that appears in the request string 
+ * that loaded the the lzx app or an Object containing all values 
+ */
+static function getInitArg (name=null) :* {
+  if (! LzBrowserKernel.__initargs) {
+    var newargs = LzBrowserKernel.callJS('eval', null, 'lz.embed.applications.' + LzBrowserKernel.getAppID() + ".initargs");
+
+    if (newargs) {
+      // cache callJS results
+      LzBrowserKernel.__initargs = newargs;
+    }
+  }
+
+  var args = LzBrowserKernel.__initargs || LFCApplication.stage.loaderInfo.parameters;
+  if (args == null) {
+    return;
+  } else if (name == null) {
+    return args;
+  }
+  return args[name];
 }
 
 /**
@@ -204,8 +220,8 @@ static function getInitArg (name:String) :* {
   * 
   * @return String: The id the app was started with
   */
-static function getAppID() :* {
-    return LzBrowserKernel.getInitArg('id');
+static function getAppID():String {
+  return LFCApplication.stage.loaderInfo.parameters.id
 }
 
 /**

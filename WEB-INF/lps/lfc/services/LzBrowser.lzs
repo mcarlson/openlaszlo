@@ -140,16 +140,17 @@ public final class LzBrowserService {
     }
 
     /**
-     * This function returns the value of a key in the request string that
-     * requested the the lzx app. This can be used to communicate server to an lzx
-     * app without forcing the app to make a request
+     * This function returns values from the the request string that
+     * loaded the the lzx app. This can be used to communicate initialization 
+     * arguments to an lzx app without forcing it to load data.
      *
-     * @param String name: The name of the key whose value to return
+     * @param name: The name of the key whose value to return.  If null, 
+     * returns an Object containing all initialization arguments.
      *
-     * @return String: The value for a key that appears in the request to the lps
-     * server
+     * @return: The value for a key that appears in the request string 
+     * that loaded the the lzx app or an Object containing all values 
      */
-    function getInitArg (name:String) :String {
+    function getInitArg (name=null) :* {
         return LzBrowserKernel.getInitArg(name);
     }
 
