@@ -1882,7 +1882,7 @@ LzSprite.quirks = {
   * @access private
   */
 LzSprite.__updateQuirks = function (browser) {
-    LzSprite.quirks.ignorespuriousff36events = browser.isFirefox && browser.OS == 'Mac' && browser.version == 3.6;
+    LzSprite.quirks.ignorespuriousff36events = browser.isFirefox && browser.OS == 'Mac' && browser.version == 3.6 && browser.subversion < 2;
 }
 
 // end pragma
