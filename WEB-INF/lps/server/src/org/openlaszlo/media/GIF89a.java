@@ -1,5 +1,5 @@
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2009-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -137,7 +137,10 @@ public class GIF89a {
                 size.setFrame(0.0, 0.0, Float.parseFloat(imgdesc.getAttribute("imageWidth")) * TWIP, Float.parseFloat(imgdesc.getAttribute("imageHeight")) * TWIP);
             }
             IIOMetadataNode gce = (IIOMetadataNode) imgdesc.getNextSibling();
-            float delay = Float.parseFloat(gce.getAttribute("delayTime"));
+
+            // Only add delay if we have more than one image
+            float delay = 0;
+            if (n > 1) delay = Float.parseFloat(gce.getAttribute("delayTime"));
 
             /*
             String filename = getBase(inputfile) + i + ".png";
