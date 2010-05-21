@@ -15,20 +15,41 @@
     </delete>
   </target>
 
+  <!-- Environment vars -->
+  <property environment="env"/>
+  <!-- OpenLaszlo version has to be set in my.properties property file -->
+  <property name="LPS_HOME" value="${env.LPS_HOME}" />
+  <!-- CLASSPATH for Laszlo compiler lzc -->
+  <path id="laszlo.compiler.classpath">
+    <fileset dir="${LPS_HOME}/3rd-party" includes="**/*.jar" />
+    <fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
+  </path>
+
+  <target name="solo-compile-file" description="Compile the file handed to this target by solo-compile-all-files">
+    <echo message="Compiling ${file}"/>
+    <echo message="arg: ${args} ${file}"/>
+    <echo message="Using LPS_HOME: ${LPS_HOME}"/>
+    <java classpathref="laszlo.compiler.classpath" classname="org.openlaszlo.compiler.Main" fork="yes">
+      <jvmarg value="-Xmx1024M"/>
+      <jvmarg value="-DLPS_HOME=${LPS_HOME}"/>
+      <arg line="${args} ${file}"/>
+    </java>
+  </target>
+
   <target name="build" description="Recompile the SOLO laszlo-explorer app">
-     <sequential>
-       <exec executable="../WEB-INF/lps/server/bin/lzc" >
-         <arg value="--runtime=swf10" />
-         <arg value="explore-nav.lzx" />
-       </exec>
-       <exec executable="../WEB-INF/lps/server/bin/lzc" >
-         <arg value="--runtime=swf8" />
-         <arg value="explore-nav.lzx" />
-       </exec>
-       <exec executable="../WEB-INF/lps/server/bin/lzc" >
-         <arg value="--runtime=dhtml" />
-         <arg value="explore-nav.lzx" />
-       </exec>
-     </sequential>
+    <sequential>
+      <antcall target="solo-compile-file">
+        <param name="file" value="explore-nav.lzx" />
+        <param name="args" value="--runtime=swf10" />
+      </antcall>
+      <antcall target="solo-compile-file">
+        <param name="file" value="explore-nav.lzx" />
+        <param name="args" value="--runtime=dhtml" />
+      </antcall>
+      <antcall target="solo-compile-file">
+        <param name="file" value="explore-nav.lzx" />
+        <param name="args" value="--runtime=swf8" />
+      </antcall>
+    </sequential>
   </target>
 </project>
