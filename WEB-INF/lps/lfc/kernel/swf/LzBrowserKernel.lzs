@@ -175,7 +175,7 @@ static function getLoadURL () {
  * loaded the the lzx app. This can be used to communicate initialization 
  * arguments to an lzx app without forcing it to load data.
  *
- * @param name: The name of the key whose value to return.  If null, 
+ * @param String name: The name of the key whose value to return.  If null, 
  * returns an Object containing all initialization arguments.
  *
  * @return: The value for a key that appears in the request string 
@@ -183,7 +183,7 @@ static function getLoadURL () {
  */
 static function getInitArg (name) {
     if (! LzBrowserKernel.__initargs) {
-        var newargs = LzBrowserKernel.callJS('eval', null, 'lz.embed.applications.' + _root.id + ".initargs");
+        var newargs = LzBrowserKernel.callJS('eval', null, 'lz.embed.applications["' + _root.id + '"].initargs');
 
         if (newargs) {
             // cache callJS results

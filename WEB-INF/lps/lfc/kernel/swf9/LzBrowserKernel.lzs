@@ -190,15 +190,15 @@ static var __initargs:Object = null;
  * loaded the the lzx app. This can be used to communicate initialization 
  * arguments to an lzx app without forcing it to load data.
  *
- * @param name: The name of the key whose value to return.  If null, 
+ * @param String name: The name of the key whose value to return.  If null, 
  * returns an Object containing all initialization arguments.
  *
  * @return: The value for a key that appears in the request string 
  * that loaded the the lzx app or an Object containing all values 
  */
-static function getInitArg (name=null) :* {
+static function getInitArg (name:String=null) :* {
   if (! LzBrowserKernel.__initargs) {
-    var newargs = LzBrowserKernel.callJS('eval', null, 'lz.embed.applications.' + LzBrowserKernel.getAppID() + ".initargs");
+    var newargs = LzBrowserKernel.callJS('eval', null, 'lz.embed.applications["' + LzBrowserKernel.getAppID() + '"].initargs');
 
     if (newargs) {
       // cache callJS results

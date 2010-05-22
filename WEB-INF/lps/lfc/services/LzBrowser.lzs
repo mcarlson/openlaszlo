@@ -144,13 +144,13 @@ public final class LzBrowserService {
      * loaded the the lzx app. This can be used to communicate initialization 
      * arguments to an lzx app without forcing it to load data.
      *
-     * @param name: The name of the key whose value to return.  If null, 
+     * @param String name: The name of the key whose value to return.  If null, 
      * returns an Object containing all initialization arguments.
      *
      * @return: The value for a key that appears in the request string 
      * that loaded the the lzx app or an Object containing all values 
      */
-    function getInitArg (name=null) :* {
+    function getInitArg (name:String=null) :* {
         return LzBrowserKernel.getInitArg(name);
     }
 
