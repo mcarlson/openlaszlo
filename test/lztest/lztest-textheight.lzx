@@ -11,6 +11,11 @@
         <text name="thetext" multiline="true" width="110" text="${parent.posttext}"/>
     </class>
   
+    <font name="myfont">
+        <face src="ariosor.ttf" style="plain"/>
+        <face src="ariosob.ttf" style="bold"/>
+    </font>
+
     <dataset name="testds">
         <text><![CDATA[What was this guy thinking?  I mean to each their own, but I can't figure out someone would think this would look good.  You've got to view the <a href="http://www.flickr.com/photo_zoom.gne?id=174062027&size=l">Large Version</a> of this photo to take it all in...
 
@@ -76,6 +81,12 @@ I'm sure he paid a good bit for the airbrush work, wow...  and on a tan car at t
         <!-- from LPP-7586 -->
         <text id="t17" multiline="false" width="50" bgcolor="#aeaeae" />
         <text id="t18" multiline="true" width="50" bgcolor="#aeaeae" />
+
+        <text id="lpp6374" width="30" multiline="true">
+            <handler name="oninit">
+                this.setAttribute('text', 'The white zone is for immediate loading and unloading of passengers only. No parking.');
+            </handler>
+        </text>
     </view>
 
     <view name="inputtexts">
@@ -101,6 +112,13 @@ F</pre></inputtext>
         <inputtext multiline="false" id="it9" width="50" bgcolor="#aeaeae"/>
     </view>    
 
+    <view name="lpp8313" font="myfont" bgcolor="yellow">
+        <simplelayout/>
+        <text onclick="this.setAttribute('text', 'Measure!')" bgcolor="red">Custom font</text>
+        <text onclick="this.setAttribute('text', 'Measure!')" bgcolor="red">Custom font once again!</text>
+        <text fontstyle="bold" onclick="this.setAttribute('text', 'Measure!')" bgcolor="red">Bold custom font!</text>
+        <text fontstyle="bold" onclick="this.setAttribute('text', 'Measure!')" bgcolor="red">Bold custom font again!</text>
+    </view>
 <script><![CDATA[
 
 var textSizeSuite = new LzTestSuite("Text Size Test Suite"); 
@@ -161,7 +179,9 @@ textSizeSuite.testTextHeight = function () {
     t16.setAttribute('fontsize',50);
     LzTestManager.assertWithin(64, t16.height, fudgefactor, "text16 height");
 
-    LzTestManager.assertWithin(t17.height, t18.height, fudgefactor, "text18 height");
+    LzTestManager.assertWithin(t17.height, t18.height, fudgefactor, "text17 height");
+    LzTestManager.assertWithin(17, t18.height, fudgefactor, "text18 height");
+    LzTestManager.assertWithin(290, lpp6374.height, fudgefactor, "EXPECTED DHTML (swf and dhtml text wrapping are not the same): lpp6374 height");
 }
 
 textSizeSuite.testInputtextHeight = function () {
@@ -230,6 +250,14 @@ textSizeSuite.testInputtextWidth = function () {
     LzTestManager.assertWithin(70, it6.width, fudgefactor, "EXPECTED (inputtext no longer resizes more than once): inputtext6 width");
 
     LzTestManager.assertWithin(350, it7.width, fudgefactor, "multiline7 inputtext width");
+    LzTestManager.assertWithin(120, c.width, fudgefactor, "inputtext c width");
+    LzTestManager.assertWithin(120, d.width, fudgefactor, "inputtext d width");
+    LzTestManager.assertWithin(120, e.width, fudgefactor, "inputtext e width");
+    LzTestManager.assertWithin(161, f.width, fudgefactor, "inputtext f width");
+    LzTestManager.assertWithin(120, g.width, fudgefactor, "inputtext g width");
+    LzTestManager.assertWithin(164, h.width, fudgefactor, "EXPECTED (inputtext no longer resizes more than once): inputtext h width");
+    LzTestManager.assertWithin(50, t18.width, fudgefactor, "text18 width");
+    LzTestManager.assertWithin(30, lpp6374.width, fudgefactor, "width");
 }
 
 textSizeSuite.addTest(textSizeSuite.testJustText); 
