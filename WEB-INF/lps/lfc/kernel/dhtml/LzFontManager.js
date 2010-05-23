@@ -121,7 +121,7 @@ LzFontManager.__measurefontdiv = function(mdiv, width, height, url){
         // Mark as timed out and warn
         fontloadstate.state = 3;
         if ($debug) {
-            Debug.warn('Timeout or error loading font ', url);
+            Debug.warn("Timeout loading font %w: the font size didn't change.", url);
         }
     } else {
         // Mark as loaded

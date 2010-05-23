@@ -451,7 +451,12 @@ LzTextSprite.prototype.getTextDimension = function (dimension) {
       if (this._lineHeight) {
         return this._lineHeight;
       }
-      string = 'Yq_gy"9;';
+      if (LzSprite.prototype.quirks['textmeasurementalphastring']) {
+        // See LPP-9005 - use only letters - no punctuation or numbers
+        string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      } else {
+        string = 'Yq_gy"9;';
+      }
       break;
     case 'height':
       width = this.CSSDimension(this.width);

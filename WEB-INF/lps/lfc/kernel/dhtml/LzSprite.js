@@ -622,6 +622,7 @@ LzSprite.quirks = {
     ,keyboardlistentotop_in_frame: false
     ,forcemeasurescrollheight: false
     ,resize2dcanvas: false
+    ,textmeasurementalphastring: false
 }
 
 LzSprite.prototype.capabilities = {
@@ -847,6 +848,8 @@ LzSprite.__updateQuirks = function () {
             // Opera uses "\r\n" for newlines, which gives different text-lengths
             // compared to SWF and to other browsers
             quirks['text_ie_carriagereturn'] = true;
+            // compared to SWF and to other browsers
+            quirks['textmeasurementalphastring'] = true;
         } else if (browser.isFirefox) {
             LzSprite.__styleNames.borderRadius = 'MozBorderRadius';
             LzSprite.__styleNames.boxShadow = 'MozBoxShadow';
