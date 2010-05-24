@@ -970,9 +970,7 @@ LzSprite.prototype.setRotation = function ( v ){
     return true;
 }
 
-LzSprite.prototype.predestroy = function(){
-    this.bringToFront();
-}
+LzSprite.prototype.predestroy = LzSprite.prototype.bringToFront;
 
 /**
   * This method should remove a view, its media, and any of its subviews.
@@ -1392,13 +1390,13 @@ LzSprite.prototype.updatePlayStatus = function (ignore){
     var c = mc._currentframe;
     if ( c != null && this.frame != c ){
         this.frame = c;
-        this.owner.resourceevent('frame', this.frame);
+        this.owner.resourceevent('frame', c);
     }
 
     var tf = mc._totalframes;
     if ( tf != null && this.totalframes != tf ){
         this.totalframes = tf;
-        this.owner.resourceevent('totalframes', this.totalframes);
+        this.owner.resourceevent('totalframes', tf);
     }
 
     if ( this.playing && this.frame == this.totalframes &&
@@ -1536,7 +1534,12 @@ LzSprite.prototype.stop = function (f, rel){
     if (this.backgroundrepeat) this.__updateBackgroundRepeat();
 
     if ( this.playing ) this.owner.resourceevent('stop', null, true);
+    var weretracking = this.__LZtracking;
     this.stopTrackPlay();
+    if (weretracking == false) {
+        // if we weren't tracking, we need to ensure onframe fires, see LPP-8975
+        this.updatePlayStatus();
+    }
 }
 
 /**
