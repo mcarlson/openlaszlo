@@ -264,19 +264,28 @@ mixin LzFormatter {
    * Literals (7.8.4).
    * @access private
    */
-  static var singleEscapeCharacters = [
-    '\\b', '\b',
-    '\\t', '\t',
-    '\\n', '\n',
-    // @devnote IE doesn't implement '\v', use hexcode instead, but cannot
-    // use '\x0B' because compiler replaces it back to '\v' (LPP-3623)
-    '\\v', String.fromCharCode(0x0B),
-    '\\f', '\f',
-    '\\r', '\r',
-    '\\"', '\"',
-    '\\\'', '\'',
-    '\\\\', '\\'
-  ];
+  static var singleEscapeCharacters = (function (np) {
+      var result = [];
+      for (var i = 0, l = np.length; i < l; i += 2) {
+        var rep = np[i];
+        var ch = np[i+1];
+        result[ch.charCodeAt(0)] = rep;
+      }
+      return result;
+    })(
+      [
+        '\\b', '\b',
+        '\\t', '\t',
+        '\\n', '\n',
+        // @devnote IE doesn't implement '\v', use hexcode instead, but cannot
+        // use '\x0B' because compiler replaces it back to '\v' (LPP-3623)
+        '\\v', String.fromCharCode(0x0B),
+        '\\f', '\f',
+        '\\r', '\r',
+        '\\"', '\"',
+        '\\\'', '\'',
+        '\\\\', '\\'
+       ]);
 
   /**
    * Escape a string
@@ -293,14 +302,12 @@ mixin LzFormatter {
    * runtimes do not support RegEx
    */
   function stringEscape (s:String, quoted:Boolean=false) {
-    // Have to handle '\\' first.
-    s = s.split('\\').join('\\\\');
     // FIXME [2009-12-13 ptw] (LPP-8666)
     if ($as3) {
-      var np = singleEscapeCharacters;
+      var sec = singleEscapeCharacters;
     } else {
-      var np = LzFormatter.singleEscapeCharacters;
-    }      
+      var sec = LzFormatter.singleEscapeCharacters;
+    }
     // quotes are skipped and ignored unless quoted
     var skip = '"';
     var quote = "";
@@ -317,14 +324,24 @@ mixin LzFormatter {
         quote = "'";
       }
     }
-    for (var i = 0, l = np.length; i < l; i += 2) {
-      var rep = np[i];
-      var ch = np[i+1];
-      if ((ch != '\\') && (ch != skip) && (ch != ignore)) {
-        s = s.split(ch).join(rep);
+    var output = '';
+    // escape control codes
+    for (var i = 0, l = s.length; i < l; i++) {
+      var ch = s.charAt(i);
+      var cc = s.charCodeAt(i);
+      if (cc in sec) {
+        if ((ch != skip) && (ch != ignore)) {
+          output += sec[cc];
+        } else {
+          output += ch;
+        }
+      } else if (((cc >= 0) && (cc <= 0x1F)) || ((cc >= 0x7f) && (cc <= 0x9f))) {
+        output += '\\x' + this.pad(cc,2,0,'0','',16);
+      } else {
+        output += ch;
       }
     }
-    return quote + s + quote;
+    return quote + output + quote;
   };
 
   /**

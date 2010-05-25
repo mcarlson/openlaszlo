@@ -1,6 +1,6 @@
 <library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
   <include href="lzunit" />
@@ -11,7 +11,7 @@
              this.dateString = this.date.toString();
              this.array = [1, 2, 3];
              this.object = {one: 1, two: 'too', 3: 'three'};
-             this.testString = '"String", with \'\\\' escapes';
+             this.testString = '"String", with \'\\\' \x01\u0008!';
       ]]>
     </method>
 
@@ -165,20 +165,20 @@
                assertEquals('true                          ', (textFormatTest.format('%-30w', true), textFormatTest.text));
                assertEquals('true                          ', (textFormatTest.format('%-30.5s', true), textFormatTest.text));
                assertEquals('true                          ', (textFormatTest.format('%-30.5w', true), textFormatTest.text));
-               assertEquals('"String", with \'\\\' escapes', (textFormatTest.format('%s', this.testString), textFormatTest.text));
-               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%w', this.testString), textFormatTest.text));
+               assertEquals('"String", with \'\\\' \x01\b!', (textFormatTest.format('%s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' \\x01\\b!'", (textFormatTest.format('%w', this.testString), textFormatTest.text));
                assertEquals('"Stri', (textFormatTest.format('%.5s', this.testString), textFormatTest.text));
 //                assertEquals('"Stri', (textFormatTest.format('%.5w', this.testString), textFormatTest.text));
-               assertEquals('    "String", with \'\\\' escapes', (textFormatTest.format('%30s', this.testString), textFormatTest.text));
-               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%30w', this.testString), textFormatTest.text));
+               assertEquals('    "String", with \'\\\' \x01\b!', (textFormatTest.format('%30s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' \\x01\\b!'", (textFormatTest.format('%30w', this.testString), textFormatTest.text));
                assertEquals('                         "Stri', (textFormatTest.format('%30.5s', this.testString), textFormatTest.text));
 //                assertEquals('                         "Stri', (textFormatTest.format('%30.5w', this.testString), textFormatTest.text));
-               assertEquals('"String", with \'\\\' escapes', (textFormatTest.format('%-s', this.testString), textFormatTest.text));
-               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%-w', this.testString), textFormatTest.text));
+               assertEquals('"String", with \'\\\' \x01\b!', (textFormatTest.format('%-s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' \\x01\\b!'", (textFormatTest.format('%-w', this.testString), textFormatTest.text));
                assertEquals('"Stri', (textFormatTest.format('%-.5s', this.testString), textFormatTest.text));
 //                assertEquals('"Stri', (textFormatTest.format('%-.5w', this.testString), textFormatTest.text));
-               assertEquals('"String", with \'\\\' escapes    ', (textFormatTest.format('%-30s', this.testString), textFormatTest.text));
-               assertEquals("'\"String\", with \\'\\\\\\' escapes'", (textFormatTest.format('%-30w', this.testString), textFormatTest.text));
+               assertEquals('"String", with \'\\\' \x01\b!    ', (textFormatTest.format('%-30s', this.testString), textFormatTest.text));
+               assertEquals("'\"String\", with \\'\\\\\\' \\x01\\b!'", (textFormatTest.format('%-30w', this.testString), textFormatTest.text));
                assertEquals('"Stri                         ', (textFormatTest.format('%-30.5s', this.testString), textFormatTest.text));
 //                assertEquals('"Stri                         ', (textFormatTest.format('%-30.5w', this.testString), textFormatTest.text));
                assertEquals(this.dateString, (textFormatTest.format('%s', this.date), textFormatTest.text));
