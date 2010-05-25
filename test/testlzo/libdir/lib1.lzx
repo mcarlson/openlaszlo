@@ -1,0 +1,13 @@
+<library>
+  <include href="myinc.lzx"/>
+  <class name="foo" bgcolor="#cccccc">
+    <attribute name="flavor" type="string"/>
+    <simplelayout/>
+    <text fgcolor="red" text="class foo from lib1"/>
+    <text text="${'has value = '+parent.flavor}"/>
+  </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

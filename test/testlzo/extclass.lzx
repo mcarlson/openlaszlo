@@ -1,0 +1,14 @@
+<library>
+
+  <class name="thebase">
+    <attribute name="pi" value="3.1415"/>
+    <method name="mymethod">
+      Debug.info('thebase.mymethod called');
+    </method>
+  </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

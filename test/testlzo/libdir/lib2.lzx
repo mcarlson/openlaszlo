@@ -1,0 +1,18 @@
+<library>
+
+  <include href="../extclass.lzx"/>
+  <class name="bar" extends="thebase">
+    <attribute name="color" type="color"/>
+    <view width="40" height="40" bgcolor="${parent.color}"/>
+    <text>lib2</text>
+    <method name="mymethod">
+      Debug.info("called bar.mymethod");
+      super.mymethod();
+    </method>
+  </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
