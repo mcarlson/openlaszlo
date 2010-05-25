@@ -112,6 +112,9 @@ public class LzTextSprite extends LzSprite {
                 this._ignoreclick = false;
                 e.stopPropagation();
             } else if (this.clickable) {
+                if (type == MouseEvent.MOUSE_OVER) {
+                    setTextfieldCursor(this);
+                }
                 // clickable -> handle mouse-event
                 if (type == MouseEvent.DOUBLE_CLICK) {
                     this.handleMouse_DOUBLE_CLICK(e);
@@ -141,6 +144,25 @@ public class LzTextSprite extends LzSprite {
             if (e.type != MouseEvent.MOUSE_UP || LzMouseKernel.__lastMouseDown === this) {
                 // don't cancel "onmouseup" if another sprite was selected
                 e.stopPropagation();
+            }
+        }
+
+        private function setTextfieldCursor (lzsprite:LzSprite) :void {
+            var cursor:String = null;
+            if (lzsprite.clickable) {
+                var usehand:Boolean = (lzsprite.showhandcursor == null) ?
+                    LzMouseKernel.showhandcursor : lzsprite.showhandcursor;
+                // need to respect global cursor setting
+                if (usehand && ! LzMouseKernel.hasGlobalCursor) {
+                    if ($swf10) { cursor = MouseCursor.BUTTON; }
+                }
+            }
+            if (lzsprite.cursorResource != null) {
+                cursor = lzsprite.cursorResource;
+            }
+            if (cursor != null) {
+                this._usecursor = true;
+                LzMouseKernel.setCursorLocal(cursor);
             }
         }
 
@@ -174,32 +196,8 @@ public class LzTextSprite extends LzSprite {
 
                     // display hand-cursor or custom cursor
                     if (type == MouseEvent.MOUSE_OVER) {
-                        var cursor:String = null;
-                        if (obj is Sprite) {
-                            var sprite:Sprite = Sprite(obj);
-                            if (sprite.buttonMode) {
-                                var usehand:Boolean = false;
-                                if (sprite is LzSprite) {
-                                    var lzsprite = sprite as LzSprite;
-                                    usehand = (lzsprite.showhandcursor == null) ?
-                                        LzMouseKernel.showhandcursor : lzsprite.showhandcursor;
-                                    // need to respect global cursor setting
-                                    if (usehand && ! LzMouseKernel.hasGlobalCursor) {
-                                        if ($swf10) { cursor = MouseCursor.BUTTON; }
-                                    }
-                                }
-                            }
-
-                            if (sprite is LzSprite) {
-                                var lzsprite:LzSprite = LzSprite(sprite);
-                                if (lzsprite.cursorResource != null) {
-                                    cursor = lzsprite.cursorResource;
-                                }
-                            }
-                        }
-                        if (cursor != null) {
-                            this._usecursor = true;
-                            LzMouseKernel.setCursorLocal(cursor);
+                        if (obj is LzSprite) {
+                            setTextfieldCursor(LzSprite(obj));
                         }
                     }
 
