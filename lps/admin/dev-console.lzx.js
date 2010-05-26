@@ -93,7 +93,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzCanvas,["displayName","<anonymous extends='canvas'>","attributes",new LzInheritedHash(LzCanvas.attributes)]);canvas=new $lzc$class_m2(null,{$delegates:["oninit","$m1",null],__LZproxied:"true",appListenerName:void 0,app_backtrace:void 0,app_console_debug:void 0,app_debug:void 0,app_floating_window:void 0,app_fullpath:void 0,app_lps_root:void 0,app_lzt:void 0,app_opt_exists:void 0,app_opt_url:void 0,app_query:void 0,app_runtime:void 0,app_uid:void 0,app_unopt_url:void 0,app_url:void 0,app_usemastersprite:void 0,appbuilddate:"2010-05-21T20:27:38Z",bgcolor:8750489,consolelistenerName:void 0,copyright:"Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms.",embedfonts:true,font:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"16421 /Users/maxcarlson/openlaszlo/trunk-clean",lpsbuilddate:"2010-05-21T18:53:26Z",lpsrelease:"Latest",lpsversion:"5.0.x",proxied:false,receivingLC:void 0,runtime:"dhtml",runtime_dhtml_enabled:false,runtime_swf10_enabled:false,runtime_swf8_enabled:false,runtime_swf9_enabled:false,width:"100%"});;lz.colors.offwhite=15921906;;lz.colors.gray10=1710618;;lz.colors.gray20=3355443;;lz.colors.gray30=5066061;;lz.colors.gray40=6710886;;lz.colors.gray50=8355711;;lz.colors.gray60=10066329;;lz.colors.gray70=11776947;;lz.colors.gray80=13421772;;lz.colors.gray90=15066597;;lz.colors.iceblue1=3298963;;lz.colors.iceblue2=5472718;;lz.colors.iceblue3=12240085;;lz.colors.iceblue4=14017779;;lz.colors.iceblue5=15659509;;lz.colors.palegreen1=4290113;;lz.colors.palegreen2=11785139;;lz.colors.palegreen3=12637341;;lz.colors.palegreen4=13888170;;lz.colors.palegreen5=15725032;;lz.colors.gold1=9331721;;lz.colors.gold2=13349195;;lz.colors.gold3=15126388;;lz.colors.gold4=16311446;;lz.colors.sand1=13944481;;lz.colors.sand2=14276546;;lz.colors.sand3=15920859;;lz.colors.sand4=15986401;;lz.colors.ltpurple1=6575768;;lz.colors.ltpurple2=12038353;;lz.colors.ltpurple3=13353453;;lz.colors.ltpurple4=15329264;;lz.colors.grayblue=12501704;;lz.colors.graygreen=12635328;;lz.colors.graypurple=10460593;;lz.colors.ltblue=14540287;;lz.colors.ltgreen=14548957;;{
+}],LzCanvas,["displayName","<anonymous extends='canvas'>","attributes",new LzInheritedHash(LzCanvas.attributes)]);canvas=new $lzc$class_m2(null,{$delegates:["oninit","$m1",null],__LZproxied:"true",appListenerName:void 0,app_backtrace:void 0,app_console_debug:void 0,app_debug:void 0,app_floating_window:void 0,app_fullpath:void 0,app_lps_root:void 0,app_lzt:void 0,app_opt_exists:void 0,app_opt_url:void 0,app_query:void 0,app_runtime:void 0,app_uid:void 0,app_unopt_url:void 0,app_url:void 0,app_usemastersprite:void 0,appbuilddate:"2010-05-26T11:49:08Z",bgcolor:8750489,consolelistenerName:void 0,copyright:"Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms.",embedfonts:true,font:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"16484 /Users/ptw/OpenLaszlo/trunk",lpsbuilddate:"2010-05-26T00:33:16Z",lpsrelease:"Latest",lpsversion:"5.0.x",proxied:false,receivingLC:void 0,runtime:"dhtml",runtime_dhtml_enabled:false,runtime_swf10_enabled:false,runtime_swf8_enabled:false,runtime_swf9_enabled:false,width:"100%"});;lz.colors.offwhite=15921906;;lz.colors.gray10=1710618;;lz.colors.gray20=3355443;;lz.colors.gray30=5066061;;lz.colors.gray40=6710886;;lz.colors.gray50=8355711;;lz.colors.gray60=10066329;;lz.colors.gray70=11776947;;lz.colors.gray80=13421772;;lz.colors.gray90=15066597;;lz.colors.iceblue1=3298963;;lz.colors.iceblue2=5472718;;lz.colors.iceblue3=12240085;;lz.colors.iceblue4=14017779;;lz.colors.iceblue5=15659509;;lz.colors.palegreen1=4290113;;lz.colors.palegreen2=11785139;;lz.colors.palegreen3=12637341;;lz.colors.palegreen4=13888170;;lz.colors.palegreen5=15725032;;lz.colors.gold1=9331721;;lz.colors.gold2=13349195;;lz.colors.gold3=15126388;;lz.colors.gold4=16311446;;lz.colors.sand1=13944481;;lz.colors.sand2=14276546;;lz.colors.sand3=15920859;;lz.colors.sand4=15986401;;lz.colors.ltpurple1=6575768;;lz.colors.ltpurple2=12038353;;lz.colors.ltpurple3=13353453;;lz.colors.ltpurple4=15329264;;lz.colors.grayblue=12501704;;lz.colors.graygreen=12635328;;lz.colors.graypurple=10460593;;lz.colors.ltblue=14540287;;lz.colors.ltgreen=14548957;;{
 Class.make("$lzc$class_basefocusview",["active",void 0,"$lzc$set_active",function($0){
 with(this){
 setActive($0)
@@ -172,7 +172,7 @@ this.setAttribute("height",$1[3])
 this.setAttribute("height",this.target.height)
 }}},"$m3",function(){
 with(this){
-var $0=lz.Focus;return $0
+return lz.Focus
 }},"$m4",function($0){
 with(this){
 this.setActive(lz.Focus.focuswithkey);if($0){
@@ -383,7 +383,7 @@ canvas.__focus=new (lz[$0])(canvas);canvas.__focus.reset()
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["init"]||this.nextMethod(arguments.callee,"init")).call(this)
 }},"_lastkeydown",void 0,"upkeydel",void 0,"$m25",function(){
 with(this){
-var $0=lz.Keys;return $0
+return lz.Keys
 }},"dispatchKeyDown",function($0){
 with(this){
 var $1=false;if($0==32){
@@ -427,7 +427,7 @@ if(this.defaults[$1]==$0){
 this.defaults.splice($1,1);this.checkDefault(lz.Focus.getFocus());return
 }}}},"$m26",function(){
 with(this){
-var $0=lz.Focus;return $0
+return lz.Focus
 }},"checkDefault",function($0){
 with(this){
 if(!($0 instanceof lz.basecomponent)||!$0.doesenter){
@@ -441,7 +441,7 @@ this.currentdefault.setAttribute("hasdefault",false)
 $0.setAttribute("hasdefault",true)
 }}},"$m27",function(){
 with(this){
-var $0=lz.ModeManager;return $0
+return lz.ModeManager
 }},"$m28",function($0){
 with(this){
 switch(arguments.length){
@@ -793,7 +793,7 @@ this.showOver()
 }else this.showUp()
 },"$m48",function(){
 with(this){
-var $0=lz.ModeManager;return $0
+return lz.ModeManager
 }},"$m49",function($0){
 if($0&&(this._msdown||this._msin)&&!this.childOf($0)){
 this._msdown=false;this._msin=false;this._callShow()
@@ -2685,14 +2685,14 @@ with(this){
 this.setAttribute("x",rg_runtime.x+rg_runtime.width+14)
 }},"$m171",function(){
 with(this){
-var $0=cb_backtrace;return $0
+return cb_backtrace
 }},"$m172",function($0){
 with(this){
 if(cb_backtrace.value){
 cb_debug.setAttribute("value",true)
 }}},"$m173",function(){
 with(this){
-var $0=cb_debug;return $0
+return cb_debug
 }},"$m174",function($0){
 with(this){
 if(cb_debug.value==false){
