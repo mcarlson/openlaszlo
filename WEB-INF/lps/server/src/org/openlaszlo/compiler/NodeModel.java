@@ -321,7 +321,7 @@ public class NodeModel implements Cloneable {
       }
       String installer = "setAttribute";
       String prefix ="";
-      String body = "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n";
+      String body = "#beginAttribute" + srcloc + value + CompilerUtils.endSourceLocationDirective + "#endAttribute";
       String suffix = "";
       String prettyBinderName = name + "='$";
 
@@ -465,7 +465,7 @@ public class NodeModel implements Cloneable {
           // here...
           return value;
         } else {
-          return "\n#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective +"\n#endAttribute\n";
+          return "#beginAttribute\n" + srcloc + value + CompilerUtils.endSourceLocationDirective +"#endAttribute";
         }
       } else {
         throw new CompilationError("invalid when value '" +
@@ -1577,15 +1577,7 @@ solution =
             String pragmas = "";
             // Note: for debugging, will be ignored by non-debug
             pragmas += "#pragma " + ScriptCompiler.quote("userFunctionName=get " + reference);
-            String refbody = "var $lzc$reference = (" +
-              "#beginAttribute\n" +
-              reference + CompilerUtils.endSourceLocationDirective + "\n#endAttribute\n);\n" +
-              "if ($debug) {\n" +
-              "  if (! ($lzc$reference is LzEventable)) {\n" +
-              "    Debug.error('Invalid event sender: " + reference + " => %w (for event " + event + ")', $lzc$reference);\n" +
-              "  }\n" +
-              "}\n" +
-              "return $lzc$reference;\n";
+            String refbody = "return (#beginAttribute" + srcloc + reference + CompilerUtils.endSourceLocationDirective + "#endAttribute);";
             Function referencefn;
             if (canHaveMethods) {
                 referencefn = new Method(referencename, "", "", pragmas, refbody, srcloc, null);
