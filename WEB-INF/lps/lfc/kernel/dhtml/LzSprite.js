@@ -484,8 +484,8 @@ LzSprite.__defaultStyles = {
         ,borderWidth: 0
     },
     lzimg: {
-        position: 'absolute',
-        backgroundRepeat: 'no-repeat'
+        position: 'absolute'
+        ,backgroundRepeat: 'no-repeat'
     },
     lzgraphicscanvas: {
         position: 'absolute'
@@ -666,6 +666,7 @@ LzSprite.prototype.capabilities = {
 LzSprite.__updateQuirks = function () {
     var quirks = LzSprite.quirks;
     var capabilities = LzSprite.prototype.capabilities;
+    var stylenames = LzSprite.__styleNames;
     var defaultStyles = LzSprite.__defaultStyles;
 
     if (window['lz'] && lz.embed && lz.embed.browser) {
@@ -775,11 +776,11 @@ LzSprite.__updateQuirks = function () {
             // Force hasLayout for lzTextSizeCache in IE
             defaultStyles['#lzTextSizeCache'].zoom = 1;
         } else if (browser.isSafari || browser.isChrome) {
-            LzSprite.__styleNames.borderRadius = 'WebkitBorderRadius';
-            LzSprite.__styleNames.boxShadow = 'WebkitBoxShadow';
-            LzSprite.__styleNames.userSelect = 'WebkitUserSelect';
-            LzSprite.__styleNames.transform = 'WebkitTransform';
-            LzSprite.__styleNames.transformOrigin = 'WebkitTransformOrigin';
+            stylenames.borderRadius = 'WebkitBorderRadius';
+            stylenames.boxShadow = 'WebkitBoxShadow';
+            stylenames.userSelect = 'WebkitUserSelect';
+            stylenames.transform = 'WebkitTransform';
+            stylenames.transformOrigin = 'WebkitTransformOrigin';
             // Safari won't show canvas tags whose parent is display: none
             quirks['safari_visibility_instead_of_display'] = true;
             quirks['absolute_position_accounts_for_offset'] = true;
@@ -851,12 +852,12 @@ LzSprite.__updateQuirks = function () {
             // compared to SWF and to other browsers
             quirks['textmeasurementalphastring'] = true;
         } else if (browser.isFirefox) {
-            LzSprite.__styleNames.borderRadius = 'MozBorderRadius';
-            LzSprite.__styleNames.boxShadow = 'MozBoxShadow';
-            LzSprite.__styleNames.userSelect = 'MozUserSelect';
+            stylenames.borderRadius = 'MozBorderRadius';
+            stylenames.boxShadow = 'MozBoxShadow';
+            stylenames.userSelect = 'MozUserSelect';
             // https://developer.mozilla.org/en/CSS/-moz-transform
-            LzSprite.__styleNames.transform = 'MozTransform';
-            LzSprite.__styleNames.transformOrigin = 'MozTransformOrigin';
+            stylenames.transform = 'MozTransform';
+            stylenames.transformOrigin = 'MozTransformOrigin';
 
             // DOM operations on blurring element break focus (LPP-7786)
             // https://bugzilla.mozilla.org/show_bug.cgi?id=481468
@@ -923,11 +924,11 @@ LzSprite.__updateQuirks = function () {
         }
         
         // Turn off image selection - see LPP-8311
-        defaultStyles.lzimg[LzSprite.__styleNames.userSelect] = 'none';
+        defaultStyles.lzimg[stylenames.userSelect] = 'none';
 
         if (capabilities.rotation) {
             // Rotation's origin in CSS is width/2 and height/2 as default
-            defaultStyles.lzdiv[LzSprite.__styleNames.transformOrigin] = '0 0';
+            defaultStyles.lzdiv[stylenames.transformOrigin] = '0 0';
         }
 
         // See LPP-8696
@@ -1339,7 +1340,7 @@ LzSprite.prototype.__setBGImage = function (url){
 LzSprite.prototype.__createIMG = function (){
     if (! this.__LZimg) {
         var im = document.createElement('img');
-        im.className = 'lzdiv';
+        im.className = 'lzimg';
         im.owner = this;
         im.src = LzSprite.blankimage;
         this.__bindImage(im);
