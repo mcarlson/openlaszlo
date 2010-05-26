@@ -6,6 +6,8 @@
 
 
 <project name="laszlo-explorer" default="build" basedir=".">
+  <import file="../build-tools/build-opt.xml" />
+
   <target name="clean">
     <delete failonerror="false">
       <fileset dir=".">
@@ -17,21 +19,27 @@
 
   <!-- Environment vars -->
   <property environment="env"/>
-  <!-- OpenLaszlo version has to be set in my.properties property file -->
-  <property name="LPS_HOME" value="${env.LPS_HOME}" />
-  <!-- CLASSPATH for Laszlo compiler lzc -->
-  <path id="laszlo.compiler.classpath">
-    <fileset dir="${LPS_HOME}/3rd-party" includes="**/*.jar" />
-    <fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
-  </path>
 
-  <target name="solo-compile-file" description="Compile the file handed to this target by solo-compile-all-files">
+  <target name="init" depends="build-opt">
+    <!-- CLASSPATH for Laszlo compiler lzc -->
+    <path id="laszlo.compiler.classpath">
+      <fileset dir="${LPS_HOME}/3rd-party" includes="**/*.jar" />
+      <fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
+    </path>
+
+    <available property="has_compiler.Main"
+               classname="org.openlaszlo.compiler.Main"
+               classpathref="laszlo.compiler.classpath" />
+  </target>
+
+  <target name="solo-compile-file" depends="init" description="Compile the file handed to this target by solo-compile-all-files">
+    <fail unless="has_compiler.Main" message="Can't find org.openlaszlo.compiler.Main in classpath." />
     <echo message="Compiling ${file}"/>
     <echo message="arg: ${args} ${file}"/>
     <echo message="Using LPS_HOME: ${LPS_HOME}"/>
     <java classpathref="laszlo.compiler.classpath" classname="org.openlaszlo.compiler.Main" fork="yes">
+      <sysproperty key="LPS_HOME" value="${LPS_HOME}" />
       <jvmarg value="-Xmx1024M"/>
-      <jvmarg value="-DLPS_HOME=${LPS_HOME}"/>
       <arg line="${args} ${file}"/>
     </java>
   </target>
