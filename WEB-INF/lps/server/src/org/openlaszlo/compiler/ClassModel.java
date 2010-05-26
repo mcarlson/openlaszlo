@@ -12,7 +12,6 @@ import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptClass;
 import org.openlaszlo.sc.Function;
 import org.openlaszlo.xml.internal.MissingAttributeException;
-import org.openlaszlo.utils.StringUtils;
 
 public class ClassModel implements Comparable {
     protected final ViewSchema schema;
@@ -542,8 +541,8 @@ public class ClassModel implements Comparable {
     String block = nodeModel.passthroughBlock;
     if (block != null) {
       block = "#passthrough (toplevel:true) {" + block + "}#\n";
-      if (nodeModel.passthroughBlockRuntime != null) {
-        block = "if ($" + nodeModel.passthroughBlockRuntime + ") {\n"+block+"}\n";
+      if (nodeModel.passthroughBlockWhen != null) {
+        block = "if (" + nodeModel.passthroughBlockWhen + ") {\n"+block+"}\n";
       }
       classBody += block;
     }

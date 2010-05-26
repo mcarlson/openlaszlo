@@ -66,7 +66,7 @@ public class NodeModel implements Cloneable {
     NodeModel     datapath = null;
 
     String passthroughBlock = null;
-    String passthroughBlockRuntime = null;
+    String passthroughBlockWhen = null;
 
     /** [eventName: String, methodName: String, Function] */
     List delegateList = new Vector();
@@ -1476,12 +1476,15 @@ solution =
      */
     void addPassthroughElement(Element element) {
       passthroughBlock = element.getText();
-      String ptr = element.getAttributeValue("runtime");
-      if (ptr != null) {
-        if ("".equals(ptr.trim())) {
-          throw new CompilationError("runtime attribute for passthrough element must be non-empty value", element);
+      String when = element.getAttributeValue("when");
+      if (when != null) {
+        when = when.trim();
+        if (!ScriptCompiler.isIdentifier(when)) {
+          throw new CompilationError(
+            "'when' attribute for passthrough element must be a valid javascript identifier",
+            element);
         }
-        passthroughBlockRuntime = ptr;
+        passthroughBlockWhen = when;
       }
     }
 
