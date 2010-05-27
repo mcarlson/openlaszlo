@@ -476,7 +476,14 @@ public class Compiler {
               canvas.setBacktrace(env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY));
               canvas.setSourceAnnotations(env.getBooleanProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY));
               // set file path (relative to webapp) in canvas
-              canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
+              String path = FileUtils.relativePath(file, LPS.HOME());
+              canvas.setFilePath(path);
+              String application = FileUtils.getBase(file.getName());
+              // Approximate ServletContext.getContextPath()
+              String context = new File(LPS.HOME()).getName() +
+                FileUtils.toURLPath(FileUtils.getBase(path));
+              // Create a meaningful default title
+              canvas.setTitle(canvas.getTitle() + ": " + application + " (" + context + ")");
             }
 
             if (linking) {

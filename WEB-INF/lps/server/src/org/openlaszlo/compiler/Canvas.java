@@ -44,9 +44,6 @@ public class Canvas implements java.io.Serializable {
     /** Default canvas backgorund color */
     private static final int DEFAULT_BGCOLOR = 0xFFFFFF;
 
-    /** Default canvas backgorund color */
-    private static final String DEFAULT_TITLE = "OpenLaszlo Application";
-
     /** Default canvas id */
     private static final String DEFAULT_ID = "lzapp";
 
@@ -116,7 +113,7 @@ public class Canvas implements java.io.Serializable {
     private FontInfo mFontInfo = null;
     
     /** Title for the canvas. */
-    private String mTitle = DEFAULT_TITLE;
+    private String mTitle = "OpenLaszlo " + LPS.getVersion();
     
     /** Version of the flash player file format which we compile to **/
     private String mRuntime = LPS.getProperty("compiler.runtime.default", LPS.getRuntimeDefault() );
