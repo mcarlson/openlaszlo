@@ -1259,6 +1259,64 @@ public dynamic class LzNode extends LzEventable {
     }
   }
 
+  /**
+   * returns the expected value for the specified property, which is the value of
+   * the property after all executing animators are complete.
+   *
+   * FUTURE ENHANCEMENT: add a time parameter to specify expected value at a
+   * specific time.
+   * @access private
+   *
+   * @param prop: a string specifying the property to return.
+   * public properties are: x, y, width, height, rotation, alpha
+   *
+   * @return value of named property
+   */
+  function getExpectedAttribute(prop) {
+    var e_prop = "e_" + prop;
+    if ( !this[ e_prop ] ) this[ e_prop ] = {};
+    if ( this[e_prop].v == null ) return this[prop];
+    return this[ e_prop ].v;
+  }
+
+  /**
+   * @access private
+   * @param prop: A string naming the attribute to set
+   * @param val: The value for that attribute
+   */
+  function setExpectedAttribute(prop, val) {
+    var e_prop = "e_" + prop;
+    if ( !this[e_prop] ) this[e_prop] = {};
+    this[ e_prop ].v = val;
+  }
+
+  /**
+   * @access private
+   * @param prop: A string naming the attribute to set
+   * @param val: The value for that attribute
+   */
+  function addToExpectedAttribute(prop, val) {
+    var e_prop = "e_" + prop;
+    if ( !this[e_prop] ) this[e_prop] = {};
+    if ( this[e_prop].v == null ) this[e_prop].v = this[prop];
+    this[ e_prop ].v += val;
+  }
+
+  /**
+   * @access private
+   * @param prop: A string naming the attribute to set
+   */
+  function __LZincrementCounter(prop) {
+    var e_prop = "e_" + prop;
+    var tep = this[e_prop];
+    if (!tep) {
+      tep = this[e_prop] = {};
+    }
+    if (!tep.c) {
+      tep.c = 0;
+    }
+    tep.c += 1;
+  }
 
   /**
    * Makes a child to the specification given in the child hash argument,
@@ -2200,18 +2258,6 @@ public dynamic class LzNode extends LzEventable {
   //+++++ Debug stuff
 
   /**
-   * Tracks expected values for LzAnimator
-   * @access private 
-   */
-  var __animExpected = null;
-
-  /**
-   * Tracks counter for LzAnimator
-   * @access private 
-   */
-  var __animCounter = null;
-
-  /**
    * animate is the simplest way to animate a property of a node. This method
    * creates an animator which will change the value of the given property over
    * the given duration. The result of this call is an LzAnimator object. Note
@@ -2234,24 +2280,22 @@ public dynamic class LzNode extends LzEventable {
    */
 
   function animate( prop, to, duration, isRelative = null, moreargs = null ) {
+
     if ( duration == 0 ){
       var val = isRelative ? this[ prop ] + to : to;
       this.setAttribute( prop, val );
       return null;
     }
 
-    var args = { attribute : prop
-                 ,to: to
-                 ,duration : duration
-// default is true                 ,started : true
-                 ,relative : isRelative
-                 ,target : this };
+    var args = { attribute : prop , to: to,  duration : duration ,
+                 start : true,  relative : isRelative,
+                 target : this };
 
-    if (moreargs != null) {
-      for( var p in moreargs) args[p] = moreargs[p];
-    }
+    for( var p in moreargs) args[p] = moreargs[p];
 
-    return new LzAnimator( null, args );
+    var animator = new LzAnimator( null, args );
+
+    return animator;
   }
 
   /**
