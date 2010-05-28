@@ -3,13 +3,13 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.  *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.compiler;
 
-import org.openlaszlo.css.CSSParser;
+import org.openlaszlo.css.parser.CSSParser;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.utils.ChainedException;
 

@@ -19,7 +19,7 @@ import org.openlaszlo.xml.internal.Schema;
 import org.openlaszlo.xml.internal.Schema.Type;
 import org.openlaszlo.sc.*;
 import org.openlaszlo.utils.ChainedException;
-import org.openlaszlo.css.CSSParser;
+import org.openlaszlo.css.parser.CSSParser;
 
 /** Compiler for <code>class</code> class elements.
  */

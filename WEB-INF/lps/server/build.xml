@@ -213,7 +213,7 @@ javac (1.4);
    
    <!-- Determine whether the css parser needs to be updated --> 
    <uptodate property="css-parser.uptodate"
-       targetfile="${buildsrc.1.4}/${pkg.css}/CSSParser.java"
+       targetfile="${buildsrc.1.4}/${pkg.css.parser}/CSSParser.java"
        srcfile="${src}/${pkg.css}/CSSParser.jj"/>
    
    <condition property="sc-parser.uptodate">
@@ -240,7 +240,7 @@ javac (1.4);
         description="Run JavaCC to create the css-parser *.java files.">
     <mkdir dir="${buildsrc.1.4}/${pkg.css.parser}"/>
     <javacc target="${src}/${pkg.css}/CSSParser.jj"
-                outputdirectory="${buildsrc.1.4}/${pkg.css}/"
+                outputdirectory="${buildsrc.1.4}/${pkg.css.parser}"
                 javacchome="${JAVACC_HOME}" />
   </target>
 

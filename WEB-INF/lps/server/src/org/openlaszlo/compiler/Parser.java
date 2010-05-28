@@ -32,7 +32,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import org.openlaszlo.server.*;
 import org.openlaszlo.utils.*;
 import org.openlaszlo.xml.internal.*;
-import org.openlaszlo.css.CSSParser;
+import org.openlaszlo.css.parser.CSSParser;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -474,9 +474,9 @@ public class Parser {
                     CompilationEnvironment.setRuntimeConstants((String)value, env.getProperties(), env);
                 }
             }
-        } catch (org.openlaszlo.css.ParseException e) {
+        } catch (org.openlaszlo.css.parser.ParseException e) {
             throw new CompilationError(e);
-        } catch (org.openlaszlo.css.TokenMgrError e) {
+        } catch (org.openlaszlo.css.parser.TokenMgrError e) {
             throw new CompilationError(e);
         }
     }

@@ -16,7 +16,7 @@ import java.util.regex.*;
 
 
 import org.openlaszlo.compiler.ViewSchema.ColorFormatException;
-import org.openlaszlo.css.CSSParser;
+import org.openlaszlo.css.parser.CSSParser;
 import org.openlaszlo.sc.Function;
 import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
@@ -1831,11 +1831,11 @@ solution =
                             }
                         }
                         canonicalValue = ScriptCompiler.objectAsJavascript(cssProperties);
-                    } catch (org.openlaszlo.css.ParseException e) {
+                    } catch (org.openlaszlo.css.parser.ParseException e) {
                         // Or just set when to WHEN_ONCE and fall
                         // through to TODO?
                         throw new CompilationError(e);
-                    } catch (org.openlaszlo.css.TokenMgrError e) {
+                    } catch (org.openlaszlo.css.parser.TokenMgrError e) {
                         // Or just set when to WHEN_ONCE and fall
                         // through to TODO?
                         throw new CompilationError(e);

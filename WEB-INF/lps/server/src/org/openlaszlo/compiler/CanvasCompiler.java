@@ -19,7 +19,7 @@ import org.openlaszlo.server.*;
 import org.openlaszlo.utils.*;
 import org.jdom.*;
 import org.apache.log4j.*;
-import org.openlaszlo.css.CSSParser;
+import org.openlaszlo.css.parser.CSSParser;
 
 /** Compiler for the <code>canvas</code> element. */
 class CanvasCompiler extends ToplevelCompiler {
@@ -102,9 +102,9 @@ class CanvasCompiler extends ToplevelCompiler {
               properties.containsKey("timeout") ?
               ((Integer)properties.get("timeout")).intValue() : 0;
             mEnv.setScriptLimits(recursion, timeout);
-          } catch (org.openlaszlo.css.ParseException e) {
+          } catch (org.openlaszlo.css.parser.ParseException e) {
             throw new CompilationError(e);
-          } catch (org.openlaszlo.css.TokenMgrError e) {
+          } catch (org.openlaszlo.css.parser.TokenMgrError e) {
             throw new CompilationError(e);
           }
         }

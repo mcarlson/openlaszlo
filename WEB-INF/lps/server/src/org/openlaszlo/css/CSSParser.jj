@@ -21,7 +21,7 @@ options {
 
 PARSER_BEGIN(CSSParser)
 
-package org.openlaszlo.css;
+package org.openlaszlo.css.parser;
 import java.util.*;
 
 public class CSSParser {

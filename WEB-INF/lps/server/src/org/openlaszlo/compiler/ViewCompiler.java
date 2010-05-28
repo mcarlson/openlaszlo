@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 import java.text.FieldPosition;
 import java.util.*;
 
-import org.openlaszlo.css.CSSParser;
+import org.openlaszlo.css.parser.CSSParser;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.xml.internal.Schema;
@@ -208,8 +208,8 @@ public class ViewCompiler extends ElementCompiler {
                 if (layoutClass == null)
                     layoutClass = "simplelayout";
                 names.add(layoutClass);
-            } catch (org.openlaszlo.css.ParseException e) {
-            } catch (org.openlaszlo.css.TokenMgrError e) {
+            } catch (org.openlaszlo.css.parser.ParseException e) {
+            } catch (org.openlaszlo.css.parser.TokenMgrError e) {
                 // The compilation phase will report the error.
             }
         }
