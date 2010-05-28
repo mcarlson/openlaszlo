@@ -416,6 +416,10 @@ override function construct (parent, args) {
         this.dataprovider = canvas.defaultdataprovider;
     }
 
+    if ('autorequest' in args) {
+        this.autorequest = args.autorequest;
+    }
+
     super.construct(parent, args);
 }
 
