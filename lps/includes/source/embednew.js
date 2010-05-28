@@ -343,6 +343,9 @@ lz.embed = {
 
         if (! lz.embed.lfcloaded) {
             lz.embed.__appqueue.push(url);
+            if (properties.lfcurl && properties.serverroot) {
+                lz.embed.lfc(properties.lfcurl, properties.serverroot);
+            }
         } else {
             lz.embed.dhtmlapploaded = true;
             this.__dhtmlLoadLibrary(url)
@@ -1114,11 +1117,22 @@ lz.embed = {
 
     ,/**
        * Sets the browser window size.
-       * 
-       * @param Number width: Width in pixels
-       * @param Number height: Height in pixels
+       * @param String width: Width in pixels
+       * @param String height: Height in pixels
        */
     resizeWindow: function (width, height) {
+        if (width.indexOf('%') > -1) {
+            width = null;
+        } else {
+            width = parseInt(width);
+        }
+
+        if (height.indexOf('%') > -1) {
+            height = null;
+        } else {
+            height = parseInt(height);
+        }
+
         // Cf. http://www.quirksmode.org/viewport/compatibility.html
         if (window.innerHeight) {
             // Sadly, innerHeight/Width is not r/w on some browsers, and resizeTo is for outerHeight/Width

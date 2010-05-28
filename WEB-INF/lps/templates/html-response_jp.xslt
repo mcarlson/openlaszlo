@@ -33,19 +33,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <!-- shared body template for embedding -->
   <xsl:include href="embed-body_jp.xslt"/>
 
-  <xsl:template name="windowdimension">
-    <xsl:param name="value" />
-    <xsl:param name="default" />
-    <xsl:choose>
-      <xsl:when test="substring-before($value, '%') = ''">
-        <xsl:value-of select="$value"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$default"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
   <xsl:template match="/">
     <html>
       <head>
