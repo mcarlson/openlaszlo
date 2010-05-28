@@ -21,6 +21,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
               <xsl:when test="/canvas/@runtime = 'dhtml'">
                 <div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: {$canvaswidth}; height: {$canvasheight}; position: fixed; display: table"><p style="display: table-cell; vertical-align: middle;"><img src="{/canvas/request/@lps}/lps/includes/spinner.gif" style="display: block; margin: 20% auto" alt="application initializing"/></p></div>
                 <script type="text/javascript" defer="defer">
+                  lz.embed.resizeWindow(<xsl:value-of select="/canvas/@width"/>, <xsl:value-of select="/canvas/@height"/>);
                   lz.embed.lfc('<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', '<xsl:value-of select="/canvas/request/@lps"/>/');
                   lz.embed.dhtml({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=object<xsl:value-of select="/canvas/request/@query_args"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>', cancelmousewheel: false, cancelkeyboardcontrol: false, skipchromeinstall: false, usemastersprite: false, approot: ''});
                   lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
@@ -31,6 +32,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
               </xsl:when>
               <xsl:otherwise>
                 <script type="text/javascript" defer="defer">
+                  lz.embed.resizeWindow(<xsl:value-of select="/canvas/@width"/>, <xsl:value-of select="/canvas/@height"/>);
                   lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', allowfullscreen: '<xsl:value-of select="/canvas/@allowfullscreen"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>', cancelmousewheel: false});
 
                   lz.embed.<xsl:value-of select="/canvas/@id"/>.onloadstatus = function loadstatus(p) {

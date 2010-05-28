@@ -46,19 +46,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
     </xsl:choose>
   </xsl:template>
 
-  <xsl:param name="windowheight">
-    <xsl:call-template name="windowdimension">
-      <xsl:with-param name="value" select="/canvas/@height" />
-      <xsl:with-param name="default" select="'null'" />
-    </xsl:call-template>
-  </xsl:param>
-  <xsl:param name="windowwidth">
-    <xsl:call-template name="windowdimension">
-      <xsl:with-param name="value" select="/canvas/@width" />
-      <xsl:with-param name="default" select="'null'" />
-    </xsl:call-template>
-  </xsl:param>
-
   <xsl:template match="/">
     <html>
       <head>
@@ -70,33 +57,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
         <title>
           <xsl:value-of select="/canvas/@title"/>
         </title>
-        <script type="text/javascript">
-          // If loaded bare into a browser, set the browser size to the canvas size
-          if (window === top) {
-            (function (width, height) {
-              // Cf. http://www.quirksmode.org/viewport/compatibility.html
-              if (window.innerHeight) {
-                // Sadly, innerHeight/Width is not r/w on some browsers, and resizeTo is for outerHeight/Width
-                window.resizeTo(width ? (width + window.outerWidth - window.innerWidth) : window.outerWidth,
-                                height ? (height + window.outerHeight - window.innerHeight) : window.outerHeight);
-              } else if (document.documentElement &amp;&amp; document.documentElement.clientHeight) {
-                if (width) {
-                  document.documentElement.clientWidth = width;
-                }
-                if (height) {
-                  document.documentElement.clientHeight = height;
-                }
-              } else {
-                if (width) {
-                  document.body.clientWidth = width;
-                }
-                if (height) {
-                  document.body.clientHeight = height;
-                }
-              }
-            })(<xsl:value-of select="$windowwidth"/>, <xsl:value-of select="$windowheight"/>);
-          }
-        </script>
         <script type="text/javascript" src="{/canvas/request/@lps}/lps/includes/embed-compressed.js"/>
         <xsl:choose>
           <xsl:when test="/canvas/@runtime = 'dhtml'">
