@@ -185,7 +185,7 @@ public dynamic class LzAnimatorGroup extends LzNode {
     /** The duration of the animation, in milliseconds (1000 = 1 second).
       *
       * @type Number
-      * @lzxtype xsd:float {minInclusive="0"} | constraint
+      * @lzxtype number
       */
     var duration;
 
