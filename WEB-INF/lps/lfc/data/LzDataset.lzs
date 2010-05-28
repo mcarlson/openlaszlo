@@ -416,6 +416,8 @@ override function construct (parent, args) {
         this.dataprovider = canvas.defaultdataprovider;
     }
 
+    // autorequest attr needs to be set early in order for it to
+    // be able to fire when the 'src' setter is called the first time.
     if ('autorequest' in args) {
         this.autorequest = args.autorequest;
     }
