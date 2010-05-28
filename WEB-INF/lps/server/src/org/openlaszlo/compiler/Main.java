@@ -59,6 +59,12 @@ public class Main {
         "  Put output into given filename.",
         "-p | --profile",
         "  Add profiling information into the output object.",
+        "--incremental",
+        "  for as3 runtime, use incremental compiler mode",
+        "--lzxonly",
+        "  for as3 runtime, emit intermediate as files, but don't call backend as3 compiler",
+        "--lzolibs",
+        "  (for use with --compile option), comma separated list of external lzo libraries to link against",
         "",
         "Logging options:",
         "-l<loglevel>",
@@ -74,12 +80,7 @@ public class Main {
         "-S | --script",
         "  Writes JavaScript to .lzs file.",
         "-SS | --savestate",
-        "  Writes JavaScript to .lzs file, and ASTs to -astin.txt, -astout.txt",
-        "--incremental",
-        "  for as3 runtime, use incremental compiler mode",
-        "--lzxonly",
-        "  for as3 runtime, emit intermediate as files, but don't call backend as3 compiler"
-
+        "  Writes JavaScript to .lzs file, and ASTs to -astin.txt, -astout.txt"
     };
 
     private final static String MORE_HELP =
@@ -147,6 +148,9 @@ public class Main {
         compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY,
                              LPS.getProperty("compiler.runtime.default",
                                              LPS.getRuntimeDefault()));
+        compiler.setProperty(CompilationEnvironment.RUNTIMES_PROPERTY,
+                             LPS.getProperty("compiler.runtime.default",
+                                             LPS.getRuntimeDefault()));
         boolean flushScriptCache = true;
         boolean enableScriptCache = "true".equals(LPS.getProperty("compiler.scache.enabled"));
         Boolean forceTransCode = null;
@@ -193,13 +197,19 @@ public class Main {
                         "throw".equals(value);
                 } else if (arg.startsWith("--runtime=")) {
                     String value = arg.substring("--runtime=".length());
-                    if ((new HashSet(Compiler.KNOWN_RUNTIMES)).contains(value)) {
-                      compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, value);
-                    } else {
-                      System.err.println("Invalid value for --runtime");
-                      System.err.println(MORE_HELP);
-                      return 1;
+                    String[] runtimes = value.split(",");
+                    HashSet known = new HashSet(Compiler.KNOWN_RUNTIMES);
+                    for (int k = 0; k < runtimes.length; k++) {
+                        String rt = runtimes[k].trim();
+                        if (!known.contains(rt)) {
+                            System.err.println("Invalid value for --runtime, "+rt);
+                            System.err.println(MORE_HELP);
+                            return 1;
+                        }
                     }
+                    // First runtime is the 'primary' one, others are just used for secondary lzo compilations
+                    compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtimes[0].trim());
+                    compiler.setProperty(CompilationEnvironment.RUNTIMES_PROPERTY, value);
                 } else if (arg == "-S" || arg == "--script") {
                     compiler.setProperty(CompilationEnvironment.INTERMEDIATE_PROPERTY, "true");
                 } else if (arg == "-SS" || arg == "--scripts") {
@@ -288,6 +298,10 @@ public class Main {
                     compiler.setProperty(CompilationEnvironment.PROFILE_PROPERTY, "true");
                 } else if (arg == "-c" || arg == "--compile") {
                   compiler.setProperty(CompilationEnvironment.LINK_PROPERTY, "false");
+                } else if (arg == "--lzolibs") {
+                    String lzolibs = safeArg("--lzolibs", args, ++i);
+                    compiler.setProperty(CompilationEnvironment.EXTERNAL_LZO_FILES_PROPERTY, lzolibs);
+                    System.err.println("setting lzolibs to "+lzolibs);
                 } else if (arg == "--incremental") {
                   compiler.setProperty(CompilationEnvironment.INCREMENTAL_MODE, "true");
                 } else if (arg == "--lzxonly") {
@@ -402,7 +416,7 @@ public class Main {
         if ("true".equals(compiler.getProperty(CompilationEnvironment.INTERMEDIATE_PROPERTY))) {
           objExtension = ".lzi";
         } else if ("false".equals(compiler.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
-          objExtension = ".gz";
+          objExtension = ".zip";
           finalExtension = ".lzo";
         } else {
           String runtime = compiler.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
@@ -423,7 +437,7 @@ public class Main {
         BufferedWriter intermediate = null;
         try {
 
-          System.err.println("Compiling: " + sourceFile + " to " + objectFile);
+            System.err.println("Compiling: " + sourceFile + " to " + ((finalExtension != null)  ? finalName : outName));
             compiler.compile(sourceFile, objectFile, new Properties());
             if (finalName != null) {
               File finalFile = new File(outDir, finalName);

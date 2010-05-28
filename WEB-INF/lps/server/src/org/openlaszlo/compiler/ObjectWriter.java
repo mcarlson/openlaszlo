@@ -25,13 +25,15 @@ import org.openlaszlo.iv.flash.util.*;
 import org.openlaszlo.iv.flash.cache.*;
 import org.openlaszlo.compiler.CompilationEnvironment;
 
+
 import org.openlaszlo.media.*;
 
 import java.io.*;
 import java.util.*;
 import java.lang.Math;
 import java.lang.Character;
-
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.jdom.Element;
 
 // jgen 1.4
@@ -125,8 +127,15 @@ abstract class ObjectWriter {
         this.mEnv          = env;
     }
 
+    public void setOutputStream(OutputStream s) {
+        this.mStream = s;
+    }
+
     /** Initialize for compiling script to output object code */
-    void open(boolean compilingSnippet) { };
+    public void open(String compileType) { }
+
+    /** Compiler lets us know when the all classes have been defined, and resources declared */
+    public void schemaDone() throws IOException  { }
 
     /**
      * Sets the canvas for the app
@@ -477,6 +486,15 @@ abstract class ObjectWriter {
 
     /** Writes the object code to the <code>OutputStream</code> that was
      * supplied to the ObjectWriter's constructor.
+     * @param isMainApp true if building and linking an app, false if compiling a library
+     * @throws IOException if an error occurs
+     */
+    abstract public void finish(boolean isMainApp) throws IOException;
+
+    public void finish() throws IOException { finish(true); }
+
+    /** Close the  <code>OutputStream</code> that was
+     * supplied to the ObjectWriter's constructor.
      * @throws IOException if an error occurs
      */
     abstract public void close() throws IOException;
@@ -605,5 +623,62 @@ abstract class ObjectWriter {
         //mLogger.debug("file: " + fileName + " is a file? " + f.isFile());
         return f.isFile();
     }
+
+
+
+    /** This is how binary library files with runtime-specific code
+        are added to the output.  This will be overridden by
+        runtime-specific writers */
+    public void addLZOFile(File lzo) {
+    }
+
+    /** Tell an ObjectWriter to insert the contents of the lzo right now.
+        Only used by DHTMLWriter currently.
+    */
+    public void outputLZO(String pathname) {
+        
+    }
+
+        /** Return true if the .lzo archive contains a runtime-specific
+     * library object file for the target runtime, and the compiler switches
+     * match (debug,backtrace,and profile);
+     */
+    public static boolean lzoFileContainsMatchingTargetRuntime(File lzo, CompilationEnvironment env)
+    throws IOException {
+
+        String runtime = env.getRuntime();
+        String entryname;
+        if (runtime.equals("swf10") || runtime.equals("swf9")) {
+            entryname = "swc";
+        } else if (runtime.equals("dhtml")) {
+            entryname = "js";
+        } else {
+            return false;
+        }
+
+        String nameWithOptions = addLZOCompilerOptionFlags(entryname, env);
+
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(lzo));
+        ZipEntry entry;
+        while (true) {
+            entry = zis.getNextEntry();
+            if (entry == null) {
+                return false;
+            }
+            if (nameWithOptions.equals(entry.getName())) {
+                return true;
+            }
+        }
+    }
+
+    
+    public static String addLZOCompilerOptionFlags(String s, CompilationEnvironment env) {
+        s += env.getBooleanProperty(env.DEBUG_PROPERTY)  ? "-debug" : "";
+        s += env.getBooleanProperty(env.BACKTRACE_PROPERTY)  ? "-backtrace" : "";
+        s += env.getBooleanProperty(env.PROFILE_PROPERTY)  ? "-profile" : "";
+        return s;
+    }
+
+
 }
 

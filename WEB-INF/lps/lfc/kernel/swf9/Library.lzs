@@ -1,7 +1,7 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -10,6 +10,7 @@
 
 // A class for loading and executing debug code at runtime
 #include "kernel/swf9/LFCApplication.as"
+#include "kernel/swf9/LZOApplication.as"
 #include "kernel/swf9/LzIdleKernel.as"
 #include "kernel/swf9/LzSprite.as"
 #include "kernel/swf9/LzTextSprite.as"

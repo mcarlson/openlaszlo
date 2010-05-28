@@ -15,6 +15,7 @@ import org.jdom.Element;
 import org.openlaszlo.xml.internal.XMLUtils;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.sc.ScriptCompiler;
+import org.openlaszlo.sc.SWF9ParseTreePrinter;
 import org.openlaszlo.utils.ChainedException;
 import org.apache.log4j.*;
 /** Compiler for <code>import</code> elements.
@@ -207,7 +208,7 @@ class ImportCompiler extends ToplevelCompiler {
                     throw new CompilationError("runtime "+runtime+" not supported for generating an import library", element);
                 }
 
-                writer.open(true);
+                writer.open(SWF9ParseTreePrinter.Config.SNIPPET);
                 env.setObjectWriter(writer);
                 // Set the main SWFWriter so we can output resources
                 // to the main app

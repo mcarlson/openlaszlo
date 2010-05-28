@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -32,6 +32,27 @@ class ScriptElementCompiler extends ElementCompiler {
         return element.getName().intern() == "script";
     }
 
+    /** Returns true if ITEM is in a comma separated list L
+     * @param item
+     * @param l comma separated list
+     * @return see doc
+     */
+    private boolean stringMember(String item, String l) {
+        if (l != null) {
+            String elts[] = l.split(",");
+            for (int k = 0; k < elts.length; k++) {
+                String elt = elts[k].trim();
+                if (item.equals(elt)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+        
+
     public void compile(Element element) {
         if (!element.getChildren().isEmpty()) {
             throw new CompilationError("<script> elements can't have children",
@@ -53,9 +74,44 @@ class ScriptElementCompiler extends ElementCompiler {
         try {
             // If it is when=immediate, emit code inline
             if ("immediate".equals(element.getAttributeValue("when"))) {
-                mEnv.compileScript(
-                    CompilerUtils.sourceLocationDirective(element, true) + script + CompilerUtils.endSourceLocationDirective,
-                    element);
+                // Check if a 'runtimes' attribute is present on this
+                // script element, and if current target runtime is
+                // one of those listed.
+                //
+                // Also check that compiler options match what the lzo
+                // was compiled with.
+                //
+                // If it's a match, that means we've got the script
+                // compiled as a platform-specific 'binary' library
+                // object file in the lzo file, so no need to compile
+                // it now. We can just discard this lzx script code
+                // block, and the compiler will link or append with
+                // the binary object file.
+                //
+                // If the runtime and compiler options don't match,
+                // use the lzs script block.
+                String runtimes = element.getAttributeValue("runtimes");
+                String options = element.getAttributeValue("options");
+
+                // compute if the current compiler options match what's in the lzo
+                String appOptions = "debug:"+mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY) + ";" +
+                    "backtrace:"+mEnv.getBooleanProperty(mEnv.BACKTRACE_PROPERTY) + ";" +
+                    "profile:"+mEnv.getBooleanProperty(mEnv.PROFILE_PROPERTY);
+                boolean optionsMatch = appOptions.equals(options);
+                SourceLocator loc = ((ElementWithLocationInfo)element).getSourceLocator();
+                if (stringMember(mEnv.getRuntime(), runtimes) && optionsMatch) {
+                    // Ignore the script, we're going to link to the precompiled .swc or .js directly
+                    //
+                    // In DHTML this outputs the .js file inline right now into the app object file.
+                    //
+                    // In SWF10, this is a no-op here, and the SWF9Writer sets up the linking for the flex compiler
+                    // using the list of lzo's that was found earlier during include-file parsing. 
+                    mEnv.getGenerator().outputLZO(loc.pathname);
+                } else {
+                    mEnv.compileScript(
+                        CompilerUtils.sourceLocationDirective(element, true) + script + CompilerUtils.endSourceLocationDirective,
+                        element);
+                } 
             } else {
                 // Compile scripts to run at construction time in the view
                 // instantiation queue.

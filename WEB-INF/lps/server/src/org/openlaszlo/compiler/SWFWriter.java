@@ -137,6 +137,9 @@ class SWFWriter extends ObjectWriter {
                 mFlashFile = new SWFFile(props);
                 mFlashFile.setVersion(mFlashVersion);
                 mFlashFile.setMainScript(new Script(1));
+            } else {
+                String baseLibraryName = ToplevelCompiler.getBaseLibraryName(env);
+                importBaseLibrary(baseLibraryName, env);
             }
 
         } catch (CompilationError e) {
@@ -890,7 +893,7 @@ class SWFWriter extends ObjectWriter {
      * supplied to the SWFWriter's constructor.
      * @throws IOException if an error occurs
      */
-    public void close() throws IOException {
+    public void finish(boolean isMainApp) throws IOException {
 
         if (mCloseCalled) {
             throw new IllegalStateException("SWFWriter.close() called twice");
@@ -954,9 +957,13 @@ class SWFWriter extends ObjectWriter {
         } catch (IVException e) {
             throw new ChainedException(e);
         }
+    }
 
+    public void close() throws IOException {
+        mStream.close();
         mCloseCalled = true;
     }
+
 
     public void openSnippet(String liburl) throws IOException {
         // How do we make sure an initial frame exists?  Does this do it?

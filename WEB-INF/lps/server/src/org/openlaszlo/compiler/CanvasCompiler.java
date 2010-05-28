@@ -109,16 +109,6 @@ class CanvasCompiler extends ToplevelCompiler {
           }
         }
 
-        if (mEnv.isSWF()) {
-          String baseLibraryName = getBaseLibraryName(mEnv);
-          String baseLibraryBecause = "Required for all applications";
-
-          // TODO [2004-06-02]: explanation for debug attribute and
-          // request parameter
-        
-            mEnv.getGenerator().importBaseLibrary(baseLibraryName, mEnv);
-        }
-        
         canvas.setRuntime(mEnv.getRuntime());
         initializeFromElement(canvas, element);
         

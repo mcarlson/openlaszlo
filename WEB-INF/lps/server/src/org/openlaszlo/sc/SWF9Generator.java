@@ -691,9 +691,7 @@ public class SWF9Generator extends JavascriptGenerator {
   }
 
   public String preProcess(String source) {
-    if (!options.getBoolean(Compiler.BUILD_SHARED_LIBRARY)) {
-      source += options.get(Compiler.SWF9_APPLICATION_PREAMBLE);
-    }
+    source += options.get(Compiler.SWF9_APPLICATION_PREAMBLE);
     return source;
   }
 
@@ -787,7 +785,7 @@ public class SWF9Generator extends JavascriptGenerator {
     SWF9ParseTreePrinter.Config config = new SWF9ParseTreePrinter.Config();
     config.compress = compress;
     config.obfuscate = obfuscate;
-    config.islib = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    config.compileType = (String) options.get(Compiler.COMPILE_TYPE);
     config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
     config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
     config.forcePublicMembers = (options.getBoolean(Compiler.DEBUG) ||
@@ -798,7 +796,7 @@ public class SWF9Generator extends JavascriptGenerator {
     config.incremental = options.getBoolean(Compiler.INCREMENTAL_COMPILE);
     config.mainClassName = (String) options.get(Compiler.SWF9_APP_CLASSNAME);
     //System.err.println("mainClassName = "+config.mainClassName);
-    if (config.islib) {
+    if (config.compileType == config.LFCLIB) {
       // 
     } else {
       config.trackLines = true;        // needed to get error messages that relate to original source
@@ -818,8 +816,8 @@ public class SWF9Generator extends JavascriptGenerator {
 
     // moved from postProcess
     boolean hasErrors = false;
-    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
-    extCompiler = new SWF9External(options, buildSharedLibrary);
+    String compileType = (String) options.get(Compiler.COMPILE_TYPE);
+    extCompiler = new SWF9External(options, compileType);
 
     String preamble = DEFAULT_FILE_PREAMBLE;
     String epilog = DEFAULT_FILE_EPILOG;
@@ -870,19 +868,7 @@ public class SWF9Generator extends JavascriptGenerator {
     SWF9External ex = extCompiler;
 
     boolean hasErrors = false;
-    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
-    //    SWF9External ex = new SWF9External(options, buildSharedLibrary);
-
-    /*    for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
-      TranslationUnit tunit = (TranslationUnit)iter.next();
-
-      String preamble = DEFAULT_FILE_PREAMBLE;
-      String epilog = DEFAULT_FILE_EPILOG;
-
-      ex.writeFile(tunit, preamble, epilog);
-    }
-    */
-
+    String compileType = (String) options.get(Compiler.COMPILE_TYPE);
     // For each global variable defined in programVars,
     // write it to its own translation unit.
 
@@ -922,7 +908,7 @@ public class SWF9Generator extends JavascriptGenerator {
     mixinDef = null;
 
     try {
-      return ex.compileTranslationUnits(tunits, buildSharedLibrary);
+      return ex.compileTranslationUnits(tunits, compileType);
     }
     catch (IOException ioe) {
       throw new CompilerError("Error running external compiler: " + ioe);
@@ -947,7 +933,7 @@ public class SWF9Generator extends JavascriptGenerator {
     SWF9ParseTreePrinter.Config config = new SWF9ParseTreePrinter.Config();
     config.compress = compress;
     config.obfuscate = obfuscate;
-    config.islib = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    config.compileType = (String) options.get(Compiler.COMPILE_TYPE);
     config.trackLines = options.getBoolean(Compiler.TRACK_LINES);
     config.dumpLineAnnotationsFile = (String)options.get(Compiler.DUMP_LINE_ANNOTATIONS);
     config.forcePublicMembers = (options.getBoolean(Compiler.DEBUG) ||
@@ -957,23 +943,19 @@ public class SWF9Generator extends JavascriptGenerator {
 
     config.incremental = options.getBoolean(Compiler.INCREMENTAL_COMPILE);
     config.mainClassName = (String) options.get(Compiler.SWF9_APP_CLASSNAME);
-    //System.err.println("mainClassName = "+config.mainClassName);
-    if (config.islib) {
+    //    System.err.println("mainClassName = "+config.mainClassName);
+    if (config.compileType == config.LFCLIB) {
       // 
     } else {
       config.trackLines = true;        // needed to get error messages that relate to original source
     }
 
     ptp = new SWF9ParseTreePrinter(config);
-
     defaultTunit = new TranslationUnit(true);
     mainTunit = null;
-
     // moved from postProcess
     boolean hasErrors = false;
-    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
-    extCompiler = new SWF9External(options, buildSharedLibrary);
-
+    extCompiler = new SWF9External(options, config.compileType);
     allTunits = new ArrayList();
 
   }
@@ -1050,17 +1032,23 @@ public class SWF9Generator extends JavascriptGenerator {
 
   
   public InputStream callFlexCompiler() {
-    boolean buildSharedLibrary = options.getBoolean(Compiler.BUILD_SHARED_LIBRARY);
+    String compileType = (String) options.get(Compiler.COMPILE_TYPE);
     try {
-      byte[] objcode = extCompiler.compileTranslationUnits(allTunits, buildSharedLibrary);
+      byte[] objcode = extCompiler.compileTranslationUnits(allTunits, compileType, mLZOlibraries);
       InputStream input = new ByteArrayInputStream(objcode);
       return input;
+    } catch (CompilerError e) {
+        throw(new CompilerException(e.toString()));
     }
     catch (IOException ioe) {
       throw new CompilerError("Error running external compiler: " + ioe);
     }
   }
 
+  Set mLZOlibraries = new HashSet();
+  public void setLZOLibraries(Set libs) {
+    mLZOlibraries = libs;
+  }
 
   // This handles writing out a list of tunits as as3 files (code from
   // postProcess), but does not call flex compiler

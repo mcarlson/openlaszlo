@@ -24,6 +24,8 @@ import org.openlaszlo.media.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
 import java.lang.Math;
 import java.lang.Character;
 
@@ -39,6 +41,9 @@ import org.apache.log4j.*;
  */
 class DHTMLWriter extends ObjectWriter {
     static final String localResourceDir = "lps/resources";
+
+    /** A PrintStream built on the raw output stream. */
+    protected PrintStream mPrintStream;
 
     // List of declarations of resources
     protected StringBuffer mResourceDefs = new StringBuffer();
@@ -61,13 +66,21 @@ class DHTMLWriter extends ObjectWriter {
                 CompilationEnvironment env) {
 
         super(props, stream, cache, importLibrary, env);
+        this.mPrintStream = new PrintStream(this.mStream);
     }
-
-    void open(boolean compilingSnippet) {
+    
+    public void open(String compileType) {
         Properties props = (Properties)mProperties.clone();
+        props.put(org.openlaszlo.sc.Compiler.COMPILE_TYPE, compileType);
         mSCompiler = new org.openlaszlo.sc.DHTMLCompiler(props);
         mSCompiler.startApp();
     }
+
+    public void setOutputStream(OutputStream s) {
+        this.mStream = s;
+        this.mPrintStream = new PrintStream(s);
+    }
+
 
     /**
      * Sets the canvas for the app
@@ -253,9 +266,8 @@ class DHTMLWriter extends ObjectWriter {
     }
 
     public void addResourceDefs () {
-        PrintStream out = new PrintStream(mStream);
-        out.print(mResourceDefs);
-        out.flush();
+        mPrintStream.print(mResourceDefs);
+        mPrintStream.flush();
     }
     public void importResource(List sources, String sResourceName, File parent)
     {
@@ -425,14 +437,14 @@ class DHTMLWriter extends ObjectWriter {
             }
             mLogger.debug("relPath is: "+relPath);
 
-            String[] out = {pType, relPath};
-            return out;
+            String[] outval = {pType, relPath};
+            return outval;
         } catch (java.io.IOException e) {
             throw new ImportResourceError(fFile.toString(), e, mEnv);
         }
     }
 
-    public void close() throws IOException { 
+    public void finish(boolean isMainApp) throws IOException { 
         //Should we emit javascript or SWF?
         //boolean emitScript = mEnv.isDHTML();
 
@@ -440,35 +452,39 @@ class DHTMLWriter extends ObjectWriter {
             throw new IllegalStateException("DHTMLWriter.close() called twice");
         }
         
-        // special case for IE7, need to copy lps/includes/blank.gif to lps/resources/lps/includes/blank.gif
-        if (mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
-            File inputFile = new File(LPS.HOME() + "/lps/includes/blank.gif");
-            File dirfile = mEnv.getApplicationFile().getParentFile();
-            copyResourceFile(inputFile, dirfile, "lps/includes/blank.gif");
-        }
+        if (isMainApp) {
+            // special case for IE7, need to copy lps/includes/blank.gif to lps/resources/lps/includes/blank.gif
+            if (mEnv.getBooleanProperty(mEnv.COPY_RESOURCES_LOCAL)) {
+                File inputFile = new File(LPS.HOME() + "/lps/includes/blank.gif");
+                File dirfile = mEnv.getApplicationFile().getParentFile();
+                copyResourceFile(inputFile, dirfile, "lps/includes/blank.gif");
+            }
 
-        String filename = getSpritePath(mEnv.getApplicationFile().toString());
-        writeMasterSprite(filename);
+            String filename = getSpritePath(mEnv.getApplicationFile().toString());
+            writeMasterSprite(filename);
+        }
         addResourceDefs();
 
         boolean debug = mProperties.getProperty("debug", "false").equals("true");
 
         // Bring up a debug window if needed.
-        if (debug) {
-            boolean userSpecifiedDebugger = mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW);
-            // This indicates whether the user's source code already manually invoked
-            // <debug> to create a debug window. If they didn't explicitly call for
-            // a debugger window, instantiate one now by calling _LZDebug.makeDebugWindow()
-            if (userSpecifiedDebugger) {
-                addScript(mEnv.getProperty(mEnv.DEBUGGER_WINDOW_SCRIPT));
-            } else {
-                // Create debugger window with default init options
-                addScript("Debug.makeDebugWindow()");
+        if (isMainApp) {
+            if (debug) {
+                boolean userSpecifiedDebugger = mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW);
+                // This indicates whether the user's source code already manually invoked
+                // <debug> to create a debug window. If they didn't explicitly call for
+                // a debugger window, instantiate one now by calling _LZDebug.makeDebugWindow()
+                if (userSpecifiedDebugger) {
+                    addScript(mEnv.getProperty(mEnv.DEBUGGER_WINDOW_SCRIPT));
+                } else {
+                    // Create debugger window with default init options
+                    addScript("Debug.makeDebugWindow()");
+                }
             }
-        }
 
-        // Tell the canvas we're done loading.
-        addScript("canvas.initDone()");
+            // Tell the canvas we're done loading.
+            addScript("canvas.initDone()");
+        }
 
         try { 
             InputStream input = mSCompiler.finishApp();
@@ -479,8 +495,63 @@ class DHTMLWriter extends ObjectWriter {
             throw new ChainedException(e);
         }
 
+    }
+
+
+    public void close() throws IOException { 
+        mStream.close();
         mCloseCalled = true;
     }
+
+
+
+
+    /** Set of lzo files which we are linking with. */
+    private HashSet mLZOFiles = new HashSet();
+
+    /** Add file to list of loaded lzo's */
+    public void addLZOFile(File lzo) {
+        mLZOFiles.add(lzo.getAbsolutePath());
+    }
+
+    public void outputLZO(String pathname) {
+        if (!mLZOFiles.contains(pathname)) {
+            throw new CompilationError("Attempting to output unknown .lzo file "+pathname);
+        }
+        try {
+            copyJSLibToObjectFile(new File(pathname));
+        } catch (IOException e) {
+            throw new CompilationError(e, "Error outputting .lzo file "+pathname);
+        }
+    }
+
+    /** Extract the named file from an lzo zip archive, and copy to the specified directory.
+        Return the newly created File
+        @param lzofile location of lzo file in app source dir
+        @param entryName entry name in lzo, e.g., "swc" or "js"
+        @param workdir destination directory
+        @return new copy of extracted file
+    */
+    public void copyJSLibToObjectFile(File lzofile) 
+      throws IOException {
+        // Scan for entry named 'js'+compiler options
+        InputStream ifs = new BufferedInputStream( new java.io.FileInputStream(lzofile) );
+        ZipInputStream zis = new ZipInputStream(ifs);
+        ZipEntry entry;
+        String nameWithOptions = addLZOCompilerOptionFlags("js", mEnv);
+        while (true) {
+            entry = zis.getNextEntry();
+            if (entry == null) {
+                throw new IOException("copyJSLibToOutstream could not find "+nameWithOptions+" js file entry in .lzo zip file "+lzofile);
+            }
+            if (nameWithOptions.equals(entry.getName())) {
+                break;
+            }
+        }
+        mSCompiler.copyRawFromInputStream(zis);
+        zis.close();
+    }
+
 
     public void openSnippet(String url) throws IOException {
         this.liburl = url;

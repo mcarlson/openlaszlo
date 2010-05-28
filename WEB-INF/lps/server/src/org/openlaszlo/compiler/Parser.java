@@ -471,7 +471,7 @@ public class Parser {
                     env.setProperty(env.BACKTRACE_PROPERTY, ((Boolean) value).booleanValue());
                 } else if (key.equals("runtime")) {
                     env.setProperty(env.RUNTIME_PROPERTY, (String)value);
-                    env.setRuntimeConstants((String)value);
+                    CompilationEnvironment.setRuntimeConstants((String)value, env.getProperties(), env);
                 }
             }
         } catch (org.openlaszlo.css.ParseException e) {

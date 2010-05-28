@@ -48,17 +48,17 @@ public class SWF10Compiler extends Compiler {
     compileBlock(cg.preProcess(""));
   }
 
+  public void setLZOLibraries(Set libs) {
+    ((SWF9Generator)cg).setLZOLibraries(libs);
+  }
+
   // Returns byte stream of compiled app.swf file
   public InputStream finishApp() {
-
     ((SWF9Generator)cg).makeInterstitials(mParser.parse(""));
-
     ((SWF9Generator)cg).writeGlobalTUnitsToAS3();
     ((SWF9Generator)cg).writeMainTranslationUnit();
-    
     return ((SWF9Generator)cg).callFlexCompiler();
   }
-  
 
   public void compileBlock(String source) {
     try {

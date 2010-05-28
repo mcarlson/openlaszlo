@@ -17,6 +17,7 @@ import org.jdom.*;
 import org.openlaszlo.css.CSSHandler;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptCompilerInfo;
+import org.openlaszlo.sc.SWF9ParseTreePrinter;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.ListFormat;
@@ -44,7 +45,6 @@ public class Compiler {
         Arrays.asList(new String[] {"swf7", "swf8"});
     public static List AS3_RUNTIMES =
         Arrays.asList(new String[] {"swf9", "swf10"});
-
 
     public static List GLOBAL_RUNTIME_VARS =
         Arrays.asList(new String[] {
@@ -360,7 +360,8 @@ public class Compiler {
 
             String runtime = env.getProperty(env.RUNTIME_PROPERTY);
             // Must be kept in sync with server/sc/lzsc.py main
-            env.setRuntimeConstants(runtime);
+            CompilationEnvironment.setRuntimeConstants(runtime, env.getProperties(), env);
+
 
             // Check if an LFC actually exists for these compilation options
             File LFClib =new File(LPS.getLFCDirectory() + File.separator +
@@ -430,11 +431,24 @@ public class Compiler {
             nprops.put("compileTimeConstants", env.getCompileTimeConstants());
 
             ObjectWriter writer = createObjectWriter(nprops, ostr, env, root);
-            writer.open(false);
+
+            writer.open(linking ? SWF9ParseTreePrinter.Config.APP : SWF9ParseTreePrinter.Config.LZOLIB );
 
             env.setObjectWriter(writer);
 
+            // If user specified external lzo's to link against, pass them to the ObjectWriter now
+            String extlzos = env.getProperty(env.EXTERNAL_LZO_FILES_PROPERTY);
+            if (extlzos != null) {
+                for (Iterator iter = Arrays.asList(extlzos.split(",")).iterator(); iter.hasNext(); ) {
+                    File lzofile = new File ((String) iter.next());
+                    env.addLZOFile(lzofile);
+                }
+            }
+
             Compiler.updateRootSchema(root, env, schema, externalLibraries);
+            // Tell the ObjectWriter that we've finished building the schema, 
+            // classes and resources are all defined now.
+            writer.schemaDone();
                         
             if (noCodeGeneration) {
                 return null;
@@ -460,8 +474,9 @@ public class Compiler {
             }
             // This isn't in a finally clause, because it won't generally
             // succeed if an error occurs.
+            writer.finish();
             writer.close();
-
+            
             Canvas canvas = env.getCanvas();
             if (!errors.isEmpty()) {
                 if (canvas != null) {

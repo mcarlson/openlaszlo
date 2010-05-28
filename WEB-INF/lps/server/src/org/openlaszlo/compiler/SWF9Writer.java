@@ -21,11 +21,14 @@ import org.openlaszlo.compiler.ObjectWriter.ImportResourceError;
 import org.openlaszlo.compiler.ObjectWriter.Resource;
 import org.openlaszlo.iv.flash.api.text.*;
 import org.openlaszlo.iv.flash.api.FlashDef;
+import org.openlaszlo.sc.SWF9ParseTreePrinter;
 
 import org.openlaszlo.media.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipEntry;
 import java.lang.Math;
 import java.lang.Character;
 
@@ -62,12 +65,19 @@ class SWF9Writer extends ObjectWriter {
     /** Logger */
     protected static Logger mLogger = org.apache.log4j.Logger.getLogger(SWF9Writer.class);
 
+    /** Code which will used as the contents of the application main as3 class file */
+    protected String mAppPreamble;
+    protected String mAppMainClassname = MAIN_APP_CLASSNAME;
+    
+
     SWF9Writer(Properties props, OutputStream stream,
                 CompilerMediaCache cache,
                 boolean importLibrary,
                CompilationEnvironment env) {
 
         super(props, stream, cache, importLibrary, env);
+
+        mAppPreamble = makeApplicationPreamble();
     }
 
 
@@ -78,6 +88,8 @@ class SWF9Writer extends ObjectWriter {
      * 
      */
     void setCanvas(Canvas canvas, String canvasConstructor) {
+        // TODO [hqm 2010-05] need to made sure canvas has been created before after any LZO initializer calls are made.
+        // So how can we ensure that? When is CanvasCompiler getting called? Before any of the lzo's are processed?
         addScript(canvasConstructor);
         // Pass canvas dimensions through the script compiler to the Flex compiler
         mProperties.put("canvasWidth", Integer.toString(canvas.getWidth()));
@@ -398,24 +410,33 @@ class SWF9Writer extends ObjectWriter {
     ScriptCompilerInfo compilerInfo;
     Properties mScriptCompilerProps;
 
-    void open(boolean compilingSnippet) {
+    public void open(String compileType) {
         Properties props = (Properties)mProperties.clone();
         mScriptCompilerProps = props;
-        if (compilingSnippet) {
-            // Pass in the table of lzx class defs
+        props.put(org.openlaszlo.sc.Compiler.COMPILE_TYPE, compileType);
+        if (compileType == SWF9ParseTreePrinter.Config.SNIPPET) {
             props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
             props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, LIBRARY_CLASSNAME);
             props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, LIBRARY_CLASSNAME);
-            props.put(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
 
             // This will contain a pointer to the working dir created by compiling the main app
             ScriptCompilerInfo compilerInfo = mEnv.getMainCompilationEnv().getScriptCompilerInfo();
             props.put(org.openlaszlo.sc.Compiler.COMPILER_INFO, compilerInfo);
-        } else {
+        } else if (compileType == SWF9ParseTreePrinter.Config.LZOLIB) {
             // Set up the boilerplate code needed for the main swf9 application class
-            props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeApplicationPreamble());
-            props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, MAIN_APP_CLASSNAME);
+            props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, mAppPreamble);
+            //            System.err.println("SWF9_APPLICATION_PREAMBLE="+mAppPreamble);
+            props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, mAppMainClassname);
             props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, EXEC_APP_CLASSNAME);
+        } else if (compileType == SWF9ParseTreePrinter.Config.APP) {
+            // Set up the boilerplate code needed for the main swf9 application class
+            props.put(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, mAppPreamble);
+            //System.err.println("SWF9_APPLICATION_PREAMBLE="+mAppPreamble);
+            props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, mAppMainClassname);
+            props.put(org.openlaszlo.sc.Compiler.SWF9_WRAPPER_CLASSNAME, EXEC_APP_CLASSNAME);
+
+        } else {
+            throw new CompilationError("unknown compileType "+compileType);
         }
 
         // Set snippets options into a new script compiler.
@@ -423,7 +444,17 @@ class SWF9Writer extends ObjectWriter {
         mSCompiler.startApp();
     }
 
-    public void close() throws IOException { 
+    /** Set of lzo files which we are linking with. */
+    private ArrayList mLZOFiles = new ArrayList();
+
+    public void addLZOFile(File lzo) {
+        String afile = lzo.getAbsolutePath().intern();
+        if (!mLZOFiles.contains(afile)) {
+            mLZOFiles.add(afile);
+        }
+    }
+
+    public void finish(boolean isMainApp) throws IOException { 
         //Should we emit javascript or SWF?
         //boolean emitScript = mEnv.isSWF9();
 
@@ -433,29 +464,61 @@ class SWF9Writer extends ObjectWriter {
         
         boolean debug = mProperties.getProperty("debug", "false").equals("true");
 
-        // Bring up a debug window if needed.
-        if (debug) {
-            boolean userSpecifiedDebugger = mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW);
-            // This indicates whether the user's source code already manually invoked
-            // <debug> to create a debug window. If they didn't explicitly call for
-            // a debugger window, instantiate one now by calling _LZDebug.makeDebugWindow()
-            if (userSpecifiedDebugger) {
-                addScript(mEnv.getProperty(mEnv.DEBUGGER_WINDOW_SCRIPT));
-            } else {
-                // Create debugger window with default init options
-                addScript("Debug.makeDebugWindow()");
+        if (isMainApp) {
+            // Bring up a debug window if needed.
+            if (debug) {
+                boolean userSpecifiedDebugger = mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW);
+                // This indicates whether the user's source code already manually invoked
+                // <debug> to create a debug window. If they didn't explicitly call for
+                // a debugger window, instantiate one now by calling _LZDebug.makeDebugWindow()
+                if (userSpecifiedDebugger) {
+                    addScript(mEnv.getProperty(mEnv.DEBUGGER_WINDOW_SCRIPT));
+                } else {
+                    // Create debugger window with default init options
+                    addScript("Debug.makeDebugWindow()");
+                }
             }
-        }
 
-        // Put the canvas sprite on the 'stage'.
-        addScript("addChild(canvas.sprite)");
-        // Tell the canvas we're done loading.
-        addScript("canvas.initDone()");
+            // Put the canvas sprite on the 'stage'.
+            addScript("addChild(canvas.sprite)");
+
+            // TODO [hqm 2010-05] I'm putting the calls to the lzo
+            // startup methods here, but they should really go in
+            // right when they are added in the addLZOFile method
+            // above. The problem is if you do that they appear before
+            // the script to instantiate the canvas is added.  If I
+            // can find where that happens, and make it happen earlier
+            // or move it, I could let the lzo script calls go in when
+            // they are collected by addLZOFile.
+            
+            
+            for (Iterator e = mLZOFiles.iterator() ; e.hasNext() ;) {
+                File lzo = new File((String)e.next());
+                // Add in a top level all in the main app to invoke the lzo
+                // lib's runtToplevel Definitions method
+                addScript("(new "+ LibraryWriter.makeLZOClassname(lzo)+"()).runToplevelDefinitions();\n");
+            }
+
+
+            // Tell the canvas we're done loading.
+            addScript("canvas.initDone()");
+        }
+        // We need to take the list of lzo/swf10 files that we found while compiling, and
+        // copy their swc files to the tmp workdir.
+        // Then pass that list of filenames to the backend
+        compilerInfo = mEnv.getScriptCompilerInfo();
+
+        Set swcfiles = new HashSet();
+        for (Iterator iter = mLZOFiles.iterator() ; iter.hasNext() ;) {
+            File lzo = new File((String)iter.next());
+            swcfiles.add(copyFromLZO(lzo, "swc", compilerInfo.workDir));
+        }
+        // Pass list of swc files to the compiler, so it can pass them to flex linker
+        mSCompiler.setLZOLibraries(swcfiles);
 
         try { 
             InputStream input = mSCompiler.finishApp();
-            compilerInfo = mEnv.getScriptCompilerInfo();
-
+        
             // Make a note of the location of the as3 working file dir
             // used for compiling the main app. This is needed so the
             // flex compiler can link any loadable libraries
@@ -473,7 +536,57 @@ class SWF9Writer extends ObjectWriter {
             throw new ChainedException(e);
         }
 
+    }
+
+    public void close() throws IOException { 
+        mStream.close();
         mCloseCalled = true;
+    }
+
+    /** Extract the named file from an lzo zip archive, and copy to the specified directory.
+        Return the newly created File
+        @param lzofile location of lzo file in app source dir
+        @param entryName binary lib base name in lzo, e.g., "swc" or "js"
+        @param workdir destination directory
+        @return new copy of extracted file
+    */
+    public File copyFromLZO(File lzofile, String entryName,  File workdir) 
+        throws IOException {
+        InputStream ifs = new BufferedInputStream( new java.io.FileInputStream(lzofile) );
+        // Scan for entry named entryName
+        ZipInputStream zis = new ZipInputStream(ifs);
+        ZipEntry entry;
+        while (true) {
+            entry = zis.getNextEntry();
+            if (entry == null) {
+                throw new IOException("copyFromLZO could not find entry "+entryName+" in .lzo zip file "+lzofile);
+            }
+            // In case this is an external LZO we're linking against,
+            // we need to make sure that the compiler options
+            // match. Unfortunately you cannot link a non-debug
+            // version of a library against a debug version, because
+            // overrides fail because methods have become 'public' in
+            // debug version vs non-public in non-debug versions.
+            if (entry.getName().startsWith(entryName)) {
+                if (entry.getName().equals(entryName)) {
+                    break;
+                } else {
+                    throw new IOException("copyFromLZO expecting to find "+entryName +" in lzo archive "+lzofile+
+                                          ", but found "+ entry.getName() +
+                                          ", compiler options must match when compiling against an lzo");
+                }
+            }
+        }
+        File dirfile = mEnv.getApplicationFile().getParentFile();
+        File appdir = dirfile != null ? dirfile : new File(".");
+        String relPath = FileUtils.relativePath(lzofile, appdir);
+        String fprefix = relPath.replace(File.separator, "_");
+        //System.err.println("lzo pathname prefix = "+fprefix);
+        File swc = new File(workdir, fprefix + ".swc");
+        FileUtils.send(zis, new FileOutputStream(swc));
+        zis.close();
+        //System.err.println("swc file copied to "+swc);
+        return swc;
     }
 
     public void openSnippet(String url) throws IOException {
@@ -1017,7 +1130,7 @@ class SWF9Writer extends ObjectWriter {
      * @return font given a font info
      */
     private Font getFontFromInfo(FontInfo fontInfo) {
-        // This will bring in the default bold ofnt if it's not here yet
+        // This will bring in the default bold font if it's not here yet
         checkFontExists(fontInfo);
         String fontName = fontInfo.getName();
         FontFamily family   = mFontManager.getFontFamily(fontName);

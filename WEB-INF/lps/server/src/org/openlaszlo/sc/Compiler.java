@@ -463,7 +463,7 @@ public class Compiler {
   // TODO [2004-03-11 ptw] share with CompilationEnvironment.java
   public static String CANVAS_WIDTH = "canvasWidth";
   public static String CANVAS_HEIGHT = "canvasHeight";
-  public static String BUILD_SHARED_LIBRARY = "buildSharedLibrary";
+  public static String COMPILE_TYPE = "compileType";
   public static String COMPUTE_METAREFERENCES = "computeMetaReferences";
   public static String CONDITIONAL_COMPILATION = "conditionalCompilation";
   public static String ALLOW_ROOT = "allowRoot";
@@ -496,6 +496,7 @@ public class Compiler {
   public static String INCLUDES = "processIncludes";
   public static String INSTR_STATS = "instrStats";
   public static String LINK = "link";
+  public static String LINK_WITH_LFC = "linkwithlfc";
   public static String RUNTIME = "runtime";
   public static String METHOD_NAME = "methodName";
   public static String NAME_FUNCTIONS = "nameFunctions";

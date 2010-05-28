@@ -248,6 +248,7 @@ public abstract class FileUtils {
         }
     }
 
+
     /**
      * Set up a reader for an XML file with the correct charset encoding, and strip
      * out any Unicode Byte Order Mark if there is one present. We need to scan the file
@@ -259,7 +260,20 @@ public abstract class FileUtils {
       throws IOException {
         InputStream ifs = new BufferedInputStream( new java.io.FileInputStream(pathname) );
         if (pathname.endsWith(".lzo")) {
-          ifs = new java.util.zip.GZIPInputStream(ifs);
+            // It's a zip file, scan it for entry named "lzo" and
+            // return the inputstream that reads from it.
+            ZipInputStream zis = new ZipInputStream(ifs);
+            ZipEntry entry;
+            while (true) {
+                entry = zis.getNextEntry();
+                if (entry == null) {
+                    throw new IOException("could not find main lzo entry in .lzo zip file "+pathname);
+                }
+                if ("lzo".equals(entry.getName())) {
+                    ifs = zis;
+                    break;
+                }
+            }
         }
         return getXMLEncodingFromFile( ifs, defaultEncoding );
     }

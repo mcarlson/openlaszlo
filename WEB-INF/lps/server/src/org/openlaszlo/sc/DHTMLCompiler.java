@@ -44,7 +44,7 @@ public class DHTMLCompiler extends Compiler {
     }
 
     // Create temp app output file
-    File workdir = SWF9External.createCompilationWorkDir(false, mInfo);
+    File workdir = SWF9External.createCompilationWorkDir(SWF9ParseTreePrinter.Config.APP, mInfo);
     mAppFile = new File (workdir.getPath() + File.separator + "obj"+(objfileCounter++) + ".js");
 
     // JavascriptGenerator will append output from each compileBlock() call to this file.
@@ -57,6 +57,12 @@ public class DHTMLCompiler extends Compiler {
     } catch (IOException e) {
       throw(new CompilerException(e.toString()));
     }
+  }
+
+  /** Copy text from input stream direct to output file */
+  public void copyRawFromInputStream(InputStream is)
+    throws IOException {
+    ((JavascriptGenerator)cg).copyRawFromInputStream(is);
   }
 
   // Returns byte stream of compiled JS file

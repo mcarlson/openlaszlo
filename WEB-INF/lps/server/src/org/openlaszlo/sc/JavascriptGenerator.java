@@ -19,6 +19,7 @@ import java.io.*;
 import java.util.*;
 
 import org.openlaszlo.sc.parser.*;
+import org.openlaszlo.utils.FileUtils;
 
 public class JavascriptGenerator extends CommonGenerator implements Translator {
 
@@ -1947,6 +1948,12 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     out.close();
   }
 
+  /** Copy text from input stream direct to output file */
+  public void copyRawFromInputStream(InputStream is) throws IOException {
+    FileUtils.send(new InputStreamReader(is), out);
+  }
+
+
   public void compileBlock(SimpleNode translatedNode) {
     // Loop over top level nodes in AST, calling makeTranslationUnits
     // on each one, to keep heap size from growing too big.
@@ -1961,7 +1968,11 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
 
       for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
         TranslationUnit tunit = (TranslationUnit)iter.next();
-        out.write(tunit.getContents()+";");
+        String objcode = tunit.getContents();
+        out.write(objcode);
+        if (!objcode.endsWith(";")) {
+          out.write(";");
+        }
         // Clear out string data to avoid wasting memory. But leave
         // class name because a list of all class names is needed when
         // constructing the command line to call flex.

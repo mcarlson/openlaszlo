@@ -33,6 +33,7 @@ public class CompilationEnvironment {
     public static final String DEFAULT_OUTPUT_DIR = "build";
     
     public static final String RUNTIME_PROPERTY            = "runtime";
+    public static final String RUNTIMES_PROPERTY           = "runtimes";
     public static final String PROXIED_PROPERTY            = "lzproxied";
     public static final String DEBUG_PROPERTY              = "debug";
     public static final String DEBUG_EVAL_PROPERTY         = "debugEval";
@@ -64,6 +65,7 @@ public class CompilationEnvironment {
     // AS3-specific options
     public static final String INCREMENTAL_MODE = "incremental";
     public static final String LZXONLY          = "lzxonly";
+    public static final String EXTERNAL_LZO_FILES_PROPERTY = "extlzolibs";
 
     // Flag used internally, to mark whether the user instantiated a <debug>
     // tag manually. If they didn't, we need to add a call to instantiate one.
@@ -161,7 +163,7 @@ public class CompilationEnvironment {
 
     /** Used to create a unique root for separately-compiled libraries */
     // TODO: [2009-02-27 ptw] Replace with Java 1.5: UUID.randomUUID.toString();
-  private String mUUID = "U" + Integer.toString((new Random()).nextInt(Integer.MAX_VALUE), 36);
+    private String mUUID = "U" + Integer.toString((new Random()).nextInt(Integer.MAX_VALUE), 36);
 
     private List mLibraryCompilations = new ArrayList();
 
@@ -274,6 +276,13 @@ public class CompilationEnvironment {
 
     public void setObjectFile(File file) {
       mObjectFile = file;
+    }
+
+    /** Collects the list of all lzo files we are using, so an
+     * ObjectWriter can link against them if needed
+     */
+    public void addLZOFile(File lzo) {
+        getGenerator().addLZOFile(lzo);
     }
 
     // For an app named /path/to/myapp.lzx, returns /path/to/build/myapp
@@ -612,6 +621,20 @@ public class CompilationEnvironment {
         return getProperty(RUNTIME_PROPERTY, defaultVersion);
     }
 
+    /** Scan list of target runtimes to see if it contains a specific one.
+     *  This is used by LibraryWriter to decide which individual runtimes to compile for.
+     * @param rt runtime
+     * @return true if runtime is in specified target runtimes
+     */
+    public boolean targetRuntimesContain(String rt) {
+        String [] runtimes = getProperty(CompilationEnvironment.RUNTIMES_PROPERTY).split(",");
+        for (int k = 0; k < runtimes.length; k++) {
+            String runtime = runtimes[k].trim();
+            if (runtime.equals(rt)) return true;
+        }
+        return false;
+    }
+
     public int getSWFVersionInt() {
       String runtime = getRuntime();
         if ("swf7".equals(runtime)) {
@@ -859,18 +882,18 @@ public class CompilationEnvironment {
     }
 
     // Set up runtime-related compile-time constants 
-    public void setRuntimeConstants(String runtime) {
-        mProperties.put("$runtime", runtime);
-        mProperties.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
-        mProperties.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
-        mProperties.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
-        mProperties.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
-        mProperties.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
-        mProperties.put("$as3", Boolean.valueOf(this.isAS3()));
-        mProperties.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
-        mProperties.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
-        mProperties.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
-        mProperties.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
+    public static void setRuntimeConstants(String runtime, Properties props, CompilationEnvironment env) {
+        props.put("$runtime", runtime);
+        props.put("$swf7", Boolean.valueOf("swf7".equals(runtime)));
+        props.put("$swf8", Boolean.valueOf("swf8".equals(runtime)));
+        props.put("$as2", Boolean.valueOf(Arrays.asList(new String[] {"swf7", "swf8"}).contains(runtime)));
+        props.put("$swf9", Boolean.valueOf("swf9".equals(runtime)));
+        props.put("$swf10", Boolean.valueOf("swf10".equals(runtime)));
+        props.put("$as3", Boolean.valueOf(env.isAS3()));
+        props.put("$dhtml", Boolean.valueOf("dhtml".equals(runtime)));
+        props.put("$j2me", Boolean.valueOf("j2me".equals(runtime)));
+        props.put("$svg", Boolean.valueOf("svg".equals(runtime)));            
+        props.put("$js1", Boolean.valueOf(Arrays.asList(new String[] {"dhtml", "j2me", "svg"}).contains(runtime)));
     }
 
     // This is to try to reclaim as much memory as possible before calling the flash 10 compiler.

@@ -1,13 +1,13 @@
 <library>
   <!-- define some objects which declare global vars -->
 
-  <dataset name="mydset">
-    <blah>
-      Blah
-    </blah>
-  </dataset>
-
-  <view id="blargh" width="150" height="50" x="0" y="200" bgcolor="#ccccff">
+  <view id="blargh" width="150" height="50" x="0" y="200" bgcolor="#ccccff" 
+        oninit='Debug.info("libglobal instantiating view blarg")'>
+    <method name="somemethod">
+      // having a method defined tests that a new anon class is created and properly called fro instantiation
+      // for this view.
+      Debug.info("foo");
+    </method>
     <simplelayout/>
     <text fgcolor="red">from libglobal.lzx</text>
     <text x="10" y="10">instance global: blargh</text>

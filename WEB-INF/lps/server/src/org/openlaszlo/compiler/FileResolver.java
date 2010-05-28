@@ -167,6 +167,18 @@ class DefaultFileResolver implements FileResolver {
                 mLogger.debug("Resolved " + pathname + " to "  +
                               f.getAbsolutePath());
                 }
+                if (env != null && f.getAbsolutePath().endsWith(".lzo")) {
+                    // Only add this to the list of lzo's to link
+                    // against if there is a runtime-specific object
+                    // file in the zipfile, and it matches the main
+                    // compilation debug/backtrace/profile options.
+                    // Otherwise, the script code will be compiled
+                    // from the platform-independent <script> block in
+                    // the lzo's XML entry.
+                    if (ObjectWriter.lzoFileContainsMatchingTargetRuntime(f, env)) {
+                        env.addLZOFile(f);
+                    }
+                }
                 return f;
               } else if (SWFtoPNG) {
                 String autoPngPath = FileUtils.insertSubdir(f.getPath(), "autoPng");

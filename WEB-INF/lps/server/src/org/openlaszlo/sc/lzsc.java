@@ -104,6 +104,7 @@ public class lzsc  {
     options.put("flashCompilerCompatability", Boolean.TRUE);
     options.put("processIncludes", Boolean.TRUE);
     options.put("resolver", new Resolver(scriptfile));
+    options.put(Compiler.COMPILE_TYPE, SWF9ParseTreePrinter.Config.LFCLIB);
 
     try {
       Compiler c = new Compiler(options);
@@ -348,7 +349,7 @@ public class lzsc  {
         compilerOptions.put(Compiler.COMPILER_INFO, scInfo);
         // Working directory path prefix to place intermediate .as3 files
         scInfo.buildDirPathPrefix = "buildlfc";
-        File workdir = SWF9External.createCompilationWorkDir(false, scInfo);
+        File workdir = SWF9External.createCompilationWorkDir(SWF9ParseTreePrinter.Config.LFCLIB, scInfo);
         scInfo.workDir = scInfo.mainAppWorkDir = workdir;
         compilerOptions.put(Compiler.REUSE_WORK_DIRECTORY, "true");
         compilerOptions.put(Compiler.CHECK_MATCHING_OPTIONS, "true");

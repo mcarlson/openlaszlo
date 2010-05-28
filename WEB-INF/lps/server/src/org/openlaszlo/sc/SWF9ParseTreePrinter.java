@@ -53,8 +53,14 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
    * Nicer than a mess of constructor parameters.
    */
   public static class Config extends ParseTreePrinter.Config {
-    boolean islib = false;
-    public Config setIsLib(boolean value) { islib = value; return this; }
+    // What are we compiling? 
+    public static final String APP = "application";   // A user application
+    public static final String LFCLIB = "lfclib"; // The LFC
+    public static final String LZOLIB = "lzolib"; // A user lzo library
+    public static final String SNIPPET = "snippet"; // A runtime loadable library
+
+    String compileType = APP;
+    public Config setCompileType(String value) { compileType = value; return this; }
 
     String mainClassName = null;
     public Config setMainClassName(String value) { mainClassName = value; return this; }
@@ -147,7 +153,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     // our assumptions about where we put top level statements.
     if (mainTunit != null) {
       mainTunit.setMainTranslationUnit(true);
-      if (config.islib) {
+      if (config.compileType == Config.LFCLIB) {
         mainTunit.setStreamObject(CLASS_LEVEL_STREAM, defaultTunit);
       } else {
         mainTunit.setStreamObject(MAIN_CONSTRUCTOR_STREAM, defaultTunit);
@@ -281,7 +287,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
     sb.append("{\n");
     sb.append(annotateInsertStream(CLASS_LEVEL_STREAM));
 
-    if (classnm.equals(config.mainClassName) && !config.islib) {
+    if (classnm.equals(config.mainClassName) && config.compileType != Config.LFCLIB) {
       sb.append("override public function runToplevelDefinitions () {");
       sb.append(annotateInsertStream(MAIN_CONSTRUCTOR_STREAM));
       sb.append("}\n");

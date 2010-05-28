@@ -37,13 +37,10 @@ class ResourceCompiler extends ElementCompiler {
             || name.equals("audio");
     }
 
-    /*
-     * @see <code>CompilerNode</code>
-     * @param env a compilation environment
-     */
-    public void compile(Element element) 
-        throws CompilationError
-    {
+
+    void updateSchema(Element element, ViewSchema schema, Set visited)
+      throws CompilationError
+      {
         File file = null;
 
         if (!element.getChildren().isEmpty()) {
@@ -211,6 +208,17 @@ class ResourceCompiler extends ElementCompiler {
             return;
         }
     }
+
+
+    /*
+     * @see <code>CompilerNode</code>
+     * @param env a compilation environment
+     */
+     public void compile(Element element)  {
+       // resources were actually compiled by updateSchema()
+     }
+      
+
 
   // Utility class to specify an offset, used to set a cursor resource's hotspot
   class Offset2D {

@@ -19,6 +19,8 @@ import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.server.LPS;
 
+import org.openlaszlo.sc.SWF9ParseTreePrinter.Config;
+
 import org.apache.commons.collections.LRUMap;
 
 /**
@@ -128,7 +130,7 @@ public class SWF9External {
       return result.toString();
     }
 
-    public SWF9External(Compiler.OptionMap options, boolean buildSharedLibrary) {
+    public SWF9External(Compiler.OptionMap options, String compileType) {
       this.options = options;
       mInfo = (ScriptCompilerInfo) options.get(Compiler.COMPILER_INFO);
 
@@ -140,7 +142,7 @@ public class SWF9External {
         workdir = mInfo.workDir;
 
       } else {
-        workdir = createCompilationWorkDir(buildSharedLibrary, mInfo);
+        workdir = createCompilationWorkDir(compileType, mInfo);
         // Copy pointer to working directory to the ScriptCompilerInfo,
         // so any subsequent <import> library compilations can use it.
         mInfo.workDir = workdir;
@@ -156,7 +158,7 @@ public class SWF9External {
               deleteDirectoryFiles(workdir);
             }
           } else {
-            System.err.println("cleaning working dir");
+            System.err.println("cleaning working dir: "+workdir);
             deleteDirectoryFiles(workdir);
           }
         }
@@ -223,7 +225,7 @@ public class SWF9External {
      * and return a File for it.
      * @throw CompilerError when directory creation fails
      */
-  public static File createCompilationWorkDir(boolean buildSharedLibrary, ScriptCompilerInfo scInfo)
+  public static File createCompilationWorkDir(String compileType, ScriptCompilerInfo scInfo)
     {
       // TODO: [2007-11-20 dda] Need some provisions for file
       // cleanup on error, and on success too.
@@ -241,7 +243,7 @@ public class SWF9External {
           appDirPrefix = appDirPrefix.substring(3);
         }
 
-        if (buildSharedLibrary) {
+        if (compileType == Config.LFCLIB) {
           // Compiling the LFC
           f = File.createTempFile(WORK_DIR_PREFIX, "", new File(swf9tmpdirstr));
           if (!f.delete()) {
@@ -967,10 +969,16 @@ public class SWF9External {
       return osname.startsWith("Windows");
     }
 
+    public byte[] compileTranslationUnits(List tunits, String compileType)
+      throws IOException
+    {
+      return compileTranslationUnits(tunits, compileType, null);
+    }
+
     /**
      * Compile the given translation units, producing a binary output.
      */
-    public byte[] compileTranslationUnits(List tunits, boolean buildSharedLibrary)
+    public byte[] compileTranslationUnits(List tunits, String compileType, Set swclibs)
       throws IOException
     {
       List cmd = new ArrayList();
@@ -989,15 +997,14 @@ public class SWF9External {
       // which will be mapped to the appropriate class in
       // callJavaCompileCommand
 
-      if (buildSharedLibrary) {
-        outfilebase = "app.swc";
-        cmd.add("compc");
-        cmd.add(getFlexPathname("bin" + File.separator + "compc" + exeSuffix));
-      }
-      else {
+      if (compileType == Config.APP) {
         outfilebase = "app.swf";
         cmd.add("mxmlc");
         cmd.add(getFlexPathname("bin" + File.separator + "mxmlc" + exeSuffix));
+      } else { // compiling the LFC library or a user LZO library, or a snippet, use 'compc'
+        outfilebase = "app.swc";
+        cmd.add("compc");
+        cmd.add(getFlexPathname("bin" + File.separator + "compc" + exeSuffix));
       }
 
       // Path to the flex compiler config file
@@ -1030,17 +1037,23 @@ public class SWF9External {
       cmd.add("-compiler.fonts.advanced-anti-aliasing=true");
       cmd.add("-output");
       cmd.add(outfilename);
-    
 
       String runtime = ((String)options.get(Compiler.RUNTIME));
-
-      if (buildSharedLibrary) {
+      if (compileType == Config.LFCLIB ||
+          compileType == Config.LZOLIB ||
+          compileType == Config.SNIPPET) {
         // must be last before list of classes to follow.
         cmd.add("-include-classes");
         // For LFC library, we list all the classes.
         for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
           TranslationUnit tunit = (TranslationUnit)iter.next();
           cmd.add(tunit.getName());
+        }
+
+        // If we're building a user-specified library (not the LFC), link against the LFC
+        if (compileType == Config.SNIPPET || compileType == Config.LZOLIB) {
+          // Link against, but don't actually include the LFC in this app
+          cmd.add("-external-library-path+="+getLFCLibrary(runtime, debug, backtrace));
         }
       } else {
         cmd.add("-default-size");
@@ -1057,13 +1070,13 @@ public class SWF9External {
           cmd.add("-compiler.library-path+=" + getLFCLibrary(runtime, debug, backtrace));
         }
 
-        if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB) ||
+        if (compileType == Config.SNIPPET || compileType == Config.LZOLIB ||
             options.getBoolean(Compiler.DEBUG_EVAL)) {
           // Don't include the LFC in this app
           cmd.add("-external-library-path+="+getLFCLibrary(runtime, debug, backtrace));
         }
 
-        if (options.getBoolean(Compiler.SWF9_LOADABLE_LIB)) {
+        if (compileType == Config.SNIPPET) {
           // If it's a loadable lib, check links against the main app,
           // but don't link those classes in. We do this by declaring the main app
           // source working directory as a external-library-path
@@ -1104,12 +1117,11 @@ public class SWF9External {
         cmd.add("-compiler.incremental=true");
       }
 
-      if (!buildSharedLibrary) {
+      if (compileType == Config.APP) {
         String mainclassname = (String) options.get(Compiler.SWF9_WRAPPER_CLASSNAME);
 
         // Insert preloader frame, unless we're compiling a loadable library
-        if (!(options.getBoolean(Compiler.SWF9_LOADABLE_LIB) ||
-              options.getBoolean(Compiler.DEBUG_EVAL))) {
+        if (compileType == Config.APP && !options.getBoolean(Compiler.DEBUG_EVAL)) {
           // Put application on second frame...
           cmd.add("-frame");
           cmd.add("two");
@@ -1119,6 +1131,21 @@ public class SWF9External {
         } else {
           // For the application, we just list one .as file
           cmd.add("-file-specs=" + workdir.getPath() + File.separator + mainclassname + ".as");
+        }
+        // Add in any swc (lzo) libs that were supplied
+        if (swclibs != null) {
+          for (Iterator iter = swclibs.iterator() ; iter.hasNext() ;) {
+            File swc = (File)iter.next();
+            cmd.add("-compiler.library-path+="+swc.getAbsolutePath());
+          }
+        }
+      } else {
+        // Link against any swc (lzo) libs that were supplied (but don't include them in this lib)
+        if (swclibs != null) {
+          for (Iterator iter = swclibs.iterator() ; iter.hasNext() ;) {
+            File swc = (File)iter.next();
+            cmd.add("-compiler.external-library-path+="+swc.getAbsolutePath());
+          }
         }
       }
 
