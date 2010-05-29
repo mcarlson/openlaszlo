@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -89,7 +89,7 @@ public class CompilationError extends RuntimeException {
     public CompilationError(Throwable cause) {
         super(getCauseMessage(cause));
         SAXParseException se = null; // is there a SAXParseException with more location info?
-        if (cause instanceof ParseException) {
+        if (cause instanceof ParseException && ((ParseException) cause).currentToken != null) {
             this.initPathname(((ParseException) cause).getPathname());
             this.setLineNumber(((ParseException) cause).getBeginLine());
             this.setColumnNumber(((ParseException) cause).getBeginColumn());
@@ -194,7 +194,7 @@ public class CompilationError extends RuntimeException {
 
         // Prefer the script compiler's suggestion of what line number
         // the error occurred on
-        if (cause instanceof ParseException) {
+        if (cause instanceof ParseException && ((ParseException) cause).currentToken != null) {
             this.initPathname(((ParseException) cause).getPathname());
             this.setLineNumber(((ParseException) cause).getBeginLine());
             this.setColumnNumber(((ParseException) cause).getBeginColumn());
