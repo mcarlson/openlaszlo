@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzinstantiator
@@ -424,6 +424,7 @@ public dynamic final class LzInstantiatorService extends LzEventable {
 } // End of LzInstantiatorService
 
 /**
- * @shortdesc Alias for <link linkend="LzInstantiatorService">LzInstantiatorService.LzInstantiator</link>
+ * lz.Instantiator is a shortcut for <link linkend="LzInstantiatorService.LzInstantiator">lz.InstantiatorService.LzInstantiator</link>
+ * @type LzInstantiatorService
  */
 lz.Instantiator = LzInstantiatorService.LzInstantiator;

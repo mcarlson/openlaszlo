@@ -421,9 +421,7 @@ public dynamic final class LzFocusService extends LzEventable {
 lz.FocusService = LzFocusService;  // publish
 
 /**
-  * lz.Focus is a shortcut for <link linkend="LzFocusService">LzFocusService.LzFocus</link>
-  * This service manages the keyboard focus. At any time, at most one view has the keyboard focus. This is the view that receives key events when a key is pressed.
-  *
-  * @shortdesc Handles keyboard focus.
+  * lz.Focus is a shortcut for <link linkend="LzFocusService.LzFocus">lz.FocusService.LzFocus</link>
+  * @type LzFocusService
   */
 lz.Focus = LzFocusService.LzFocus;

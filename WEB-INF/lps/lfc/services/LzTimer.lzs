@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lztimer
@@ -255,6 +255,7 @@ if ($debug) {
 lz.TimerService = LzTimerService;  // publish
 
 /**
- * @shortdesc Alias for <link linkend="LzTimerService">LzTimerService.LzTimer</link>
+ * lz.Timer is a shortcut for <link linkend="LzTimerService.LzTimer">lz.TimerService.LzTimer</link>
+ * @type LzTimerService
  */
 lz.Timer = LzTimerService.LzTimer;

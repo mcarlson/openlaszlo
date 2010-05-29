@@ -523,13 +523,13 @@ class LzUtilsClass {
 }
 
 /**
- * @shortdesc Alias for <link linkend="LzUtilsClass">LzUtilsClass</link>
+ * @shortdesc Alias for <link linkend="LzUtilsClass">lz.UtilsClass</link>
  */
 lz.Utils = new LzUtilsClass();
 
 /**
  * @deprecated
- * @shortdesc Alias for <link linkend="LzUtilsClass">LzUtilsClass</link>
+ * @shortdesc Alias for <link linkend="LzUtilsClass">lz.UtilsClass</link>
  * Use lz.Utils instead.
  */
 var LzUtils:LzUtilsClass = lz.Utils;

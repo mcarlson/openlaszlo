@@ -17,11 +17,14 @@
   * The mode manager controls the dispatch of mouse events to the rest
   * of the system. The mode manager keeps a stack of modal views. When a
   * view is made <i>modal</i> (with the
-  * call <xref linkend="lz.ModeManager.makeModal"/>) only it and
+  * call <link linkend="LzModeManagerService.prototype.makeModal">lz.ModeManager.makeModal()</link>) only it and
   * its children receive mouse events. </p>
   *
   * <p>
-  * In the example below, the window grabs the mode when it is opened and releases it when it is closed. Note that the button no longer responds to mouse examplesses after the window is made modal, but the children of the window (such as the close button and the drag bar) still do. For a more detailed example of using modes with Laslzo, see
+  * In the example below, the window grabs the mode when it is opened and releases it when it is closed.
+  * Note that the button no longer responds to mouse examplesses after the window is made modal,
+  * but the children of the window (such as the close button and the drag bar) still do.
+  * For a more detailed example of using modes with OpenLaszlo, see
   * <a href="${examples}modeexample.lzx">modeexample.lzx</a> in the examples
   * directory.
   * </p>
@@ -31,7 +34,6 @@
   *   &lt;button name="b1" onclick="winDia.openWindow()"&gt;Show modal dialog&lt;/button&gt;
   *   &lt;window width="200" name="winDia" closeable="true" visible="false"
   *           x="150" title="modal dialog"&gt;
-  *
   *     &lt;method name="openWindow"&gt;
   *       this.open();
   *       lz.ModeManager.makeModal(this);
@@ -41,7 +43,6 @@
   *       super.close();
   *     &lt;/method&gt;
   *   &lt;/window&gt;
-  *
   * &lt;/canvas&gt;
   * </example>
   *
@@ -298,6 +299,7 @@ public final class LzModeManagerService extends LzEventable {
 lz.ModeManagerService = LzModeManagerService;  // publish
 
 /**
-  * lz.ModeManager is a shortcut for <a href="LzModeManagerService.html">LzModeManagerService.LzModeManager</a>.
+  * lz.ModeManager is a shortcut for <link linkend="LzModeManagerService.LzModeManager">lz.ModeManagerService.LzModeManager</link>
+  * @type LzModeManagerService
   */
 lz.ModeManager = LzModeManagerService.LzModeManager;

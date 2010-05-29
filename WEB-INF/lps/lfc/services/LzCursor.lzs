@@ -1,6 +1,6 @@
  /**
  *
- * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  *
  * @affects lzcursor
@@ -34,7 +34,7 @@
  *   &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
  *     &lt;method name="setCursor"&gt;
  *       lz.Cursor.setCursorGlobal('waitcursor');
- *       var del= new LzDelegate(lz.Cursor, 'unlock');
+ *       var del = new LzDelegate(lz.Cursor, 'unlock');
  *       lz.Timer.addTimer(del, 500);
  *     &lt;/method&gt;
  *   &lt;/button&gt;
@@ -109,39 +109,7 @@ public final class LzCursorService extends LzEventable {
 lz.CursorService = LzCursorService;  // publish
 
 /**
- *
- * <p>The <code>lz.Cursor</code> service provides methods for
- * changing the mouse cursor.</p>
- *
- * <p>This example shows how the cursor can be set on a view so that
- * it will change when the mouse is over that view:</p>
- *
- * <example title="Setting the cursor for a view">
- * &lt;canvas height="30"&gt;
- *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
- *   &lt;view bgcolor="yellow" cursor="waitcursor"&gt;
- *     &lt;text&gt;Roll over to change the cursor&lt;/text&gt;
- *   &lt;/view&gt;
- * &lt;/canvas&gt;
- * </example>
- *
- * <p>This example changes the cursor for 1/2 second when the button is
- * clicked:</p>
- *
- * <example title="Changing the cursor with lz.Cursor">
- * &lt;canvas height="30"&gt;
- *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
- *   &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
- *     &lt;method name="setCursor"&gt;
- *       lz.Cursor.setCursorGlobal('waitcursor');
- *       var del= new LzDelegate(lz.Cursor, 'unlock');
- *       lz.Timer.addTimer(del, 500);
- *     &lt;/method&gt;
- *   &lt;/button&gt;
- * &lt;/canvas&gt;
- * </example>
- *
+ * lz.Cursor is a shortcut for <link linkend="LzCursorService.LzCursor">lz.CursorService.LzCursor</link>
  * @type LzCursorService
- * @shortdesc  lz.Cursor is a shortcut for <link linkend="LzCursorService">LzCursorService.LzCursor</link>
  */
 lz.Cursor = LzCursorService.LzCursor;

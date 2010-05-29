@@ -210,6 +210,7 @@ public final class LzGlobalMouseService extends LzEventable {
 lz.GlobalMouseService = LzGlobalMouseService;  // publish
 
 /**
- * @shortdesc Alias for <link linkend="LzGlobalMouseService">LzGlobalMouseService.LzGlobalMouse</link>
+ * lz.GlobalMouse is a shortcut for <link linkend="LzGlobalMouseService.LzGlobalMouse">lz.GlobalMouseService.LzGlobalMouse</link>
+ * @type LzGlobalMouseService
  */
 lz.GlobalMouse = LzGlobalMouseService.LzGlobalMouse;

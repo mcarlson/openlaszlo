@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzhistory
@@ -18,8 +18,8 @@
   * 
   * <programlisting>
   * &lt;form&gt;
-  *     &lt;input type="button" value="0" onclick="lzSetCanvasAttribute('foo', 0)"/&gt; 
-  *     &lt;input type="button" value="1" onclick="lzSetCanvasAttribute('foo', 1)"/&gt; 
+  *     &lt;input type="button" value="0" onclick="lz.embed.setCanvasAttribute('foo', 0)"/&gt; 
+  *     &lt;input type="button" value="1" onclick="lz.embed.setCanvasAttribute('foo', 1)"/&gt; 
   * &lt;/form&gt;
   * </programlisting>
   *
@@ -182,7 +182,7 @@ public final class LzHistoryService extends LzEventable {
       * e.g. scope.setAttribute('attribute_name_to_set', value). 
       * @param String who: Global id of the scope to be used
       * @param String prop: Attribute name to be set
-      * @param val: Value to set the attribute to
+      * @param * val: Value to set the attribute to
       */
     function save(who:*, prop:String, val:*) :void {
         if (typeof who != 'string') {
@@ -316,6 +316,7 @@ public final class LzHistoryService extends LzEventable {
 lz.HistoryService = LzHistoryService;  // publish
 
 /**
-  * lz.History is a shortcut for <link linkend="LzHistoryService">LzHistoryService.LzHistory</link>
+  * lz.History is a shortcut for <link linkend="LzHistoryService.LzHistory">lz.HistoryService.LzHistory</link>
+  * @type LzHistoryService
   */
 lz.History = LzHistoryService.LzHistory;

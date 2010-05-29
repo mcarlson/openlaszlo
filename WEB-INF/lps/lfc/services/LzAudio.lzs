@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -146,6 +146,7 @@ public final class LzAudioService {
 lz.AudioService = LzAudioService;  // publish
 
 /**
-  * lz.Audio is a shortcut for <a href="LzAudioService.html">LzAudioService.LzAudio</a>.
+  * lz.Audio is a shortcut for <link linkend="LzAudioService.LzAudio">lz.AudioService.LzAudio</link>
+  * @type LzAudioService
   */
 lz.Audio = LzAudioService.LzAudio;

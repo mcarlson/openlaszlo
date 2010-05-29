@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lztrack
@@ -62,7 +62,7 @@
   *     &lt;attribute name="trackgroup" type="string" value="${parent.trackgroup}"/&gt;
   *     &lt;view name="spot" bgcolor="${parent.mycolor}"
   *         x="2" y="2" width="18" height="18"/&gt;
-  * &lt;handler name="oninit"&gt;
+  *     &lt;handler name="oninit"&gt;
   *         lz.Track.register(this, this.trackgroup);
   *     &lt;/handler&gt;
   *     &lt;handler name="onmousetrackover"&gt;
@@ -391,6 +391,7 @@ lz.TrackService = LzTrackService;  // publish
 
 
 /**
-  * lz.Track is a shortcut for <a href="LzTrackService.html">LzTrackService.LzTrack</a>.
+  * lz.Track is a shortcut for <link linkend="LzTrackService.LzTrack">lz.TrackService.LzTrack</link>
+  * @type LzTrackService
   */
 lz.Track = LzTrackService.LzTrack;

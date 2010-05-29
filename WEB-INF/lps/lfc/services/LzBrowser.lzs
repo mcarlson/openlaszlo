@@ -17,8 +17,8 @@
  * It includes methods to load URLs in the browser, and check the version of the player. For example:</p>
  * <example title="Using lz.Browser to launch another browser">
  * <![CDATA[<canvas height="140" debug="true">
- *   <!-- Load the Laszlo site in a new window -->
- *   <button onclick="lz.Browser.loadURL('http://www.laszlosystems.com/', '_blank')">
+ *   <!-- Load the OpenLaszlo site in a new window -->
+ *   <button onclick="lz.Browser.loadURL('http://www.openlaszlo.org/', '_blank')">
  *     Click me
  *   </button>
  *   <script>
@@ -492,12 +492,8 @@ public final class LzBrowserService {
 lz.BrowserService = LzBrowserService;  // publish
 
 /**
- * <p>The <code>lz.Browser</code> service provides methods for
- * communicating with the browser that embeds the application.</p>
- *
- * @access public
+ * lz.Browser is a shortcut for <link linkend="LzBrowserService.LzBrowser">lz.BrowserService.LzBrowser</link>
  * @type LzBrowserService
- * @shortdesc  LzBrowser is a shortcut for <link linkend="LzBrowserService">LzBrowserService.LzBrowser</link>
  */
 lz.Browser = LzBrowserService.LzBrowser;
 

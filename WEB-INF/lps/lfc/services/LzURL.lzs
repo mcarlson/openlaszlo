@@ -14,10 +14,10 @@
   * the specified URL.</para>
   * <example><![CDATA[
   *     <canvas height="220" debug="true">
-  *     <debug x="0" y="0" height="200" width="450"/>
+  *     <debug x="0" y="0" height="200" width="650"/>
   *     <script>
-  *         var urlstring:String = 'http://localhost:8080/lps/lzurl_example.lzx?lzt=swf';
-  *         var url:LzURL = new LzURL(urlstring);
+  *         var urlstring = 'http://localhost:8080/lps/lzurl_example.lzx?lzt=swf';
+  *         var url = new lz.URL(urlstring);
   *
   *         // list each part of this url
   *         Debug.debug("protocol: %w", url.protocol);
@@ -45,9 +45,8 @@
   *
   * http://www.ietf.org/rfc/rfc2396.txt specifies the syntax for a URI
   *
-  * We also need to handle these cases that OpenLaszlo allows
+  * @devnote We also need to handle these cases that OpenLaszlo allows
   * which aren't real URLs:
-  * 
   * http:foo.html
   * http:/foo/bar.html
   * http:foo.ksp?q=12
@@ -237,7 +236,7 @@ public class LzURL {
     
 
     /**
-     * Returns URL merged with DEFAULTS as an LzURL
+     * Returns URL merged with DEFAULTS as an lz.URL
      * @param LzURL url: base URL
      * @param LzURL defaults: default URL
      * @return LzURL: the merged URL
