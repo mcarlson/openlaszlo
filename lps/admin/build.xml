@@ -6,20 +6,72 @@
 
 
 <project name="admin" default="build" basedir=".">
-  <target name="build" description="Recompile the SOLO dev-console app">
+  <import file="../../build-tools/build-opt.xml" />
+
+  <target name="init" depends="build-opt">
+    <!-- CLASSPATH for Laszlo compiler lzc -->
+    <path id="laszlo.compiler.classpath">
+      <fileset dir="${LPS_HOME}/3rd-party" includes="**/*.jar" />
+      <fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
+    </path>
+
+    <available property="has_compiler.Main"
+               classname="org.openlaszlo.compiler.Main"
+               classpathref="laszlo.compiler.classpath" />
+  </target>
+
+  <target name="solo-compile-file" depends="init" description="Compile the file handed to this target">
+    <fail unless="has_compiler.Main" message="Can't find org.openlaszlo.compiler.Main in classpath." />
+    <echo message="Compiling ${file}"/>
+    <echo message="arg: ${args} ${file}"/>
+    <echo message="Using LPS_HOME: ${LPS_HOME}"/>
+    <java classpathref="laszlo.compiler.classpath" classname="org.openlaszlo.compiler.Main" fork="yes">
+      <sysproperty key="LPS_HOME" value="${LPS_HOME}" />
+      <jvmarg value="-Xmx1024M"/>
+      <arg line="${args} ${file}"/>
+    </java>
+  </target>
+
+  <target name="build" depends="init" description="Recompile the SOLO dev-console app">
     <sequential>
-      <exec executable="../../WEB-INF/lps/server/bin/lzc" >
-        <arg value="--runtime=swf10" />
-        <arg value="dev-console.lzx" />
-      </exec>
-      <exec executable="../../WEB-INF/lps/server/bin/lzc" >
-        <arg value="--copy-resources" />
-        <arg value="--runtime=dhtml" />
-        <arg value="dev-console.lzx" />
-      </exec>
-      <move file="dev-console.swf10.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
+      <antcall target="solo-compile-file">
+        <param name="file" value="dev-console.lzx" />
+        <param name="args" value="--runtime=swf10" />
+      </antcall>
+      <antcall target="solo-compile-file">
+        <param name="file" value="dev-console.lzx" />
+        <param name="args" value="--runtime=dhtml --copy-resources" />
+      </antcall>
+      <!-- proxied="false" creates two output files? -->
+      <delete file="dev-console.swf10.swf" />
+      <delete file="dev-console.js" />
+      <move file="dev-console.lzx.swf10.swf" tofile="dev-console.lzx.swf" overwrite="yes"/>
       <copy file="../includes/lfc/LFCdhtml.js" tofile="lps/includes/lfc/LFCdhtml.js" overwrite="yes"/>
       <echo message="Please test the rebuilt developer's console in DHTML and Flash"/>
     </sequential>
+  </target>
+
+  <target name="clean">
+    <delete failonerror="false">
+      <fileset dir=".">
+        <include name="lps/includes/lfc/**" />
+        <include name="dev-console.*" />
+        <exclude name="dev-console.html" />
+        <exclude name="dev-console.lzx" />
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- in addition to "clean", also wipes out all copied resources -->
+  <target name="clean-all">
+    <delete failonerror="false">
+      <fileset dir=".">
+        <include name="lps/includes/lfc/**" />
+        <include name="lps/resources/*/**" />
+        <include name="dev-console.*" />
+        <exclude name="dev-console.html" />
+        <exclude name="dev-console.lzx" />
+      </fileset>
+    </delete>
   </target>
 </project>

@@ -17,9 +17,6 @@
     </delete>
   </target>
 
-  <!-- Environment vars -->
-  <property environment="env"/>
-
   <target name="init" depends="build-opt">
     <!-- CLASSPATH for Laszlo compiler lzc -->
     <path id="laszlo.compiler.classpath">
@@ -32,7 +29,7 @@
                classpathref="laszlo.compiler.classpath" />
   </target>
 
-  <target name="solo-compile-file" depends="init" description="Compile the file handed to this target by solo-compile-all-files">
+  <target name="solo-compile-file" depends="init" description="Compile the file handed to this target">
     <fail unless="has_compiler.Main" message="Can't find org.openlaszlo.compiler.Main in classpath." />
     <echo message="Compiling ${file}"/>
     <echo message="arg: ${args} ${file}"/>
@@ -44,7 +41,7 @@
     </java>
   </target>
 
-  <target name="build" description="Recompile the SOLO laszlo-explorer app">
+  <target name="build" depends="init" description="Recompile the SOLO laszlo-explorer app">
     <sequential>
       <antcall target="solo-compile-file">
         <param name="file" value="explore-nav.lzx" />
