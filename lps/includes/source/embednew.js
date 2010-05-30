@@ -175,7 +175,7 @@ lz.embed = {
             div._gotmouseup = document.onmouseup = function(e) {
                 if (div.mouseisoutside) {
                     // tell flash that the button went up outside
-                    app.callMethod('LzMouseKernel.__mouseUpOutsideHandler()');
+                    app.callMethod('lz.GlobalMouse.__mouseUpOutsideHandler()');
                     //console.log('mouseup ', embed[app._id]);
                 }
             }

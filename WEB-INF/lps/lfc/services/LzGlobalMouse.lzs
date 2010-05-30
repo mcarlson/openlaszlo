@@ -206,6 +206,14 @@ public final class LzGlobalMouseService extends LzEventable {
             Debug.debug("Unknown mouse event %s", eventname);
         }
     }
+
+    /**
+     * Trampoline so we can call from lz.embed
+     * @access private
+     */
+    function __mouseUpOutsideHandler () :void {
+      LzMouseKernel.__mouseUpOutsideHandler();
+    }
 }
 lz.GlobalMouseService = LzGlobalMouseService;  // publish
 
