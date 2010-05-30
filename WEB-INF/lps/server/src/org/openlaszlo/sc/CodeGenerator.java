@@ -546,7 +546,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       finallyNode = children[2];
     }
 
-    String catchVarName = "";
+    Object catchVar = "";
 
     // For catch and finally, reach down to get
     // the target node to visit.
@@ -555,7 +555,17 @@ public class CodeGenerator extends CommonGenerator implements Translator {
       SimpleNode[] catchchildren = catchNode.getChildren();
       SimpleNode id = catchchildren[0];
       assert id instanceof ASTIdentifier;
-      catchVarName = ((ASTIdentifier)id).getName();
+      String catchVarName = ((ASTIdentifier)id).getName();
+      catchVar = catchVarName;
+
+      Map registers = (Map) context.get(TranslationContext.REGISTERS);
+      if (registers != null) {
+          Instructions.Register register = (Instructions.Register) registers.get(catchVarName);
+          if (register != null) {
+              catchVar = register;
+              flags |= Instructions.TryInstruction.FLAGS_USE_REGISTER;
+          }
+      }
       catchNode = catchchildren[1];
       flags |= Instructions.TryInstruction.FLAGS_HAS_CATCH;
     }
@@ -588,7 +598,7 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     Object[] tryargs = { new Integer(1), new Integer(0), // label1 - label0
                          new Integer(2), new Integer(1), // label2 - label1
                          new Integer(3), new Integer(2), // label3 - label2
-                         catchVarName, new Integer(flags)};
+                         catchVar, new Integer(flags)};
     code.add(Instructions.TRY.make(tryargs));
     code.add(new Integer(0));
     code.add(block);

@@ -567,6 +567,7 @@ public class Instructions {
     short blockEnd;
     public static int FLAGS_HAS_CATCH = 0x1;
     public static int FLAGS_HAS_FINALLY = 0x2;
+    public static int FLAGS_USE_REGISTER = 0x4;
 
     protected TryInstruction(Action op) {
       this(op, null);
@@ -617,14 +618,22 @@ public class Instructions {
       bytes.putShort(this.catchStart);
       bytes.putShort(this.finallyStart);
       bytes.putShort(this.blockEnd);
-      String varname = (String)args.get(6);
-      if (varname == null) varname = "";
-      try {
-        bytes.put(varname.getBytes("UTF-8"));
-      } catch (UnsupportedEncodingException e) {
-        assert false : "this can't happen";
+      Object var = args.get(6);
+      if (var == null) var = "";
+      if (var instanceof String) {
+        assert (flags & FLAGS_USE_REGISTER) == 0;
+        String varname = (String) var;
+        try {
+          bytes.put(varname.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+          assert false : "this can't happen";
+        }
+        bytes.put((byte)0);
+      } else if (var instanceof Register) {
+        assert (flags & FLAGS_USE_REGISTER) != 0;
+        Register register = (Register) var;
+        bytes.put(register.regno);
       }
-      bytes.put((byte)0);
     }
 
     public int argsBytes() {
@@ -1398,7 +1407,7 @@ public class Instructions {
 }
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
