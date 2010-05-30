@@ -113,7 +113,7 @@ public class Canvas implements java.io.Serializable {
     private FontInfo mFontInfo = null;
     
     /** Title for the canvas. */
-    private String mTitle = "OpenLaszlo " + LPS.getVersion();
+    private String mTitle = null;
     
     /** Version of the flash player file format which we compile to **/
     private String mRuntime = LPS.getProperty("compiler.runtime.default", LPS.getRuntimeDefault() );

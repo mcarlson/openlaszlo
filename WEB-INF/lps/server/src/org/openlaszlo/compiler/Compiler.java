@@ -493,12 +493,13 @@ public class Compiler {
               // set file path (relative to webapp) in canvas
               String path = FileUtils.relativePath(file, LPS.HOME());
               canvas.setFilePath(path);
-              String application = FileUtils.getBase(file.getName());
-              // Approximate ServletContext.getContextPath()
-              String context = new File(LPS.HOME()).getName() +
-                FileUtils.toURLPath(FileUtils.getBase(path));
-              // Create a meaningful default title
-              canvas.setTitle(canvas.getTitle() + ": " + application + " (" + context + ")");
+              // If the canvas has not set a title, create a useful default
+              if (canvas.getTitle() == null) {
+                String application = FileUtils.getBase(file.getName());
+                // Approximate ServletContext.getContextPath()
+                String context = new File(LPS.HOME()).getName() + FileUtils.toURLPath(FileUtils.getBase(path));
+                canvas.setTitle("OpenLaszlo " + LPS.getVersion() + ": " + application + " (" + context + ")");
+              }
             }
 
             if (linking) {
