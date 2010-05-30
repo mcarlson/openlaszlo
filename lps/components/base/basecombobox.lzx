@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -411,8 +411,12 @@
         <!--- @keywords private -->
         <attribute name="_fixseldel" value="$once{new LzDelegate(this, 'fixSelection')}"/>
         <!--- @keywords private -->
+        <attribute name="_fixselstart" type="number"/>
+        <!--- @keywords private -->
+        <attribute name="_fixselend" type="number"/>
+        <!--- @keywords private -->
         <method name="fixSelection" args="ignore">
-            this.interior.cbtext.setSelection(_fixseldel.start, _fixseldel.end);
+            this.interior.cbtext.setSelection(this._fixselstart, this._fixselend);
         </method>
 
         <!--- this method listens for the onselect event from the floating list
@@ -426,8 +430,8 @@
             this.selected = v;
             if (v) this.setText(v.text);
             if (this.editable && lz.Focus.getFocus() == this.interior.cbtext) {
-                _fixseldel.start = 0;
-                _fixseldel.end = v.text.length;
+                this._fixselstart = 0;
+                this._fixselend = v.text.length;
                 lz.Idle.callOnIdle( _fixseldel );
 
             }
