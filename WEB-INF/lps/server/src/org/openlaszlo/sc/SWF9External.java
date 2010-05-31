@@ -131,6 +131,9 @@ public class SWF9External {
     }
 
     public SWF9External(Compiler.OptionMap options, String compileType) {
+      if (compileType == null) {
+        throw new CompilerError("In SWF9External, supplied compileType is null.");
+      }
       this.options = options;
       mInfo = (ScriptCompilerInfo) options.get(Compiler.COMPILER_INFO);
 

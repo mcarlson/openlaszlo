@@ -646,6 +646,7 @@ public class Compiler {
         try {
             Properties props = new Properties();
             props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtime);
+            props.put(org.openlaszlo.sc.Compiler.COMPILE_TYPE, SWF9ParseTreePrinter.Config.APP);
             props.setProperty("canvasWidth", "1000");
             props.setProperty("canvasHeight", "600");
             Map compileTimeConstants = new HashMap();
