@@ -167,18 +167,19 @@ public final class LzModeManagerService extends LzEventable {
         }
 
         var dosend:Boolean = true;
+        if ($debug) {
+            // exclude the debugger from the mode
+            var isDebugView:Boolean = Debug.canvasConsoleWindow && view && view.childOf(Debug.canvasConsoleWindow);
+            // the loop's test expression checks dosend, by setting it to
+            // false we won't enter the loop for the debugger altogether
+            dosend = ! isDebugView;
+        }
         for (var i:int = this.modeArray.length - 1; dosend && i >= 0; --i) {
             var mView:LzView = this.modeArray[ i ];
             if (! mView) {
                 // invalid entries are possible because the call to passModeEvent
                 // can have side-effects, e.g. modeArray may change (LPP-7681)
                 continue;
-            }
-            // exclude the debugger from the mode
-            if ($debug) {
-                if (Debug.canvasConsoleWindow && view.childOf(Debug.canvasConsoleWindow)) {
-                  break;
-                }
             }
 
             if (view && view.childOf( mView )) {
@@ -193,6 +194,10 @@ public final class LzModeManagerService extends LzEventable {
             return;
         }
 
+        if ($debug) {
+            // always send event for debugger
+            dosend = dosend || isDebugView;
+        }
         if (dosend) {
             //check for double-click
             if (eventStr == "onclick") {
