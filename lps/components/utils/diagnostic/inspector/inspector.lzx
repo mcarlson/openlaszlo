@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.         *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 <library>
@@ -120,24 +120,7 @@
                     } else if (ref.name != null) {
                         idname = ref.name;
                     }
-                    if (ref.constructor.hasOwnProperty('tagname')) {
-                        var text = '&lt;' + ref.constructor.tagname + '&gt;';
-                    } else {
-                        if ($as3) {
-                            // '[class xxx]'
-                            var cname = ref.constructor.toString();
-                            cname = cname.substring('[class '.length, cname.length - 1);
-                        } else {
-                            var cname = ref.constructor['classname'] || '';
-                        }
-                        if (cname.indexOf('Lz') == 0) {
-                            if (lz[cname.substring(2)] === ref.constructor) {
-                                // c.f. lz.ReplicationManager
-                                cname = 'lz.' + cname.substring(2);
-                            }
-                        }
-                        var text = cname;
-                    }
+                    var text = classroot.getDisplayName(ref);
                     this.setAttribute('text', idname ? text + ' (' + idname + ')' : text);
                 ]]></handler>
             </text>
@@ -160,14 +143,15 @@
                         nodes = defplace.subnodes;
                     }
                 }
+                var hidehelpers = (this.reference === canvas && !this.showcomponenthelpers);
                 for (var i=0, len=nodes.length; i<len; i++) {
                     var show = true;
-                    if (this.reference == canvas && !this.showcomponenthelpers) {
-                       switch (nodes[i].constructor.tagname) {
+                    if (hidehelpers) {
+                       switch (getTagName(nodes[i])) {
                         case '_componentmanager':
                         case 'style':
                         case 'focusoverlay':
-                        case 'debugwindow':
+                        case 'LzDebugWindow':
                         case 'inspector':
                         case 'colormenu':
                             show = false;
@@ -188,6 +172,60 @@
             }
         ]]>
         </method>
+        <switch>
+            <when property="$as3">
+                <passthrough>
+                    import flash.utils.*;
+                </passthrough>
+                <method name="getClassName" args="who"><![CDATA[
+                    // '[class xxx]'
+                    var cname = who.constructor.toString();
+                    cname = cname.substring('[class '.length, cname.length - 1);
+                    return cname;
+                ]]></method>
+                <method name="getSuperClass" args="who"><![CDATA[
+                    try {
+                        return getDefinitionByName(getQualifiedSuperclassName(who));
+                    } catch (e:ReferenceError) {
+                    }
+                ]]></method>
+            </when>
+            <otherwise>
+                <method name="getClassName" args="who"><![CDATA[
+                    var cname = who.constructor['classname'] || '';
+                    return cname;
+                ]]></method>
+                <method name="getSuperClass" args="who"><![CDATA[
+                    return who.constructor.prototype.constructor;
+                ]]></method>
+            </otherwise>
+        </switch>
+        <method name="getDisplayName" args="who"><![CDATA[
+            var name = getTagName(who);
+            if (name != null) {
+                name = '&lt;' + name + '&gt;';
+            } else {
+                name = getClassName(who);
+                if (name.indexOf('Lz') == 0) {
+                    if (lz[name.substring(2)] === who.constructor) {
+                        // c.f. lz.ReplicationManager
+                        name = 'lz.' + name.substring(2);
+                    }
+                }
+            }
+            return name;
+        ]]></method>
+        <method name="getTagName" args="who"><![CDATA[
+            var c = who.constructor;
+            if (c['tagname'] == null) {
+                var cname = getClassName(who);
+                if (cname.indexOf('$lzc$class_') == 0) {
+                    // an anonymous class, get base class for tagname
+                    c = getSuperClass(who) || {};
+                }
+            }
+            return c['tagname'];
+        ]]></method>
     </class>
 
     <class name="inspector" extends="window"
