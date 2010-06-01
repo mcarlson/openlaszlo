@@ -934,6 +934,28 @@ public class JavascriptGenerator extends CommonGenerator implements Translator {
     return node;
   }
 
+  public SimpleNode visitConditionalExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    assert children.length == 3;
+    SimpleNode test = children[0];
+    SimpleNode a = children[1];
+    SimpleNode b = children[2];
+
+    // Compile-time conditional evaluations
+    Boolean value = evaluateCompileTimeConditional(test);
+    if (value != null) {
+      if (value.booleanValue()) {
+        return visitExpression(a);
+      } else {
+        return visitExpression(b);
+      }
+    } else {
+      children[0] = visitExpression(test);
+      children[1] = visitExpression(a);
+      children[2] = visitExpression(b);
+      return node;
+    }
+  }
+
   public SimpleNode visitAssignmentExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
     JavascriptReference lhs = translateReference(children[0]);
     int op = ((ASTOperator)children[1]).getOperator();

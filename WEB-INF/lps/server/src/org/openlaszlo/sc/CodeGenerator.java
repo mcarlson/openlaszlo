@@ -1851,16 +1851,27 @@ public class CodeGenerator extends CommonGenerator implements Translator {
     SimpleNode test = children[0];
     SimpleNode a = children[1];
     SimpleNode b = children[2];
-    String l1 = newLabel(node);
-    String l2 = newLabel(node);
-    visitExpression(test);
-    collector.emit(Instructions.BranchIfTrue.make(l1));
-    visitExpression(b);
-    collector.emit(Instructions.BRANCH.make(l2));
-    collector.emit(Instructions.LABEL.make(l1));
-    visitExpression(a);
-    collector.emit(Instructions.LABEL.make(l2));
-    return node;
+
+    // Compile-time conditional evaluations
+    Boolean value = evaluateCompileTimeConditional(test);
+    if (value != null) {
+      if (value.booleanValue()) {
+        return visitExpression(a);
+      } else {
+        return visitExpression(b);
+      }
+    } else {
+      String l1 = newLabel(node);
+      String l2 = newLabel(node);
+      visitExpression(test);
+      collector.emit(Instructions.BranchIfTrue.make(l1));
+      visitExpression(b);
+      collector.emit(Instructions.BRANCH.make(l2));
+      collector.emit(Instructions.LABEL.make(l1));
+      visitExpression(a);
+      collector.emit(Instructions.LABEL.make(l2));
+      return node;
+    }
   }
 
   public SimpleNode visitAssignmentExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
