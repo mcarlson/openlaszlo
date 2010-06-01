@@ -189,11 +189,13 @@
                 if ( s is lz.view  ) {
                     s.setHilite(false);
                 }
-                // If shift is down, extend the selection
-                if (next.enabled && _selector.isRangeSelect(next)) {
-                  next.setAttribute('selected', true);
+                if (next) {
+                    // If shift is down, extend the selection
+                    if (next.enabled && _selector.isRangeSelect(next)) {
+                      next.setAttribute('selected', true);
+                    }
+                    next.setHilite(true);
                 }
-                next.setHilite(true);
                 this._hiliteview = next;
              }
             ]]>
