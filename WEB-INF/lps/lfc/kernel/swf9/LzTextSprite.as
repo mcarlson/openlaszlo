@@ -154,7 +154,12 @@ public class LzTextSprite extends LzSprite {
                     LzMouseKernel.showhandcursor : lzsprite.showhandcursor;
                 // need to respect global cursor setting
                 if (usehand && ! LzMouseKernel.hasGlobalCursor) {
-                    if ($swf10) { cursor = MouseCursor.BUTTON; }
+                    if ($swf9) {
+                        // This is a workaround for LPP_8710, to make a button cursor in swf9
+                        cursor = "__LFCSWF9handcursor";
+                    } else {
+                        cursor = MouseCursor.BUTTON;
+                    }
                 }
             }
             if (lzsprite.cursorResource != null) {

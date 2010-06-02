@@ -19,6 +19,7 @@ import org.openlaszlo.utils.ListFormat;
 import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.compiler.ObjectWriter.ImportResourceError;
 import org.openlaszlo.compiler.ObjectWriter.Resource;
+import org.openlaszlo.compiler.ResourceCompiler.Offset2D;
 import org.openlaszlo.iv.flash.api.text.*;
 import org.openlaszlo.iv.flash.api.FlashDef;
 import org.openlaszlo.sc.SWF9ParseTreePrinter;
@@ -481,6 +482,17 @@ class SWF9Writer extends ObjectWriter {
 
             // Put the canvas sprite on the 'stage'.
             addScript("addChild(canvas.sprite)");
+
+            // TODO [hqm 2010-06] This is a workaround for LPP-8710,
+            // can be removed when swf9 support is dropped.
+            if ("swf9".equals(mEnv.getRuntime())) {
+                // <resource name="__LFCSWF9handcursor" src="resources/handcursor.png"/>
+                Offset2D offset = new Offset2D("-4", "0");
+                importResource(LPS.getComponentsDirectory()+File.separator+
+                               "lz"+File.separator+"resources"+File.separator+"handcursor.png", "__LFCSWF9handcursor",
+                               offset);
+            }
+
 
             // TODO [hqm 2010-05] I'm putting the calls to the lzo
             // startup methods here, but they should really go in

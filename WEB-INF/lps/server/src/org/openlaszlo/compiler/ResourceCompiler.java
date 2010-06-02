@@ -221,7 +221,7 @@ class ResourceCompiler extends ElementCompiler {
 
 
   // Utility class to specify an offset, used to set a cursor resource's hotspot
-  class Offset2D {
+  static class Offset2D {
     String offsetx = null;
     String offsety = null;
 
