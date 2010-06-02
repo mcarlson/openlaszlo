@@ -28,6 +28,9 @@
     <entry revision="15483" release="Latest" id="4.7.1" />
     <entry revision="15761" release="RC" id="4.7.1" />
   </branch>
+  <branch url="http://svn.openlaszlo.org/openlaszlo/branches/4.8">
+    <entry revision="16580" release="Latest" id="4.8.0" />
+  </branch>
   <!-- Copyright 2010 Laszlo Systems, Inc. All Rights Reserved. Use is subject to license terms. -->
 </versions>
 
