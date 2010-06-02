@@ -51,32 +51,32 @@ Delegates that you explicitly create are generally used for objects that are cre
 
 <para>
 Delegates are necessary because sometimes you don't know, at compile time, what a particular event should do.  For example, say you have a <indexterm><primary>window</primary></indexterm><classname>window</classname>, and you want a certain method to be called every time the window is clicked.  In that case, you would use a tag such as <literal>&lt;window onclick="clickhandler()"&gt;</literal>.  However, there may exist times when the desired action for the event depends on conditions at the time the event is created.  In that situation you would use delegates.</para>
-<para/><section><title>LzDelegate</title>
+<para/><section><title>lz.Delegate</title>
 <para>
-To create and manage delegates, you use the <indexterm><primary>LzDelegate</primary></indexterm><classname>LzDelegate</classname> class.
+To create and manage delegates, you use the <indexterm><primary>lz.Delegate</primary></indexterm><classname>lz.Delegate</classname> class.
 </para>
 <para>
 The syntax for creating a delegate is:</para>
 <programlisting>
-LzDelegate(object, method, sender, event)
+lz.Delegate(object, method, sender, event)
 </programlisting>
 <para>
-The 3rd and 4th optional arguments to LzDelegate are just shorthand: </para>
+The 3rd and 4th optional arguments to lz.Delegate are just shorthand: </para>
 <programlisting>
- var del = new LzDelegate(object, method, sender, event); 
+ var del = new lz.Delegate(object, method, sender, event); 
 </programlisting>
 <para>
 is the same as: 
 </para>
 <programlisting>
- var del = new LzDelegate(object, method); 
+ var del = new lz.Delegate(object, method); 
  del.register(sender, event);
 </programlisting> 
 
 <para/></section><section><title>Relationship between delegates and tag-generated events</title>
 
 <para>
-The <indexterm><primary>LzDelegate</primary></indexterm><classname>LzDelegate</classname> class is used to create delegates in script. 
+The <indexterm><primary>lz.Delegate</primary></indexterm><classname>lz.Delegate</classname> class is used to create delegates in script. 
 </para>
 <para>
 That is to say, you can statically attach a handler to an event by:</para>
@@ -89,20 +89,23 @@ That is to say, you can statically attach a handler to an event by:</para>
 but if you don't know <literal>eventName</literal> or <literal>eventSender</literal> at compile time, you need to use the dynamic technique:
 </para>
 <programlisting>
-
-     &lt;method name="methodName"&gt;
+     &lt;method name="methodName" args="value=null"&gt;
        ...what to do...
      &lt;/method&gt;
 
      &lt;method name="createDelegate&gt;
-     this.myDel = new LzDelegate(this, "methodName", eventSender, "eventName");
+     this.myDel = new lz.Delegate(this, "methodName", eventSender, "eventName");
      &lt;/method&gt;
 </programlisting>
+<note>
+The method referenced by a delegate must accept an argument. Most times this
+requirement is fulfilled by adding an optional argument to the method. 
+</note>
 <para>
 An event handler automatically handles all the work of making and registering a delegate for you: 
 </para>
 <programlisting>
-onclick="do something or other"; 
+onclick="do something or other;"
 </programlisting>
 <para>
 expands to: 
@@ -114,21 +117,22 @@ expands to:
 </programlisting>
 <para>
  Which expands to: </para>
-<programlisting>
- // make up a unique method name 
- var uid = $m + &lt;unique id&gt; 
- // make a method of that name to run the onclick code 
- this.$m = function () { ; }; 
+<programlisting><![CDATA[
+ // make a method with a unique name to run the onclick code 
+ <method name="$m<unique id>" args="ignore=null">
+  do something or other;
+ </method>
+
  // make a delegate for that method 
- var del = new LzDelegate(this, $m); 
+ var del = new lz.Delegate(this, $m<unique id>); 
  // register it to receive onclick events 
  del.register(this, 'onclick'); 
-</programlisting>
+]]></programlisting>
 <para>
-The example below illustrates <indexterm><primary>LzDelegate</primary></indexterm><classname>LzDelegate</classname> in use.
+The example below illustrates <indexterm><primary>lz.Delegate</primary></indexterm><classname>lz.Delegate</classname> in use.
 </para>
 
-<para/></section><section><title> Example: using LzDelegate to register an event at runtime </title>
+<para/></section><section><title> Example: using lz.Delegate to register an event at runtime </title>
 
 <para>
 The following example is a simple memory game.  When a button is clicked once,
@@ -167,21 +171,7 @@ all events from the delegate, and resets the message to nothing special.
 <para>
 In the past, it was necessary to manually track delegates and manually clean them up when objects were destroyed to prevent memory leaks.  This is no longer required - the event system now automatically cleans up delegates as needed.
 </para>
-<para/><section><title>Memory Management example</title>
-<para>
-To dynamically attach a method to an event, use a delegate:
-</para>
-<example role="live-example"><title>Delegates and memory</title><programlisting>
-&lt;class ...&gt;
-   &lt;method name="doit"&gt; ... &lt;/method&gt;
-
-   &lt;method name="init"&gt;
-     super.init();
-     new LzDelegate(this, 'doit', libraryName, 'onload');
-   &lt;/method&gt;
-&lt;/class&gt;
-</programlisting></example>
-<para/></section></section><section><title>Using a lz.Timer to show the passage of time </title>
+<para/></section><section><title>Using a lz.Timer to show the passage of time </title>
 
 <para> 
 In the following example, a visual timer is created which shows each passing
@@ -203,7 +193,7 @@ by the delegate, instead of creating a new timer (which would be inefficient) , 
    </programlisting>
 </example>
 
-<para/></section><section><title> Using <indexterm><primary>LzDelegate</primary></indexterm><classname>LzDelegate</classname> to determine initialization of the last replicated view </title>
+<para/></section><section><title> Using <indexterm><primary>lz.Delegate</primary></indexterm><classname>lz.Delegate</classname> to determine initialization of the last replicated view </title>
 
 <para>
 In the following example, when the last <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> object has been
@@ -212,7 +202,7 @@ view has been replicated'.  To accomplish this task, we first explicitly declare
 a datapath on the <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> to be replicated.  Next, we handle
 the onclones event, which indicates that the new <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> nodes
 has been cloned, but not initialized.  Inside the onclones event, we determine the
-last replicated clone, and register the oninit event using <indexterm><primary>LzDelegate</primary></indexterm><classname>LzDelegate</classname>.  When the
+last replicated clone, and register the oninit event using <indexterm><primary>lz.Delegate</primary></indexterm><classname>lz.Delegate</classname>.  When the
 last <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> node has been initialized, the delegate calls the
 "replicationComplete" method, where the text of the green <indexterm><primary>text</primary></indexterm><sgmltag class="element">&lt;text&gt;</sgmltag> node is updated. 
 </para>
@@ -234,12 +224,12 @@ A delegate is an object, and as such it can be an attribute of another object. F
 <example role="live-example"><title>delegate as attribute</title><programlisting>
 &lt;button text="clickme"&gt;
     &lt;attribute name="mydel" type="expression"
-               value="$once{new LzDelegate(this, 'handler')}"
+               value="$once{new lz.Delegate(this, 'handler')}"
 </programlisting></example>
 <para>
 The above code creates the delegate <literal>mydel</literal> when the button is instantiated. This technique of declaring a delegate has the advantage of being easy to read, and it ensures that only one delegate is created.
 </para>
-<para>For an example that uses this technique, see the "Using delegates as attributes"example in <xref linkend="rpc"/>.</para>
+<para>For an example that uses this technique, see <xref linkend="rpc"/>.</para>
 <para/></section><section><title>Delegates in relation to other languages</title>
 <para>
 Here is a brief discussion of delegates in relation to other programming languages with which you may be familiar.  You don't need to follow this discussion in order to use delegates in LZX.

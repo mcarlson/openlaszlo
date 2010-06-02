@@ -19,15 +19,15 @@
                     var lastclone = this.clones[ this.clones.length - 1 ];
 
                     if( typeof this.del == "undefined" ) {
-                        this.del = new LzDelegate( this, "replicationComplete") 
+                        this.del = new lz.Delegate( this, "replicationComplete") 
                     } else {
-                        this.del.ungregisterAll();
+                        this.del.unregisterAll();
                     }
 
                     this.del.register( lastclone, "oninit"); 
                 </handler>
 
-                <method name="replicationComplete">
+                <method name="replicationComplete" args="ignore=null">
                     lastRepText.setAttribute("text", "The last view has been replicated"); 
                 </method>
             </datapath>
@@ -42,6 +42,6 @@
     <simplelayout axis="y"/> 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.             *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** --> 

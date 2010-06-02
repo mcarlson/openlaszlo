@@ -18,7 +18,7 @@
 
     <method name="regbutton" args="b"> 
         if( typeof this.del == "undefined" )  {
-            this.del = new LzDelegate( this, "buttonclickedagain" ); 
+            this.del = new lz.Delegate( this, "buttonclickedagain" ); 
         }      
 
         this.del.register( b, "onclick" );
@@ -33,11 +33,11 @@
         statusText.setAttribute("text", "Nothing special");
     </method> 
 
-    <method name="buttonclickedagain"> 
+    <method name="buttonclickedagain" args="ignore=null"> 
         statusText.setAttribute("text", "That button was clicked two or more times");
     </method> 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007, 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2007, 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.       *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
