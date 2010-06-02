@@ -568,10 +568,15 @@ class SWF9Writer extends ObjectWriter {
         // Scan for entry named entryName
         ZipInputStream zis = new ZipInputStream(ifs);
         ZipEntry entry;
+        // TODO [hqm 2010-06] When the compiler no longer forces the 'public' flag when doing debug compiles,
+        // we won't need to make sure that compiler options match exactly when linking against external library,
+        // and we can just use any "swf10" .swc file we find in the external library.
+        String nameWithOptions = ObjectWriter.addLZOCompilerOptionFlags(entryName, mEnv);
+        String debugFlagName = mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY) ? "debug" : "non-debug";
         while (true) {
             entry = zis.getNextEntry();
             if (entry == null) {
-                throw new IOException("copyFromLZO could not find entry "+entryName+" in .lzo zip file "+lzofile);
+                throw new CompilationError("copyFromLZO could not find entry "+entryName+" in .lzo zip file "+lzofile);
             }
             // In case this is an external LZO we're linking against,
             // we need to make sure that the compiler options
@@ -580,12 +585,12 @@ class SWF9Writer extends ObjectWriter {
             // overrides fail because methods have become 'public' in
             // debug version vs non-public in non-debug versions.
             if (entry.getName().startsWith(entryName)) {
-                if (entry.getName().equals(entryName)) {
+                if (entry.getName().equals(nameWithOptions)) {
                     break;
                 } else {
-                    throw new IOException("copyFromLZO expecting to find "+entryName +" in lzo archive "+lzofile+
-                                          ", but found "+ entry.getName() +
-                                          ", compiler options must match when compiling against an lzo");
+                    throw new CompilationError("copyFromLZO expecting to find '"+debugFlagName +"' version in lzo archive "+lzofile+
+                                          ", but found '"+ entry.getName() +
+                                          "'; when building a (swf10) lzo any external lzo's that it references must have matching debug flag.");
                 }
             }
         }

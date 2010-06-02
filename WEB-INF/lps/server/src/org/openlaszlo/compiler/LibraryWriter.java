@@ -232,8 +232,6 @@ class LibraryWriter extends IntermediateWriter {
         mDHTMLWriter.finish(false);
         zout.closeEntry();
       }
-    } catch (Exception e) {
-      throw new ChainedException(e);
     } finally {
       zout.close();
     }
