@@ -382,7 +382,9 @@ lz.embed = {
         }
 
         this.__setAttr(script, 'src', url);
-        document.getElementsByTagName("head")[0].appendChild(script);
+        // prefer adding scripts to the body - it's better for performance
+        var el = document.getElementsByTagName("body")[0] || document.getElementsByTagName("head")[0]
+        el.appendChild(script);
     }
 
     ,/** @access private */
