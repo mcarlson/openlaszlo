@@ -1154,6 +1154,12 @@ public class SWF9External {
 
       mFlexTime = System.currentTimeMillis();
 
+      // Clean out old object file
+      File outf = new File(outfilename);
+      if (outf.exists()) {
+        outf.delete();
+      }
+
       // Call the Flex compiler, either in its own exec'ed process or in a thread 
       if (execFlex()) {
         execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
