@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -78,6 +78,10 @@ public class LPS {
         mBuildDate = root.getChildTextNormalize("build-date");
         mVersionID = root.getChildTextNormalize("version-id");
         mRelease = root.getChildTextNormalize("release");
+
+        System.setProperty("java.awt.headless", "true"); 
+
+
     }
 
 
