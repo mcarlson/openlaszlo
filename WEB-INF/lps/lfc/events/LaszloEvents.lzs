@@ -77,7 +77,7 @@
   * @see LzEvent
   *
   */
-public dynamic final class LzDelegate {
+public final class LzDelegate {
   /** @access private */
   var __delegateID:int = 0;
   /** @access private */
