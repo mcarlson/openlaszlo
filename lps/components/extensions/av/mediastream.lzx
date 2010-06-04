@@ -1482,7 +1482,14 @@
 
     <!--- @keywords private -->
     <method name="_setupStreamAudio">
-        this._flashstream.attachAudio(this.muteaudio ? false : this.mic._dev);
+        if ($as2) {
+            var noaudioobject = false;
+        } else {
+            // attachAudio() requires a Microphone object in AS3 - see 
+            // http://www.adobe.com/livedocs/flash/9.0/ActionScriptLangRefV3/flash/net/NetStream.html#attachAudio%28%29
+            var noaudioobject = null;
+        }
+        this._flashstream.attachAudio(this.muteaudio ? noaudioobject : this.mic._dev);
     </method>
 
     <!--- @keywords private -->
