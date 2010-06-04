@@ -1503,7 +1503,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 if (! this.__norebuild && (this.__bitmapdata || ! this.measuresize)) this.rebuildBitmap();
             }
 
-            private function __updateSize() :void {
+            protected function __updateSize() :void {
                 if (! this.__drawcontainer) return;
                 var measureSize:Boolean = (this.hassetwidth == false || this.hassetheight == false || this._setrescwidth || this._setrescheight) && this.measuresize;
                 if (! measureSize) return;
