@@ -109,7 +109,7 @@
             <!--- The AMF object encoding to use for this connection, either 0 or 3.
                 @type Number
                 @keywords final  -->
-            <attribute name="objectencoding" value="3" type="number" />
+            <attribute name="objectencoding" value="0" type="number" />
 
             <!--- Event sent when connection established. -->
             <event name="onconnect"/>
