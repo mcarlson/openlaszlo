@@ -187,8 +187,6 @@
                 <radiogroup id="rg_runtime" layout="class: simplelayout; axis: x; spacing:12" x="10" y="9">
                     <radiobutton id="rb8" value="'swf8'" enabled="${canvas.runtime_swf8_enabled}"
                                  selected="${canvas.app_runtime == 'swf8'}">swf8</radiobutton >
-                    <radiobutton id="rb9" value="'swf9'" enabled="${canvas.runtime_swf9_enabled}"
-                                 selected="${canvas.app_runtime == 'swf9'}">swf9</radiobutton >
                     <radiobutton id="rb10" value="'swf10'" enabled="${canvas.runtime_swf10_enabled}"
                                  selected="${canvas.app_runtime == 'swf10'}">swf10</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'" enabled="${canvas.runtime_dhtml_enabled}"
