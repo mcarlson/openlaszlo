@@ -1,0 +1,76 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+
+/** style use Configuration object to style text */
+public class StyledText extends Sprite {
+
+    #passthrough (toplevel:true) {
+        import flash.display.Sprite;
+
+        import flashx.textLayout.conversion.TextConverter;
+        import flashx.textLayout.elements.Configuration;
+        import flashx.textLayout.elements.IConfiguration;
+        import flashx.textLayout.formats.ITextLayoutFormat;
+        import flashx.textLayout.formats.TextDecoration;
+        import flashx.textLayout.formats.TextLayoutFormat;
+
+        import flashx.textLayout.elements.TextFlow;
+        import flashx.textLayout.compose.StandardFlowComposer;
+        import flashx.textLayout.container.ContainerController;
+        import flashx.textLayout.elements.TextFlow;
+        import flashx.textLayout.edit.SelectionManager;
+
+    }#
+
+        #passthrough {
+
+        public function StyledText()
+        {
+
+            var txt:String = "Check out our website at <a href='http://www.openlaszlo.org/'>openlaszlo.org</a>.";
+
+            var cfg:Configuration = new Configuration(true);
+
+            var normalFmt:TextLayoutFormat = new TextLayoutFormat(cfg.defaultLinkNormalFormat);
+            normalFmt.color = 0xFF0000; // red
+            normalFmt.textDecoration = TextDecoration.NONE;
+
+            var hoverFmt:TextLayoutFormat = new TextLayoutFormat(cfg.defaultLinkHoverFormat);
+            hoverFmt.color = 0xFF00FF; // purple
+            hoverFmt.textDecoration = TextDecoration.UNDERLINE;
+
+            cfg.defaultLinkNormalFormat = normalFmt;
+            cfg.defaultLinkHoverFormat = hoverFmt;
+
+            var textFlow:TextFlow = TextConverter.importToFlow(txt, TextConverter.TEXT_FIELD_HTML_FORMAT, cfg);
+            textFlow.flowComposer.addController(new ContainerController(this, 200, 50));
+            textFlow.interactionManager = new SelectionManager();
+
+            textFlow.flowComposer.updateAllControllers();
+
+        }
+    }#
+}
+
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit" args="w">
+     k = new StyledText();
+     canvas.sprite.addChild(k);      
+</handler>
+
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
