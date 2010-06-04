@@ -1,0 +1,86 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+    public class EventHandlerExample extends Sprite 
+    { 
+#passthrough (toplevel:true) {
+
+
+   import flash.text.engine.*; 
+    import flash.ui.Mouse; 
+    import flash.display.Sprite 
+    import flash.events.MouseEvent; 
+    import flash.events.EventDispatcher; 
+}#     
+
+
+        var textBlock:TextBlock = new TextBlock(); 
+        var gtl:TextLine = null;
+ 
+        public function EventHandlerExample():void 
+        { 
+            var str:String = "I'll change color if you click me."; 
+            var fontDescription:FontDescription = new FontDescription("Arial"); 
+            var format:ElementFormat = new ElementFormat(fontDescription, 18); 
+            var textElement = new TextElement(str, format); 
+            textBlock.content = textElement; 
+            createLine(textBlock); 
+        } 
+     
+        private function createLine(textBlock:TextBlock):void 
+        { 
+            var textLine:TextLine = textBlock.createTextLine(null, 500); 
+            textLine.x = 30; 
+            textLine.y = 30; 
+            canvas.sprite.addChild(textLine);
+            textLine.addEventListener("mouseOut", mouseOutHandler); 
+            textLine.addEventListener("mouseOver", mouseOverHandler); 
+            textLine.addEventListener("click", clickHandler); 
+        } 
+ 
+        private function mouseOverHandler(event:MouseEvent):void 
+        { 
+            Mouse.cursor = "button"; 
+        } 
+ 
+        private function mouseOutHandler(event:MouseEvent):void 
+        { 
+            Mouse.cursor = "arrow"; 
+        } 
+ 
+        function clickHandler(event:MouseEvent):void { 
+            if(textBlock.firstLine) 
+                canvas.sprite.removeChild(textBlock.firstLine); 
+            var newFormat:ElementFormat = textBlock.content.elementFormat.clone(); 
+            switch(newFormat.color) 
+            { 
+                case 0x000000: 
+                    newFormat.color = 0xFF0000; 
+                    break; 
+                case 0xFF0000: 
+                    newFormat.color = 0x00FF00; 
+                    break; 
+                case 0x00FF00: 
+                    newFormat.color = 0x0000FF; 
+                    break; 
+                case 0x0000FF: 
+                    newFormat.color = 0x000000; 
+                    break; 
+            } 
+            textBlock.content.elementFormat = newFormat; 
+            createLine(textBlock); 
+        } 
+    } 
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit">
+     this.k = new EventHandlerExample();
+     Debug.info(this.k);
+</handler>
+
+
+</canvas>

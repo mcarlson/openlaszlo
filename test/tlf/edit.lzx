@@ -1,0 +1,47 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+
+
+    /** Simple example of a text component where the text is selectable and editable.  */
+    public class EditText extends Sprite {
+
+    #passthrough (toplevel:true) {
+    import flash.display.Sprite;
+    import flashx.textLayout.container.ContainerController;
+    import flashx.textLayout.elements.TextFlow;
+    import flashx.textLayout.conversion.TextConverter;
+    import flashx.textLayout.edit.EditManager;
+    }#
+
+    #passthrough {
+        public function EditText()
+        {
+
+            var markup:String = "<p><font size='18'>Hello, World</font></p>";
+            var textFlow:TextFlow = TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT);
+            textFlow.flowComposer.addController(new ContainerController(this, 200, 50));
+            textFlow.flowComposer.updateAllControllers();
+            
+            textFlow.interactionManager = new EditManager();
+        }
+    }#
+    }
+
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit" args="w">
+     k = new EditText();
+     canvas.sprite.addChild(k);      
+</handler>
+
+
+
+
+
+</canvas>

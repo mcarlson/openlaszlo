@@ -1121,6 +1121,21 @@ public class SWF9External {
       }
 
       if (compileType == Config.APP) {
+
+        // TODO [hqm 2010-06] This static link flag started to be
+        // needed when we moved to flex_sdk_4.0.0.14159, otherwise you
+        // get this error below from the compiler. We should figure
+        // out how to get it to use runtime shared libraries,
+        // especially for text layout classes.
+        // 
+        // Tmp-/lzswf9/build/edit/LzPreloader.as: Warning: This
+        // compilation unit did not have a factoryClass specified in
+        // Frame metadata to load the configured runtime shared
+        // libraries. To compile without runtime shared libraries
+        // either set the -static-link-runtime-shared-libraries option
+        // to true or remove the -runtime-shared-libraries option.
+        cmd.add("-static-link-runtime-shared-libraries");
+
         String mainclassname = (String) options.get(Compiler.SWF9_WRAPPER_CLASSNAME);
 
         // Insert preloader frame, unless we're compiling a loadable library

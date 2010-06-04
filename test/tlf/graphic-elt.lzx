@@ -1,0 +1,62 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+
+<script when="immediate">
+<![CDATA[
+    public class GraphicElementExample extends Sprite 
+    { 
+#passthrough (toplevel:true) {
+    import flash.text.engine.*; 
+    import flash.display.Sprite; 
+    import flash.display.Shape; 
+    import flash.display.Graphics; 
+}# 
+
+    var tl1:TextLine;
+      var tl2:TextLine;
+
+        public function GraphicElementExample() 
+        { 
+            var str:String = "Beware of Dog!"; 
+     
+            var triangle:Shape = new Shape(); 
+            triangle.graphics.beginFill(0xFF0000, 1); 
+            triangle.graphics.lineStyle(3); 
+            triangle.graphics.moveTo(30, 0); 
+            triangle.graphics.lineTo(60, 50); 
+            triangle.graphics.lineTo(0, 50); 
+            triangle.graphics.lineTo(30, 0); 
+            triangle.graphics.endFill(); 
+     
+            var format:ElementFormat = new ElementFormat(); 
+            format.fontSize = 20; 
+             
+            var graphicElement:GraphicElement = new GraphicElement(triangle, triangle.width, triangle.height, format); 
+            var textBlock:TextBlock = new TextBlock(); 
+            textBlock.content = graphicElement; 
+            var textLine1:TextLine = textBlock.createTextLine(null, triangle.width); 
+            textLine1.x = 50; 
+            textLine1.y = 110; 
+      
+            var textElement:TextElement = new TextElement(str, format); 
+            textBlock.content = textElement; 
+            var textLine2 = textBlock.createTextLine(null, 300); 
+             textLine2.x = textLine1.x - 30; 
+            textLine2.y = textLine1.y + 15; 
+            this.tl1 = textLine1;
+            this.tl2 = textLine2;
+    } 
+}
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit">
+     this.k = new GraphicElementExample();
+     Debug.info(this.k);
+canvas.sprite.addChild(k.tl1);
+canvas.sprite.addChild(k.tl2);
+</handler>
+</canvas>

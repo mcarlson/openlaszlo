@@ -1,0 +1,61 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+
+
+
+ 
+    public class ElementFormatExample extends Sprite 
+    { 
+#passthrough (toplevel:true) {
+  import flash.display.Sprite; 
+    import flash.text.*; 
+
+   import flash.text.engine.*; 
+    import flash.ui.Mouse; 
+    import flash.display.Sprite 
+    import flash.events.MouseEvent; 
+    import flash.events.EventDispatcher; 
+
+
+}#     
+
+
+
+
+        private var tb:TextBlock = new TextBlock(); 
+        private var te:TextElement; 
+        private var ef:ElementFormat; 
+         private var fd:FontDescription = new FontDescription(); 
+        private var str:String; 
+        private var tl:TextLine; 
+ 
+        public function ElementFormatExample() 
+        { 
+            fd.fontName = "Garamond"; 
+            ef = new ElementFormat(fd); 
+            ef.fontSize = 30; 
+            ef.color = 0xFF0000; 
+            str = "This is flash text"; 
+            te = new TextElement(str, ef); 
+            tb.content = te; 
+            tl = tb.createTextLine(null,600); 
+            tl.y = 100;
+            tl.x  =100;
+            canvas.sprite.addChild(tl); 
+        } 
+    } 
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit">
+     this.k = new ElementFormatExample();
+     Debug.info(this.k);
+</handler>
+
+
+</canvas>
