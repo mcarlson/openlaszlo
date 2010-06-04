@@ -170,17 +170,19 @@ public dynamic class LzAnimatorGroup extends LzNode {
 
     /** The start value for the animation.  Defaults to the
       * targeted attribute's current value.
+      * @devnote must be type * so it can be tested for null !&#!# AS3...
       * @type Number
       * @lzxtype number
       */
-    var from;
+    var from:*;
 
     /** The final value for the targeted attribute.
       *
+      * @devnote must be type * so it can be tested for null !&#!# AS3...
       * @type Number
       * @lzxtype number
       */
-    var to;
+    var to:*;
 
     /** The duration of the animation, in milliseconds (1000 = 1 second).
       *
@@ -318,10 +320,10 @@ public dynamic class LzAnimatorGroup extends LzNode {
     /** The object for which an attribute will be animated (by
      * default, the immediate parent of the animator node)
      *
-     * @type String
+     * @type LzNode
      * @lzxtype reference
      */
-    var target;
+    var target:LzNode;
 
     /** @access private */
     var ontarget :LzDeclaredEventClass = LzDeclaredEvent;
@@ -428,15 +430,11 @@ public dynamic class LzAnimatorGroup extends LzNode {
       */
     function doStart () {
         if (this.isactive) return false;
-
-        // update the views counter of animation currently executing
-        //this.target.anmExecuteCount += 1;
+        this.isactive = true;
 
         //Debug.info('doStart', start);
         if (this.onstart.ready) this.onstart.sendEvent(new Date().getTime());
         //this is a bug -- embedded animators won't send onstart
-
-        this.isactive = true;
 
         this.prepareStart();
         this.updateDel.register(lz.Idle , "onidle");
@@ -553,6 +551,9 @@ public dynamic class LzAnimatorGroup extends LzNode {
       * @devnote make private after 5.1
       */
     function stop () {
+        if (! this.isactive) return;
+        this.isactive = false;
+
         //need to stop any running animators
         if (this.actAnim) {
             var animend:int = this.actAnim.length - 1;
@@ -567,7 +568,7 @@ public dynamic class LzAnimatorGroup extends LzNode {
         this.__LZhalt();
     }
 
-    /**
+    /** Overridden by LzAnimator
       * @access private
       */
     function __LZfinalizeAnim () :void {
@@ -589,9 +590,11 @@ public dynamic class LzAnimatorGroup extends LzNode {
       */
     function checkRepeat () :Boolean {
         if (this.crepeat == 1) {
+            // done
             this.__LZfinalizeAnim();
             return true;
         } else {
+            // repeating
             this.crepeat--;
             if (this.onrepeat.ready) this.onrepeat.sendEvent(new Date().getTime());
             //this.prepareStart();

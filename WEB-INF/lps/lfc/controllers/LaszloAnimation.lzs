@@ -47,8 +47,6 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
     /** @access private */
     var calcMethod:Function;
     /** @access private */
-    var lastIterationTime:Number;
-    /** @access private */
     var currentValue:Number;
     /** @access private */
     var doBegin:Boolean;
@@ -57,9 +55,17 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
     /** @access private */
     var endPoleDelta:Number = .25;
     /** @access private */
-    var primary_K:Number;
+    var primary_K:Number = 1;
     /** @access private */
     var origto:Number;
+    /** @access private */
+    var beginPole:Number;
+    /** @access private */
+    var endPole:Number;
+    /**
+      * @access private
+      */
+    var counterkey:String;
 
     /**
       * @access private
@@ -67,7 +73,6 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
     override function construct (parent, args) {
         super.construct(parent, args);
         this.calcMethod = this.calcNextValue;
-        this.primary_K = 1.0;
     }
 
     /**
@@ -105,25 +110,39 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
     }
 
     /**
+      * @access private
+      */
+    var onattribute:LzDeclaredEventClass = LzDeclaredEvent;
+
+    function $lzc$set_attribute(attribute) {
+        this.attribute = attribute;
+        this.counterkey = attribute + '_lzcounter';
+        if (this.onattribute.ready) this.onattribute.sendEvent(attribute);
+    }
+
+    /**
       * Calculate the control values for the animation. These will not change even
       * if the animation is repeated.
       *
       * @access private
       */
-    function calcControlValues (cval = null) :void {
-        // reset currentValue
-        this.currentValue = cval || 0;
+    function calcControlValues () :void {
+        // set current value to zero since all animators are now relative
+        var cval = 0;
+        this.currentValue = cval;
+
+        var to = this.to;
 
         // create direction multiplier
         var dir:int = this.indirect ? -1 : 1;
 
         // set beginPole and endPole values
-        if (this.currentValue < this.to) {
-            this.beginPole = this.currentValue - dir * this.beginPoleDelta;
-            this.endPole = this.to + dir * this.endPoleDelta;
+        if (cval < to) {
+            this.beginPole = cval - dir * this.beginPoleDelta;
+            this.endPole = to + dir * this.endPoleDelta;
         } else {
-            this.beginPole = this.currentValue + dir * this.beginPoleDelta;
-            this.endPole = this.to - dir * this.endPoleDelta;
+            this.beginPole = cval + dir * this.beginPoleDelta;
+            this.endPole = to - dir * this.endPoleDelta;
         }
 
         // calculate value for primary_K
@@ -132,11 +151,11 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         // always be the same.
         this.primary_K = 1.0;
 
-        var kN:Number = 1.0 * (this.beginPole - this.to) *
-                              (this.currentValue - this.endPole);
+        var kN:Number = 1.0 * (this.beginPole - to) *
+                              (cval - this.endPole);
 
-        var kD:Number = 1.0 * (this.beginPole - this.currentValue) *
-                              (this.to - this.endPole);
+        var kD:Number = 1.0 * (this.beginPole - cval) *
+                              (to - this.endPole);
 
         // NOTE: in future this should probaly check for really small amounts not
         // just zero
@@ -164,6 +183,27 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         this.updateDel.register(lz.Idle, "onidle");
     }
 
+    /** Adds the delta to the counter(s)
+      * @access private
+      */
+    function updateCounter(delta:Number):Number {
+        var expected:Object = this.target.__animatedAttributes;
+        var val = expected[this.counterkey];
+        if (val == null) {
+            val = delta;
+        } else {
+            val += delta;
+        }
+
+        if (val == 0) {
+            delete expected[this.counterkey];
+        } else {
+            expected[this.counterkey] = val;
+        }
+
+        return val;
+    }
+
     /**
       * @access private
       */
@@ -173,7 +213,18 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         this.crepeat = this.repeat;
         var targ:LzNode = this.target;
         var attr:String = this.attribute;
+        var expected:Object = targ.__animatedAttributes;
 
+        // initialize hash used to track per-attribute LzAnimator counter 
+        // and expected values.  
+        if (expected == null) {
+            // create a default hash
+            expected = targ.__animatedAttributes = {};
+        }
+        if (expected[attr] == null) {
+            expected[attr] = Number(targ[attr]);
+        }
+        
         // Set the attribute of the view to its "from" value but make sure
         // expectedAttribute is updated.
         if (this.from != null) {
@@ -183,61 +234,69 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         if (this.relative) {
             this.to = this.origto;
         } else {
-            this.to = this.origto - targ.getExpectedAttribute(attr);
-
-            // "to" has changed so calc new poles and K value
-            //this.calcControlValues();
+            this.to = this.origto - expected[attr];
         }
 
         // update the expected attribute for this view so that animators attached
         // after this one will can execute appropriately.
-        targ.addToExpectedAttribute(attr, this.to);
+        expected[attr] += this.to;
 
-        // everytime an animator is started, a counter associated with that property
+        // Every time an animator is started, a counter associated with that property
         // is incremented. When this counter is decremented and reaches zero then
         // the final expected value will be assigned to that attribute
-        targ.__LZincrementCounter(attr);
+        this.updateCounter(1);
 
         // set current to zero since all animators are now relative
         this.currentValue = 0;
 
-        //we already did this if !this.relative -- conditionalize?
+        // to, indirect or option may have changed so calc new poles and K value
         this.calcControlValues();
 
+        // next call to update() will this.beginAnimator(time);
         this.doBegin = true;
     }
 
     /**
-      * reset the time variables and currentValue
+      * reset the time variables and currentValue.  TODO: merge with prepareStart()?  They're very similar...
       * @access private
       */
     override function resetAnimator () :void {
-        // Set the attribute of the view to its "from" value but make sure
-        // expectedAttribute is updated.
         var targ:LzNode = this.target;
         var attr:String = this.attribute;
+        var expected:Object = targ.__animatedAttributes;
 
+        if (expected[attr] == null) {
+            expected[attr] = Number(targ[attr]);
+        }
+
+        // Set the attribute of the view to its "from" value but make sure
+        // expectedAttribute is updated.
         var from:* = this.from;
         if (from != null) {
-            targ.setAttribute(attr, from);
-            var d:Number = from - targ.getExpectedAttribute(attr);
-            targ.addToExpectedAttribute(attr, d);
+            expected[attr] += Number(from - expected[attr]);
+            targ.setAttribute(attr, Number(from));
         }
 
         if (! this.relative) {
-            this.to = this.origto - targ.getExpectedAttribute(attr);
-            // "to" has changed so calc new poles and K value
-            this.calcControlValues();
+            var newto = this.origto - expected[attr];
+            if (this.to != newto) {
+                this.to = newto;
+                // "to" has changed so calc new poles and K value 
+                this.calcControlValues();
+            }
         }
 
         // update the expected attribute for this view so that animators attached
         // after this one will can execute appropriately.
-        targ.addToExpectedAttribute(attr, this.to);
-        targ.__LZincrementCounter(attr);
+        expected[attr] += this.to;
+        
+        // Increment the counter to track how many animators are running for this attribute 
+        this.updateCounter(1);
 
         // set current to zero since all animators are now relative
         this.currentValue = 0;
 
+        // next call to update() will this.beginAnimator(time);
         this.doBegin = true;
     }
 
@@ -252,7 +311,6 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
     function beginAnimator (time:Number) :void {
         // set initial time parameters
         this.startTime = time;
-        this.lastIterationTime = time;
 
         if (this.onstart.ready) this.onstart.sendEvent(time);
 
@@ -265,38 +323,40 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
       */
     override function stop () {
         if (! this.isactive) return;
+        this.isactive = false;
 
-        var targ:LzNode = this.target;
-        var e_prop:String = "e_" + (this.attribute cast String);
-        if (! targ[e_prop].c) {
-            targ[e_prop].c = 0;
-        }
-        targ[e_prop].c -= 1; //decrement animation counter for prop
-        if (targ[e_prop].c <= 0) {
-            targ[e_prop].c = 0;
-            targ[e_prop].v = null;
+        var attr:String = this.attribute;
+        var expected:Object = this.target.__animatedAttributes;
+
+        // decrement counter 
+        if (this.updateCounter(-1) == 0) {
+            // clear attribute value
+            delete expected[attr];
         } else {
-            targ[e_prop].v -= this.to - this.currentValue;
+            expected[attr] -= this.to - this.currentValue;
         }
 
         this.__LZhalt();
     }
 
-    /**
+    /** Called by when the animation should end because it's done repeating.  
       * @access private
       */
     override function __LZfinalizeAnim () :void {
         var targ:LzNode = this.target;
         var attr:String = this.attribute;
-        var e_prop:String = "e_" + attr;
-        if (! targ[e_prop].c) {
-            targ[e_prop].c = 0;
-        }
-        targ[e_prop].c -= 1; //decrement animation counter for prop
-        if (targ[e_prop].c <= 0) {
-            targ[e_prop].c = 0;
-            targ.setAttribute(attr, targ[e_prop].v);
-            targ[e_prop].v = null;
+        var expected:Object = targ.__animatedAttributes;
+
+        // decrement counter 
+        if (this.updateCounter(-1) == 0) {
+            // copy value
+            var val = expected[attr];
+            // clear attribute value first, since setAttribute() may have 
+            // side effects, e.g. starting another animator on the same 
+            // attribute
+            delete expected[attr];
+            // Set to final expected attribute
+            targ.setAttribute(attr, val);
         }
 
         this.__LZhalt();
@@ -369,7 +429,6 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
                 var aTotalTimeDifference:Number = time - this.startTime;
                 if (aTotalTimeDifference < this.duration) {
                     this.setValue(this.calcMethod(aTotalTimeDifference));
-                    this.lastIterationTime = time;
                 } else {
                     this.setValue(this.to);
                     return this.checkRepeat();
@@ -392,8 +451,8 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         var targ:LzNode = this.target;
         var attr:String = this.attribute;
         var aDiff:Number = value - this.currentValue;
-        targ.setAttribute(attr, targ[attr] + aDiff);
         this.currentValue = value;
+        targ.setAttribute(attr, targ[attr] + aDiff);
     }
 
     /**
