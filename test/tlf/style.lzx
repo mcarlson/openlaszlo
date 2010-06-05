@@ -36,7 +36,8 @@ public class SelectText extends Sprite {
 
             var textLayoutFormat:TextLayoutFormat = new TextLayoutFormat();
             textLayoutFormat.color = 0x336633;
-            textLayoutFormat.fontFamily = "Arial, Helvetica, _sans";
+            textLayoutFormat.fontFamily = "Comic Sans MS, _sans";
+            //textLayoutFormat.fontFamily = "Arial, Helvetica, _sans";
             textLayoutFormat.fontSize = 14;
             textLayoutFormat.paragraphSpaceBefore = 15;
             textLayoutFormat.paragraphSpaceAfter = 15;

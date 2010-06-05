@@ -34,6 +34,9 @@ public class StyledText extends Sprite {
 
             var cfg:Configuration = new Configuration(true);
 
+            //textLayoutFormat.fontFamily = "Comic Sans MS, _sans";
+
+
             var normalFmt:TextLayoutFormat = new TextLayoutFormat(cfg.defaultLinkNormalFormat);
             normalFmt.color = 0xFF0000; // red
             normalFmt.textDecoration = TextDecoration.NONE;

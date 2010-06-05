@@ -1,0 +1,139 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+
+
+    /** single line input edit field */
+
+         public class SingleLineEditManager extends EditManager {
+
+Should this be the TextFlow class accepting this event? ? IFLOW? 
+    private function textFlow_flowOperationBeginHandler(
+                        event:FlowOperationEvent):void
+    {
+        //trace("operationBegin");
+        
+        var op:FlowOperation = event.operation;
+
+        // If the user presses the Enter key in a single-line TextView,
+        // we cancel the paragraph-splitting operation and instead
+        // simply dispatch an 'enter' event.
+        if (op is SplitParagraphOperation && !multiline)
+        {
+            event.preventDefault();
+            dispatchEvent(new FlexEvent(FlexEvent.ENTER));
+            return;
+        }
+        
+
+             
+
+         }
+
+
+
+
+    public class EditManager_example extends Sprite
+    {
+
+    #passthrough (toplevel:true) {
+    import flash.display.Sprite;
+    import flash.display.Sprite;
+    import flash.events.MouseEvent;
+    import flash.text.TextField;
+    import flash.text.TextFieldAutoSize;
+    
+    import flashx.textLayout.container.ContainerController;
+    import flashx.textLayout.edit.EditManager;
+    import flashx.textLayout.elements.ParagraphElement;
+    import flashx.textLayout.elements.SpanElement;
+    import flashx.textLayout.elements.TextFlow;
+    import flashx.undo.UndoManager;
+    }#
+
+    #passthrough {
+
+
+        private var tf:TextFlow;
+        private var em:EditManager;
+        private var um:UndoManager;
+        private var editable:TextField;
+        
+        public function EditManager_example()
+        {
+            //define TextFlow
+            tf = new TextFlow();
+            
+            //define elements to contain text
+            var p:ParagraphElement = new ParagraphElement();
+            var s:SpanElement = new SpanElement();
+            s.text ="This is sample text for the EditManager example.";
+            
+            //add these elements to the TextFlow
+            p.addChild(s);
+            tf.addChild(p);    
+            
+            //compose TextFlow to display
+            var tfController:ContainerController = new ContainerController(this,600,600);
+            tfController.container.y = 10
+            tf.flowComposer.addController(tfController);
+            tf.flowComposer.updateAllControllers();
+            
+            //define TextFlow manager objects
+            um = new UndoManager();
+            em = new EditManager(um);
+            tf.interactionManager = null;
+            
+            createEditButton();
+        }
+        
+        private function createEditButton ():void {
+            editable = new TextField();
+            editable.appendText("Click to make the sample text editable");
+            editable.x = 0;
+            editable.y = 50;
+            editable.width = 150;
+            editable.autoSize = flash.text.TextFieldAutoSize.LEFT;
+            editable.selectable = false;
+            editable.background = true;
+            editable.backgroundColor = 0xAAAAAA;
+            
+            addChild(editable);
+            editable.addEventListener(MouseEvent.CLICK, updateEditable);
+        }
+        
+        private function updateEditable(me:MouseEvent):void{
+            if (editable.text.indexOf("read only") >= 0) {
+                editable.text = "Click to make the sample text editable";
+                tf.interactionManager = null;
+            }
+            else {
+                editable.text = "Click to make the sample text read only";
+                tf.interactionManager = em;                
+            }
+            
+        }
+    }#
+    }
+
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit" args="w">
+     k = new  EditManager_example();
+     canvas.sprite.addChild(k);      
+</handler>
+
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
