@@ -13,20 +13,30 @@
     import flashx.textLayout.container.ContainerController;
     import flashx.textLayout.elements.TextFlow;
     import flashx.textLayout.conversion.TextConverter;
+    import flashx.textLayout.conversion.ConversionType;
     import flashx.textLayout.edit.EditManager;
     }#
 
     #passthrough {
+        var textFlow:TextFlow;
+
         public function EditText()
         {
 
             var markup:String = "<p><font size='18'>Hello, World</font></p>";
-            var textFlow:TextFlow = TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT);
+            textFlow = TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT);
             textFlow.flowComposer.addController(new ContainerController(this, 200, 50));
             textFlow.flowComposer.updateAllControllers();
             
             textFlow.interactionManager = new EditManager();
         }
+
+        public  function exporttext () {
+            var out = TextConverter.export(textFlow, TextConverter.PLAIN_TEXT_FORMAT, ConversionType.STRING_TYPE );
+            mytext.setAttribute('text', out);
+        }
+
+
     }#
     }
 
@@ -40,7 +50,8 @@
      canvas.sprite.addChild(k);      
 </handler>
 
-
+<text x="500" y="50" width="600" height="400" bgcolor="#cccccc" id="mytext"/>
+<button x="500" y="0" onclick="canvas.k.exporttext()">export</button>
 
 
 

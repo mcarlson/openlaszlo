@@ -1,0 +1,131 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+
+
+public class ContainerController_focusInHandlerExample extends ContainerController
+    {
+
+
+    #passthrough (toplevel:true) {
+    import flash.events.FocusEvent;
+    import flash.display.Sprite;
+    import flashx.textLayout.container.ContainerController;
+}#    
+
+    #passthrough {
+
+public function ContainerController_focusInHandlerExample(container:Sprite, compositionWidth:Number=100, compositionHeight:Number=100)
+        {
+            super(container, compositionWidth, compositionHeight);
+        }
+        override public function focusInHandler(event:FocusEvent):void
+        {    
+            // run the TLF handler for the focus event
+            super.focusInHandler(event);
+            // and add your own code for the event 
+            Debug.info("You are in focusInHandler()");        
+        }
+    }#
+    }
+
+
+
+
+    /** Simple example of a text component where the text is selectable and editable.  */
+    public class EditText extends Sprite {
+
+    #passthrough (toplevel:true) {
+    import flash.display.Sprite;
+    import flashx.textLayout.container.ContainerController;
+    import flashx.textLayout.elements.TextFlow;
+    import flashx.textLayout.conversion.TextConverter;
+    import flashx.textLayout.edit.EditManager;
+    import flashx.textLayout.formats.*;
+
+    import flashx.textLayout.elements.Configuration;
+
+    }#
+
+    #passthrough {
+        public var controller:ContainerController;
+
+
+        public function EditText()
+        {
+
+            var markup:String = "<p><font size='18'>Hello, World</font><br/>"+
+            "Line 1<br/>" +
+            "Line 2<br/>"  +
+            "Line 3<br/>"  +
+            "Line 4<br/>"  +
+            "Line 5<br/>"  +
+            "Line 6<br/>"  +
+            "Line 7<br/>"  +
+            "Line 8<br/>"  +
+            "Line 9<br/>"  +
+            "Line 10<br/>"  +
+            "Line 11<br/>"  +
+            "Line 12<br/>"  +
+            "</p>";
+
+            var textLayoutFormat:TextLayoutFormat = new TextLayoutFormat();
+            textLayoutFormat.color = 0x336633;
+            textLayoutFormat.backgroundColor = 0xcccccc;
+            //textLayoutFormat.fontFamily = "Comic Sans MS, _sans";
+            textLayoutFormat.fontFamily = "Arial, Helvetica, _sans";
+            textLayoutFormat.fontSize = 16;
+//            textLayoutFormat.paragraphSpaceBefore = 15;
+//            textLayoutFormat.paragraphSpaceAfter = 15;
+
+            //textFlow.hostFormat = textLayoutFormat;
+
+            var cfg:Configuration = new Configuration(true);
+            cfg.textFlowInitialFormat = textLayoutFormat;
+
+            var textFlow:TextFlow = TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT, cfg);
+
+            //            controller = new ContainerController(this, 400, 200);
+            controller = new ContainerController_focusInHandlerExample(this, 400, 200); 
+            textFlow.flowComposer.addController(controller);
+            textFlow.interactionManager = new EditManager();
+
+
+            textFlow.flowComposer.updateAllControllers();
+
+
+        }
+    }#
+    }
+
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+     <attribute name="k2" value="null"/>
+<handler name="oninit" args="w">
+     k = new EditText();
+     canvas.sprite.addChild(k);
+
+     k2 = new EditText();
+k2.x=400;
+     canvas.sprite.addChild(k2);      
+</handler>
+
+<slider x="100" y="200" onvalue="if (canvas.k != null) {canvas.k.controller.verticalScrollPosition = this.value}"
+                  value="0" minvalue="0" maxvalue="100" showvalue="true"/>
+
+
+
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
