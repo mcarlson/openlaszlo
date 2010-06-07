@@ -1139,20 +1139,8 @@ lz.embed = {
         if (window.innerHeight) {
             // Sadly, innerHeight/Width is not r/w on some browsers, and resizeTo is for outerHeight/Width
             window.resizeTo(width ? (width + window.outerWidth - window.innerWidth) : window.outerWidth, height ? (height + window.outerHeight - window.innerHeight) : window.outerHeight);
-        } else if (document.documentElement && document.documentElement.clientHeight) {
-            if (width) {
-                document.documentElement.clientWidth = width;
-            }
-            if (height) {
-                document.documentElement.clientHeight = height;
-            }
         } else {
-            if (width) {
-                document.body.clientWidth = width;
-            }
-            if (height) {
-                document.body.clientHeight = height;
-            }
+            // TODO: determine window offsets in IE
         }
     }
 };
