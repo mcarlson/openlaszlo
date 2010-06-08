@@ -29,10 +29,9 @@
     #passthrough {
 
 
-        private var tf:TextFlow;
-        private var em:EditManager;
-        private var um:UndoManager;
-        private var editable:TextField;
+        public  var tf:TextFlow;
+        public  var em:EditManager;
+        public var um:UndoManager;
         
         public function EditManager_example()
         {
@@ -49,7 +48,7 @@
             tf.addChild(p);    
             
             //compose TextFlow to display
-            var tfController:ContainerController = new ContainerController(this,600,600);
+            var tfController:ContainerController = new ContainerController(this,600,100);
             tfController.container.y = 10
             tf.flowComposer.addController(tfController);
             tf.flowComposer.updateAllControllers();
@@ -59,8 +58,6 @@
             em = new EditManager(um);
             tf.interactionManager = null;
             addListeners(tf);
-            
-            createEditButton();
         }
         
         
@@ -103,34 +100,13 @@
         }
         
     }
-
-
-
-        private function createEditButton ():void {
-            editable = new TextField();
-            editable.appendText("Click to make the sample text editable");
-            editable.x = 0;
-            editable.y = 50;
-            editable.width = 150;
-            editable.autoSize = flash.text.TextFieldAutoSize.LEFT;
-            editable.selectable = false;
-            editable.background = true;
-            editable.backgroundColor = 0xAAAAAA;
-            
-            addChild(editable);
-            editable.addEventListener(MouseEvent.CLICK, updateEditable);
-        }
-        
-        private function updateEditable(me:MouseEvent):void{
-            if (editable.text.indexOf("read only") >= 0) {
-                editable.text = "Click to make the sample text editable";
+        public  function setEditable(val:Boolean):void{
+            Debug.info('setEditable', val);
+            if (val)  {
+                tf.interactionManager = em;
+            } else {
                 tf.interactionManager = null;
             }
-            else {
-                editable.text = "Click to make the sample text read only";
-                tf.interactionManager = em;                
-            }
-            
         }
     }#
     }
@@ -145,7 +121,16 @@
      canvas.sprite.addChild(k);      
 </handler>
 
+<view y="120" layout="axis:y;spacing:4">
+ <button text="Make Editable"
+         onclick="canvas.k.setEditable(canvas.k.tf != null);
+             setAttribute('text', canvas.k.tf == null ? 'Make Editable' : 'Make Read-Only')"
+         />
+ <button text="Make Multiline"
+         onclick="canvas.k.multiline = !canvas.k.multiline;
+            setAttribute('text', canvas.k.multiline ? 'Make Single-Line' : 'Make Multiline')"/>
 
+</view>
 
 
 
