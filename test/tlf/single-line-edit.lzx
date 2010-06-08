@@ -123,11 +123,11 @@
 
 <view y="120" layout="axis:y;spacing:4">
  <button text="Make Editable"
-         onclick="canvas.k.setEditable(canvas.k.tf != null);
-             setAttribute('text', canvas.k.tf == null ? 'Make Editable' : 'Make Read-Only')"
+         onclick="canvas.k.setEditable(canvas.k.tf.interactionManager == null); lz.Focus.setFocus(null);
+             setAttribute('text', canvas.k.tf.interactionManager == null ? 'Make Editable' : 'Make Read-Only')"
          />
  <button text="Make Multiline"
-         onclick="canvas.k.multiline = !canvas.k.multiline;
+         onclick="canvas.k.multiline = !canvas.k.multiline; lz.Focus.setFocus(null);
             setAttribute('text', canvas.k.multiline ? 'Make Single-Line' : 'Make Multiline')"/>
 
 </view>
