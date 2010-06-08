@@ -9,7 +9,6 @@
 
          public class SingleLineEditManager extends EditManager {
 
-Should this be the TextFlow class accepting this event? ? IFLOW? 
     private function textFlow_flowOperationBeginHandler(
                         event:FlowOperationEvent):void
     {

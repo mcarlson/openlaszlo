@@ -53,6 +53,7 @@ public function ContainerController_focusInHandlerExample(container:Sprite, comp
         public var controller:ContainerController;
 
 
+        public var textFlow:TextFlow;
         public function EditText()
         {
 
@@ -85,7 +86,7 @@ public function ContainerController_focusInHandlerExample(container:Sprite, comp
             var cfg:Configuration = new Configuration(true);
             cfg.textFlowInitialFormat = textLayoutFormat;
 
-            var textFlow:TextFlow = TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT, cfg);
+            textFlow= TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT, cfg);
 
             //            controller = new ContainerController(this, 400, 200);
             controller = new ContainerController_focusInHandlerExample(this, 400, 200); 
@@ -117,9 +118,10 @@ k2.x=400;
 
 <slider x="100" y="200" onvalue="if (canvas.k != null) {canvas.k.controller.verticalScrollPosition = this.value}"
                   value="0" minvalue="0" maxvalue="100" showvalue="true"/>
+<button onclick="canvas.k.textFlow.flowComposer.setFocus(0)" x="0" y="240" >focus k</button>
+<button onclick="canvas.k2.textFlow.flowComposer.setFocus(0)" x="0" y="280" >focus k2</button>         
 
-
-
+<inputtext x="0" y="320" width="300" id="lt" bgcolor="#cccccc"/>
 
 
 

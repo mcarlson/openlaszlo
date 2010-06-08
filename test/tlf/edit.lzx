@@ -4,37 +4,100 @@
 <script when="immediate">
 <![CDATA[
 
+      public class MyContainerController extends ContainerController
+       {
+
+    #passthrough (toplevel:true) {
+    import flash.display.Sprite;
+    import flash.events.TextEvent;
+    import flash.events.KeyboardEvent;
+    import flash.geom.Rectangle;
+
+    import flashx.textLayout.container.ContainerController;
+    import flashx.textLayout.elements.TextFlow;
+    import flashx.textLayout.conversion.TextConverter;
+    import flashx.textLayout.conversion.ConversionType;
+    import flashx.textLayout.edit.EditManager;
+
+    }#
+
+    #passthrough {
+        public function MyContainerController(container:Sprite, compositionWidth:Number=100, compositionHeight:Number=100)
+         {
+             super(container, compositionWidth, compositionHeight);
+         }
+
+        override public function keyDownHandler(event:KeyboardEvent):void {
+            if (event.charCode == 13){
+                Debug.info("keyDownHandler ENTER intercepted");
+            } else {
+                super.keyDownHandler(event);
+            }
+        }
+
+        override public function textInputHandler(event:TextEvent):void
+        {    
+            super.textInputHandler(event);
+
+        }
+    }#
+      }
+
 
     /** Simple example of a text component where the text is selectable and editable.  */
     public class EditText extends Sprite {
 
     #passthrough (toplevel:true) {
     import flash.display.Sprite;
+    import flash.events.TextEvent;
+    import flash.geom.Rectangle;
+
     import flashx.textLayout.container.ContainerController;
     import flashx.textLayout.elements.TextFlow;
     import flashx.textLayout.conversion.TextConverter;
     import flashx.textLayout.conversion.ConversionType;
     import flashx.textLayout.edit.EditManager;
+
     }#
 
     #passthrough {
         var textFlow:TextFlow;
+        var controller:ContainerController;
 
         public function EditText()
         {
 
             var markup:String = "<p><font size='18'>Hello, World</font></p>";
             textFlow = TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT);
-            textFlow.flowComposer.addController(new ContainerController(this, 200, 50));
+            controller = new MyContainerController(this, 400, 100);
+            textFlow.flowComposer.addController(controller);
             textFlow.flowComposer.updateAllControllers();
             
             textFlow.interactionManager = new EditManager();
+            drawBorder();
         }
 
         public  function exporttext () {
             var out = TextConverter.export(textFlow, TextConverter.PLAIN_TEXT_FORMAT, ConversionType.STRING_TYPE );
             mytext.setAttribute('text', out);
         }
+        
+        function drawBorder():void
+        {
+            // get the rectangle that makes up the bounds of the content
+            var bounds:Rectangle = controller.getContentBounds();
+            // retrieve the container and draw the border 
+            var container:Sprite = controller.container as Sprite;
+            container.graphics.lineStyle(.5);
+            container.graphics.moveTo(bounds.left,bounds.top);
+            container.graphics.lineTo(bounds.right,bounds.top);
+            container.graphics.lineTo(bounds.right,bounds.bottom);
+            container.graphics.lineTo(bounds.left,bounds.bottom);
+            container.graphics.lineTo(bounds.left,bounds.top);
+            container.graphics.drawRect(bounds.left, bounds.top, bounds.width, bounds.height );
+        }
+
+
 
 
     }#
@@ -47,6 +110,8 @@
 <attribute name="k" value="null"/>
 <handler name="oninit" args="w">
      k = new EditText();
+k.x = 100;
+k.y = 100;
      canvas.sprite.addChild(k);      
 </handler>
 
