@@ -5,35 +5,6 @@
 <![CDATA[
 
 
-    /** single line input edit field */
-
-         public class SingleLineEditManager extends EditManager {
-
-    private function textFlow_flowOperationBeginHandler(
-                        event:FlowOperationEvent):void
-    {
-        //trace("operationBegin");
-        
-        var op:FlowOperation = event.operation;
-
-        // If the user presses the Enter key in a single-line TextView,
-        // we cancel the paragraph-splitting operation and instead
-        // simply dispatch an 'enter' event.
-        if (op is SplitParagraphOperation && !multiline)
-        {
-            event.preventDefault();
-            dispatchEvent(new FlexEvent(FlexEvent.ENTER));
-            return;
-        }
-        
-
-             
-
-         }
-
-
-
-
     public class EditManager_example extends Sprite
     {
 
@@ -43,6 +14,9 @@
     import flash.events.MouseEvent;
     import flash.text.TextField;
     import flash.text.TextFieldAutoSize;
+    import flash.events.Event;
+    import flashx.textLayout.events.*;
+    import flashx.textLayout.operations.*;
     
     import flashx.textLayout.container.ContainerController;
     import flashx.textLayout.edit.EditManager;
@@ -84,10 +58,54 @@
             um = new UndoManager();
             em = new EditManager(um);
             tf.interactionManager = null;
+            addListeners(tf);
             
             createEditButton();
         }
         
+        
+        var multiline:Boolean = false;
+        
+
+        private function addListeners(textFlow:TextFlow):void
+        {
+
+
+
+            textFlow.addEventListener(
+                FlowOperationEvent.FLOW_OPERATION_BEGIN,
+                textFlow_flowOperationBeginHandler);
+
+
+        }
+
+
+        private function null_handler(event:Event):void {
+            // do nothing
+        }
+
+
+
+    private function textFlow_flowOperationBeginHandler(
+                        event:FlowOperationEvent):void
+    {
+        //trace("operationBegin");
+        
+        var op:FlowOperation = event.operation;
+
+        // If the user presses the Enter key in a single-line TextView,
+        // we cancel the paragraph-splitting operation and instead
+        // simply dispatch an 'enter' event.
+        if (op is SplitParagraphOperation && !multiline)
+        {
+            Debug.info("got SplitParagraphOperation");
+            event.preventDefault();
+        }
+        
+    }
+
+
+
         private function createEditButton ():void {
             editable = new TextField();
             editable.appendText("Click to make the sample text editable");
