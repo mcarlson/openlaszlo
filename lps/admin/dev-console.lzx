@@ -190,7 +190,7 @@
                     <radiobutton id="rb10" value="'swf10'" enabled="${canvas.runtime_swf10_enabled}"
                                  selected="${canvas.app_runtime == 'swf10'}">swf10</radiobutton >
                     <radiobutton id="rbdhtml" value="'dhtml'" enabled="${canvas.runtime_dhtml_enabled}"
-                                 selected="${canvas.app_runtime == 'dhtml'}">DHTML</radiobutton >
+                                 selected="${canvas.app_runtime == 'dhtml'}">HTML5</radiobutton >
                 </radiogroup>
                 <view x="$once{rg_runtime.x + rg_runtime.width + 14}">
                     <view height="14" width="1" bgcolor="black" y="9" />

@@ -16,7 +16,7 @@
 
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -24,7 +24,7 @@
 
 <html>
     <head>
-    <title>SOLO DHTML Application Deployment Wizard</title>
+    <title>SOLO HTML5 Application Deployment Wizard</title>
     </head>
     <body>
 
@@ -262,7 +262,7 @@ try {
 if (whatpage.equals("configure")) { 
 %>
 
-<font face="helvetica,arial"> <b> <i> Setup SOLO DHTML Application Deployment</i> </b> </font>
+<font face="helvetica,arial"> <b> <i> Setup SOLO HTML5 Application Deployment</i> </b> </font>
 <hr align="left" width="420" height="2"/>
 
 
