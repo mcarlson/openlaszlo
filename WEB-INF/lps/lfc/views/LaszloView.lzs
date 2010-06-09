@@ -57,12 +57,8 @@ dynamic class LzView extends LzNode {
   * @modifiers override 
   */
 static var tagname = 'view';
-  /** @access private */
-  static var attributes = new LzInheritedHash(LzNode.attributes);
-  // We add some more kludges to those in LzNode.  See #construct
-  // where we override the LzNode setting
-  /** @access private */
-  static var earlySetters = new LzInheritedHash(LzNode.earlySetters);
+    /** @access private */
+    static var attributes = new LzInheritedHash(LzNode.attributes);
 
     /** @access private */
     var __LZlayout;
@@ -431,9 +427,6 @@ var capabilities;
 override function construct ( parent , args) {
     super.construct( (parent ? parent : canvas), args );
 
-    // Set applyArgs ordering kludges.  Overriding those of LzNode
-    this.earlySetters = LzView.earlySetters;
-
     this.mask = this.immediateparent.mask;
 
     this.__makeSprite(args);
@@ -446,6 +439,11 @@ override function construct ( parent , args) {
         }
     }
 
+    /*
+     * Process arguments that need to be handled either early, or in a
+     * particular order
+     */
+    // See if we have a defined width/height
     if (args['width'] != null || this.__LZhasConstraint('width')) {
         this.hassetwidth = true;
         this.__LZcheckwidth = false;
@@ -454,19 +452,26 @@ override function construct ( parent , args) {
         this.hassetheight = true;
         this.__LZcheckheight = false;
     }
-
     if (args['clip']){
         this.clip = args.clip;
         this.makeMasked();
     }
+    var ignore = LzNode._ignoreAttribute;
+    // NOTE: [2010-06-03 ptw] This ordering is traditional:
+    // clickregion, stretches; although I don't see how the ordering
+    // could be important, since we also purport to support setting
+    // these attributes dynamically
+    if (args['clickregion'] != null){
+        this.$lzc$set_clickregion(args.clickregion);
+        args.clickregion = ignore;
+    }
     if (args['stretches'] != null){
         this.$lzc$set_stretches(args.stretches);
-        args.stretches = LzNode._ignoreAttribute;
+        args.stretches = ignore;
     }
-
     if (args['resource'] != null){
         this.$lzc$set_resource( args.resource );
-        args.resource = LzNode._ignoreAttribute;
+        args.resource = ignore;
     }
 
     if($debug){
@@ -1041,11 +1046,6 @@ function sendAAEvent(childID:Number, eventType:Number, nonHTML:Boolean = false) 
         LzView.__warnCapability('view.sendAAEvent()', 'accessibility'); 
     }
 }
-
-
-LzView.earlySetters.clickregion = 7;
-LzView.earlySetters.stretches = 8;
-
 
 /** @access private */
 var sprite:LzSprite = null;

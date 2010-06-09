@@ -90,17 +90,6 @@
  * @lzxname state
  */
 dynamic class LzState extends LzNode {
-
-  /** @access private */
-  public function LzState ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
-    super(parent,attrs,children,instcall);
-  }
-
-  /** @access private */
-  var __LZpool = [];
-  /** @access private */
-  var __LZstateconstraintdelegates;
-
   /**
    * @access private
    * @modifiers override
@@ -108,6 +97,31 @@ dynamic class LzState extends LzNode {
   static var tagname = 'state';
   /** @access private */
   static var attributes = new LzInheritedHash(LzNode.attributes);
+
+  /** @access private */
+  var heldArgs;
+  /** @access private */
+  var releasedconstraints;
+  /** @access private */
+  var appliedChildren;
+  /** @access private */
+  var applyOnInit:Boolean = false;
+  /** @access private */
+  var __LZpool:Array = null;
+  /** @access private */
+  var __LZstateconstraintdelegates;
+
+
+  /** @access private */
+  public function LzState ( parent:* , attrs:* , children:* = null, instcall:*  = null) {
+    // TODO: [2010-06-09 ptw] (LPP-5232) Move these initializations to
+    // the declaration when LPP-5232 is fixed.  (Note that super calls
+    // our override of __LZapplyArgs, which uses these instance
+    // variables.)
+    this.heldArgs = {};
+    this.appliedChildren = [];
+    super(parent,attrs,children,instcall);
+  }
 
   /**
    * Sent before a state is applied. The event argument is the state
@@ -122,20 +136,6 @@ dynamic class LzState extends LzNode {
    * @lzxtype event
    */
   var onremove:LzDeclaredEventClass = LzDeclaredEvent;
-
-  /**
-   * Sent when a state is applied or removed.  The event argument is
-   * the new value of <code>applied</code> (<code>true</code> if the
-   * state is being applied, <code>false</code> if the state is being
-   * removed).
-   *
-   * @devnote This is actually sent by apply and remove at the same
-   * time as onapply and onremove are sent, since they directly
-   * manipulate applied.
-   *
-   * @lzxtype event
-   */
-  var onapplied:LzDeclaredEventClass = LzDeclaredEvent;
 
   /**
    * Whether or not the state is applied.
@@ -169,20 +169,21 @@ dynamic class LzState extends LzNode {
     }
   }
   /**
-   * Backward-compatible version of `applied`.
-   * @deprecated in 4.1
+   * Sent when a state is applied or removed.  The event argument is
+   * the new value of <code>applied</code> (<code>true</code> if the
+   * state is being applied, <code>false</code> if the state is being
+   * removed).
+   *
+   * @lzxtype event
+   *
+   * @devnote This is actually sent by apply and remove at the same
+   * time as onapply and onremove are sent, since they directly
+   * manipulate applied.  (Marked as private because we do not
+   * document implicit events associated with attributes.)
+   *
    * @access private
    */
-  var isapplied = false;
-  /**
-   * Backward-compatible version of `applied`
-   * @deprecated in 4.1
-   * @access private
-   */
-  function $lzc$set_apply(v) { this.setApply(v); }
-
-  /** @access private */
-  static var props = { apply : true }; // unused?
+  var onapplied:LzDeclaredEventClass = LzDeclaredEvent;
 
   /** @access private */
   static var events = { onremove : true , onapply : true, onapplied : true };
@@ -217,27 +218,7 @@ dynamic class LzState extends LzNode {
    * @access private
    */
   function $lzc$set___LZsourceLocation(v) { this.__LZsetProperty(v, '__LZsourceLocation'); }
-  /** @access private */
-  var heldArgs;
-  /** @access private */
-  var handlerMethodNames;
-  /** @access private */
-  var releasedconstraints;
-  /** @access private */
-  var appliedChildren;
-  /** @access private */
-  var applyOnInit :Boolean = false;
 
-  /**
-   * @access private
-   */
-  override function construct ( parent , args ){
-    super.construct(parent, args);
-    this.heldArgs = {};
-    this.handlerMethodNames = {};
-    this.appliedChildren = [];
-  }
-  
   /**
    * @access private
    */
@@ -257,30 +238,6 @@ dynamic class LzState extends LzNode {
   }
 
   /**
-   * @access private
-   * @deprecated Use setAttribute('applied', ...) instead.
-   */
-  function setApply ( doapply ){
-    if ($debug) {
-      Debug.deprecated(this, arguments.callee, "setAttribute('applied', " + doapply + ")");
-    }
-    if ( typeof(doapply) == 'function' ){
-      // this happens because there is an attribute with the same name as
-      // a function and both attributes and functions are sent in
-      // the same "attrs" data structure
-      // NOTE: [2007-05-16 ptw]
-      // This would happen if an LZX subclass of state overrode the
-      // apply method.  `addProperty` is the way to dynamically add
-      // a method.  YOW!  It seems like a really bad idea to have an
-      // attribute and method have the same name and disambiguate by
-      // type.  What do we think we are, a LISP2?
-      this.addProperty('apply', doapply);
-      return;
-    }
-    this.$lzc$set_applied(doapply);
-  }
-
-  /**
    * Applies the state to the state's parent. If the state is already applied,
    * has no effect.  This is the programmatic equivalent of
    * <code>setAttribute('applied', true)</code>.
@@ -291,8 +248,7 @@ dynamic class LzState extends LzNode {
     }
 
     var parent = this.parent;
-    // TODO [2008-05-14 ptw] Removed isapplied after 4.1
-    this.applied = this.isapplied = true;
+    this.applied = true;
 
     // release any constraints you are about to override
     var pia = parent._instanceAttrs;
@@ -350,8 +306,7 @@ dynamic class LzState extends LzNode {
       return;
     }
 
-    // TODO [2008-05-14 ptw] Removed isapplied after 4.1
-    this.applied = this.isapplied = false;
+    this.applied = false;
 
     if (this.onremove.ready) this.onremove.sendEvent( this );
     if (this.onapplied.ready) this.onapplied.sendEvent( false );
@@ -374,7 +329,7 @@ dynamic class LzState extends LzNode {
     for ( var i = 0; i < this.appliedChildren.length; i++ ){
       var ac = this.appliedChildren[ i ];
       if ( this.pooling ){
-        //if it's a view, we pool it -- otherwise we'll just reconstruct it
+        // if it's a view, we pool it -- otherwise we'll just reconstruct it
         if (ac is LzView){
           this.__LZpool.push ( this.__LZdetach( ac ) );
         } else {
@@ -440,21 +395,65 @@ dynamic class LzState extends LzNode {
    * application to parent.
    *
    * @devnote NOTE: [2006-12-09 ptw] Currently the only args that apply to the
-   * state are args that have setters or handlers for state events
+   * state are args that have setters
    */
   override function __LZapplyArgs ( args , constcall = null){
     var stateArgs = {};
     var held = this.heldArgs;
-    var handlers = this.handlerMethodNames;
+    var $delegates:Array = null;
+
     for (var key in args) {
       var val = args[key];
       var setr = '$lzc$set_' + key;
-      if (this[setr] is Function || key in handlers) {
+      if (key == '$delegates') {
+        $delegates = val;
+      } else if (this[setr]) {
         stateArgs[key] = val;
       } else {
         held[key] = val;
       }
     }
+
+    // Capture handlers that don't belong to the state for later
+    // application to the parent (and pass the ones that do apply to the
+    // state on to your superclass).
+    if ($delegates != null) {
+      var pardels:Array = null;
+      var mydels:Array = null;
+      var ignore = LzNode._ignoreAttribute;
+      // $delegates is a sequence of triplets of the form
+      // eventname, methodname, referencemethodname
+      for (var i = 0, l = $delegates.length; i < $delegates.length; i +=3){
+        // does this go with the state or the state's owner?  goes
+        // with the state ONLY IF the event is an event that the state
+        // sends, and a reference isn't given.
+        if (LzState.events[$delegates[i]] && (! $delegates[ i + 2 ])){
+          if (mydels == null) { mydels = []; }
+          var arrtopush = mydels;
+          // now, capture the method that this calls
+          var mname = $delegates[i +1];
+          //check to see if we held the method (we shouldn't have,
+          //because it is used by this state handler)
+          if (mname in held){
+            stateArgs[mname] = held[mname];
+            delete held[ mname ];
+          }
+        } else {
+          if (pardels == null) { pardels = []; }
+          var arrtopush = pardels;
+        }
+        arrtopush.push($delegates[i], $delegates[i + 1], $delegates[i +2]);
+      }
+      if (mydels != null){
+        // pass state handlers
+        stateArgs.$delegates = mydels;
+      }
+      if (pardels != null){
+        // hold parent handlers
+        held.$delegates = pardels;
+      }
+    }
+
     // If any stateArgs are LzOnceExpr's, we need to move the
     // methods they call from held to stateArgs
     for (var key in stateArgs) {
@@ -530,7 +529,7 @@ dynamic class LzState extends LzNode {
             // attach it to the parent
             held[newDependenciesName] = this[dependenciesName];
           }
-          // Clone the init expr with the new nameS
+          // Clone the init expr with the new names
           held[key] = new (expr.constructor)(newMethodName, newDependenciesName, dbgName);
         } else {
           // Clone the init expr with the new name
@@ -541,54 +540,6 @@ dynamic class LzState extends LzNode {
 
     super.__LZapplyArgs(stateArgs);
   }
-
-  /**
-   * @access private
-   * Capture handlers that don't belong to the state for later
-   * application to the parent (and pass the ones that do apply to the
-   * state on to your superclass).
-   */
-  override function $lzc$set_$delegates ( delarr ){
-    var pardels = [];
-    var mydels = [];
-
-    for ( var i = 0; i < delarr.length;i +=3 ){
-      //does this go with the state or the state's owner?
-      //goes with the state ONLY IF the event is an event that the state
-      //sends, and a reference isn't given.
-      if ( LzState.events[ delarr[ i ] ] && ! delarr[ i + 2 ] ){
-        var arrtopush = mydels;
-
-        //now, capture the method that this calls
-        var mname = delarr[ i +1 ];
-
-        //check to see if we already processed this method
-        //in __LZapplyArgs
-        if ( this.heldArgs[ mname ] ){
-          this.addProperty(mname, this.heldArgs[ mname ]);
-          delete this.heldArgs[ mname ];
-        }
-
-        //create a setter for this method; by definition attributes that
-        //the state has a setter for are handled by the state
-        this.handlerMethodNames[mname] = true;
-      } else {
-        var arrtopush = pardels;
-      }
-
-      arrtopush.push( delarr[ i ], delarr[ i + 1], delarr[ i +2 ] );
-    }
-
-    if ( mydels.length ){
-      // Install state handlers
-      super.$lzc$set_$delegates( mydels );
-    }
-
-    if ( pardels.length ){
-      this.heldArgs.$delegates = pardels;
-    }
-  }
-
 
   /**
    * @access private

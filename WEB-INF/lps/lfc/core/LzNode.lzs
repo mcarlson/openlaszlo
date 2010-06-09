@@ -529,8 +529,6 @@ public dynamic class LzNode extends LzEventable {
   var initstage = null;
   /** @access private */
   var $isstate = false;
-  /** @access private */
-  var doneClassRoot = false;
 
   /** Reference to the node that was passed as this
    * node's ancestor in the constructor.  If this node was created
@@ -826,9 +824,8 @@ public dynamic class LzNode extends LzEventable {
    *
    * This is the method to override if you need to initialize instances
    * of an LZX class as they are constructed.  If you override this
-   * method, you <b>must</b> call the superclass method (the simplest
-   * way to do this is to say <code>super.construct.apply(this,
-   * arguments)</code>. Note that construct can only be overriden within
+   * method, you <b>must</b> call the superclass method (<code>super.construct(parent,
+   * args)</code>. Note that construct can only be overriden within
    * a subclass definition, not within a customized instance.
    *
    * The construct method is also responsible for placing the newly-built view
@@ -887,8 +884,6 @@ public dynamic class LzNode extends LzEventable {
    * signals an error in debug mode).
    */
   function construct ( parent , args ){
-    this.earlySetters = LzNode.earlySetters;
-
     var lp = parent; // lp == lexical parent
     this.parent = lp;
 
@@ -1107,26 +1102,45 @@ public dynamic class LzNode extends LzEventable {
    */
   var ignoreplacement = false;
 
+  /*
+   * Special flags to keep these pseudo-args from being processed by
+   * `__LZapplyArgs` default case: each requires special handling.
+   * NOTE: [2010-06-09 ptw] LzState also uses the existence of a
+   * "setter" to sort state from parent attributes in its override of
+   * `__LZapplyArgs`.
+   */
+  /** @access private */
+  var $lzc$set_$delegates = -1;
+  /** @access private */
+  var $lzc$set_$classrootdepth = -1;
+  /** @access private */
+  var $lzc$set_$datapath = -1;
 
   /**
    * Applies a dictionary of args
    * @access private
    */
   function __LZapplyArgs ( args , constcall = null ){
+    var ignore = LzNode._ignoreAttribute;
     var oset = {};
     var hasset = null;
-    var hasearly = null;
-
     var inits = null;
     var constraints = null;
 
-    for ( var key in args ){
+    // `name` needs to be set ASAP
+    if ('name' in args) {
+      this.$lzc$set_name(args.name);
+      // Don't let it be re-processed as a setter below
+      delete args.name;
+    }
+
+    for ( var key in args ) {
       var val = args[key];
+      if ( oset[key] || (val === ignore) ) continue;
+      //handle flash bug where objects slots are enumerated multiple times
+      oset[ key ] = true;
       /* To see if it has key setter.  Cf., setAttribute */
       var setr = '$lzc$set_' + key;
-      //handle flash bug where objects slots are enumerated multiple times
-      if ( oset[key] || args[key] === LzNode._ignoreAttribute ) continue;
-      oset[ key ] = true;
 
       if (val is LzInitExpr) {
         // Ordering is important, constraint is a subclass of once
@@ -1189,28 +1203,72 @@ public dynamic class LzNode extends LzEventable {
         // [20100107 max] Simplifying to test explicitly for -1 since 
         // 'fake setters' are indicated that way: -1 must be used instead of 
         // null to get to this point see $lzc$set_id().
-        if (key in this.earlySetters) {
-          if (hasearly == null) { hasearly = []; }
-          hasearly[this.earlySetters[key]] = key;
+        if (hasset == null) { hasset = []; }
+        hasset.push(key);
+      }
+    }
+
+    /**
+     * Some attributes have to be handled early, and in a particular
+     * order.  NOTE: [2010-06-03 ptw] This ordering is traditional:
+     * name, $delegates, $classrootdepth, $datapath; although I don't
+     * see how any of these could affect one another.
+     */
+    // This is a pseudo-attribute from the NodeModel.  It's the set of
+    // delegates connecting handlers in this node to their respective
+    // events
+    if ('$delegates' in args) {
+      var $delegates = args.$delegates;
+      // $delegates is a sequence of triplets of the form
+      // eventname, methodname, referencemethodname
+      var cdels:Array = this.__LZconstraintdelegates;
+      var resarray:Array;
+      for (var i = 0, l = $delegates.length; i < l; i +=3){
+        if ( $delegates[i + 2] ) {
+          // This is a delegate on a 'foreign' event.  We can't
+          // install it until our child nodes have been created, in
+          // case one of them is the foreigner.
+          if (resarray == null) { resarray = []; }
+          resarray.push ( $delegates[ i ] , $delegates[ i +1 ] , $delegates[ i + 2 ] );
         } else {
-          if (hasset == null) { hasset = []; }
-          hasset.push(key);
+          var m = $delegates[i + 1];
+          if (! cdels) { cdels = this.__LZconstraintdelegates = []; }
+          cdels.push( new LzDelegate( this , m , this , $delegates[i] ) );
         }
       }
-    }
-
-    if (hasearly) {
-      for (var i = 1, l = hasearly.length; i < l; i++) {
-        if (i in hasearly) {
-          // bail if deleted, e.g. by setDatapath causing replication
-          if (this.__LZdeleted) return;
-          var key = hasearly[i];
-          var setr = '$lzc$set_' + key;
-          this[setr]( args[key] );
-        }
+      if ( resarray != null ){
+        this.__LZstoreAttr( resarray , "$delegates" );
       }
     }
+    // This is a pseudo-argument, from the class compiler, that tells
+    // us the depth of this node relative to the root of the class.
+    // We use it to set the public `classroot` attribute of the node.
+    // When the compiler writes custom constructors for classes, this
+    // could be done more efficiently by simply propagating the root
+    // node to the child instantiators.
+    if ('$classrootdepth' in args) {
+      var $classrootdepth = args.$classrootdepth;
+      // NOTE: (LPP-7559) 0 is _not_ allowed, so `classroot.classroot`
+      // takes you to the next outer class, rather than in a loop.
+      if ($classrootdepth) {
+        var p = this.parent;
+        while (--$classrootdepth > 0) { p = p.parent }
+        this.classroot = p;
+      }
+    }
+    // Another pseudo-attribute from NodeModel:  The black-magic
+    // $datapath that will cause replication and destruction
+    if (('$datapath' in args) && (args.$datapath !== ignore)) {
+      var $datapath = args.$datapath;
+      if ($debug) {
+        if (! ($datapath instanceof Object)) {
+          Debug.debug('`$datapath` is non-object %w?', $datapath);
+        }
+      }
+      this.makeChild( $datapath , true);
+    }
 
+    // Now install the attrs that will trigger setters
     if (hasset) {
       for (var i = hasset.length - 1; i >= 0; i--) {
         // bail if deleted, e.g. by setDatapath causing replication
@@ -1353,19 +1411,6 @@ public dynamic class LzNode extends LzEventable {
   var $lzc$set_$setters = -1;
 
   /**
-   * @access private
-   */
-  function $lzc$set_$classrootdepth ( d ) {
-
-    if (!d) return;
-
-    var p = this.parent;
-    while ( --d > 0){ p = p.parent }
-
-    this.classroot = p;
-  }
-
-  /**
    * Binds the named attribute to the given path, relative to this node's
    * datapath. This is the method that is called when the $path{} constraint
    * is used. Note that the binding is two-way -- changing the value of the
@@ -1390,47 +1435,6 @@ public dynamic class LzNode extends LzEventable {
       this.__LZconstraintdelegates = [];
     }
     this.__LZconstraintdelegates.push ( new LzDataAttrBind( this.datapath, attr, path, type ));
-  }
-
-  /** @access private */
-  static var earlySetters = new LzInheritedHash({
-    name            : 1 ,
-    $events         : 2 ,
-    $delegates      : 3 ,
-    $classrootdepth : 4 ,
-    $datapath       : 5
-    });
-  /** @access private */
-  var earlySetters;
-
-  /**
-   * @access private
-   */
-  function $lzc$set_$delegates ( delarr ){
-    //delarr is a sequence of triplets of the form
-    //... eventname, methodname, referencemethodname
-    var l = delarr.length;
-    if (l < 1) return;
-
-    var dels:Array = this.__LZconstraintdelegates;
-    var resarray:Array = [];
-    for ( var i = 0; i < l;i +=3 ){
-      if ( delarr[i + 2] ) {
-        //let's resolve this later
-        resarray.push ( delarr[ i ] , delarr[ i +1 ] , delarr[ i + 2 ] );
-      } else {
-        var m = delarr[i + 1];
-        if (! dels) {
-          dels = this.__LZconstraintdelegates = [];
-        }
-        dels.push( new LzDelegate( this , m , this , delarr[i] ) );
-      }
-    }
-
-    if ( resarray.length ){
-      this.__LZstoreAttr( resarray , "$delegates" );
-    }
-
   }
 
   /**
@@ -1490,9 +1494,9 @@ public dynamic class LzNode extends LzEventable {
     if ( delarr.length < 1) {
       return;
     }
-    var dels:Array = this.__LZconstraintdelegates;
-    if (! dels){
-      dels = this.__LZconstraintdelegates = [];
+    var cdels:Array = this.__LZconstraintdelegates;
+    if (! cdels){
+      cdels = this.__LZconstraintdelegates = [];
     }
 
     var l = delarr.length;
@@ -1501,7 +1505,7 @@ public dynamic class LzNode extends LzEventable {
       var sender = (sendermethodname != null) ? this[sendermethodname]() : null;
       if ( sender == null ) sender = this;
       var meth = delarr[i + 1];
-      dels.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
+      cdels.push( new LzDelegate( this , meth ,sender , delarr[i] ) );
     }
 
   }
@@ -1557,9 +1561,9 @@ public dynamic class LzNode extends LzEventable {
       }
     }
     if (dependencies && dependencies.length > 0){
-      var dels:Array = this.__LZconstraintdelegates;
-      if ( ! dels ){
-        dels = this.__LZconstraintdelegates = [];
+      var cdels:Array = this.__LZconstraintdelegates;
+      if ( ! cdels ){
+        cdels = this.__LZconstraintdelegates = [];
       }
 
       // NOTE: [2006-05-30 ptw] You may think to yourself 'this is
@@ -1577,7 +1581,7 @@ public dynamic class LzNode extends LzEventable {
       for (var i = 0, l = dependencies.length; i < l; i += 2) {
         dp = dependencies[i];
         if (dp) {
-          dels.push( new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]) );
+          cdels.push( new LzDelegate(this, constraintMethodName, dp, "on" + dependencies[i + 1]) );
         }
       }
     }
@@ -1682,16 +1686,16 @@ public dynamic class LzNode extends LzEventable {
    */
   function releaseConstraintMethod (constraintMethodName) {
     var result:Boolean = false;
-    var dels:Array = this.__LZconstraintdelegates;
-    if (dels) {
-      for (var i:int = 0; i < dels.length; ) {
-        var del:* = dels[i];
+    var cdels:Array = this.__LZconstraintdelegates;
+    if (cdels) {
+      for (var i:int = 0; i < cdels.length; ) {
+        var del:* = cdels[i];
         if (del is LzDelegate && del.c === this &&
                 del.m === this[constraintMethodName]) {
           if (del.__LZdeleted != true) {
             del.destroy();
           }
-          dels.splice(i, 1);
+          cdels.splice(i, 1);
           result = true;
         } else {
           i++;
@@ -1784,16 +1788,6 @@ public dynamic class LzNode extends LzEventable {
     // Finally, update ourselves
     this.name = name;
   }
-
-  /**
-   * @access private
-   */
-  function defaultSet ( val ,prop ){
-    if ( val != null ){
-      this[ prop ] = val ;
-    }
-  }
-
 
   /**
    * Sets the datacontext for the node to the xpath given as an argument
@@ -2353,22 +2347,6 @@ public dynamic class LzNode extends LzEventable {
         return ts;
       }
     }
-  }
-
-  /**
-   * @access private
-   * setter for $datapath
-   */
-  function $lzc$set_$datapath( dpobj ){
-    if (dpobj === LzNode._ignoreAttribute) {
-      // a 'datapath' attribute overrode our $datapath
-      return;
-    } else if (! (dpobj instanceof Object)) {
-      if ($debug) {
-        Debug.debug('%s on non-object %w?', arguments.callee, dpobj)
-      }
-    }
-    this.makeChild( dpobj , true);
   }
 
   /** @access private */
