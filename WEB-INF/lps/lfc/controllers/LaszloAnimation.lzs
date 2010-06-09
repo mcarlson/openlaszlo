@@ -221,14 +221,16 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
             // create a default hash
             expected = targ.__animatedAttributes = {};
         }
-        if (expected[attr] == null) {
-            expected[attr] = Number(targ[attr]);
-        }
         
         // Set the attribute of the view to its "from" value but make sure
         // expectedAttribute is updated.
         if (this.from != null) {
             targ.setAttribute(attr, Number(this.from));
+        }
+
+        // update here in case from updated
+        if (expected[attr] == null) {
+            expected[attr] = Number(targ[attr]);
         }
 
         if (this.relative) {

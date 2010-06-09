@@ -170,7 +170,7 @@ public dynamic class LzAnimatorGroup extends LzNode {
 
     /** The start value for the animation.  Defaults to the
       * targeted attribute's current value.
-      * @devnote must be type * so it can be tested for null !&#!# AS3...
+      * @devnote must be type * so it can be tested for null !#!# AS3...
       * @type Number
       * @lzxtype number
       */
@@ -178,7 +178,7 @@ public dynamic class LzAnimatorGroup extends LzNode {
 
     /** The final value for the targeted attribute.
       *
-      * @devnote must be type * so it can be tested for null !&#!# AS3...
+      * @devnote must be type * so it can be tested for null !#!# AS3...
       * @type Number
       * @lzxtype number
       */
