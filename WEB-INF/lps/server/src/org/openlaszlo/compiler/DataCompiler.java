@@ -3,19 +3,15 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.compiler;
-import org.openlaszlo.auth.AuthenticationException;
-import org.openlaszlo.iv.flash.api.action.*;
-import java.io.*;
+import java.util.regex.Pattern;
+
 import org.openlaszlo.sc.ScriptCompiler;
 import org.jdom.Element;
-import org.jdom.Text;
-import org.jdom.Content;
-import org.jdom.JDOMException;
 import org.openlaszlo.xml.internal.XMLUtils;
 
 /** Compiler for local data elements.
@@ -36,6 +32,9 @@ class DataCompiler extends ElementCompiler {
 
     static final String LOCAL_DATA_FNAME = "canvas.lzAddLocalData";
 
+    // Pattern matcher for '$once{...}' style constraints
+    private static final Pattern constraintPat = Pattern.compile("^\\s*\\$(\\w*)\\s*\\{(.*)\\}\\s*");
+
     DataCompiler(CompilationEnvironment env) {
         super(env);
     }
@@ -51,7 +50,8 @@ class DataCompiler extends ElementCompiler {
             if (src != null && src.indexOf("http:") == 0) {
                 return false;
             }
-            return src == null || !XMLUtils.isURL(src);
+            // not an element for this compiler when the is an url or a constraint
+            return ! (src != null && (XMLUtils.isURL(src) || constraintPat.matcher(src).matches()));
         }
         return false;
     }

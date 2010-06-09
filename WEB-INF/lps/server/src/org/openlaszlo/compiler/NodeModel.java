@@ -609,7 +609,7 @@ public class NodeModel implements Cloneable {
             String type = elt.getAttributeValue("type");
 
             if ((type != null && ("soap".equals(type) || "http".equals(type)))
-                || (src != null && XMLUtils.isURL(src))
+                || (src != null && (XMLUtils.isURL(src) || constraintPat.matcher(src).matches()))
                 || "true".equals(datafromchild)) {
                 contentIsLiteralXMLData = false;
             }
@@ -1764,7 +1764,7 @@ solution =
 
 
     // Pattern matcher for '$once{...}' style constraints
-    Pattern constraintPat = Pattern.compile("^\\s*\\$(\\w*)\\s*\\{(.*)\\}\\s*");
+    private static final Pattern constraintPat = Pattern.compile("^\\s*\\$(\\w*)\\s*\\{(.*)\\}\\s*");
 
 
     CompiledAttribute compileAttribute(
