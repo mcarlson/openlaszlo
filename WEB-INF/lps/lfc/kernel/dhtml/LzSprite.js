@@ -2894,10 +2894,7 @@ LzSprite.prototype.getContextMenu = function() {
 }
 
 LzSprite.prototype.setRotation = function(r) {    
-    var browser = lz.embed.browser;
-    if (browser.isSafari || browser.isFirefox) {
-        this.__LZdiv.style[LzSprite.__styleNames.transform] = 'rotate(' + r + 'deg)';
-    }
+    this.__LZdiv.style[LzSprite.__styleNames.transform] = 'rotate(' + r + 'deg)';
 }
 
 LzSprite.prototype.backgroundrepeat = null;
