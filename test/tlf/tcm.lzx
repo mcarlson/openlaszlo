@@ -1,0 +1,60 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+
+    public class TextContainerManager_setText_test extends Sprite {
+    #passthrough (toplevel:true) {
+    import flash.display.Sprite; 
+    import flash.text.*; 
+
+    import flash.text.engine.*; 
+    import flash.ui.Mouse; 
+    import flash.display.Sprite 
+    import flash.events.MouseEvent; 
+    import flash.events.EventDispatcher; 
+        import flashx.textLayout.elements.TextFlow;
+        import flashx.textLayout.conversion.TextConverter;
+
+    import flash.display.Sprite;
+ 
+    import flashx.textLayout.container.TextContainerManager;
+
+}#     
+ 
+    #passthrough {
+        public function TextContainerManager_setText_test() {
+            var spr:Sprite = new Sprite();
+            addChild(spr);
+            spr.x = 40;
+            spr.y = 50;
+ 
+            var tcm:TextContainerManager = new TextContainerManager(spr);
+            tcm.compositionWidth = 300;
+            tcm.compositionHeight = 200;
+            //            tcm.setText("(1)The quick brown fox jumps over the lazy dev. (2)The quick brown fox jumps over the lazy dev. (3)The quick brown fox jumps over the lazy dev. (4)The quick brown fox jumps over the lazy dev. (5)The quick brown fox jumps over the lazy dev.");
+            var markup:String = "<p>This is some <b>bold</b> and <i>italic</i> text. <a href='http://www.openlaszlo.org'>Click here to go to OpenLaszlo site</a></p>";
+            var textFlow:TextFlow = TextConverter.importToFlow(markup, TextConverter.TEXT_FIELD_HTML_FORMAT);
+            tcm.setTextFlow(textFlow);
+
+            tcm.updateContainer();
+        }
+    }#
+    }
+
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit" >
+     k = new  TextContainerManager_setText_test();
+     canvas.sprite.addChild(k);      
+</handler>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
