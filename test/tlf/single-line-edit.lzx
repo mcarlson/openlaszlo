@@ -5,12 +5,64 @@
 <![CDATA[
 
 
+      public class MyEditManager extends EditManager
+       {
+
+           #passthrough (toplevel:true) {
+               import flash.display.Sprite;
+               import flash.events.TextEvent;
+               import flash.events.KeyboardEvent;
+               import flash.geom.Rectangle;
+
+               import flashx.textLayout.container.ContainerController;
+               import flashx.textLayout.elements.TextFlow;
+               import flashx.textLayout.conversion.TextConverter;
+               import flashx.textLayout.conversion.ConversionType;
+               import flashx.textLayout.edit.EditManager;
+               import flashx.undo.UndoManager;
+               import flashx.undo.IUndoManager;
+               import flash.events.MouseEvent;
+
+           }#
+
+               #passthrough {
+               public function MyEditManager(undoManager:IUndoManager  = null)
+               {
+                   super(undoManager);
+               }
+
+               override public function mouseOverHandler(event:MouseEvent):void {
+                   super.mouseOverHandler(event);
+                   Debug.info("mouseOverHandler", event);
+               }
+
+
+               override public function mouseOutHandler(event:MouseEvent):void {
+                   super.mouseOutHandler(event);
+                   Debug.info("mouseOutHandler", event);
+               }
+
+
+
+
+               override public function textInputHandler(event:TextEvent):void
+               {    
+                   super.textInputHandler(event);
+                   Debug.info("textInputHandler", event);
+
+               }
+           }#
+      }
+
+
+
     public class EditManager_example extends Sprite
     {
 
     #passthrough (toplevel:true) {
     import flash.display.Sprite;
     import flash.display.Sprite;
+    import flash.ui.Mouse; 
     import flash.events.MouseEvent;
     import flash.text.TextField;
     import flash.text.TextFieldAutoSize;
@@ -29,8 +81,9 @@
     #passthrough {
 
 
+
         public  var tf:TextFlow;
-        public  var em:EditManager;
+        public  var em:MyEditManager;
         public var um:UndoManager;
         
         public function EditManager_example()
@@ -53,9 +106,12 @@
             tf.flowComposer.addController(tfController);
             tf.flowComposer.updateAllControllers();
             
+
+
             //define TextFlow manager objects
             um = new UndoManager();
-            em = new EditManager(um);
+            em = new MyEditManager(um);
+
             tf.interactionManager = null;
             addListeners(tf);
         }
@@ -64,8 +120,16 @@
         var multiline:Boolean = false;
         
 
+        private function mouseOverHandler(event:MouseEvent):void 
+        { 
+            Debug.info("mouseOverHandler", event);
+           Mouse.cursor = "button"; 
+        } 
+ 
+
         private function addListeners(textFlow:TextFlow):void
         {
+            
 
 
 

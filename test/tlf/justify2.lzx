@@ -1,0 +1,82 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug  x="450" fontsize="12"/>
+
+<script when="immediate">
+<![CDATA[
+
+
+
+public class ContainerController_setCompositionSizeExample extends Sprite {
+    #passthrough (toplevel:true) {
+        import flash.display.Sprite;
+        import flashx.textLayout.container.ContainerController;
+        import flashx.textLayout.elements.ParagraphElement;
+        import flashx.textLayout.elements.SpanElement;
+        import flashx.textLayout.elements.TextFlow;
+        import flashx.textLayout.conversion.TextConverter;
+    }#
+
+        public var controller:ContainerController;
+        public var textFlow:TextFlow;
+    
+        #passthrough {
+        public function ContainerController_setCompositionSizeExample()
+        {
+            // create container, text flow, composer, paragraph, and span
+            var container:Sprite = new Sprite();
+            textFlow = new TextFlow();
+            var paragraph:ParagraphElement = new ParagraphElement();
+            var span:SpanElement = new SpanElement;
+            // add container to the stage; create controller and add it to the text flow
+            addChild(container);
+            container.x = 100;
+            container.y = 50;
+            controller = new ContainerController(container);
+            textFlow.flowComposer.addController(controller);
+            // set font size and add text to the span; add the span to the paragraph
+            textFlow.fontSize = 12;
+            controller.setCompositionSize(250, 200);
+            span.text = "This example uses setCompositionSize() to set compositionWidth (";
+            span.text += controller.compositionWidth; 
+            span.text += ") and compositionHeight ("
+            span.text += controller.compositionHeight;
+            span.text += "), rather than setting them with:\nnew ContainerController()";
+            paragraph.addChild(span);
+            // add paragraph to text flow, and display text
+            textFlow.addChild(paragraph);            
+            textFlow.flowComposer.updateAllControllers();       
+        }
+    }#
+}
+
+
+]]>
+</script>
+
+<attribute name="k" value="null"/>
+<handler name="oninit">
+     k = new ContainerController_setCompositionSizeExample();
+     canvas.sprite.addChild(k);
+</handler>
+
+<method name="justify" args="w,h">
+         if (canvas.k != null) {
+             canvas.k.controller.setCompositionSize(w,h);
+             canvas.k.textFlow.flowComposer.updateAllControllers();
+         }
+</method>
+
+<slider id="wslider" x="100" y="350" onvalue="canvas.justify(wslider.value, hslider.value)"
+                  value="150" minvalue="40" maxvalue="1000" showvalue="true"/>
+
+
+<slider id="hslider" x="100" y="380" onvalue="canvas.justify(wslider.value, hslider.value)"
+                  value="150" minvalue="10" maxvalue="300" showvalue="true"/>
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
