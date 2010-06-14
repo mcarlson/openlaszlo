@@ -1,0 +1,80 @@
+<project name="tomcat-manager">
+
+    <!-- This file defines macros for deploying and undeploying webapps via the tomcat manager. -->
+    <!-- @author David Nault -->
+
+    <property environment="tomcat.manager.env"/>
+
+    <!-- define <trycatch> -->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+    <!-- define tomcat tasks -->
+    <path id="tomcat.manager.classpath">
+        <pathelement location="${tomcat.manager.env.TOMCAT_HOME}/server/lib/catalina-ant.jar"/>
+    </path>
+    <taskdef name="_tomcat.reload" classname="org.apache.catalina.ant.ReloadTask" classpathref="tomcat.manager.classpath"/>
+    <taskdef name="_tomcat.remove" classname="org.apache.catalina.ant.RemoveTask" classpathref="tomcat.manager.classpath"/>
+    <taskdef name="_tomcat.install" classname="org.apache.catalina.ant.InstallTask" classpathref="tomcat.manager.classpath"/>
+
+    <macrodef name="_checkTomcatPreconditions">
+        <sequential>
+            <fail unless="tomcat.manager.env.TOMCAT_HOME" message="TOMCAT_HOME environment variable must be set"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="tomcatDeployInPlace">
+        <attribute name="docBase"/>
+        <attribute name="contextPath"/>
+        <attribute name="host" default="localhost"/>
+        <attribute name="port" default="8080"/>
+        <attribute name="username" default="admin"/>
+        <attribute name="password" default="laszlo"/>
+        <attribute name="tomcatManagerUrl" default="http://@{host}:@{port}/manager"/>
+
+        <sequential>
+            <_checkTomcatPreconditions/>
+
+            <echo>Deploying webapp context "@{contextPath}" from docBase "@{docBase}"</echo>
+            <echo>Tomcat manager url: @{tomcatManagerUrl}</echo>
+
+            <!-- Deploy using a context descriptor to prevent Tomcat 5.5 from copying
+                 the whole webapp directory to $TOMCAT_HOME/webapps.
+                 The redundant path attribute is included for backwards compatibility with 5.0.x -->
+            <property name="temp.context.file" location="_temporary-context-descriptor.xml"/>
+            <echo file="${temp.context.file}"><![CDATA[
+                       <Context path="@{contextPath}" docBase="@{docBase}" allowLinking="true"/>
+            ]]></echo>
+
+            <_tomcat.install url="@{tomcatManagerUrl}" username="@{username}" password="@{password}"
+                            path="@{contextPath}" config="file://${temp.context.file}"/>
+
+            <delete file="${temp.context.file}"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="tomcatUndeploy">
+        <attribute name="contextPath"/>
+        <attribute name="host" default="localhost"/>
+        <attribute name="port" default="8080"/>
+        <attribute name="username" default="admin"/>
+        <attribute name="password" default="laszlo"/>
+        <attribute name="tomcatManagerUrl" default="http://@{host}:@{port}/manager"/>
+
+        <sequential>
+            <_checkTomcatPreconditions/>
+
+            <echo>Undeploying webapp context "@{contextPath}"</echo>
+            <echo>Tomcat manager url: @{tomcatManagerUrl}</echo>
+            <trycatch>
+                <try>
+                    <_tomcat.remove url="@{tomcatManagerUrl}" username="@{username}"
+                                   password="@{password}" path="@{contextPath}"/>
+                </try>
+                    <!-- Allow graceful failure if the webapp isn't deployed -->
+                <catch/>
+            </trycatch>
+        </sequential>
+    </macrodef>
+
+  <!-- Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms.  -->
+</project>
