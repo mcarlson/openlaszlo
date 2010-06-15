@@ -842,7 +842,8 @@ public abstract class CommonGenerator extends GenericVisitor {
     else if (node instanceof ASTStatementList) {
       newNode = visitStatementList(node, children);
     }
-    else if (node instanceof ASTDirectiveBlock) {
+    else if (node instanceof ASTDirectiveBlock ||
+             node instanceof ASTClassDirectiveBlock) {
       newNode = visitDirectiveBlock(node, children);
     }
     else if (node instanceof ASTFunctionDeclaration) {
@@ -874,7 +875,8 @@ public abstract class CommonGenerator extends GenericVisitor {
     else if (node instanceof ASTIfStatement) {
       newNode = visitIfStatement(node, children);
     }
-    else if (node instanceof ASTIfDirective) {
+    else if (node instanceof ASTIfDirective ||
+             node instanceof ASTClassIfDirective) {
       newNode = visitIfDirective(node, children);
     }
     else if (node instanceof ASTWhileStatement) {
