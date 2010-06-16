@@ -1,0 +1,278 @@
+/**
+  *
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @access public
+  * @affects lztext
+  * @topic LFC
+  * @subtopic Text
+  */
+
+/**
+  * <p>This tag creates an area of the canvas that the user can use to
+  * edit text.  It is equivalent to the HTML <code>&lt;input
+  * type="text"&gt;</code>, <code>&lt;input type="password"&gt;</code>,
+  * and <code>textarea</code> tags.</p>
+  * <p>See the documentation for the <sgmltag class="element" role="LzText">&lt;text&gt;</sgmltag>
+  * tag for a description of the <attribute>width</attribute> and <attribute>height</attribute> attributes,
+  * and of scrolling.</p>
+  * <h2>Single-line input text</h2>
+  * 
+  * <p>With the <attribute>multiline</attribute> and
+  * <attribute>password</attribute> attributes set to <code>false</code>
+  * (the default), this tag is similar to the HTML <code>&lt;input
+  * type="text"&gt;</code> tag.  In this use, long lines of text are
+  * clipped according to the <attribute>width</attribute> attribute.</p>
+  * 
+  * <example title="Simple inputtext"><programlisting>&lt;canvas height="50"&gt;
+  *   &lt;inputtext width="150"&gt;This text is editable.&lt;/inputtext&gt;
+  * &lt;/canvas&gt;</programlisting></example>
+  * 
+  * <h2>Multi-line input text</h2>
+  * 
+  * <p>With the <attribute>multiline</attribute> attribute set to
+  * <code>true</code>, this tag is similar to the HTML
+  * <code>&lt;textarea&gt;</code> tag.  In this use, text is wrapped to
+  * the length of the <attribute>width</attribute> attribute, and the user
+  * can press Enter to create multiple lines of input.</p>
+  * 
+  * <example title="Simple inputtext"><programlisting>&lt;canvas height="50"&gt;
+  *   &lt;inputtext width="150" multiline="true"&gt;This text is editable.&lt;/inputtext&gt;
+  * &lt;/canvas&gt;</programlisting></example>
+  * 
+  * <h2>Passwords</h2>
+  * 
+  * <p>With <attribute>password</attribute> set to <code>true</code>, this
+  * tag is similar to the HTML <code>&lt;input type="password"&gt;</code>
+  * tag.  Input characters are displayed as the asterisk
+  * ('<code>*</code>') character.</p>
+  * 
+  * <example title="Password inputtext"><programlisting>&lt;canvas height="20"&gt;
+  *   &lt;inputtext width="100" password="true"&gt;password.&lt;/inputtext&gt;
+  * &lt;/canvas&gt;</programlisting></example>
+  * 
+  * 
+  * @shortdesc The basic input-text element.
+  * @lzxname tlfinputtext
+  */
+dynamic public class LzTLFInputText extends LzTLFText {
+
+  function LzTLFInputText ( parent:LzNode? = null , attrs:Object? = null , children:Array? = null, instcall:Boolean  = false) {
+    super(parent,attrs,children,instcall);
+  }
+
+/** If true, the inputtext contents will be obscured
+  * @lzxtype booleanLiteral
+  * @type Boolean
+  * @modifiers read-only
+  */
+    var password;
+
+/** @access private
+  * @modifiers override 
+  */
+static var tagname = 'tlfinputtext';
+/** @access private */
+  static var attributes = new LzInheritedHash(LzText.attributes);
+  LzNode.mergeAttributes({selectable: true, enabled: true, clip: true}, LzInputText.attributes);
+
+
+/** Sent whenever the text field is enabled.
+  * @lzxtype event
+  */
+var onenabled = LzDeclaredEvent;
+
+/** 
+  * Width to use for text field if none is specified
+  * @access private
+  */
+override function getDefaultWidth () {
+    return 100;
+}
+
+
+/** @access private */
+var _onfocusDel = null;
+/** @access private */
+var _onblurDel = null;
+/** @access private */
+var _modemanagerDel = null;
+
+/**
+  * @access private
+  */
+override function construct ( parent , args ){
+    this.password = ('password' in args) ? (!! args.password) : false;
+    this.resize = ('resize' in args) ? (!! args.resize) : false;
+    this.focusable = true;
+    super.construct(parent, args);
+    this._onfocusDel = new LzDelegate( this , "_gotFocusEvent" , this,
+                                            "onfocus" );
+    this._onblurDel = new LzDelegate( this , "_gotBlurEvent" , this,
+                                            "onblur" );
+    this._modemanagerDel = new LzDelegate( this, "_modechanged", lz.ModeManager,
+                                            "onmode" );
+}
+
+/** @access private */
+var isprite:LzTLFInputTextSprite;
+/**
+  * Called to create the sprite object.  May be overridden to use a specific 
+  * version, e.g. LzTextSprite();
+  * @access private
+  */
+override function __makeSprite(args) {
+    this.sprite = this.tsprite = this.isprite = new LzTLFInputTextSprite(this, args);
+}
+
+/** @access private */
+var _focused = false;
+
+/** @access private */
+function _gotFocusEvent(e=null){
+    this._focused = true;
+    this.isprite.gotFocus();
+}
+
+/** @access private */
+function _gotBlurEvent(e=null){
+    this._focused = false;
+    this.isprite.gotBlur();
+}
+
+/** @access private 
+ * Receive input text events from sprite: onblur, onfocus, onchange
+ * Additionally for dhtml: onmousedown, onmouseout, onclick
+ */
+function inputtextevent (eventname:String, value:* = null) :void {
+    if (eventname == 'onfocus' && this._focused) return;
+    if (eventname == 'onblur' && ! this._focused) return;
+
+    if (eventname == 'onfocus') {
+        this._focused = true;
+        if (lz.Focus.getFocus() !== this) {
+            var tabdown:Boolean = lz.Keys.isKeyDown('tab');
+            lz.Focus.setFocus(this, tabdown);
+        }
+    } else if (eventname == 'onchange') {
+        // Must use instead of local property so sprite can normalize newlines
+        this.text = this.isprite.getText();
+
+        // Update the height if we're multiline and don't have a set height
+        if (this.multiline && !this.hassetheight) {
+            var textheight = this.isprite.getTextfieldHeight();
+            if (this.height != textheight) {
+                this.updateHeight(textheight);
+            }
+        }
+        if (this.ontext.ready) this.ontext.sendEvent(this.text);
+    } else if (eventname == 'onblur') {
+        this._focused = false;
+        if (lz.Focus.getFocus() === this) {
+            lz.Focus.clearFocus();
+        }
+    } else {
+        if ($debug) {
+            Debug.warn("unhandled inputtextevent='%s' in %#w", eventname, this);
+        }
+    }
+}
+
+/**
+  * Retrieves the contents of the text field for use by a datapath. See
+  * <link linkend="LzDatapath.prototype.updateData"><method>LzDatapath.updateData()</method></link> for more on this.
+  * @access public
+  */
+override function updateData () {
+    return this.isprite.getText();
+}
+
+
+/** If true, the inputtext will be enabled
+  * @lzxtype booleanLiteral
+  * @type Boolean
+  */
+    public var enabled = true;
+
+/**
+  * @access private
+  */
+function $lzc$set_enabled(enabled) {
+    this.focusable = true;
+    this.enabled = enabled;
+    this.isprite.setEnabled(enabled);
+    if (this.onenabled.ready) this.onenabled.sendEvent(enabled);
+}
+
+/**
+  * Sets whether user can modify input text field
+  * @param Boolean enabled: true if the text field can be edited
+  * @deprecated Use setAttribute('enabled', ...) instead.
+  */
+final function setEnabled (enabled){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
+    this.$lzc$set_enabled(enabled);
+}
+
+/**
+  * Set the html flag on this text view
+  * @param Boolean htmlp: If true, the text content is treated as HTML when displayed.
+  */
+function setHTML (htmlp) {
+    if (this.capabilities['htmlinputtext']) {
+        this.isprite.setHTML(htmlp);
+    } else if ($debug) {
+        LzView.__warnCapability('inputtext.setHTML()', 'htmlinputtext'); 
+    }
+}
+/** 
+* @access private
+*/
+override function getText ( ){
+    return (this.sprite cast LzTLFInputTextSprite).getText();    
+}
+
+/** 
+  * this attribute control the LzText::selectable attribute trough its setter
+  * @access private
+  */
+var _allowselectable=true;
+
+/** 
+  * cache true value of selectable
+  * @access private
+  */
+var _selectable;
+
+/** 
+  * Catch all lz.ModeManager events
+  * @access private
+  */
+function _modechanged(modalview:LzView) :void {
+    // if !modalview = "lz.ModeManager release a view" => so allowselectable
+    // else query lz.ModeManager whether we can be selected
+    this._setallowselectable(!modalview || lz.ModeManager.__LZallowInput(modalview, this));
+}
+
+/** 
+  * update the selectable status based on cached value
+  * @access private
+  */
+function _setallowselectable(value) {
+    this._allowselectable = value;
+    this.$lzc$set_selectable( this._selectable );
+}
+
+/** 
+  * @access private
+  */
+override function $lzc$set_selectable(value) {
+    this._selectable = value;
+    // depending on allowselectable : the setted value or false !
+    super.$lzc$set_selectable( this._allowselectable ? value : false );
+}
+
+} // End of LzInputText
+
+lz[LzTLFInputText.tagname] = LzTLFInputText;  // publish

@@ -1,7 +1,7 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
@@ -10,6 +10,10 @@
 #include "views/LaszloView.lzs"
 #include "views/LzText.lzs"
 #include "views/LzInputText.lzs"
+
+#include "views/LzTLFText.lzs"
+#include "views/LzTLFInputText.lzs"
+
 #include "views/LzViewLinkage.lzs"
 #include "views/LaszloCanvas.lzs"
 #include "views/LzScript.lzs"
