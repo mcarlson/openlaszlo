@@ -115,12 +115,34 @@ class LibraryWriter extends IntermediateWriter {
       lzoAbsPath = lzoAbsPath.substring(0,lzoAbsPath.length()-4);
       String relPath = FileUtils.relativePath(lzoAbsPath, LPS.HOME());
       // remove "/" and "." from pathname, replace with "_"
-      String safename = relPath.replaceAll("[\\/.]", "_");
+      relPath += relPath.hashCode();
+      String safename = "";
+      for (int i = 0; i < relPath.length(); i++) {
+        if (Character.isJavaIdentifierPart(relPath.charAt(i))) {
+          safename += relPath.charAt(i);
+        } else {
+          safename += "_";
+        }
+      }
       return safename;
     } catch (IOException e) {
       throw new CompilationError("Could not generate classname from LZO file name "+appfile);
     }
   }
+
+  // Returns true if s is a legal Java identifier.
+  public static boolean isJavaIdentifier(String s) {
+    if (s.length() == 0 || !Character.isJavaIdentifierStart(s.charAt(0))) {
+      return false;
+    }
+    for (int i=1; i<s.length(); i++) {
+      if (!Character.isJavaIdentifierPart(s.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 
 
   /** For an lzo library, we look at the runtimes specified, and

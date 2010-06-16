@@ -2,7 +2,7 @@
 
   <include href="libdir/lib1.lzx"/>
   <include href="libdir/lib2.lzx"/>
-  <include href="libglobal.lzx"/>
+  <include href="libglobal-dash.lzx"/>
 
   <foo flavor="instance from main app" oninit="this.bar()">
     <method name="bar">

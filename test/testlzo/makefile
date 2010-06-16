@@ -5,7 +5,7 @@
 
 LZC="${LPS_HOME}/WEB-INF/lps/server/bin/lzc"
 all:
-	${LZC} -c --runtime=swf10,dhtml libglobal.lzx 
+	${LZC} -c --runtime=swf10,dhtml libglobal-dash.lzx 
 	${LZC} -c --runtime=swf10,dhtml extclass.lzx 
 	${LZC} -c --runtime=swf10,dhtml libdir/lib1.lzx
 	## test compiling a swf10 lzo which subclasses something from an external lzo library
@@ -15,7 +15,7 @@ all:
 
 
 lzs:
-	${LZC} -c --runtime=swf8 libglobal.lzx 
+	${LZC} -c --runtime=swf8 libglobal-dash.lzx 
 	${LZC} -c --runtime=swf8 extclass.lzx 
 	${LZC} -c --runtime=swf8 libdir/lib1.lzx
 	## test compiling a swf10 lzo which subclasses something from an external lzo library
@@ -23,7 +23,7 @@ lzs:
 
 
 debug:
-	${LZC} -c -g1 --runtime=swf10,dhtml libglobal.lzx 
+	${LZC} -c -g1 --runtime=swf10,dhtml libglobal-dash.lzx 
 	${LZC} -c -g1 --runtime=swf10,dhtml extclass.lzx 
 	${LZC} -c -g1 --runtime=swf10,dhtml libdir/lib1.lzx
 	## test compiling a swf10 lzo which subclasses something from an external lzo library
