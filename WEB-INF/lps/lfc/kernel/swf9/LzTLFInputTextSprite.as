@@ -115,19 +115,11 @@ public class LzTLFInputTextSprite extends LzTLFTextSprite {
      * @access private
      */
         function gotFocus ()  {
-            // this is from LzInputTextSprite::
-            /* if ( this.hasFocus ) { return; }
             // assign keyboard control
-            LFCApplication.stage.focus = this.textfield;
-            this.select();
+            if ( this.hasFocus ) { return; }
             this.hasFocus = true;
-            */
-
-            var selmgr:ISelectionManager = textFlow.interactionManager;
-            if (selmgr != null) {
-                selmgr.setFocus();
-                this.select();
-            }
+            this.select();
+            LFCApplication.stage.focus = this.container;
         }
 
 
@@ -137,40 +129,30 @@ public class LzTLFInputTextSprite extends LzTLFTextSprite {
      * @access private
      */
         function gotBlur () {
-            /*
-              this.hasFocus = false;
-              this.deselect();
-              if (LFCApplication.stage.focus === this.textfield) {
+            this.hasFocus = false;
+            if (LFCApplication.stage.focus === this.container) {
                 // remove keyboard control
                 LFCApplication.stage.focus = LFCApplication.stage;
-              }
-            */
-
-            // TODO [hqm 2010-06] How do I unset the focus ??? 
-
-            this.deselect();
+            }
+            deselect();
         }
 
 
     /**
-     * TODO [hqm 2008-01] I have no idea whether this comment
-     * still applies:
-     * Register for update on every frame when the text field gets the focus.
-     * Set the behavior of the enter key depending on whether the field is
-     * multiline or not.
-     * 
+     *  Notify LFC that Flash set the focus
      * @access private
      */
-    function __gotFocus (event:*) :void {
-        // scroll text fields horizontally back to start
-        if (owner) owner.inputtextevent('onfocus');
-    }
+    override function __gotFocus (event:Event) :void {
+            // scroll text fields horizontally back to start
+            this.hasFocus = true;
+            if (owner) owner.inputtextevent('onfocus');
+        }
 
     /**
      * @access private
      * TODO [hqm 2008-01] Does we still need this workaround???
      */
-    function __lostFocus (event:*) :void {
+    override function __lostFocus (event:Event) :void {
         // defer execution, see swf8 kernel
         LzTimeKernel.setTimeout(this.__handlelostFocus, 1, event);
     }
@@ -192,7 +174,7 @@ public class LzTLFInputTextSprite extends LzTLFTextSprite {
      * into a LFC ontext event. 
      * @access private
      */
-    function __onChanged (event:Event) :void {
+     override function __onChanged (event:Event) :void {
         this.text = this.getText();
         if (owner) owner.inputtextevent('onchange', this.text);
     }

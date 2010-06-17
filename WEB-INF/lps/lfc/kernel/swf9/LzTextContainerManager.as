@@ -38,7 +38,7 @@ public class LzTextContainerManager extends TextContainerManager {
             override protected function createEditManager(undoManager:IUndoManager):IEditManager
             {
                 Debug.info("createEditManager");
-                return new LzTLFEditManager(undoManager, lzsprite);
+                return new LzTLFEditManager(undoManager, lzsprite as LzTLFInputTextSprite);
             }
 
             override protected function createSelectionManager():ISelectionManager

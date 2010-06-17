@@ -8,12 +8,12 @@
            fgcolor="red" 
            font="Verdana"
            fontsize="24"
-          width="500" >This is some <i>sample <b>text</b></i>. The quick brown dog, etc.
+          width="500" >This is some sample text. The quick brown dog, etc.
   </tlfinputtext>
 
 
-<button onclick="k.sprite.setEditable(true)">make editable</button>
-<button onclick="k.sprite.setEditable(false)">make uneditable</button>
+<button onclick="k.sprite.setEnabled(true)">make editable</button>
+<button onclick="k.sprite.setEnabled(false)">make uneditable</button>
 <button onclick="k.sprite.setSelectable(true)">make selectable</button>
 <button onclick="k.sprite.setSelectable(false)">make unselectable</button>
 </view>
@@ -25,8 +25,7 @@
            fgcolor="ffffff" 
            font="Courier"
            fontsize="16"
-           selectable="true"
-           width="400" >This is some <i>sample <b>text</b></i>. The quick brown dog jumped over the Zoroastrian god. When in the 
+           width="400" >This is some sample text. The quick brown dog jumped over the Zoroastrian god. When in the 
 course of human events, it becomes necessary to change cell phone carriers, it becomes necessary for a people to dissolve the
 contract that binds them...
 

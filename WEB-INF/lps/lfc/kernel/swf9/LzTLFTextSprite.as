@@ -105,10 +105,11 @@ public class LzTLFTextSprite extends LzSprite {
         public var undoManager:UndoManager = null;
         public var tcm:LzTextContainerManager;
         public var textFlow:TextFlow;
+        public var container:Sprite; 
 
         public function LzTLFTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,false);
-            var container:Sprite = new Sprite();
+            container = new Sprite();
             // add container to the stage; create controller and add it to the text flow
             addChild(container);
             this.config = ((TextContainerManager.defaultConfiguration) as Configuration).clone();
@@ -513,17 +514,16 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
 
-
-
         function select () :void {
             var selmgr:ISelectionManager = textFlow.interactionManager;
             if (selmgr != null) {
                 selmgr.selectAll();
+                selmgr.setFocus();
             }            
         }
 
         function deselect () :void {
-            this.setSelection(0, 0);
+            this.setSelection(-1, -1);
         }
 
 
@@ -609,6 +609,12 @@ public class LzTLFTextSprite extends LzSprite {
         function setTextDecoration (decoration:String) :void {
 
         }
+
+        function __gotFocus (event:Event) :void { }
+
+        function __onChanged (event:Event) :void { }
+
+        function __lostFocus (event:Event) :void { }
 
     }#
 }

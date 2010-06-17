@@ -131,6 +131,7 @@ var _focused = false;
 
 /** @access private */
 function _gotFocusEvent(e=null){
+    Debug.info("LzTLFInputText _gotFocusEvent", e);
     this._focused = true;
     this.isprite.gotFocus();
 }
