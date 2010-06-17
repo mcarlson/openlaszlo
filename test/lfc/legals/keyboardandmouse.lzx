@@ -25,16 +25,16 @@
     <view>
         <simplelayout/>
         <text text="global mouse events turn green"/> 
-        <eventtester eventname="onmousedown" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onmouseup" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onmouseover" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onmouseout" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onclick" reference="lz.GlobalMouse"/>
-        <eventtester eventname="ondblclick" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onmousedragin" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onmousedragout" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onmouseupoutside" reference="lz.GlobalMouse"/>
-        <eventtester eventname="onmousemove" reference="lz.GlobalMouse" verbose="false"/>
+        <eventtester eventname="onmousedown" reference="lz.GlobalMouse" label="global onmousedown"/>
+        <eventtester eventname="onmouseup" reference="lz.GlobalMouse" label="global onmouseup"/>
+        <eventtester eventname="onmouseover" reference="lz.GlobalMouse" label="global onmouseover"/>
+        <eventtester eventname="onmouseout" reference="lz.GlobalMouse" label="global onmouseout"/>
+        <eventtester eventname="onclick" reference="lz.GlobalMouse" label="global onclick"/>
+        <eventtester eventname="ondblclick" reference="lz.GlobalMouse" label="global ondblclick"/>
+        <eventtester eventname="onmousedragin" reference="lz.GlobalMouse" label="global onmousedragin"/>
+        <eventtester eventname="onmousedragout" reference="lz.GlobalMouse" label="global onmousedragout"/>
+        <eventtester eventname="onmouseupoutside" reference="lz.GlobalMouse" label="global onmouseupoutside"/>
+        <eventtester eventname="onmousemove" reference="lz.GlobalMouse" verbose="false" label="global onmousemove"/>
     </view>
     <view>
         <simplelayout/>
