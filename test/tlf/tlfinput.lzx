@@ -7,6 +7,8 @@
            bgcolor="#ccccaa" 
            fgcolor="red" 
            font="Verdana"
+           clickable="true"
+           onclick="Debug.info('click')"
            fontsize="24"
           width="500" >This is some sample text. The quick brown dog, etc.
   </tlfinputtext>

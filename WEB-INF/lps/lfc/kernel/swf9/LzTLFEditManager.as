@@ -116,7 +116,9 @@ public class LzTLFEditManager extends EditManager {
                 // TODO [hqm 2010-06] For some reason, if an inputtext already has the focus, and you mousedown on it,
                 // this focusOutHandler method gets called, so if you uncomment the line below, the field will lose
                 // focus. This has the effect of toggling the focus each time you click the mouse, which is bogus.
-                // lzsprite.__lostFocus(event);
+
+                lzsprite.__lostFocus(event);
+
                 Debug.info(" focusOutHandler", event.type, event.target.parent.owner, event.relatedObject, event.currentTarget);
             }
             public override function  imeStartCompositionHandler(event:IMEEvent):void {
@@ -150,6 +152,7 @@ public class LzTLFEditManager extends EditManager {
             public override function  mouseDownHandler(event:MouseEvent):void {
                 if (lzsprite.enabled || lzsprite.clickable) {
                     super.mouseDownHandler(event);
+                    // This prevents the default selectAll behavior from inputtextsprite
                     lzsprite.hasFocus = true;
                     lzsprite.__mouseEvent(event);
                 }

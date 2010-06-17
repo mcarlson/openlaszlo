@@ -107,6 +107,8 @@ public class LzTLFTextSprite extends LzSprite {
         public var textFlow:TextFlow;
         public var container:Sprite; 
 
+        public static const TEXTPADDING = 2;
+
         public function LzTLFTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,false);
             container = new Sprite();
@@ -115,6 +117,8 @@ public class LzTLFTextSprite extends LzSprite {
             this.config = ((TextContainerManager.defaultConfiguration) as Configuration).clone();
             Debug.info("config.textFlowInitialFormat = ",  config.textFlowInitialFormat);
             layoutFormat =  new TextLayoutFormat(config.textFlowInitialFormat);
+            layoutFormat.paddingTop = layoutFormat.paddingBottom = layoutFormat.paddingLeft =
+                layoutFormat.paddingRight = LzTLFTextSprite.TEXTPADDING;
             config.textFlowInitialFormat = layoutFormat;
             
             tcm = new LzTextContainerManager(container, null, this);
@@ -332,21 +336,7 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         public function appendText( t:String ):void {
-            this.text += t;
-            textFlow = TextConverter.importToFlow(this.text, TextConverter.TEXT_FIELD_HTML_FORMAT, config);
-            textFlow.addEventListener(
-                FlowOperationEvent.FLOW_OPERATION_BEGIN,
-                textFlow_flowOperationBeginHandler);
-            tcm.setTextFlow(textFlow);
-
-            // hqm [2010-06] This call to beginInteraction creates our
-            // custom EditManager or SelectionManager, which is the
-            // only way I have found to get mouse events, such as
-            // mouseOver, mouseOut.
-            tcm.beginInteraction();
-
-            tcm.updateContainer();
-            if (this.initted) this.owner._updateSize();
+            setText(text+t);
         }
 
         public function getText():String {
@@ -378,6 +368,7 @@ public class LzTLFTextSprite extends LzSprite {
             tcm.beginInteraction();
 
             tcm.updateContainer();
+
             if (this.initted) this.owner._updateSize();
         }
 
@@ -417,7 +408,7 @@ public class LzTLFTextSprite extends LzSprite {
         public function setMultiline ( ml:Boolean ):void {
             // TODO [hqm 2008-01] have to figure out how the Flex textfield multiline
             // maps to Laszlo model.
-            this.multiline = (ml == true);
+            multiline = (ml == true);
             if (this.initted) this.owner._updateSize();
         }
 
@@ -439,19 +430,27 @@ public class LzTLFTextSprite extends LzSprite {
 
 
         public function getTextWidth (force=null):Number {
+            var ocw:Number = tcm.compositionWidth;
+            tcm.compositionWidth = Infinity;
+            tcm.updateContainer();
             var bounds:Rectangle = tcm.getContentBounds();
-            return bounds.width;
+            tcm.compositionWidth = ocw;
+            tcm.updateContainer();
+            return bounds.width + ( 2 * LzTLFTextSprite.TEXTPADDING);
         }
 
         public function getLineHeight ( ):Number {
-            var bounds:Rectangle = tcm.getContentBounds();
-            // TODO [hqm 2010-06] What is the right way to get line height? Ask which format object?
-            return bounds.height / tcm.numLines;
+            //            return textFlow.flowComposer.getLineAt(0).textHeight;
+            return fontsize;
         }
 
         public function getTextfieldHeight (force=null) :Number {
             var bounds:Rectangle = tcm.getContentBounds();
-            return bounds.height;
+            if (multiline) {
+                return bounds.height  + ( 2 * LzTLFTextSprite.TEXTPADDING);
+            } else {
+                return getLineHeight()  + ( 2 * LzTLFTextSprite.TEXTPADDING);
+            }
         }
 
 
