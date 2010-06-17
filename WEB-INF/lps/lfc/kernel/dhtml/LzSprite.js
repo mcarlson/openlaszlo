@@ -775,6 +775,7 @@ LzSprite.__updateQuirks = function () {
             capabilities['dropshadows'] = true;
             // Force hasLayout for lzTextSizeCache in IE
             defaultStyles['#lzTextSizeCache'].zoom = 1;
+            defaultStyles['#lzTextSizeCache'].position = 'relative';
         } else if (browser.isSafari || browser.isChrome) {
             stylenames.borderRadius = 'WebkitBorderRadius';
             stylenames.boxShadow = 'WebkitBoxShadow';
