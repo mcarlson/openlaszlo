@@ -95,7 +95,7 @@ class LzValueExpr {
 };
 
 /**
- * Private class that is used to describe LZX <attribute> fields
+ * Private class that is used to describe LZX &lt;attribute /&gt; fields
  * @access private
  */
 class LzAttributeDescriptor extends LzValueExpr {
