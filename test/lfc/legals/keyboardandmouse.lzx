@@ -52,6 +52,18 @@
     </view>
     <view>
         <simplelayout/>
+        <text text="text events turn green"/> 
+        <text id="atext" bgcolor="yellow" clickable="true" width="100" height="30"/>
+        <eventtester eventname="onmousedown" reference="atext"/>
+        <eventtester eventname="onmouseup" reference="atext"/>
+        <eventtester eventname="onmouseover" reference="atext"/>
+        <eventtester eventname="onmouseout" reference="atext"/>
+        <eventtester eventname="onclick" reference="atext"/>
+        <eventtester eventname="ondblclick" reference="atext"/>
+        <eventtester eventname="onmouseupoutside" reference="atext"/>
+    </view>
+    <view>
+        <simplelayout/>
         <text text="inputtext events turn green"/> 
         <inputtext id="input" bgcolor="yellow" clickable="true" width="100" height="30"/>
         <eventtester eventname="onkeydown" reference="input"/>
