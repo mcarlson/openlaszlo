@@ -64,6 +64,7 @@
         <eventtester eventname="onmouseout" reference="input"/>
         <eventtester eventname="onclick" reference="input"/>
         <eventtester eventname="ondblclick" reference="input"/>
+        <eventtester eventname="onmouseupoutside" reference="input"/>
     </view>
 
 
