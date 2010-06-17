@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -323,7 +323,7 @@ override function construct ( odp , args ){
         // on the clone (which means we really want a clone class here
         // to instantiate, rather than an instance to clone).
         this.__LZpreventXPathUpdate = true;
-        this.applyConstraintExpr(new LzAlwaysExpr("__LZxpathconstr", "__LZxpathdepend"));
+        this.applyConstraintExpr(new LzAlwaysExpr("datapath", "string", "__LZxpathconstr", "__LZxpathdepend"));
         this.__LZpreventXPathUpdate = false;
 
         if (this.pooling) {
@@ -349,7 +349,7 @@ override function construct ( odp , args ){
             // on the clone (which means the compiler really has to move
             // it from the datapath subnode to the clone class).
             this.__LZpreventXPathUpdate = true;
-            refObj.applyConstraintExpr(new LzAlwaysExpr("__LZxpathconstr", "__LZxpathdepend"));
+            refObj.applyConstraintExpr(new LzAlwaysExpr("xpath", "string", "__LZxpathconstr", "__LZxpathdepend"));
             this.__LZpreventXPathUpdate = false;
 
             if (this.pooling) {

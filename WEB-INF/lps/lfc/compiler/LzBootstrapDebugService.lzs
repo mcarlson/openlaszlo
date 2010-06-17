@@ -488,6 +488,20 @@ dynamic class LzBootstrapDebugService {
   }
 
   /**
+   * Read-only message.
+   * @param lznode obj: The object the read-only attribute is on.
+   * @param String attribute: The read-only attribute name.
+   * @param * value: The value attempting to be set.
+   *
+   * @devnote Only a warning since setting a read-only value is ignored
+   *
+   * @access private
+   */
+    function readOnly (obj, attribute, value) {
+      Debug.warn("%w.%s is read-only.  %w ignored", obj, attribute, value);
+  }
+
+  /**
    * Evaluate a closure in context, reporting errors
    *
    * @param String fileName: The source file

@@ -435,8 +435,8 @@ public class NodeModel implements Cloneable {
             kind = "LzStyleConstraintExpr";
             return new BindingExpr("new " + kind + "(" +
                                    ScriptCompiler.quote(name) + ", " +
-                                   value + ", " +
-                                   ScriptCompiler.quote("" + type) +
+                                   ScriptCompiler.quote("" + type) + ", " +
+                                   value +
                                    // We pass both the expression and
                                    // a flag saying not to warn (so
                                    // you can turn off the warning by
@@ -447,13 +447,19 @@ public class NodeModel implements Cloneable {
         } else if (when.equals(WHEN_ALWAYS)) {
           kind = "LzAlwaysExpr";
           // Always constraints have a second value, the dependencies method
-          return new BindingExpr("new " + kind + "(" + 
+          return new BindingExpr("new " + kind + "(" +
+                                 ScriptCompiler.quote(name) + ", " +
+                                 ScriptCompiler.quote("" + type) + ", " +
                                  ScriptCompiler.quote(bindername) + ", " +
-                                 ScriptCompiler.quote(dependenciesname) + 
+                                 ScriptCompiler.quote(dependenciesname) +
                                  debugDescription + ")");
         }
         // Return an initExpr as the 'value' of the attribute
-        return new BindingExpr("new " + kind + "(" + ScriptCompiler.quote(bindername) + debugDescription + ")");
+        return new BindingExpr("new " + kind + "(" +
+                               ScriptCompiler.quote(name) + ", " +
+                               ScriptCompiler.quote("" + type) + ", " +
+                               ScriptCompiler.quote(bindername) +
+                               debugDescription + ")");
       } else if (when.equals(WHEN_IMMEDIATELY)) {
         if (CanvasCompiler.isElement(source) &&
             ("width".equals(name) || "height".equals(name))) {

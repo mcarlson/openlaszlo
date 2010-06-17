@@ -16,6 +16,7 @@
  * @access private
  */
 class PresentationType {
+  static var nullValue = null;
   static function accept(value) {
     return value;
   }
@@ -50,6 +51,7 @@ class DefaultPresentationType extends PresentationType {
  * @access private
  */
 class StringPresentationType extends PresentationType {
+  static var nullValue = "";
   static function accept(value) {
     return String(value);
   }
@@ -62,6 +64,7 @@ class StringPresentationType extends PresentationType {
  * @access private
  */
 class BooleanPresentationType extends PresentationType {
+  static var nullValue = false;
   static function accept(value) {
     // NOTE: [2009-01-13 ptw] Boolean("false") would not do what we
     // expect (a non-empty string is considered true).
@@ -81,6 +84,7 @@ class BooleanPresentationType extends PresentationType {
  * @access private
  */
 class NumberPresentationType extends PresentationType {
+  static var nullValue = 0;
   static function accept(value) {
     // NOTE [2009-03-02 ptw] Only required for swf8 whose Number
     // does not understand Infinity
@@ -101,6 +105,7 @@ class NumberPresentationType extends PresentationType {
  * @access private
  */
 class ColorPresentationType extends PresentationType {
+  static var nullValue = 0;
   static function accept(value) {
     // handle 'transparent' semaphore from compiler (for canvas)
     if (value == -1) {
@@ -116,7 +121,6 @@ class ColorPresentationType extends PresentationType {
         return name;
       }
     }
-
     return LzColorUtils.inttohex(value);
   }
 }
@@ -134,6 +138,7 @@ class ColorPresentationType extends PresentationType {
  * @access private
  */
 class ExpressionPresentationType extends PresentationType {
+  static var nullValue = null;
   static function accept(value) {
     switch (value) {
       case "undefined": return void 0;
@@ -169,6 +174,7 @@ class ExpressionPresentationType extends PresentationType {
  * @access private
  */
 class SizePresentationType extends PresentationType {
+  static var nullValue = null;
   static function accept(value) {
     // sizeExpression can be null
     if (value == "null") { return null; }

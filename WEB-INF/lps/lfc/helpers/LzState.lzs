@@ -530,15 +530,15 @@ dynamic class LzState extends LzNode {
             held[newDependenciesName] = this[dependenciesName];
           }
           // Clone the init expr with the new names
-          held[key] = new (expr.constructor)(newMethodName, newDependenciesName, dbgName);
+          held[key] = new (expr.constructor)(expr.attribute, expr.type, newMethodName, newDependenciesName, dbgName);
         } else {
           // Clone the init expr with the new name
-          held[key] = new (expr.constructor)(newMethodName, dbgName);
+          held[key] = new (expr.constructor)(expr.attribute, expr.type, newMethodName, dbgName);
         }
       }
     }
 
-    super.__LZapplyArgs(stateArgs);
+    super.__LZapplyArgs(stateArgs, constcall);
   }
 
   /**
