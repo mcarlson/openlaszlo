@@ -35,7 +35,8 @@ public class LzTLFTextSprite extends LzSprite {
     import flashx.textLayout.formats.TextAlign;
     import flash.text.engine.FontPosture;
     import flash.text.engine.Kerning;
-
+    import flash.text.engine.TextBaseline;
+    import flashx.textLayout.formats.WhiteSpaceCollapse;
     import flashx.textLayout.edit.EditingMode;
     import flashx.textLayout.conversion.TextConverter;
     import flashx.textLayout.formats.Direction;
@@ -106,6 +107,7 @@ public class LzTLFTextSprite extends LzSprite {
         public var container:Sprite; 
 
         public static const TEXTPADDING = 2;
+        public static const LEADING = 1.2;
 
         public function LzTLFTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,false);
@@ -350,7 +352,7 @@ public class LzTLFTextSprite extends LzSprite {
          * Set the html flag on this text view
          */
         function setHTML (htmlp:Boolean) :void {
-            Debug.warn("setHTML NYI");
+            this.html = htmlp;
         }
 
         public function appendText( t:String ):void {
@@ -374,10 +376,15 @@ public class LzTLFTextSprite extends LzSprite {
          */
         public function setText ( t:String ):void {
             this.text = t;
-            textFlow = TextConverter.importToFlow(t, TextConverter.TEXT_FIELD_HTML_FORMAT, config);
+            textFlow = TextConverter.importToFlow(t,
+                                                  html ? TextConverter.TEXT_FIELD_HTML_FORMAT : TextConverter.PLAIN_TEXT_FORMAT,
+                                                  config);
             textFlow.addEventListener(
                 FlowOperationEvent.FLOW_OPERATION_BEGIN,
                 textFlow_flowOperationBeginHandler);
+            textFlow.alignmentBaseline = flash.text.engine.TextBaseline.DESCENT;
+            textFlow.whiteSpaceCollapse = flashx.textLayout.formats.WhiteSpaceCollapse.PRESERVE;
+
             tcm.setTextFlow(textFlow);
             // hqm [2010-06] This call to beginInteraction creates our
             // custom EditManager or SelectionManager, which is the
@@ -471,20 +478,23 @@ public class LzTLFTextSprite extends LzSprite {
             var bounds:Rectangle = tcm.getContentBounds();
             tcm.compositionWidth = ocw;
             tcm.updateContainer();
-            return bounds.width + ( 2 * LzTLFTextSprite.TEXTPADDING);
+            //            return bounds.width + ( 2 * LzTLFTextSprite.TEXTPADDING);
+            return Math.round(bounds.width + 1);
+            
         }
 
+        
         public function getLineHeight ( ):Number {
             //            return textFlow.flowComposer.getLineAt(0).textHeight;
-            return fontsize;
+            return fontsize * LzTLFTextSprite.LEADING;
         }
 
         public function getTextfieldHeight (force=null) :Number {
             var bounds:Rectangle = tcm.getContentBounds();
             if (multiline) {
-                return bounds.height  + ( 2 * LzTLFTextSprite.TEXTPADDING);
+                return Math.round( bounds.height  + ( 2 * LzTLFTextSprite.TEXTPADDING));
             } else {
-                return getLineHeight()  + ( 2 * LzTLFTextSprite.TEXTPADDING);
+                return Math.round(getLineHeight()  + ( 2 * LzTLFTextSprite.TEXTPADDING));
             }
         }
 
