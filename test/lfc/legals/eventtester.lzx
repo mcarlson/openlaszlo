@@ -1,6 +1,6 @@
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->
@@ -13,7 +13,11 @@
         <attribute name="verbose" value="true"/> 
         <attribute name="value" value="null"/> 
         <handler name="oninit">
-            if (eventname == '') Debug.warn('Must specify event name.')
+            if ($debug) {
+                if (eventname == '') {
+                    Debug.warn('Must specify event name.')
+                }
+            }
             if (this.reference == null) reference = this.parent; 
             this.evDel = new LzDelegate(this, 'update', this.reference, eventname); 
         </handler>
@@ -22,7 +26,11 @@
             if (this.test != null) {
                 if (this.test(d) != true) return;
             }
-            if ($debug && this.verbose) Debug.warn(this.label, d);
+            if ($debug) {
+                if (this.verbose) {
+                    Debug.debug(this.label, d);
+                }
+            }
             this.setAttribute('value', d);
             this.txt.setAttribute('text', this.label + ': '+ d);
             this.bg.setAttribute('bgcolor', 'green');
