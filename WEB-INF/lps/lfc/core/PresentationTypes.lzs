@@ -59,6 +59,55 @@ class StringPresentationType extends PresentationType {
 }
 
 /**
+ * text presentation type
+ *
+ * `accept` will escape the 5 XML entities, `present` will unescape them
+ *
+ * @access private
+ */
+class TextPresentationType extends PresentationType {
+  /** The five XML entities
+   * (See http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML)
+   * @access private */
+  static const xmlEscapes:Object = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
+
+  static function accept(value:String):* {
+    const escChars:Object = TextPresentationType.xmlEscapes;
+    var result:String = "";
+    for (var i:int = 0, l:int = value.length; i < l; i++) {
+      var c:String = value.charAt(i);
+      result += (escChars[c] || c);
+    }
+    return result;
+  }
+
+  static function present(value:*):String {
+    var result:String = "";
+    for (var i:int = 0, l:int = value.length; i < l; i++) {
+      var c:String = value.charAt(i);
+      if (c == '&') {
+        var e:int = value.indexOf(';', i);
+        if (e > i) {
+          var p:String = value.substring(i, e);
+          switch (p) {
+            case 'amp': break;
+            case 'lt': c = '<'; break;
+            case 'gt': c = '>'; break;
+            case 'quot': c = '"'; break;
+            case 'apos': c = "'"; break;
+            default: c = '&' + p + ';';
+          }
+          // Tip o' th pin to andre:  loop step will increment to e+1
+          i = e;
+        }
+      }
+      result += c;
+    }
+    return result;
+  }
+}
+
+/**
  * Boolean presentation type
  *
  * @access private

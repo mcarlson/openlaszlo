@@ -672,7 +672,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * not a string, the value will first be converted to a string as if
    * by <code>String(value)</code>.  To display nothing, set the value
    * to the empty string <code>""</code>.
-   * @lzxtype string
+   * @lzxtype text
    * @type String
    */
   var text:String = '';

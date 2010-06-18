@@ -180,7 +180,7 @@ function $lzc$set_timeout (t:Number) :void { this.timeout = t; }
  * limitations in the Flash 8 player API. This restriction is not
  * present in later swf runtimes, or in the DHTML runtime.
  *
- * @lzxtype String
+ * @lzxtype string
  * @type String
 */
 var postbody :String = null;

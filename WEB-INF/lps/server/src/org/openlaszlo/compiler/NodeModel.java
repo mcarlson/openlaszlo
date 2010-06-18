@@ -1849,11 +1849,23 @@ solution =
                 }
                 // TODO: [2003-05-02 ptw] Wrap non-constant styles in
                 // runtime parser
-            } else if (type == ViewSchema.STRING_TYPE
+            } else if (type == ViewSchema.STRING_TYPE) {
+                // Immediate string types are auto-quoted, but must
+                // _first_ be parsed as ES strings!
+                if (when.equals(WHEN_IMMEDIATELY)) {
+                    org.openlaszlo.sc.parser.ASTLiteral literal = new org.openlaszlo.sc.parser.ASTLiteral(0);
+                    literal.setStringValue(value);
+                    value = ScriptCompiler.quote((String)literal.getValue());
+                }
+            } else if (type == ViewSchema.XML_CDATA_TYPE
+                       || type == ViewSchema.XML_CONTENT_TYPE
                        || type == ViewSchema.TOKEN_TYPE
-                       || type == ViewSchema.ID_TYPE
-                       ) {
-                // Immediate string attributes are auto-quoted
+                       || type == ViewSchema.ID_TYPE) {
+                // Immediate text, html, token, and id types are
+                // auto-quoted.
+                //
+                // NOTE: [2010-06-16 ptw] (LPP-9027) For the time being, 'html'
+                // and 'text' are treated as synonyms
                 if (when.equals(WHEN_IMMEDIATELY)) {
                     value = ScriptCompiler.quote(value);
                 }

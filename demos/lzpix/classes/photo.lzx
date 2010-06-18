@@ -1,8 +1,8 @@
-<!-- Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
 
     <class name="photo" width="77" height="77" visible="${!tls.waitforload}">
-        <attribute name="defaultplacement" value="interior" type="text" />
+        <attribute name="defaultplacement" value="interior" />
         <attribute name="text" value="title" type="text" />   
 
         <attribute name="clipfactor" value="0"

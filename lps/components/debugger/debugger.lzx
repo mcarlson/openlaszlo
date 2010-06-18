@@ -329,31 +329,6 @@
     <command name="_cmd_complete_bracket" onselect="parent.doCommandCompletion('[')"  key="['[']" active="false"/>
     <command name="_cmd_complete_paren" onselect="parent.doCommandCompletion('(')"  key="['(']" active="false"/>
     ?>
-    <!--- Substitute entity character escapes for HTML meta-characters  -->
-<method name="escapeText" args="ts" >
-      <![CDATA[
-          var i;
-          if (typeof(ts) == "string") {
-              var outstr = "";
-              var tlen = ts.length;
-              for ( i = 0; i < tlen; i++) {
-                  var c = ts.charAt(i);
-                  if (c == '<') {
-                      outstr += "&lt;";
-                  } else if (c == '>') {
-                      outstr += "&gt;";
-                  } else if (c == '&') {
-                      outstr += "&amp;";
-                  } else {
-                      outstr += c;
-                  }
-              }
-              return outstr;
-          } else {
-              return ts;
-          }
-       ]]>
-    </method>
 
     <!-- send the input text field to server for compile/eval -->
     <method name="doEval">

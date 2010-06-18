@@ -230,14 +230,6 @@ public dynamic class LzNode extends LzEventable {
           // unadorned.
           var val = expr;
         }
-        // Ensure dynamic properties (LZX attributes) exist (for
-        // `with(this)`), this test works in all runtimes to detect
-        // missing properties
-        if (this[key] === void 0) {
-          // NOTE: [2009-05-11 ptw] (LPP-8088) We use `null` rather than
-          // `void 0` so we don't inject `NaN`s into numeric attributes
-          this[key] = null;
-        }
         if (! (expr is LzInitExpr)) {
           // If there is no setter for this attr the value
           // should just be installed as a declaration
@@ -249,7 +241,17 @@ public dynamic class LzNode extends LzEventable {
               this[key] = val;
             }
             delete iargs[key];
+            continue;
           }
+        }
+        // Ensure dynamic properties (LZX attributes) exist (for
+        // `with(this)`), this test works in all runtimes to detect
+        // missing properties; only do this for properties with
+        // delayed initial values.
+        if (this[key] === void 0) {
+          // NOTE: [2009-05-11 ptw] (LPP-8088) We use `null` rather than
+          // `void 0` so we don't inject `NaN`s into numeric attributes
+          this[key] = null;
         }
       }
     }
@@ -1145,15 +1147,6 @@ public dynamic class LzNode extends LzEventable {
       // To see if it has key setter.  Cf., setAttribute
       var setr = '$lzc$set_' + key;
 
-      // Ensure dynamic properties (LZX attributes) exist (for
-      // `with(this)`), this test works in all runtimes to detect
-      // missing properties
-      if (this[key] === void 0) {
-        // NOTE: [2009-05-11 ptw] (LPP-8088) We use `null` rather than
-        // `void 0` so we don't inject `NaN`s into numeric attributes
-        this[key] = null;
-      }
-
       // Pull out constraints for later, install values without
       // setters, defer setters until 'pseudo-attributes' have been
       // handled
@@ -1169,6 +1162,16 @@ public dynamic class LzNode extends LzEventable {
           inits.push(expr);
         } else if ($debug) {
           Debug.debug("Unknown init expr: %w", expr);
+        }
+        // Ensure dynamic properties (LZX attributes) exist (for
+        // `with(this)`), this test works in all runtimes to detect
+        // missing properties; only do this for properties with
+        // delayed initial values.
+        if (this[key] === void 0) {
+          // NOTE: [2009-05-11 ptw] (LPP-8088) We use `null` rather
+          // than `void 0` so we don't inject `NaN`s into numeric
+          // attributes
+          this[key] = null;
         }
       } else if (! this[setr]) {
         // TODO: should already be declared, so we should just be
@@ -1196,6 +1199,10 @@ public dynamic class LzNode extends LzEventable {
         // null to get to this point see $lzc$set_id().
         if (hasset == null) { hasset = []; }
         hasset.push(setr, val);
+        // See above
+        if (this[key] === void 0) {
+          this[key] = null;
+        }
       }
     }
 
@@ -2346,6 +2353,10 @@ public dynamic class LzNode extends LzEventable {
   /** @access private */
   static var presentationtypes = {
     string: StringPresentationType,
+    // NOTE: [2010-06-16 ptw] (LPP-9027) For the time being, 'html'
+    // and 'text' are treated as synonyms
+    html: StringPresentationType,
+    text: StringPresentationType,
     number: NumberPresentationType,
     numberExpression: NumberPresentationType,
     color: ColorPresentationType,

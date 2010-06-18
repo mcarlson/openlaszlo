@@ -38,7 +38,7 @@
         <attribute name="initialheight" value="45" />        
         <attribute name="raiseheight" value="80" />        
         <attribute name="height" value="$once{ this.initialheight }" />        
-        <attribute name="defaultplacement" value="interior" type="text" />
+        <attribute name="defaultplacement" value="interior" />
         <attribute name="isopen" value="false" type="boolean" />
         <animator name="anm_open"  attribute="height" to="300" duration="700" start="false"/>
         <animator name="anm_close" attribute="height" to="$once{ parent.initialheight }"  
@@ -129,6 +129,6 @@
 </library>
 <!--
 * X_LZ_COPYRIGHT_BEGIN ****************************************************
-* Copyright 2006-2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2006-2008,2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************-->

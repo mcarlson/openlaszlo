@@ -767,8 +767,9 @@
                         <entry>
                            <literal>string</literal>
                         </entry>
-                        <entry>A <literal>string</literal>. To assign the value of an expression
-                           that yields a JavaScript <classname>String</classname>, use
+                        <entry>An ECMAScript <classname>String</classname> in ECMAScript String literal syntax.
+                           To assign the value of an expression
+                           that yields a ECMAScript <classname>String</classname>, use
                                  <literal>value="${<varname>expression</varname>}"</literal>.</entry>
                      </row>
                      <row>
@@ -811,13 +812,13 @@
                         <entry>
                            <literal>text</literal>
                         </entry>
-                        <entry>plain unicode text or html</entry>
+                        <entry>XML content</entry>
                      </row>
                      <row>
                         <entry>
                            <literal>html</literal>
                         </entry>
-                        <entry>html-encoded text</entry>
+                        <entry>XML content</entry>
                      </row>
                   </tbody>
                </tgroup>

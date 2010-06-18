@@ -1,5 +1,5 @@
 <canvas>
-    <include href="lztest/lztestmanager.lzx" /> 
+    <include href="lztest/lztestmanager.lzx" />
 <!--
   covers-tags : lznode smoketest
 -->
@@ -9,22 +9,31 @@
     <node name="subnode1"/>
     <node name="subnode2"/>
   </class>
-  
+
   <node name="n1" id="node1">
     <node name="a"/>
     <node name="b"/>
   </node>
-  
+
     <snode name="sn1" id="snode1" />
-  
-        
+
+    <node name="strings">
+      <attribute name="literalString" type="string" value="[^\u0001-\u0008\u000b-\u000c\u000e-\u001f\u007f-\u0084\u0086-\u009f]*"/>
+      <attribute name="stringExpression" type="string" value="${'[^\u0001-\u0008\u000b-\u000c\u000e-\u001f\u007f-\u0084\u0086-\u009f]*'}"/>
+      <attribute name="expressionString" type="expression" value="'[^\u0001-\u0008\u000b-\u000c\u000e-\u001f\u007f-\u0084\u0086-\u009f]*'"/>
+    </node>
+
+
 <script><![CDATA[
 
-var suiteTestNode = new LzTestSuite("LFC Node Hierarchy"); 
+var suiteTestNode = new LzTestSuite("LFC Node Hierarchy");
 
 suiteTestNode.testBasicAttributes = function() {
     LzTestManager.assertEquals("n1", node1.name);
     LzTestManager.assertEquals("node1", node1.id);
+    LzTestManager.assertEquals( strings.literalString, strings.stringExpression);
+    LzTestManager.assertEquals( strings.literalString, strings.expressionString);
+    LzTestManager.assertEquals( strings.expressionString, strings.stringExpression);
 }
 
 suiteTestNode.testSubNodes = function() {
@@ -38,20 +47,20 @@ suiteTestNode.testParent = function() {
     var sn = node1.subnodes;
     LzTestManager.assertEquals(node1, sn[0].parent);
     LzTestManager.assertEquals(node1, sn[1].parent);
-}      
+}
 
 suiteTestNode.testChildOf = function() {
     var sn = node1.subnodes;
     LzTestManager.assertTrue(sn[0].childOf(n1), 'sn[0].childOf(n1)');
     LzTestManager.assertTrue(sn[1].childOf(n1), 'sn[0].childOf(n1)');
 }
-      
+
 suiteTestNode.testImmediateParent = function() {
     var sn = node1.subnodes;
     LzTestManager.assertEquals(n1, sn[0].immediateparent);
     LzTestManager.assertEquals(n1, sn[1].immediateparent);
 }
-      
+
 suiteTestNode.testNodeLevel = function() {
     var sn = n1.subnodes;
     LzTestManager.assertEquals(n1.nodeLevel + 1, sn[0].nodeLevel);
@@ -63,21 +72,21 @@ suiteTestNode.testClassroot = function() {
     LzTestManager.assertEquals(snode1, snode1.subnode1.classroot);
 }
 
-suiteTestNode.addTest(suiteTestNode.testBasicAttributes); 
-suiteTestNode.addTest(suiteTestNode.testSubNodes); 
-suiteTestNode.addTest(suiteTestNode.testParent); 
-suiteTestNode.addTest(suiteTestNode.testChildOf); 
-suiteTestNode.addTest(suiteTestNode.testImmediateParent); 
-suiteTestNode.addTest(suiteTestNode.testNodeLevel); 
+suiteTestNode.addTest(suiteTestNode.testBasicAttributes);
+suiteTestNode.addTest(suiteTestNode.testSubNodes);
+suiteTestNode.addTest(suiteTestNode.testParent);
+suiteTestNode.addTest(suiteTestNode.testChildOf);
+suiteTestNode.addTest(suiteTestNode.testImmediateParent);
+suiteTestNode.addTest(suiteTestNode.testNodeLevel);
 
 ]]>
 </script>
 
 
 </canvas>
-<!-- 
+<!--
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2008,2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

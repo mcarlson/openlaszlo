@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -24,8 +24,12 @@ public abstract class Schema {
 
     /** Represents the type of an attribute whose type isn't known. */
     public static final Type UNKNOWN_TYPE = newType("unknown");
-    /** Represents a String. */
+    /** Represents an _ECMAScript_ String. */
     public static final Type STRING_TYPE = newType("string");
+    /** Represents XML CDATA. */
+    public static final Type XML_CDATA_TYPE = newType("text");
+    /** Represents a XML CONTENT. */
+    public static final Type XML_CONTENT_TYPE = newType("html");
     /** Represents a number. */
     public static final Type NUMBER_TYPE = newType("number");
     /** Represents an XML ID. */

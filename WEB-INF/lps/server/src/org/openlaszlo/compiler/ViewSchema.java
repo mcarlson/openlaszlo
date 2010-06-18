@@ -434,10 +434,10 @@ public class ViewSchema extends Schema {
     }
 
     public Type getTypeForName(String name) {
-        if (name.equals("text") ||
-            name.equals("html"))
-            name = "string";
-        return super.getTypeForName(name);
+      // NOTE: [2010-06-16 ptw] (LPP-9027) For the time being, 'html'
+      // and 'text' are treated as synonyms
+      if (name.equals("html")) { name = "text"; }
+      return super.getTypeForName(name);
     }
 
     /** Adds a ClassModel entry into the class table for CLASSNAME. */
