@@ -37,7 +37,7 @@ public class LzTextContainerManager extends TextContainerManager {
 
             override protected function createEditManager(undoManager:IUndoManager):IEditManager
             {
-                Debug.info("createEditManager");
+                //Debug.info("createEditManager");
                 return new LzTLFEditManager(undoManager, lzsprite as LzTLFInputTextSprite);
             }
 
@@ -48,13 +48,13 @@ public class LzTextContainerManager extends TextContainerManager {
             }
 
             override public function beginInteraction():ISelectionManager {
-                Debug.info("beginInteraction");
+                //Debug.info("beginInteraction");
                 return super.beginInteraction();
             }
 
             override public function menuSelectHandler(event:ContextMenuEvent):void
             {
-                Debug.info("menuSelectHandler", event);
+                //Debug.info("menuSelectHandler", event);
                 super.menuSelectHandler(event);
 
             }

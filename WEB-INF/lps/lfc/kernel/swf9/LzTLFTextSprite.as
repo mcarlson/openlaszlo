@@ -75,8 +75,6 @@ public class LzTLFTextSprite extends LzSprite {
         /**
          * @access private
          */
-        public var lineheight:Number = 1;
-
         public var textcolor:Number = 0;
         public var text:String = "";
 
@@ -115,7 +113,7 @@ public class LzTLFTextSprite extends LzSprite {
             // add container to the stage; create controller and add it to the text flow
             addChild(container);
             this.config = ((TextContainerManager.defaultConfiguration) as Configuration).clone();
-            Debug.info("config.textFlowInitialFormat = ",  config.textFlowInitialFormat);
+            //Debug.info("config.textFlowInitialFormat = ",  config.textFlowInitialFormat);
             layoutFormat =  new TextLayoutFormat(config.textFlowInitialFormat);
             layoutFormat.paddingTop = layoutFormat.paddingBottom = layoutFormat.paddingLeft =
                 layoutFormat.paddingRight = LzTLFTextSprite.TEXTPADDING;
@@ -141,12 +139,12 @@ public class LzTLFTextSprite extends LzSprite {
 
         // This is too late to stop the selection behavior
         function selectionChangeHandler(event:flashx.textLayout.events.SelectionEvent):void {
-            Debug.info("selectionChangeHandler",
-                       event.selectionState.absoluteStart, event.selectionState.absoluteEnd);
+            //Debug.info("selectionChangeHandler",
+                      //event.selectionState.absoluteStart, event.selectionState.absoluteEnd);
 
             if (!this.selectable) {
-                Debug.info("not selectable, calling event.preventDefault, cancelable:", event.cancelable,
-                           "eventphase:", event.eventPhase, 'type:', event.type);
+                //                Debug.info("not selectable, calling event.preventDefault, cancelable:", event.cancelable,
+                //                           "eventphase:", event.eventPhase, 'type:', event.type);
                 event.preventDefault();
             }
         }
@@ -161,7 +159,7 @@ public class LzTLFTextSprite extends LzSprite {
     {
         //trace("operationBegin");
         
-        Debug.info("textFlow_flowOperationBeginHandler", event.operation);
+        //Debug.info("textFlow_flowOperationBeginHandler", event.operation);
         var op:FlowOperation = event.operation;
 
         // If the user presses the Enter key in a single-line TextView,
@@ -169,7 +167,7 @@ public class LzTLFTextSprite extends LzSprite {
         // simply dispatch an 'enter' event.
         if (op is SplitParagraphOperation && !multiline)
         {
-            Debug.info("got SplitParagraphOperation");
+            //Debug.info("got SplitParagraphOperation");
             event.preventDefault();
         }
         
@@ -185,8 +183,7 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         public function addScrollEventListener():void {
-            Debug.warn("addScrollEventListener not yet implemented");
-            //this.textfield.addEventListener(Event.SCROLL, __handleScrollEvent);
+            tcm.addEventListener(TextLayoutEvent.SCROLL, __handleScrollEvent);
         }
 
         var scrollevents = false;
@@ -195,8 +192,28 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         function __handleScrollEvent(e:Event = null) :void {
+            //Debug.info('__handleScrollEvent');
+
             if (! this.scrollevents) return;
-            Debug.warn("__handleScrollEvent not yet implemented");
+            if (scroll !== getScroll()) {
+                scroll = getScroll();
+                owner.scrollevent('scrollTop', lineNoToPixel(scroll));
+            }
+            if (maxscroll !== getMaxScroll()) {
+                maxscroll = getMaxScroll();
+                //Debug.info('__handleScrollEvent', 'scrollHeight', lineNoToPixel(textfield.maxScrollV));
+                owner.scrollevent('scrollHeight', lineNoToPixel(maxscroll) + owner.height);
+            }
+            if (hscroll !== tcm.horizontalScrollPosition) {
+                hscroll = tcm.horizontalScrollPosition;
+                //Debug.info('__handleScrollEvent', 'scrollLeft', textfield.scrollH);
+                owner.scrollevent('scrollLeft', tcm.horizontalScrollPosition);
+            }
+            if (maxhscroll !== getMaxScrollH()) {
+                maxhscroll = getMaxScrollH();
+                //Debug.info('__handleScrollEvent', 'scrollWidth', textfield.maxScrollH);
+                owner.scrollevent('scrollWidth', maxhscroll + owner.width);
+            }
         }
 
         public function textLinkHandler(e:TextEvent) :void {
@@ -228,7 +245,7 @@ public class LzTLFTextSprite extends LzSprite {
 
             //inherited attributes, documented in view
 
-            Debug.info("__initTextProperties", args);
+            //Debug.info("__initTextProperties", args);
 
             this.fontname = args.font;
             this.fontsize = args.fontsize;
@@ -250,7 +267,7 @@ public class LzTLFTextSprite extends LzSprite {
             // out how to suppress the other calls from setters.
 
             if (this.sizeToHeight) {
-                var h = this.lineheight;
+                var h = fontsize;
                 //TODO [anba 20080602] is this ok for multiline? 
                 if (this.multiline) h *= tcm.numLines;
                 h += 4;//2*2px gutter, see flash docs for flash.text.TextLineMetrics 
@@ -291,18 +308,19 @@ public class LzTLFTextSprite extends LzSprite {
          o Sets the size of the font in pixels 
         */
         public function setFontSize ( fsize:Number ):void {
-            Debug.info("setFontSize", fsize);
-            textFlow.fontSize = layoutFormat.fontSize = fsize;
+            //Debug.info("setFontSize", fsize);
+            fontsize= textFlow.fontSize = layoutFormat.fontSize = fsize;
             tcm.compose();
-            tcm.updateContainer();            
+            setText(text );
         }
 
 
         public function setFontStyle ( fstyle:String ):void {
             // FontPosture.NORMAL, for use in plain text, or FontPosture.ITALIC
+            // TODO [hqm 2010-06] Need BOLD BOLDITALIC also
             layoutFormat.fontStyle = fstyle == 'normal' ? FontPosture.NORMAL : FontPosture.ITALIC;
             textFlow.fontStyle = layoutFormat.fontStyle;
-            tcm.updateContainer();            
+            setText(text);
         }
 
         /* setFontName( String:name )
@@ -311,8 +329,7 @@ public class LzTLFTextSprite extends LzSprite {
         */
         public function setFontName ( fname:String , prop:*=null):void{
             textFlow.fontFamily = layoutFormat.fontFamily = fname;
-            tcm.updateContainer();
-
+            setText( text );
         }
 
         function setFontInfo () :void {
@@ -333,6 +350,7 @@ public class LzTLFTextSprite extends LzSprite {
          * Set the html flag on this text view
          */
         function setHTML (htmlp:Boolean) :void {
+            Debug.warn("setHTML NYI");
         }
 
         public function appendText( t:String ):void {
@@ -366,8 +384,25 @@ public class LzTLFTextSprite extends LzSprite {
             // only way I have found to get mouse events, such as
             // mouseOver, mouseOut.
             tcm.beginInteraction();
-
             tcm.updateContainer();
+
+
+            if (this.resize && (this.multiline == false)) {
+                // single line resizable fields adjust their width to match the text
+                var w:Number = this.getTextWidth();
+                if (w != this.lzwidth) {
+                    this.setWidth(w);
+                }
+            }
+
+            //multiline resizable fields adjust their height
+            if (this.sizeToHeight) {
+                var theight:Number = getLineHeight();
+                if (theight == 0) { theight = fontsize; }
+                this.setHeight(theight + (2 * LzTLFTextSprite.TEXTPADDING));
+            }
+
+
 
             if (this.initted) this.owner._updateSize();
         }
@@ -538,13 +573,19 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         function getScroll() :Number {
-            return tcm.verticalScrollPosition;
+            return Math.ceil(tcm.verticalScrollPosition);
         }
 
         function getMaxScroll() :Number {
             // TODO [hqm 2010-06] how do we compute this? controller.getContentBounds() - controller.compositionHeight???
             var bounds:Rectangle = tcm.getContentBounds();
-            return Math.max (0, bounds.height - tcm.compositionHeight);
+            return Math.max (0, Math.ceil(bounds.height - tcm.compositionHeight));
+        }
+
+        function getMaxScrollH() :Number {
+            // TODO [hqm 2010-06] how do we compute this? controller.getContentBounds() - controller.compositionHeight???
+            var bounds:Rectangle = tcm.getContentBounds();
+            return Math.max (0, bounds.width - tcm.compositionWidth);
         }
 
         function getBottomScroll() :Number {
@@ -552,19 +593,19 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         function lineNoToPixel (n:Number):Number {
-            return (n - 1) * lineheight;
+            return (n - 1) * getLineHeight();
         }
 
         function pixelToLineNo (n:Number):Number {
-            return Math.ceil(n / lineheight) + 1;
+            return Math.ceil(n / getLineHeight()) + 1;
         }
 
         function setYScroll (n:Number) :void {
-            Debug.warn("setYScroll NYI");
+         tcm.verticalScrollPosition = scroll = pixelToLineNo((- n));
         }
 
         function setXScroll (n:Number) :void {
-            Debug.warn("setXScroll NYI");
+            tcm.horizontalScrollPosition =  hscroll = (- n);
         }
 
         function setWordWrap (wrap:Boolean) :void {
@@ -594,19 +635,19 @@ public class LzTLFTextSprite extends LzSprite {
             } else {
                 Debug.error("setTextAlign unknown value", align);
             }
-            tcm.updateContainer();
+            this.setText( this.text );
         }
 
         function setTextIndent (indent:Number) :void {
-
+            Debug.warn("setTextIndent NYI");
         }
 
         function setLetterSpacing (spacing:Number) :void {
-
+            Debug.warn("setLetterSpacing NYI");
         }
 
         function setTextDecoration (decoration:String) :void {
-
+            Debug.warn("setTextDecoration NYI");
         }
 
         function __gotFocus (event:Event) :void { }
