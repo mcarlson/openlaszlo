@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
- * Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+ * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
  * Use is subject to license terms.                                            *
  * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -168,12 +168,6 @@ class NullWriter extends DHTMLWriter {
     public void importBaseLibrary(String library, CompilationEnvironment env) {
         env.warn("DHTMLWriter does not implement importBaseLibrary");
     }
-
-    public String importClickResource(File file) throws ImportResourceError {
-        mEnv.warn( "clickregion not implemented by DHTMLWriter");
-        return("DHTMLWriter clickregions not implemented");
-    }
-
 
     protected Resource getResource(String fileName, String name, boolean stop)
         throws ImportResourceError

@@ -559,7 +559,6 @@ abstract class ObjectWriter {
     }
 
     abstract public void importBaseLibrary(String library, CompilationEnvironment env);
-    abstract public String importClickResource(File file) throws ImportResourceError;
 
    /** Find a resource for importing into a movie and return a flashdef.
      * Doesn't includes stop action.

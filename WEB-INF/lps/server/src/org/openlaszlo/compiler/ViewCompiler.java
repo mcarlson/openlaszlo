@@ -283,7 +283,6 @@ public class ViewCompiler extends ElementCompiler {
      */
   void preprocess(Element elt, CompilationEnvironment env) {
       compileResources(elt, env);
-      compileClickResources(elt, env);
       compileAttributes(elt, env);
     }
 
@@ -475,43 +474,6 @@ public class ViewCompiler extends ElementCompiler {
         for (iter = elt.getChildren().iterator();
              iter.hasNext(); ) {
             compileResources((Element) iter.next(), env);
-        }
-    }
-
-    static void compileClickResources(Element elt,
-                                      CompilationEnvironment env) {
-        final String ATTR_NAME = "clickregion";
-        String value = elt.getAttributeValue(ATTR_NAME);
-
-        if (value != null) {
-            if (value.matches(sConstraintPatStr) ||
-                ScriptCompiler.isIdentifier(value) ||
-                XMLUtils.isURL(value)) {
-                env.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="The value of the " + p[0] + "attribute" + "must be a file name."
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewCompiler.class.getName(),"051018-414", new Object[] {ATTR_NAME})
-                        , elt);
-            } else {
-                // pathname: turn into an id
-                File file = env.resolveReference(elt, ATTR_NAME);
-                try {
-                    value = env.getResourceGenerator().importClickResource(file);
-                } catch (ObjectWriter.ImportResourceError e) {
-                    env.warn(e, elt);
-                }
-                elt.setAttribute(ATTR_NAME, value);
-            }
-        }
-
-        // Recurse
-        Iterator iter;
-        for (iter = elt.getChildren().iterator();
-             iter.hasNext(); ) {
-            compileClickResources((Element) iter.next(), env);
         }
     }
 

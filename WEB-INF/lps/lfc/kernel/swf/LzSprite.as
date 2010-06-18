@@ -66,7 +66,6 @@ LzSprite.prototype.capabilities = {
     ,advancedfonts: true
     ,bitmapcaching: true
     ,persistence: true
-    ,clickmasking: true
     ,clickregion: true
     ,history: true
     ,runtimemenus: true
@@ -872,11 +871,39 @@ LzSprite.prototype.applyMask = function (s) {
 
 /**
   * @access private
+  */
+LzSprite.prototype.clickresource;
+/** Must be called after setClickable()
+  * @access private
   * */
-LzSprite.prototype.setClickRegion = function ( cr ){
-    //@devnote "LzMouseEvents" is defined in SWFFile.java
-    if (cr == null) cr = "LzMouseEvents";
-    this.__LZclickregion = cr;
+LzSprite.prototype.setClickRegion = function ( resource ){
+    if (this.clickresource === resource) return;
+    clickresource = resource;
+    if (resource == null) {
+        // clear the mask
+        this.__LZbuttonRef.setMask(null);
+    } else {
+        if (! this.__clickmaskclip) {
+            // make up a name unless one was specified...
+            if (instName == null) {
+                if ( this.__LZsubUniqueNum == null ){
+                    this.__LZsubUniqueNum = 0;
+                } else {
+                    this.__LZsubUniqueNum++;
+                }
+                var instName = ("$m" + this.__LZsubUniqueNum );
+            }
+
+            //Debug.write('Sprite.depth', this.FIRST_SUBVIEW_DEPTH, childsprite.owner.sprite.__LZdepth, this.CLIPS_PER_SUBVIEW, this.FOREGROUND_DEPTH_OFFSET)
+            var depth = this.FIRST_SUBVIEW_DEPTH + 
+            (childsprite.__LZdepth * this.CLIPS_PER_SUBVIEW) + 
+            this.FOREGROUND_DEPTH_OFFSET;
+
+            this.__clickmaskclip = this.__LZmovieClipRef.attachMovie( resource, instName, depth);
+        }
+        //Debug.info('setClickMask', this.__LZbuttonRef, this.__clickmaskclip);
+        this.__LZbuttonRef.setMask(this.__clickmaskclip);
+    }
 }
 
 

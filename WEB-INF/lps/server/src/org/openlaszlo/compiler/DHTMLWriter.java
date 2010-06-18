@@ -654,13 +654,6 @@ class DHTMLWriter extends ObjectWriter {
         env.warn("DHTMLWriter does not implement importBaseLibrary");
     }
 
-    public String importClickResource(File file) throws ImportResourceError {
-        mEnv.warn( "clickregion not implemented by DHTMLWriter");
-        return("DHTMLWriter clickregions not implemented");
-    }
-
-
-
     /**
        Copies a file, INPUTFILE, to the file RELPATH relative to the
        system-generated application local resources directory in

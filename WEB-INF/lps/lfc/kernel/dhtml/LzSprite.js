@@ -638,7 +638,7 @@ LzSprite.prototype.capabilities = {
     ,advancedfonts: false
     ,bitmapcaching: false
     ,persistence: false
-    ,clickmasking: false
+    ,clickregion: false
     ,minimize_opacity_changes: false
     ,history: true
     ,runtimemenus: false

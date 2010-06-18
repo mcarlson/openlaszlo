@@ -457,18 +457,12 @@ override function construct ( parent , args) {
         this.makeMasked();
     }
     var ignore = LzNode._ignoreAttribute;
-    // NOTE: [2010-06-03 ptw] This ordering is traditional:
-    // clickregion, stretches; although I don't see how the ordering
-    // could be important, since we also purport to support setting
-    // these attributes dynamically
-    if (args['clickregion'] != null){
-        this.$lzc$set_clickregion(args.clickregion);
-        args.clickregion = ignore;
-    }
     if (args['stretches'] != null){
         this.$lzc$set_stretches(args.stretches);
         args.stretches = ignore;
     }
+    // NOTE: [2010-06 max] I seem to remember stretches must come first for IE 
+    // DHTML...
     if (args['resource'] != null){
         this.$lzc$set_resource( args.resource );
         args.resource = ignore;
@@ -703,19 +697,29 @@ function $lzc$set_source(v) { this.setSource(v); }
   * @access public
   * @type String
   * @lzxtype string
-  * @keywords final
-  * @runtimes as2
+  * @runtimes as2 as3
   */
 var clickregion;   
 /** @access private */
-function $lzc$set_clickregion(cr) { 
+var onclickregion = LzDeclaredEvent;
+/** @access private */
+function $lzc$set_clickregion(region:*) { 
     if (this.capabilities.clickregion) {
-        this.sprite.setClickRegion(cr);
+        // Avoid unneeded calls
+        if (this.clickregion !== region) {
+            if (! this.clickable) {
+                // clickable is implied
+                this.$lzc$set_clickable(true);
+            }
+            this.sprite.setClickRegion(region);
+        }
     } else if ($debug) {
         LzView.__warnCapability('view.clickregion', 'clickregion'); 
     }
-    this.clickregion = cr;
+    this.clickregion = region;
+    if (this.onclickregion.ready) this.onclickregion.sendEvent(region);
 }
+
 /** The cursor to display when the mouse is over this view. Any
   * resource can be used as a cursor. This attribute can be set for
   * any view with clickable=true, or any view whose class defaults

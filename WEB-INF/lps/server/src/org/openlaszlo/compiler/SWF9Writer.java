@@ -1274,11 +1274,5 @@ class SWF9Writer extends ObjectWriter {
     public void importBaseLibrary(String library, CompilationEnvironment env) {
         env.warn("SWF9Writer does not implement importBaseLibrary");
     }
-
-    public String importClickResource(File file) throws ImportResourceError {
-        mEnv.warn( "clickregion not implemented by SWF9Writer");
-        return("SWF9Writer clickregions not implemented");
-    }
-
 }
 

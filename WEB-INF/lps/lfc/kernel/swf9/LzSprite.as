@@ -62,6 +62,8 @@ public class LzSprite extends Sprite {
     public var clickable:Boolean = false;
     public var clickbutton:SimpleButton = null;
     public var clickregion:Sprite = null;
+    public var clickregionwidth:Number;
+    public var clickregionheight:Number;
     public var masksprite:Sprite = null;
     public var resource:String = null;
     public var clip:Boolean = false;
@@ -146,6 +148,7 @@ public class LzSprite extends Sprite {
     ,css2boxmodel: true
     ,medialoading: true
     ,backgroundrepeat: true
+    ,clickregion: true
     };
     var capabilities = LzSprite.capabilities;
 
@@ -959,19 +962,12 @@ public class LzSprite extends Sprite {
             }
             cb.useHandCursor = (showhandcursor == null) ? LzMouseKernel.showhandcursor : showhandcursor;
             cb.tabEnabled = false;
-            var cr:Sprite = new Sprite();
-            this.clickregion = cr;
-            // draw a 1px by 1px white rectangle
-            cr.graphics.beginFill(0xffffff);
-            cr.graphics.drawRect(0, 0, 1, 1);
-            cr.graphics.endFill();
-            // then scale it to fit...
-            cr.scaleX = this.lzwidth;
-            cr.scaleY = this.lzheight;
+            if (! this.clickregion) {
+                this.setClickRegion(this.clickresource);
+            }
             // for debugging: make button visible
             // cb.overState = cr;
             //
-            cb.hitTestState = cr;
             attachMouseEvents(cb);
         } else {
             removeMouseEvents(this);
@@ -1018,7 +1014,7 @@ public class LzSprite extends Sprite {
         // TODO [hqm 2008-01] We need to add back in the code here to
         // update the clipping mask size, and resource stretching as well, see swf8 kernel
         if (this.clickregion != null) {
-            this.clickregion.scaleX = v;
+            this.clickregion.scaleX = v / this.clickregionwidth;
         }
 
         // Update the clip region if there is one
@@ -1039,7 +1035,7 @@ public class LzSprite extends Sprite {
         // TODO [hqm 2008-01] We need to add back in the code here to
         // update the clipping mask size, and resource stretching as well, see swf8 kernel
         if (this.clickregion != null) {
-            this.clickregion.scaleY = v;
+            this.clickregion.scaleY = v / this.clickregionheight;
         }
 
         // Update the clip region if there is one
@@ -1247,32 +1243,9 @@ public class LzSprite extends Sprite {
         }
         var framenumber:int = fn - 1;
 
-        var assetclass:Class;
-        // single frame resources get an entry in LzResourceLibrary which has
-        // 'assetclass' pointing to the resource Class object.
-        if (resinfo.assetclass is Class) {
-            assetclass = resinfo.assetclass;
-        } else {
-            // Multiframe resources have an array of Class objects in frames[]
-            assetclass = frames[framenumber];
-        }
+        var asset:DisplayObject = this.getAsset(this.resource, framenumber);
 
-        if (assetclass) {
-            if (this.resourceCache == null) {
-                this.resourceCache = [];
-            }
-            var asset:DisplayObject = this.resourceCache[framenumber];
-            if (asset == null) {
-                //Debug.write('CACHE MISS, new ',assetclass);
-                asset = new assetclass();
-                if (asset is Bitmap) {
-                    (asset as Bitmap).smoothing = true;
-                }
-                asset.scaleX = 1.0;
-                asset.scaleY = 1.0;
-                this.resourceCache[framenumber] = asset;
-            }
-
+        if (asset) {
             var oRect:Rectangle = asset.getBounds( asset );
             if (oRect.width == 0 || oRect.height == 0) {
                 // store the frame number passed in to prevent it from being reset
@@ -1320,6 +1293,41 @@ public class LzSprite extends Sprite {
         if (this.frame == this.totalframes) {
             this.owner.resourceevent('lastframe', null, true);
         }
+    }
+
+    private function getAsset (resource:String, framenumber:Number = 0):DisplayObject {
+        var resinfo:Object = LzResourceLibrary[resource];
+        // Frames are one based not zero based
+        var frames:Array = resinfo.frames;
+        var assetclass:Class;
+        // single frame resources get an entry in LzResourceLibrary which has
+        // 'assetclass' pointing to the resource Class object.
+        if (resinfo.assetclass is Class) {
+            assetclass = resinfo.assetclass;
+        } else {
+            // Multiframe resources have an array of Class objects in frames[]
+            assetclass = frames[framenumber];
+        }
+
+        if (assetclass) {
+            if (this.resourceCache == null) {
+                this.resourceCache = [];
+            }
+            var asset:DisplayObject = this.resourceCache[framenumber];
+            if (asset == null) {
+                //Debug.write('CACHE MISS, new ',assetclass);
+                asset = new assetclass();
+                if (asset is Bitmap) {
+                    (asset as Bitmap).smoothing = true;
+                }
+                asset.scaleX = 1.0;
+                asset.scaleY = 1.0;
+                this.resourceCache[framenumber] = asset;
+            }
+            if (asset is InteractiveObject) InteractiveObject(asset).mouseEnabled = false;
+            if (asset is DisplayObjectContainer) DisplayObjectContainer(asset).mouseChildren = false;
+        }
+        return asset;
     }
 
     private function updateResourcePlay (play:Boolean, framenumber:*, rel:Boolean) :void {
@@ -1840,9 +1848,46 @@ public class LzSprite extends Sprite {
       if (! skipsend) this.owner.resourceload({width: this.resourcewidth, height: this.resourceheight, resource: this.resource, skiponload: true});
     }
 
-    function setClickRegion (cr:*) :void {
-        trace('LzSprite.setClickRegion not yet implemented');
-    }
+    private var clickresource;
+
+    // Must be called after setClickable()
+    function setClickRegion (resource) :void {
+        if (this.clickresource === resource) return;
+        clickresource = resource;
+        if (resource == null) {
+            // draw a clickregion procedurally
+            clickregion = new Sprite();
+            // draw a 1px by 1px white rectangle
+            clickregion.graphics.beginFill(0xffffff);
+            clickregion.graphics.drawRect(0, 0, 1, 1);
+            clickregion.graphics.endFill();
+            // then scale it to fit...
+            clickregion.scaleX = this.lzwidth;
+            clickregion.scaleY = this.lzheight;
+            clickregionwidth = 1;
+            clickregionheight = 1;
+
+            this.hitArea = null;
+        } else {
+            var resinfo:Object = LzResourceLibrary[resource];
+            if (! resinfo) {
+                if ($debug) {
+                    Debug.warn('Could not find clickregion resource', resource);
+                }
+                return;
+            }
+            var clicksprite = this.getAsset(resource);
+            clickregion = clicksprite;
+            clickregionwidth = resinfo.width;
+            clickregionheight = resinfo.height;
+            clickregion.scaleX = this.lzwidth / clickregionwidth;
+            clickregion.scaleY = this.lzheight / clickregionheight;
+
+            this.hitArea = clickregion;
+        }
+        //Debug.warn('setClickRegion', resource, clickregionwidth, clickregionheight, this.lzwidth, this.lzheight);
+
+        clickbutton.hitTestState = clickregion;    }
 
     function sendAAEvent(childID:Number, eventType:Number, nonHTML:Boolean = false) {
         trace('LzSprite.sendAAEvent not yet implemented');
