@@ -61,6 +61,8 @@ public class LzTLFInputTextSprite extends LzTLFTextSprite {
         public function LzTLFInputTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,args);
             tcm.editingMode = EditingMode.READ_WRITE;
+            container.mouseChildren = true;
+            container.mouseEnabled = true;
         }
 
         /**

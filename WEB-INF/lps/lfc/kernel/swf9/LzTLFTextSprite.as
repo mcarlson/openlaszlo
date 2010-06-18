@@ -104,6 +104,7 @@ public class LzTLFTextSprite extends LzSprite {
         public var undoManager:UndoManager = null;
         public var tcm:LzTextContainerManager;
         public var textFlow:TextFlow;
+        // The text sprite layout puts its stuff in here
         public var container:Sprite; 
 
         public static const TEXTPADDING = 2;
@@ -112,6 +113,9 @@ public class LzTLFTextSprite extends LzSprite {
         public function LzTLFTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,false);
             container = new Sprite();
+            container.mouseChildren  = false;
+            container.mouseEnabled  = false;
+            
             // add container to the stage; create controller and add it to the text flow
             addChild(container);
             this.config = ((TextContainerManager.defaultConfiguration) as Configuration).clone();
@@ -181,6 +185,8 @@ public class LzTLFTextSprite extends LzSprite {
         override public function setClickable( c:Boolean ):void {
             if (this.clickable == c) return;
             //setShowHandCursor(c);
+            container.mouseChildren = c || selectable;
+            container.mouseEnabled = c || selectable;
             this.clickable = c;
         }
 
@@ -465,6 +471,8 @@ public class LzTLFTextSprite extends LzSprite {
         public function setSelectable ( isSel:Boolean ):void {
             if (this.selectable == isSel) return;
             this.selectable = isSel;
+            container.mouseChildren = isSel || clickable;
+            container.mouseEnabled = isSel || clickable;
             tcm.editingMode = EditingMode.READ_SELECT;
             // TODO [hqm 2010-06] will this be sufficient to force the cursor to change?
             tcm.updateContainer();

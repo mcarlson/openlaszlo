@@ -2,18 +2,19 @@
   <debug  fontsize="12"/>
 <simplelayout axis="x" spacing="4"/>
 <view  layout="spacing:4">
-  <tlftext 
+  <tlfinputtext 
            id="k" 
            bgcolor="#ccccaa" 
            fgcolor="red" 
            font="Verdana"
+
            fontsize="24"
-          width="500" >This is some <i>sample <b>text</b></i>. The quick brown dog, etc.
-  </tlftext>
+ >This is some <i>sample <b>text</b></i>. The quick brown dog, etc.
+  </tlfinputtext>
 
 
-<button onclick="k.sprite.setEditable(true)">make editable</button>
-<button onclick="k.sprite.setEditable(false)">make uneditable</button>
+<button onclick="k.sprite.setEnabled(true)">make editable</button>
+<button onclick="k.sprite.setEnabled(false)">make uneditable</button>
 <button onclick="k.sprite.setSelectable(true)">make selectable</button>
 <button onclick="k.sprite.setSelectable(false)">make unselectable</button>
 </view>
