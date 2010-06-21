@@ -1,0 +1,77 @@
+/**
+  *
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  *
+  * @affects lzevent
+  * @topic LFC
+  * @subtopic Events
+  *
+  * LzNotifyingEvents call notify() with a Boolean value when the event changes 
+  * from not having listeners to having listeners (and vice-versa).  
+  * LzNotifyingEvents are intended to be subclassed: notify() should be 
+  * overridden to decide what to do when the event is activated/deactivated.  
+  * Currently used for LzIdleEvent and LzTextlinkEvent.  
+  *
+  * @access private
+  */
+
+class LzNotifyingEvent extends LzEvent {
+  /**
+    * @access private
+    */
+  function LzNotifyingEvent(eventSender:LzEventable, eventName:String, d:* = null) {
+    var wasready = this.ready;
+    super(eventSender, eventName, d);
+    if (this.ready != wasready) {
+      this.notify(this.ready);
+    }
+  }
+
+  /**
+    * @access private
+    */
+  public override function addDelegate (d:LzDelegate) :void {
+    var wasready = this.ready;
+    super.addDelegate(d);
+    if (this.ready != wasready) {
+      this.notify(this.ready);
+    }
+  }
+
+  /**
+    * @access private
+    */
+  public override function removeDelegate (d:LzDelegate = null) :void {
+    var wasready = this.ready;
+    super.removeDelegate(d);
+    if (this.ready != wasready) {
+      this.notify(this.ready);
+    }
+  }
+
+  /**
+    * @access private
+    */
+  public override function clearDelegates () :void {
+    var wasready = this.ready;
+    super.clearDelegates();
+    if (this.ready != wasready) {
+      this.notify(this.ready);
+    }
+  }
+
+  /** Override to do something when this event is activated/deactivated by 
+    * adding/removing listeners.
+    * 
+    * @param Boolean ready: true for activation, false for deactivation. 
+    * event.
+    *
+    * @access private
+    */
+  protected function notify(ready:Boolean) :void {
+  }
+}
+
+lz.NotifyingEvent = LzNotifyingEvent;  // publish
+

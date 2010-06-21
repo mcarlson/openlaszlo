@@ -1,0 +1,93 @@
+/**
+  * LzDeclaredEventClass.lzs
+  *
+  * @copyright Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.
+  *            Use is subject to license terms.
+  * @todo 2006-04-07 hqm This machinery could be removed if all
+  * callers to sendEvent can be guaranteed to check if the event slot
+  * is null before calling it as a function.
+  * @topic LZX
+  * @subtopic Runtime
+  */
+
+/**
+ * The type of the initial value for an event that has no delegates
+ * registered to receive the event.  Automatically replaced with an
+ * <xref linkend="LzEvent" /> when an <xref linkend="LzDelegate" />
+ * registers to receive the event.
+ *
+ * @access public
+ */
+public class LzDeclaredEventClass {
+  /** The class that should replace this event
+    @access private */
+  public var actual:Class;
+
+  /** @access private */
+  public function LzDeclaredEventClass (actual=null) {
+    // Debug.debug("%w.%s(%w)", this, arguments.callee, arguments);
+    super();
+    this.actual = actual;
+  }
+
+  /** True when the event has listeners, and is not in progress
+   * @type Boolean
+   * @keywords readonly
+   * @access private
+   */
+  public var ready:Boolean = false;
+
+
+  /**
+   * Sends an event to all the delegates that are registered to receive
+   * this event.  Each registered delegate's method will be called with
+   * the single argument of sendEvent.
+   *
+   *  @param * eventValue: (Optional) The value to pass when executing
+   *  the delegates registered to receive the event.  If omitted,
+   *  <code>null</code> will be sent.
+   */
+  public function  sendEvent (eventValue:* = null) :void {
+    // TODO [hqm 2008-03] This would be useful debugging info to see
+    // when apps call sendEvent on null events.
+    /*
+      if ($debug) {
+        Debug.debug('Inefficient call to %s', arguments.callee);
+      }
+    */
+  };
+
+  /**
+   * @access private
+   */
+  public function clearDelegates () :void { };
+
+  /**
+   * @access private
+   */
+  public function removeDelegate (d:LzDelegate = null) :void { };
+
+  /**
+   * @access private
+   */
+  public function getDelegateCount () :int {return 0;};
+
+  /**
+   * @access private
+   */
+  public function toString ( ){
+    return "LzDeclaredEvent";
+  }
+}
+
+lz.DeclaredEventClass = LzDeclaredEventClass;  // publish
+
+/**
+ * The initial value for an event.  Automatically replaced with an
+ * <xref linkend="LzEvent" /> when an <xref linkend="LzDelegate" />
+ * registers to receive the event.
+ *
+ * @access public
+ * @keywords readonly
+ */
+var LzDeclaredEvent:LzDeclaredEventClass = new LzDeclaredEventClass();

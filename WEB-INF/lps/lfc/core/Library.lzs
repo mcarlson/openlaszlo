@@ -1,13 +1,14 @@
 /**
   * Library.lzs
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access private
   */
 
 #include "core/LzDefs.lzs"
+#include "core/LzDeclaredEvent.lzs"
 #include "core/LzConstants.lzs"
 #include "core/LzCache.lzs"
 #include "core/LzEventable.lzs"

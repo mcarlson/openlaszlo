@@ -264,7 +264,8 @@ public function execute (eventValue:*) :* {
         }
         return;
       }
-      anEvent = new LzEvent( eventSender, eventName, this );
+      var eventclass = ( (anEvent && anEvent.actual) || LzEvent);
+      anEvent = new eventclass( eventSender, eventName, this );
     } else {
       (anEvent cast LzEvent).addDelegate( this );
     }

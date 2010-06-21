@@ -15,38 +15,23 @@
  *
  * @access private
  */
-class LzIdleEvent extends LzEvent {
-  var registered:Boolean = false;
+class LzIdleEvent extends LzNotifyingEvent {
+  private var registered:Boolean = false;
 
   function LzIdleEvent(eventSender:LzEventable, eventName:String, d:* = null) {
     super(eventSender, eventName, d);
-    if (this.ready && (! this.registered)) {
+  }
+
+  /**
+    * @access private
+    */
+  protected override function notify(ready:Boolean) :void {
+    if (ready && (! this.registered)) {
       this.registered = true;
       LzIdleKernel.addCallback( this, 'sendEvent' );
-    }
-  }
-
-  public override function addDelegate (d:LzDelegate) :void {
-    super.addDelegate(d);
-    if (this.ready && (! this.registered)) {
-      this.registered = true;
-      LzIdleKernel.addCallback( this, 'sendEvent' );
-    }
-  }
-
-  public override function removeDelegate (d:LzDelegate = null) :void {
-    super.removeDelegate(d);
-    if ((! this.ready) && this.registered) {
-      LzIdleKernel.removeCallback( this, 'sendEvent' );
+    } else if (! ready && this.registered) {
       this.registered = false;
-    }
-  }
-
-  public override function clearDelegates () :void {
-    super.clearDelegates();
-    if ((! this.ready) && this.registered) {
       LzIdleKernel.removeCallback( this, 'sendEvent' );
-      this.registered = false;
     }
   }
 }
@@ -86,7 +71,7 @@ public final class LzIdleService extends LzEventable {
     /** This is the idle event for the system, sent by this service
      * @lzxtype event
      */
-    var onidle :LzEvent;
+    var onidle:LzDeclaredEventClass = new LzDeclaredEventClass(LzIdleEvent);
 
     /**
      * The idle service.  Also available as the global
@@ -110,7 +95,6 @@ public final class LzIdleService extends LzEventable {
         // Create array on instance, not prototype
         this.coi = new Array;
         this.removeCOI = new LzDelegate( this, "removeCallIdleDelegates" );
-        this.onidle = new LzIdleEvent(this, 'onidle');
     }
 
     LzIdleService.LzIdle = new LzIdleService();
