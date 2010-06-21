@@ -878,7 +878,7 @@ LzSprite.prototype.clickresource;
   * */
 LzSprite.prototype.setClickRegion = function ( resource ){
     if (this.clickresource === resource) return;
-    clickresource = resource;
+    this.clickresource = resource;
     if (resource == null) {
         // clear the mask
         this.__LZbuttonRef.setMask(null);

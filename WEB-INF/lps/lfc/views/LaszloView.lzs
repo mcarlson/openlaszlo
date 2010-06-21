@@ -748,7 +748,7 @@ var onfgcolor = LzDeclaredEvent;
 function $lzc$set_fgcolor(c) {
   if ($debug) {
     if (this.tintcolor != '') {
-        Debug.warn('Setting fgcolor when tintcolor is already set');
+        Debug.warn('Setting fgcolor when tintcolor is already set on', this);
     }
   }
   // This enables setting to symbolic color names, which people expect
@@ -2227,7 +2227,7 @@ function __LZvalignBottom (e=null) {
   * view or subview resources. Use the view method
   * <method>setColorTransform</method> to tint a view.
   * @param Integer c: A color in rgb format; for example, 0xff0000 is red.
-  * @deprecated Use setAttribute('fgcolor', ...) instead.
+  * @deprecated Use setAttribute('tintcolor', ...) instead.
   */
 final function setColor ( c ){
     if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
@@ -2262,8 +2262,10 @@ function getColor (){
   *
   * @runtimes as2
   * @param Object o: A color transformation dictionary
+  * @deprecated Use setAttribute('tintcolor', ...) instead.
   */
 function setColorTransform ( o ){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.setAttribute);
     if (this.capabilities.colortransform) {
         this.sprite.setColorTransform(o);
        // update the tintcolor attribute
@@ -2291,8 +2293,10 @@ function setColorTransform ( o ){
   * o.ab: overall offset (-255 to 255);
   *
   * @runtimes as2
+  * @deprecated
   */
 function getColorTransform (){
+    if ($debug) Debug.deprecated(this, arguments.callee, this.tintcolor);
     if (this.capabilities.colortransform) {
         return this.sprite.getColorTransform();
     } else if ($debug) {
@@ -3634,8 +3638,8 @@ var tintcolor = '';
 function $lzc$set_tintcolor(color) {
     if (this.capabilities.colortransform) {
         if ($debug) {
-            if (this.fgcolor != 0) {
-                Debug.warn('Setting tintcolor when fgcolor is already set');
+            if (this.fgcolor != null) {
+                Debug.warn('Setting tintcolor when fgcolor is already set on', this);
             }
         }
 
