@@ -16,8 +16,6 @@
  * @access private
  */
 class LzIdleEvent extends LzNotifyingEvent {
-  private var registered:Boolean = false;
-
   function LzIdleEvent(eventSender:LzEventable, eventName:String, d:* = null) {
     super(eventSender, eventName, d);
   }
@@ -26,11 +24,9 @@ class LzIdleEvent extends LzNotifyingEvent {
     * @access private
     */
   protected override function notify(ready:Boolean) :void {
-    if (ready && (! this.registered)) {
-      this.registered = true;
+    if (ready) {
       LzIdleKernel.addCallback( this, 'sendEvent' );
-    } else if (! ready && this.registered) {
-      this.registered = false;
+    } else if (! ready) {
       LzIdleKernel.removeCallback( this, 'sendEvent' );
     }
   }
