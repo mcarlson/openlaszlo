@@ -508,7 +508,7 @@ class SWF9Writer extends ObjectWriter {
                 File lzo = new File((String)e.next());
                 // Add in a top level all in the main app to invoke the lzo
                 // lib's runtToplevel Definitions method
-                addScript("(new "+ LibraryWriter.makeLZOClassname(lzo)+"()).runToplevelDefinitions();\n");
+                addScript("(new "+ LibraryWriter.fileToSymbol(lzo)+"()).runToplevelDefinitions();\n");
             }
 
 
@@ -594,12 +594,11 @@ class SWF9Writer extends ObjectWriter {
                 }
             }
         }
-        File dirfile = mEnv.getApplicationFile().getParentFile();
-        File appdir = dirfile != null ? dirfile : new File(".");
-        String relPath = FileUtils.relativePath(lzofile, appdir);
-        String fprefix = relPath.replace(File.separator, "_");
+        String fprefix = LibraryWriter.fileToSymbol(lzofile);
+
         //System.err.println("lzo pathname prefix = "+fprefix);
         File swc = new File(workdir, fprefix + ".swc");
+
         FileUtils.send(zis, new FileOutputStream(swc));
         zis.close();
         //System.err.println("swc file copied to "+swc);

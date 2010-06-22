@@ -109,7 +109,7 @@ class LibraryWriter extends IntermediateWriter {
     }
   }
 
-  public static String makeLZOClassname(File appfile) {
+  public static String fileToSymbol(File appfile) {
     try {
       String lzoAbsPath = appfile.getCanonicalPath();
       lzoAbsPath = lzoAbsPath.substring(0,lzoAbsPath.length()-4);
@@ -151,7 +151,7 @@ class LibraryWriter extends IntermediateWriter {
   public void open(String compileType) {
     CompilerMediaCache mcache = mEnv.getMediaCache();
     if (mSWF10Writer != null) {
-      String safename = makeLZOClassname(mEnv.getApplicationFile());
+      String safename = fileToSymbol(mEnv.getApplicationFile());
       mSWF10Writer.mAppMainClassname = safename;
       mSWF10Writer.mAppPreamble = makeLZOPreamble(safename);
 
