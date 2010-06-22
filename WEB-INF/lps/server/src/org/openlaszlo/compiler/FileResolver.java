@@ -126,9 +126,14 @@ class DefaultFileResolver implements FileResolver {
         // Determine whether to substitue resource files initially just swf to png
         String pnext = FileUtils.getExtension(pathname);
         boolean dhtmlResourceFlag = false;
+        
         if (env != null) {
-            dhtmlResourceFlag = env.isDHTML();
+            boolean linking = (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)));
+            if (linking) {
+                dhtmlResourceFlag = env.isDHTML();
+            }
         }
+
         boolean SWFtoPNG = dhtmlResourceFlag && LZUtils.equalsIgnoreCase(pnext, "swf");
         if (SWFtoPNG) {
             String pnbase = FileUtils.getBase(pathname);

@@ -370,7 +370,7 @@ public class Compiler {
                                                  env.getBooleanProperty(CompilationEnvironment.PROFILE_PROPERTY),
                                                  env.getBooleanProperty(CompilationEnvironment.BACKTRACE_PROPERTY),
                                                  false));
-            if (!LFClib.exists()) {
+            if (linking && !LFClib.exists()) {
                 throw new CompilationError(
                         "No LFC library was found at "+LFClib+" for compilation options: runtime="+runtime+", debug="+
                         props.get("$debug") + ", backtrace="+props.get("$backtrace") + ", profile="+

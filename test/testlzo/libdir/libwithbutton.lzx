@@ -1,0 +1,22 @@
+<library>
+  <!-- references lz/components library  -->
+
+  <button onclick="Debug.info('click')">Click Me!</button>
+  
+
+  <class name="mybutton" extends="button">
+    <handler name="onclick">
+      Debug.info("clicked mybutton");
+    </handler>
+    <method name="foo">
+      return 269;
+    </method>
+  </class>
+
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
