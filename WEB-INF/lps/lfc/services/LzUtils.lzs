@@ -53,7 +53,12 @@ class LzColorUtils {
 
         var parts = s.substring(s.indexOf('(') + 1, s.indexOf(')')).split(',');
 
-        var color = (parts[0] << 16) + (parts[1] << 8) + (parts[2] * 1);
+        // Ensure we end up with an integer
+        var color = Math.floor( 
+                        (parts[0] << 16) + 
+                        (parts[1] << 8) + 
+                        Number(parts[2]) 
+                    );
 
         if (parts.length > 3) {
             color += parts[3] * .01;

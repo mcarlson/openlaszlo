@@ -326,23 +326,30 @@
         <method name="setTint" args="v, color, brightness=0">
             <![CDATA[
             if (v.capabilities.colortransform) {
-            if (color != "" && color != null){
-                var rgb = color;
-                var red=(rgb >> 16) & 0xFF;
-                var green=(rgb >> 8) & 0xFF;
-                var blue=rgb & 0xFF;
+                if (color != "" && color != null){
+                    var rgb = color;
+                    var red=(rgb >> 16) & 0xFF;
+                    var green=(rgb >> 8) & 0xFF;
+                    var blue=rgb & 0xFF;
 
-                red += 0x33;
-                green += 0x33;
-                blue += 0x33;
+                    red += 0x33;
+                    green += 0x33;
+                    blue += 0x33;
 
-                red = red/255*100;
-                green = green/255*100;
-                blue = blue/255*100;
+                    red = red/255*100;
+                    green = green/255*100;
+                    blue = blue/255*100;
 
-                v.setColorTransform( { ra : red, ga : green, ba : blue,
-                                rb : brightness, gb : brightness, 
-                                bb : brightness } );
+                    var tintcolor = LzColorUtils.fromrgb('rgb(' + red + ',' + green + ',' + blue + ')');
+
+                    if (brightness != 0) {
+                        var hsv = LzColorUtils.tohsv(tintcolor);
+                        // Add/subtract the brightness as a percentage
+                        hsv.v += (brightness / 255);
+                        tintcolor = LzColorUtils.fromhsv(hsv.h, hsv.s, hsv.v);
+                    }
+
+                    v.setAttribute('tintcolor', tintcolor);
                 }
             }
             ]]>
