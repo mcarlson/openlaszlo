@@ -39,6 +39,11 @@
             assertEquals(14540253.01, LzColorUtils.fromrgb('rgb(221,221,221,1)'), "Convert from RGB");
             assertEquals(0x800080, LzColorUtils.fromrgb('purple'), "Convert from RGB");
             assertEquals(0xff00ff, LzColorUtils.fromrgb('rgb(255,0,255)'), "Convert from RGB");
+            var hsv = LzColorUtils.tohsv(0xff00ff);
+            assertEquals(300, hsv.h, "Convert tohsv .h");
+            assertEquals(1, hsv.s, "Convert tohsv .s");
+            assertEquals(1, hsv.v, "Convert tohsv .v");
+            assertEquals(8323199, LzColorUtils.fromhsv(300, 1, .5), "Convert fromhsv ");
         </method>
         <method name="addTests"> 
             this.addTest("testdectohex");
@@ -50,6 +55,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
