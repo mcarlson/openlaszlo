@@ -13,6 +13,8 @@
     </method>
   </class>
 
+  <mybutton onclick="Debug.info('instance click handler')">mybutton</mybutton>
+
 
 
 </library>
