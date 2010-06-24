@@ -266,10 +266,10 @@ LzTextSprite.prototype.setPattern = function ( val ){
     if (val == null || val == "") {
         this.__LZtextclip.restrict = null;
     } else if (val.substring(0,1) == "[" &&
-        val.substring(val.length-2, val.length) == "]*") {
-            this.__LZtextclip.restrict = val.substring(1,val.length-2);
+               val.substring(val.length-2, val.length) == "]*") {
+        this.__LZtextclip.restrict = val.substring(1,val.length-2);
     } else {
-        Debug.warn('LzTextSprite.setPattern argument %w must be of the form "[...]*"', val);
+        Debug.error('LzTextSprite.setPattern argument %w must be of the form "[...]*"', val);
     }
 }
 

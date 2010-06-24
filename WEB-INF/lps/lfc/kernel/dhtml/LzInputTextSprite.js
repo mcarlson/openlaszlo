@@ -660,7 +660,7 @@ LzInputTextSprite.prototype.__textEvent = function ( evt ){
             if (validChar) {
                 var prevent = false;
                 if (keycode != 13 && sprite.restrict) {
-                    // only printable characters
+                    // only permit characters that match the restrict RegExp
                     prevent = (0 > String.fromCharCode(charcode).search(sprite.restrict));
                 }
                 if (! prevent) {

@@ -747,13 +747,22 @@ function setMaxLength(val:Number) {
     if (this.initted) this.owner._updateSize();
 }
 
+/**
+ * @devnote [2010-06-21 ptw] (LPP-9134) The textfield pattern is just
+ * the permitted character set description, without the enclosing
+ * `[...]*`.  If you think using RegExp to check this condition would
+ * be a better idea, see the referenced bug first.
+ *
+ * @access private
+ */
 function setPattern (val:String) :void {
     if (val == null || val == "") {
         this.textfield.restrict = null;
-    } else if (new RegExp("^\\[.*\\]\\*$").test( val )) {
+    } else if (val.substring(0,1) == "[" &&
+               val.substring(val.length-2, val.length) == "]*") {
         this.textfield.restrict = val.substring(1, val.length - 2);
     } else if ($debug) {
-        Debug.warn('LzTextSprite.setPattern argument %w must be of the form "[...]*"', val);
+        Debug.error('LzTextSprite.setPattern argument %w must be of the form "[...]*"', val);
     }
 }
 
