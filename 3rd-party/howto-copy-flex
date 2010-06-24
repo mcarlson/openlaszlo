@@ -1,8 +1,10 @@
 # These are instructions to build flex from source and then copy needed files
 # to the LPS tree.
-# 
-# The current installed flex compiler is flex_sdk_4.0.0.6898 May 14, which is 
-# the most recent 'stable build'
+#
+# Wed Jun  2 08:30:41 2010
+# I am installing flex_sdk_4.0.0.14159 Mar 2010 milestone build
+#
+# http://opensource.adobe.com/svn/opensource/flex/sdk/trunk
 #
 # If a pre-built release from adobe is being used, skip the step where 
 # you do "svn export" and "ant", below, and just copy the files as specified.
@@ -37,9 +39,16 @@ cd /tmp/flex; ant
 for i in \
 adt.jar \
 afe.jar \
-aglj32.jar \
+aglj40.jar \
 asc.jar \
 asdoc.jar \
+batik-all-flex.jar \
+batik_de.jar \
+batik_fr.jar \
+batik_ja.jar \
+batik_ko.jar \
+batik_ru.jar \
+batik_zh_CN.jar \
 commons-collections.jar \
 commons-discovery.jar \
 commons-logging.jar \
@@ -67,14 +76,16 @@ mxmlc_nl.jar \
 mxmlc_pt.jar \
 mxmlc_ru.jar \
 mxmlc_sv.jar \
-mxmlc_zh_cn.jar \
-mxmlc_zh_tw.jar \
+mxmlc_zh_CN.jar \
+mxmlc_zh_TW.jar \
 optimizer.jar \
 rideau.jar \
+swcdepends.jar \
+swfdump.jar \
 swfutils.jar \
 velocity-dep-1.4-flex.jar 
-do 
-  cp /tmp/flex/lib/$i $LPS_HOME/WEB-INF/lib
+do  
+  cp /tmp/flex/lib/$i $LPS_HOME/WEB-INF/lib 
 done;
 
 cp -r /tmp/flex/frameworks $LPS_HOME/WEB-INF
