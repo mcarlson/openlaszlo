@@ -13,6 +13,55 @@
 #pragma "warnUndefinedReferences=true"
 
 /**
+ * The LzTextscrollEvent is used to activate, deactivate scroll events when
+ * onyscroll, onscroll, onxscroll, onhscroll, onscrollheight, onmaxscroll or 
+ * onscrollwidth, onmaxhscroll event is registered.
+ * Can only be used with LzText.
+ *
+ * @access private
+ */
+class LzTextscrollEvent extends LzNotifyingEvent {
+  /**
+    * @access private
+    */
+  private var __senderscope:LzText;
+
+  /**
+    * @access private
+    */
+  function LzTextscrollEvent(eventSender:LzEventable,eventName:String, d:* = null) {
+    this.__senderscope = eventSender cast LzText;
+    super(eventSender, eventName, d);
+  }
+
+  /** Automatically turn on scroll events when needed
+    * @access private
+    */
+  protected override function notify(ready:Boolean) :void {
+    if (this.__senderscope) {
+      var scope:LzText = this.__senderscope; 
+      if (ready) {
+        scope.__scrollEventListeners++;
+      } else {
+        scope.__scrollEventListeners--;
+      }
+      var scrollevents:Boolean = (scope.__scrollEventListeners > 0) || scope.__userscrollevents;
+      if (scrollevents != scope.scrollevents) {
+        //Debug.info('setting scrollevents', scope, scrollevents);
+        scope.__set_scrollevents(scrollevents);
+      }
+    }
+  }
+  static var LzDeclaredTextscrollEvent:LzDeclaredEventClass;
+}
+
+/** Shared DeclaredEventClass for textscroll events.  This must be a assigned here - DHTML complains about making a static property of LzTextscrollEvent in the class declaration above
+ * @access private
+ */
+LzTextscrollEvent.LzDeclaredTextscrollEvent = new LzDeclaredEventClass(LzTextscrollEvent);
+
+
+/**
  * <p>This class is used for non-editable text fields (as opposed to
  * <sgmltag class="element" role="LzInputText">&lt;inputtext&gt;</sgmltag>).  A text field can be initalized
  * with text content at compile time.</p>
@@ -122,13 +171,6 @@ dynamic class LzText extends LzView with LzFormatter {
    * Instance variables
    */
 
-  /** The number of lines that will fit in the current height
-   * @devnote not ever updated, see updateMaxLines()
-   * @lzxtype Number
-   * @type Number
-   * @keywords read-only
-   */
-  var maxlines = 1;
   /** If true, the text is selectable
    * @lzxtype booleanLiteral
    * @type Boolean
@@ -268,7 +310,6 @@ dynamic class LzText extends LzView with LzFormatter {
     return 0;
   }
 
-
   /*
    * Scrolling interface
    */
@@ -335,19 +376,38 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @lzxtype event */
   var onlineheight:LzDeclaredEventClass = LzDeclaredEvent;
 
+  /** Counts active scroll event listeners for LzTextscrollEvent
+    * @access private 
+    */
+  var __scrollEventListeners:Number = 0;
   /**
-   * You must use setAttribute('scrollevents', true) to cause scroll events 
-   * to be sent.
+   * Use setAttribute('scrollevents', true) to cause scroll events to be sent.
+   *
+   * NOTE: A constraint or handler on onyscroll, onscroll, onxscroll, 
+   * onhscroll, onscrollheight, onmaxscroll, onscrollwidth or onmaxhscroll 
+   * will automatically enable scrollevents.
    *
    * @lzxtype Boolean
    * @type Boolean
    */
   var scrollevents:Boolean = false;
-    /** @access private */
+  /** Track explicitly-set scrollevents separately to ensure registering/unregistering a LzTextscrollEvent
+    * @access private */
+  var __userscrollevents:Boolean = false;
+  /** @access private */
   function $lzc$set_scrollevents(on:Boolean):void {
+    this.__userscrollevents = on;
+    if (this.scrollevents !== on) {
+        this.__set_scrollevents(on);
+    }
+  }
+
+  /** @access private */
+  function __set_scrollevents(on:Boolean):void {
+    if (this.scrollevents == on) return;
     this.scrollevents = on;
-    if (this.isinited &&  this.scrollevents && !this.clip) {
-        if ($debug) {
+    if ($debug) {
+        if (this.isinited && this.scrollevents && !this.clip) {
             // Warn if user has <text> view with scrollevents=true, but which does not have clipping enabled (LPP-8562)
             Debug.warn("You have set scrollevents to true on text view ", this, ", but you must also set clip='true' on this view to have scrolling work correctly");
         }
@@ -361,8 +421,10 @@ dynamic class LzText extends LzView with LzFormatter {
   /**
    * The y scroll offset of the content in pixels (a negative number
    * specifying how many pixels the content should be scrolled
-   * vertically).  Default 0.  You must use setAttribute('scrollevents', true) 
-   * to cause this property to change.
+   * vertically).  Default 0.
+   * 
+   * NOTE: A constraint or handler on onyscroll will automatically enable 
+   * updating the attribute.
    *
    * @lzxtype Number
    * @type Number
@@ -384,7 +446,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.updateLineAttribute('scroll', (- n));
   }
   /** @lzxtype event */
-  var onyscroll:LzDeclaredEventClass = LzDeclaredEvent;
+  var onyscroll:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
 
   /**
    * The total height of the content in pixels.
@@ -396,8 +458,10 @@ dynamic class LzText extends LzView with LzFormatter {
    * this.height</code>, <code>this.setAttribute('yscroll',
    * this.height - this.scrollheight)</code> will scroll the content
    * so that the bottom of the content appears in the bottom of the
-   * view. You must use setAttribute('scrollevents', true) 
-   * to cause this property to change.
+   * view.
+   * 
+   * NOTE: A constraint or handler on onscrollheight will automatically enable 
+   * updating the attribute.
    *
    * @lzxtype Number
    * @type number
@@ -409,13 +473,15 @@ dynamic class LzText extends LzView with LzFormatter {
     if ($debug) { Debug.error("scrollheight is read-only"); }
   }
   /** @lzxtype event */
-  var onscrollheight:LzDeclaredEventClass = LzDeclaredEvent;
+  var onscrollheight:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
 
   /**
    * The x scroll offset of the content in pixels (a negative number
    * specifying how many pixels the content should be scrolled
-   * horizontally). Default 0. You must use setAttribute('scrollevents', true) 
-   * to cause this property to change.
+   * horizontally). Default 0.
+   * 
+   * NOTE: A constraint or handler on onxscroll will automatically enable 
+   * updating the attribute.
    *
    * @lzxtype Number
    * @type Number
@@ -437,7 +503,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.updateAttribute('hscroll', (- n));
   }
   /** @lzxtype event */
-  var onxscroll:LzDeclaredEventClass = LzDeclaredEvent;
+  var onxscroll:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
 
   /**
    * The total width of the content in pixels.
@@ -449,8 +515,10 @@ dynamic class LzText extends LzView with LzFormatter {
    * this.width</code>, <code>this.setAttribute('yscroll', this.width
    * - this.scrollwidth)</code> will cause the end of content to be
    * visible at the edge of the view.  (The rightmost content will
-   * appear at the right edge of the view for left-to-right scripts.) You must 
-   * use setAttribute('scrollevents', true) to cause this property to change.
+   * appear at the right edge of the view for left-to-right scripts.)
+   * 
+   * NOTE: A constraint or handler on onscrollwidth will automatically enable 
+   * updating the attribute.
    *
    * @lzxtype Number
    * @type number
@@ -462,7 +530,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if ($debug) { Debug.error("scrollwidth is read-only"); }
   }
   /** @lzxtype event */
-  var onscrollwidth:LzDeclaredEventClass = LzDeclaredEvent;
+  var onscrollwidth:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
 
   /*
    * Backward-compatible line/character-based interfaces
@@ -476,8 +544,10 @@ dynamic class LzText extends LzView with LzFormatter {
    * @devnote NOTE: [2009-01-31 ptw] Some sprites support accurate
    * conversion of pixel values to line numbers, considering interior
    * styling of the content.  If this is not supported, default to
-   * converting assuming a uniform line height. You must 
-   * use setAttribute('scrollevents', true) to cause this property to change.
+   * converting assuming a uniform line height. 
+   *
+   * NOTE: A constraint or handler on onscroll will automatically enable 
+   * updating the attribute.
    */
   var scroll:Number = 1;
   /** @access private */
@@ -499,7 +569,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.$lzc$set_yscroll((- pixel));
   }
   /** @lzxtype event */
-  var onscroll:LzDeclaredEventClass = LzDeclaredEvent;
+  var onscroll:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
 
   /**
    * The maximum vertical scroll position (in lines, 1-based).
@@ -507,8 +577,10 @@ dynamic class LzText extends LzView with LzFormatter {
    * cause the last line of the content to be visible at the bottom of
    * the view (hence this is the line number of the line that will
    * appear at the top of the view when scrolled all the way to the
-   * bottom). You must use setAttribute('scrollevents', true) to cause this 
-   * event to be sent.
+   * bottom).
+   *
+   * NOTE: A constraint or handler on onmaxscroll will automatically enable 
+   * updating the attribute.
    *
    * @lzxtype Number
    * @type Number
@@ -520,11 +592,13 @@ dynamic class LzText extends LzView with LzFormatter {
     if ($debug) { Debug.error("maxscroll is read-only"); }
   }
   /** @lzxtype event */
-  var onmaxscroll:LzDeclaredEventClass = LzDeclaredEvent;
+  var onmaxscroll:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
 
   /**
-   * The horizontal scroll position in pixels.  Default 0. You must use 
-   * setAttribute('scrollevents', true) to cause this property to change.
+   * The horizontal scroll position in pixels.  Default 0.
+   *
+   * NOTE: A constraint or handler on onhscroll will automatically enable 
+   * updating the attribute.
    *
    * @lzxtype Number
    * @type Number
@@ -543,7 +617,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.$lzc$set_xscroll((- n));
   }
   /** @lzxtype event */
-  var onhscroll:LzDeclaredEventClass = LzDeclaredEvent;
+  var onhscroll:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
 
   /**
    * The maximum horizontal scroll position in pixels.
@@ -552,8 +626,10 @@ dynamic class LzText extends LzView with LzFormatter {
    * the view.  (The rightmost content will appear at the right edge
    * of the view for left-to-right scripts, hence this is the pixel
    * position of the leftmost pixel that will appear in the view when
-   * scrolled all the way to the right.) You must use 
-   * setAttribute('scrollevents', true) to cause this property to change.
+   * scrolled all the way to the right.)
+   *
+   * NOTE: A constraint or handler on onmaxhscroll will automatically enable 
+   * updating the attribute.
    *
    * @lzxtype Number
    * @type Number
@@ -565,7 +641,7 @@ dynamic class LzText extends LzView with LzFormatter {
     if ($debug) { Debug.error("maxhscroll is read-only"); }
   }
   /** @lzxtype event */
-  var onmaxhscroll:LzDeclaredEventClass = LzDeclaredEvent;
+  var onmaxhscroll:LzDeclaredEventClass = LzTextscrollEvent.LzDeclaredTextscrollEvent;
   /**
    * maxhscroll depends on width
    * @devnote see $lzc$set_width
@@ -1372,20 +1448,6 @@ dynamic class LzText extends LzView with LzFormatter {
     // interpreted as markup in text).
     this.$lzc$set_text (this.getText() +
                         this.formatToString.apply(this, [control].concat(args)).toString().toHTML());
-  }
-
-  /**
-   * This must be called after updating the measurement. This is done for speed.
-   *
-   * @access private
-   */
-  function updateMaxLines (){
-    // TODO: Make sure maxlines is updated or remove from the LFC
-    //this is a copy of the method in kernel/swf/LzTextSprite.as - commenting out for now...
-    //var newlin = Math.floor( this.height / (  this.font.height -1 ) );
-    //if ( newlin != this.maxlines ){
-    //  this.maxlines = newlin;
-    //}
   }
 
   /**

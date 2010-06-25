@@ -200,7 +200,7 @@
              selectable="true" 
              width="4096"
              height="${parent.height}"
-             scrollevents="true"/>
+             />
      </view>
             
      <view name="scrollbar" x="${parent.width-12}" height="${parent.height-11}" bgcolor="#666666"
@@ -418,7 +418,7 @@
  </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004,2007-2009 Laszlo Systems, Inc.  All Rights Reserved.    *
+* Copyright 2001-2004,2007-2010 Laszlo Systems, Inc.  All Rights Reserved.    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
