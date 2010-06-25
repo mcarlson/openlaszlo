@@ -2447,6 +2447,90 @@ public dynamic class LzNode extends LzEventable {
    return [ self,  name ];
  }
 
+ /** 
+  * @access private
+  */
+ var ontransition = LzDeclaredEvent;
+
+ /** Allows node attributes to be automatically animated when set. A string of
+  * transitions, according to the css3 transition spec 
+  * http://dev.w3.org/csswg/css3-transitions/#the-transition-shorthand-property- 
+  * e.g. 'x 2s'. Note that transition-delay is not currently supported.
+  * [transition-property  || transition-duration  || transition-timing-function  || transition-delay  [, [transition-property  || transition-duration  || transition-timing-function  || transition-delay]]* 
+  * @type String
+  * @lzxtype string
+  */
+ var transition;
+
+ /** Allows node attributes to be automatically animated when set. A string of
+   * transitions, according to the css3 transition spec 
+   * @access private
+   * @param css: String of transitions using http://dev.w3.org/csswg/css3-transitions/#the-transition-shorthand-property-
+   * Note that transition-delay is not currently supported.
+   * [transition-property  || transition-duration  || transition-timing-function  || transition-delay  [, [transition-property  || transition-duration  || transition-timing-function  || transition-delay]]* 
+   */
+ function $lzc$set_transition(css:String) {
+   if (transition === css) return;
+   this.transition = css;
+
+   var transitions = {};
+   var counter:int = 0;
+   var transitionlist = css.split(',');
+   for (var i:int = 0, l:int = transitionlist.length; i < l; i++) {
+     var transition = transitionlist[i].split(' ');
+     var attr = transition.shift();
+     if (attr) {
+        // convert CSS transition-duration to milliseconds
+        var duration = transition.shift();
+        duration = (parseFloat(duration) * 1000);
+
+        // No duration == no animation, continue to the next item
+        if (! duration || isNaN(duration)) continue;
+
+        // convert CSS transition-timing-function to LzAnimator motion
+        var motion = transition.shift();
+        if (motion == 'ease-in') {
+            motion = 'easein';
+        } else if (motion == 'ease-out') {
+            motion = 'easeout';
+        } else if (motion == 'linear') {
+        } else {
+            // default to ease
+            motion = 'ease';
+        }
+
+        /* TODO [2010-06] add delay support
+        var delay = transition.shift() || 0;
+        transitions[attr] = {duration: duration, motion: motion, delay: delay};
+        */
+    
+        transitions[attr] = {duration: duration, motion: motion};
+        counter++;
+     }
+   }
+   // Overwrite old list of transitions
+   this.__transitionAttributes = transitions;
+   // Register/unregister for callbacks for transition attributes
+   this.__LZskipsetter = transitions
+   //Debug.info('set_transition', css, transitions, this.__LZskipsetter);
+ }
+
+ /**
+  * Called by LzEventable.setAttribute() for transition attributes.   
+  * NOTE: Only called from user code. this won't be called from the LFC 
+  * (e.g. from animate()) because LFC setAttribute() calls are inlined.
+  *
+  * @access private
+  */
+ override protected function __skipSetter(prop:String, val) {
+   var ta = this.__transitionAttributes && this.__transitionAttributes[prop];
+   // avoid animating to the same value
+   if (ta && this[prop] !== val) {
+     //Debug.warn('__animateTransition', prop, val, ta);
+     this.animate(prop, val, ta.duration, false, {motion: ta.motion});
+   }
+ }
+
 } // End of LzNode
 
 lz[LzNode.tagname] = LzNode;  // publish

@@ -126,6 +126,21 @@ class LzEventable {
   function childOf ( node, ignore=null ) { return false;}
 
   /**
+   * An Object of attribute names.  If a property is true, setAttribute() skips 
+   * calling the setter.
+   * @access private
+   */
+  protected var __LZskipsetter:Object = {};
+
+  /**
+   * If __LZskipsetter[prop] is true, this method will be called by 
+   * setAttribute() instead of the setter/property being updated.
+   * @access private
+   */
+  protected function __skipSetter(prop:String, val) {
+  }
+
+  /**
    * Sets the named attribute to the given value. If there is a setter
    * for the property, the setter is called, otherwise, this[ prop ]
    * is set to the value, and the event this [ "on"+prop ] is sent.
@@ -145,6 +160,13 @@ class LzEventable {
       }
     }
     if (this.__LZdeleted) { return; }
+
+    if (this.__LZskipsetter[prop]) {
+      // Optionally do something, then
+      this.__skipSetter(prop, val);
+      // skip the setter
+      return;
+    }
 
     // Must agree with NodeModel in tag compiler
     var s = ('$lzc$set_' + prop);

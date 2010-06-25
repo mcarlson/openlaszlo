@@ -429,32 +429,31 @@ public dynamic class LzAnimator extends LzAnimatorGroup {
         } else {
             if (! this.paused) {
                 var aTotalTimeDifference:Number = time - this.startTime;
+                var checkrepeat = false;
                 if (aTotalTimeDifference < this.duration) {
-                    this.setValue(this.calcMethod(aTotalTimeDifference));
+                    var value = this.calcMethod(aTotalTimeDifference);
                 } else {
-                    this.setValue(this.to);
+                    // reset
+                    var value = this.to;
+                    checkrepeat = true;
+                }
+
+                // inline setValue
+                var targ:LzNode = this.target;
+                var attr:String = this.attribute;
+                // All animators are now relative at the core so add the difference
+                // of this value - the current value to the view's attribute.
+                targ.setAttribute(attr, targ[attr] + 
+                                        (value - this.currentValue)
+                                 );
+                this.currentValue = value;
+
+                if (checkrepeat) {
                     return this.checkRepeat();
                 }
             }
         }
         return false; // TODO: [20081020 dda] review this return value change from LPP-7031
-    }
-
-    /**
-      * sets the property specified in the binding to the <b>value</b>
-      *
-      * @access private
-      *
-      * @param value: to the value to be assigned
-      */
-    function setValue (value:Number) :void {
-        // All animators are now relative at the core so add the difference
-        // of this value - the current value to the view's attribute.
-        var targ:LzNode = this.target;
-        var attr:String = this.attribute;
-        var aDiff:Number = value - this.currentValue;
-        this.currentValue = value;
-        targ.setAttribute(attr, targ[attr] + aDiff);
     }
 
     /**
