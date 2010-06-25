@@ -16,6 +16,7 @@ import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.ListFormat;
+import org.openlaszlo.utils.NaturalOrderComparator;
 import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.compiler.ObjectWriter.ImportResourceError;
 import org.openlaszlo.compiler.ObjectWriter.Resource;
@@ -175,6 +176,7 @@ class SWF9Writer extends ObjectWriter {
         if (inputFile.isDirectory()) {
             //mLogger.debug("SWF9Writer Is directory: " + inputFile.toString());    
             sources = inputFile.listFiles();
+            Arrays.sort(sources, NaturalOrderComparator.NUMERICAL_ORDER);
             //mLogger.debug("SWF9Writer: "+inputFile.toString()+" is a directory containing "+ sources.length +" files.");    
             for (int i = 0; i < sources.length; i++) {
                 // Construct path from directory and file names.

@@ -15,6 +15,7 @@ import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.ListFormat;
+import org.openlaszlo.utils.NaturalOrderComparator;
 import org.openlaszlo.iv.flash.api.*;
 import org.openlaszlo.iv.flash.api.action.*;
 import org.openlaszlo.iv.flash.api.button.*;
@@ -575,6 +576,7 @@ class SWFWriter extends ObjectWriter {
             File inputFile = new File(fileName);
             if (inputFile.isDirectory()) {
                 String[] sources = inputFile.list();
+                Arrays.sort(sources, NaturalOrderComparator.NUMERICAL_ORDER);
                 ArrayList outsources = new ArrayList();
 
                 for (int i = 0; i < sources.length; i++) {
