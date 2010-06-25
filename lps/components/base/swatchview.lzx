@@ -44,21 +44,8 @@
     -->
     <setter name="bgcolor" args="c"> <![CDATA[
         this.color = c;
-        if (this.ctransform != null) {
-             var red= (c >> 16) & 0xFF;
-             var green= (c >> 8) & 0xFF;
-             var blue= c & 0xFF;
-             red = red * ctransform['ra']/100 + ctransform['rb'];
-             red = Math.min(red, 255);
-
-             green = green * ctransform['ga']/100 + ctransform['gb'];
-             green = Math.min(green, 255);
-
-             blue = blue * ctransform['ba']/100 + ctransform['bb'];
-             blue = Math.min(blue, 255);
-
-             c = Math.floor(blue + (green << 8) + (red << 16));
-
+        if (this['ctransform'] != null) {
+            c = LzColorUtils.applyTransform(c, ctransform);
         }
         super.setAttribute('bgcolor', c);
         ]]>
@@ -68,10 +55,10 @@
         resource and subviews are affected by the color transform
         @param Object o: color transform object (see view.setColorTransform for details)
     -->
-    <method name="setColorTransform" args="o">
+    <setter name="colortransform" args="o">
         this.ctransform = o;
         this.setAttribute('bgcolor', this.color);
-    </method>
+    </setter>
 
     <doc>
       <tag name="shortdesc"><text>A simple space-filling colored view.</text></tag>
@@ -90,7 +77,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

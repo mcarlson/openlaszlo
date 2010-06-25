@@ -336,20 +336,18 @@
                     green += 0x33;
                     blue += 0x33;
 
-                    red = red/255*100;
-                    green = green/255*100;
-                    blue = blue/255*100;
+                    // these are percentages
+                    red = red/255;
+                    green = green/255;
+                    blue = blue/255;
 
-                    var tintcolor = LzColorUtils.fromrgb('rgb(' + red + ',' + green + ',' + blue + ')');
-
-                    if (brightness != 0) {
-                        var hsv = LzColorUtils.tohsv(tintcolor);
-                        // Add/subtract the brightness as a percentage
-                        hsv.v += (brightness / 255);
-                        tintcolor = LzColorUtils.fromhsv(hsv.h, hsv.s, hsv.v);
-                    }
-
-                    v.setAttribute('tintcolor', tintcolor);
+                    // Can't shade 114% rgb with tintcolor...
+                    v.setAttribute('colortransform', {redMultiplier : red, 
+                                                      greenMultiplier : green, 
+                                                      blueMultiplier : blue, 
+                                                      redOffset : brightness, 
+                                                      greenOffset : brightness, 
+                                                      blueOffset : brightness});
                 }
             }
             ]]>

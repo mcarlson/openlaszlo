@@ -1098,24 +1098,25 @@ public class LzSprite extends Sprite {
      * background) by the transformation dictionary given in <param>o</param>.  The dictionary has
      * the following possible keys:
      * 
-     * o.ra: percentage alpha for red component (-100 to 100);
-     * o.rb: offset for red component (-255 to 255);
-     * o.ga: percentage alpha for green component (-100 to 100);
-     * o.gb: offset for green component (-255 to 255);
-     * o.ba: percentage alpha for blue component (-100 to 100);
-     * o.bb: offset for blue component (-255 to 255);
-     * o.aa: percentage overall alpha (-100 to 100);
-     * o.ab: overall offset (-255 to 255);
+     * o.redMultiplier: multiplier for red component (0 to 1) defaults to 1
+     * o.redOffset: offset for red component (-255 to 255) defaults to 0
+     * o.greenMultiplier: multiplier for green component (0 to 1) defaults to 1
+     * o.greenOffset: offset for green component (-255 to 255) defaults to 0
+     * o.blueMultiplier: multiplier for blue component (0 to 1) defaults to 1
+     * o.blueOffset: offset for blue component (-255 to 255) defaults to 0
+     * o.alphaMultiplier: multiplier for alpha component (0 to 1) defaults to 1
+     * o.alphaOffset: offset for alpha component (-255 to 255) defaults to 0
      */
     function setColorTransform ( o:* ) :void {
-        this.transform.colorTransform = new ColorTransform(o.ra / 100.0,
-                                                           o.ga / 100.0,
-                                                           o.ba / 100.0,
-                                                           o.aa ? o.aa / 100.0: 1.0,
-                                                           o.rb,
-                                                           o.gb,
-                                                           o.bb,
-                                                           o.ab ? o.ab : 0);
+        this.transform.colorTransform = 
+            new ColorTransform(o.redMultiplier,
+                               o.greenMultiplier,
+                               o.blueMultiplier,
+                               o.alphaMultiplier,
+                               o.redOffset,
+                               o.greenOffset,
+                               o.blueOffset,
+                               o.alphaOffset);
     }
 
     /** setBGColor( String/Number:color )

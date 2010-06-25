@@ -1076,17 +1076,25 @@ LzSprite.prototype.getMCRef = function () {
   * background) by the transformation dictionary given in <param>o</param>.  The dictionary has
   * the following possible keys:
   * 
-  * o.ra: percentage alpha for red component (-100 to 100);
-  * o.rb: offset for red component (-255 to 255);
-  * o.ga: percentage alpha for green component (-100 to 100);
-  * o.gb: offset for green component (-255 to 255);
-  * o.ba: percentage alpha for blue component (-100 to 100);
-  * o.bb: offset for blue component (-255 to 255);
-  * o.aa: percentage overall alpha (-100 to 100);
-  * o.ab: overall offset (-255 to 255);
+  * o.redMultiplier: multiplier for red component (0 to 1) defaults to 1
+  * o.redOffset: offset for red component (-255 to 255) defaults to 0
+  * o.greenMultiplier: multiplier for green component (0 to 1) defaults to 1
+  * o.greenOffset: offset for green component (-255 to 255) defaults to 0
+  * o.blueMultiplier: multiplier for blue component (0 to 1) defaults to 1
+  * o.blueOffset: offset for blue component (-255 to 255) defaults to 0
+  * o.alphaMultiplier: multiplier for alpha component (0 to 1) defaults to 1
+  * o.alphaOffset: offset for alpha component (-255 to 255) defaults to 0
   */
 LzSprite.prototype.setColorTransform = function ( o ){
-    this.getColorObj().setTransform( o );
+    this.getColorObj().setTransform(
+                        {ra: o.redMultiplier * 100, 
+                        rb: o.redOffset, 
+                        ga: o.greenMultiplier * 100, 
+                        gb: o.greenOffset, 
+                        ba: o.blueMultiplier * 100, 
+                        bb: o.blueOffset, 
+                        aa: o.alphaMultiplier * 100, 
+                        ab: o.alphaOffset});
 }
 
 
