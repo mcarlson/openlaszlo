@@ -163,6 +163,19 @@ class LibraryWriter extends IntermediateWriter {
 
   }
 
+  /** Compiles a class as as3 script, for referencing against, but
+      directs that the swf10 backend not include it in the final .swc
+      that it produces.
+      
+
+   */
+  void addClassModel(String script, String classname) {
+    if (mSWF10Writer != null) {    
+      mSWF10Writer.addClassModel(script, classname);
+    }
+  }
+
+
   public int addScript(String script) {
     int val = super.addScript(script);
     if (mDHTMLWriter != null) {

@@ -678,6 +678,6 @@ abstract class ObjectWriter {
         return s;
     }
 
-
+    void addClassModel(String script, String classname) { }
 }
 

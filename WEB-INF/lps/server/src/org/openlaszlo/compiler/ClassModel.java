@@ -499,181 +499,196 @@ public class ClassModel implements Comparable {
 
 
   protected boolean declarationEmitted = false;
+
   /**
    * Emits a class model as a JS2 class declaration.  This is used
    * both by the class compiler and the instance compiler (when an
    * instance has methods, either explicit or implicit).
    */
-  void emitClassDeclaration(CompilationEnvironment env) {
+  void emitClassDeclaration(CompilationEnvironment env, boolean modelOnly) {
+
     // Last chance for resolution
 
-    resolve(env);
-    declarationEmitted = true;
-    // Should the package prefix be in the model?  Should the
-    // model store class and tagname separately?
-    assert superModel != null : "Unknown superclass " + superTagName + " for " + kind + " " + tagName;
-    // Allow forward references.
-    if (! superModel.isCompiled()) {
-      superModel.compile(env);
-    }
-    String superClassName = superModel.className;
-    // className will be a global
-    env.addId(className, definition);
+    boolean prev = env.compilingExternalLibrary;
 
-    if (! (tagName == null ||  "anonymous".equals(tagName))) {
-      getNodeModel(env).assignClassRoot(0);
-    }
+    try {
+      env.compilingExternalLibrary = modelOnly;
 
-    // LZX classes are not allowed to define their constructor, but
-    // since LZX classes have required constructor arguments, we need
-    // to define a constructor that passes those arguments to the
-    // superclass.
-    String body = "";
-    body += "super(parent, attrs, children, async);\n";
-    nodeModel.setAttribute(
-      className,
-      new Method(
-        className,
-        // All nodes get these args when constructed
-        "parent:LzNode? = null, attrs:Object? = null, children:Array? = null, async:Boolean = false",
-        body));
-
-    // Build the class body
-    String classBody = "";
-    String block = nodeModel.passthroughBlock;
-    if (block != null) {
-      block = "#passthrough (toplevel:true) {" + block + "}#\n";
-      if (nodeModel.passthroughBlockWhen != null) {
-        block = "if (" + nodeModel.passthroughBlockWhen + ") {\n"+block+"}\n";
+      resolve(env);
+      //    declarationEmitted = (! modelOnly);
+      declarationEmitted = true;
+      // Should the package prefix be in the model?  Should the
+      // model store class and tagname separately?
+      assert superModel != null : "Unknown superclass " + superTagName + " for " + kind + " " + tagName;
+      // Allow forward references.
+      if (! superModel.isCompiled()) {
+        superModel.compile(env);
       }
-      classBody += block;
-    }
+      String superClassName = superModel.className;
+      // className will be a global
+      env.addId(className, definition);
 
-    // Various serializers depend on getting the tagname from the
-    // class constructor, so we emit this for all published classes
-    if (! anonymous) {
-      assert tagName != null;
-      // Set the tag name
-      nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
-    } else {
-      String with = "";
-      if (debugWith.length() > 0) {
-        with = " with='" + debugWith + "'";
+      if (! (tagName == null ||  "anonymous".equals(tagName))) {
+        getNodeModel(env).assignClassRoot(0);
       }
-      String debugName;
-      // Instance classes end up with a null tagName
-      if (tagName == null) {
-        debugName = "<anonymous extends='" + debugExtends + "'" + with + ">";
-      } else {
-        debugName = "<" + debugExtends + with + ">";
-      }
-      nodeModel.setClassAttribute(Function.FUNCTION_NAME, ScriptCompiler.quote(debugName));
-    }
 
-    // TODO: [2008-06-02 ptw] This should only be done for LZX classes that are
-    // subclasses of LzNode
-    //
-    // Before you output this, see if it is necessary:  will this node
-    // end up with children at all?
-    boolean hasChildren = (! nodeModel.getChildren().isEmpty());
-    boolean inheritsChildren = inheritsChildren();
-    if (hasChildren || inheritsChildren) {
-      String children = ScriptCompiler.objectAsJavascript(nodeModel.childrenMaps(env));
-      if (inheritsChildren) {
-        // NOTE: [2009-04-01 ptw] We don't compute the merged children
-        // at compile time, because we may not know them (superclass
-        // may be loaded from a library).  It might be possible to
-        // optimize this when we know the superclass.
-        nodeModel.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superClassName + "['children'])");
-      } else {
-        nodeModel.setClassAttribute("children", children);
-      }
-    }
+      // LZX classes are not allowed to define their constructor, but
+      // since LZX classes have required constructor arguments, we need
+      // to define a constructor that passes those arguments to the
+      // superclass.
+      String body = "";
+      body += "super(parent, attrs, children, async);\n";
+      nodeModel.setAttribute(
+          className,
+          new Method(
+              className,
+              // All nodes get these args when constructed
+              "parent:LzNode? = null, attrs:Object? = null, children:Array? = null, async:Boolean = false",
+              body));
 
-    // Declare all instance vars and methods, save initialization
-    // in <class>.attributes
-    Map attrs = nodeModel.getAttrs();
-    Map decls = new LinkedHashMap();
-    Map inits = new LinkedHashMap();
-    boolean isstate = isSubclassOf(schema.getClassModel("state"));
-    for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
-      Map.Entry entry = (Map.Entry) i.next();
-      String key = (String) entry.getKey();
-      Object value = entry.getValue();
-      boolean redeclared = (superModel.getAttribute(key, NodeModel.ALLOCATION_INSTANCE) != null);
-      if ((value instanceof NodeModel.BindingExpr)) {
-        // Bindings always have to be installed as an init
-        if (! redeclared) {
-          decls.put(key, null);
+      // Build the class body
+      String classBody = "";
+      String block = nodeModel.passthroughBlock;
+      if (block != null) {
+        block = "#passthrough (toplevel:true) {" + block + "}#\n";
+        if (nodeModel.passthroughBlockWhen != null) {
+          block = "if (" + nodeModel.passthroughBlockWhen + ") {\n"+block+"}\n";
         }
-        inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
-      } else if (value instanceof Method &&
-                 ((! isstate) ||
-                  className.equals(key))) {
-        // Methods are just decls.  Except in states, because they
-        // have to be applied to the parent, except for the
-        // constructor!
-        decls.put(key, value);
-      } else if (value != null) {
-        // If there is a setter for this attribute, or this is a
-        // state, or this is an Array or Map argument that needs
-        // magic merging, the value has to be installed as an init,
-        // otherwise it should be installed as a decl
-        //
-        // TODO: [2008-03-15 ptw] This won't work until we know (in
-        // the classModel) the setters for all the superclasses
-        // (built-in and in libraries), so we install as an init for
-        // now and this is fixed up in LzNode by installing inits that
-        // have no setters when the arguments are merged
-        if (true) { // (! (value instanceof String))  || setters.containsKey(key) || isstate) {
-          // If this is a re-declared attribute, we just init it,
-          // don't re-declare it
+        classBody += block;
+      }
+
+      // Various serializers depend on getting the tagname from the
+      // class constructor, so we emit this for all published classes
+      if (! anonymous) {
+        assert tagName != null;
+        // Set the tag name
+        nodeModel.setClassAttribute("tagname",  ScriptCompiler.quote(tagName));
+      } else {
+        String with = "";
+        if (debugWith.length() > 0) {
+          with = " with='" + debugWith + "'";
+        }
+        String debugName;
+        // Instance classes end up with a null tagName
+        if (tagName == null) {
+          debugName = "<anonymous extends='" + debugExtends + "'" + with + ">";
+        } else {
+          debugName = "<" + debugExtends + with + ">";
+        }
+        nodeModel.setClassAttribute(Function.FUNCTION_NAME, ScriptCompiler.quote(debugName));
+      }
+
+      // TODO: [2008-06-02 ptw] This should only be done for LZX classes that are
+      // subclasses of LzNode
+      //
+      // Before you output this, see if it is necessary:  will this node
+      // end up with children at all?
+      boolean hasChildren = (! nodeModel.getChildren().isEmpty());
+      boolean inheritsChildren = inheritsChildren();
+      if (hasChildren || inheritsChildren) {
+        String children = ScriptCompiler.objectAsJavascript(nodeModel.childrenMaps(env));
+        if (inheritsChildren) {
+          // NOTE: [2009-04-01 ptw] We don't compute the merged children
+          // at compile time, because we may not know them (superclass
+          // may be loaded from a library).  It might be possible to
+          // optimize this when we know the superclass.
+          nodeModel.setClassAttribute("children", "LzNode.mergeChildren(" + children + ", " + superClassName + "['children'])");
+        } else {
+          nodeModel.setClassAttribute("children", children);
+        }
+      }
+
+      // Declare all instance vars and methods, save initialization
+      // in <class>.attributes
+      Map attrs = nodeModel.getAttrs();
+      Map decls = new LinkedHashMap();
+      Map inits = new LinkedHashMap();
+      boolean isstate = isSubclassOf(schema.getClassModel("state"));
+      for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        String key = (String) entry.getKey();
+        Object value = entry.getValue();
+        boolean redeclared = (superModel.getAttribute(key, NodeModel.ALLOCATION_INSTANCE) != null);
+        if ((value instanceof NodeModel.BindingExpr)) {
+          // Bindings always have to be installed as an init
           if (! redeclared) {
             decls.put(key, null);
           }
-          inits.put(key, value);
+          inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
+        } else if (value instanceof Method &&
+                   ((! isstate) ||
+                    className.equals(key))) {
+          // Methods are just decls.  Except in states, because they
+          // have to be applied to the parent, except for the
+          // constructor!
+          decls.put(key, value);
+        } else if (value != null) {
+          // If there is a setter for this attribute, or this is a
+          // state, or this is an Array or Map argument that needs
+          // magic merging, the value has to be installed as an init,
+          // otherwise it should be installed as a decl
+          //
+          // TODO: [2008-03-15 ptw] This won't work until we know (in
+          // the classModel) the setters for all the superclasses
+          // (built-in and in libraries), so we install as an init for
+          // now and this is fixed up in LzNode by installing inits that
+          // have no setters when the arguments are merged
+          if (true) { // (! (value instanceof String))  || setters.containsKey(key) || isstate) {
+            // If this is a re-declared attribute, we just init it,
+            // don't re-declare it
+            if (! redeclared) {
+              decls.put(key, null);
+            }
+            inits.put(key, value);
+          } else {
+            if (! redeclared) {
+              decls.put(key, value);
+              // If there is a property that would have been shadowed,
+              // you have to hide that from applyArgs, or you will get
+              // clobbered!
+              inits.put(key, "LzNode._ignoreAttribute");
+            } else {
+              inits.put(key, value);
+            }
+          }
         } else {
+          // Just a declaration
           if (! redeclared) {
             decls.put(key, value);
-            // If there is a property that would have been shadowed,
-            // you have to hide that from applyArgs, or you will get
-            // clobbered!
-            inits.put(key, "LzNode._ignoreAttribute");
-          } else {
-            inits.put(key, value);
           }
         }
-      } else {
-        // Just a declaration
-        if (! redeclared) {
-          decls.put(key, value);
-        }
       }
-    }
-    // Create inits list, merged with superclass inits
-    nodeModel.setClassAttribute("attributes", "new LzInheritedHash(" + superClassName + ".attributes)");
-    // NOTE: [2008-06-02 ptw] As an optimization, we don't do this if
-    // this class has no inits of its own.  (Unlike LFC classes, an LZX
-    // class should not be manipulating its attributes directly, so we
-    // ought not to have to make the copy above, but that mysteriously
-    // breaks things.)
-    if (! inits.isEmpty()) {
-      classBody += "LzNode.mergeAttributes(" +
-        ScriptCompiler.objectAsJavascript(inits) +
-        ", " + env.getGlobalPrefix() + className + ".attributes);\n";
-    }
-    // Emit the class decl
-    ScriptClass scriptClass =
-      new ScriptClass(className,
-                      superClassName,
-                      interfaceClassNames,
-                      decls,
-                      nodeModel.getClassAttrs(),
-                      classBody,
-                      kind);
-    env.compileScript(scriptClass.toString(), definition);
-    if ((! anonymous) && (tagName != null)) {
-      env.addTag(tagName, className);
+      // Create inits list, merged with superclass inits
+      nodeModel.setClassAttribute("attributes", "new LzInheritedHash(" + superClassName + ".attributes)");
+      // NOTE: [2008-06-02 ptw] As an optimization, we don't do this if
+      // this class has no inits of its own.  (Unlike LFC classes, an LZX
+      // class should not be manipulating its attributes directly, so we
+      // ought not to have to make the copy above, but that mysteriously
+      // breaks things.)
+      if (! inits.isEmpty()) {
+        classBody += "LzNode.mergeAttributes(" +
+          ScriptCompiler.objectAsJavascript(inits) +
+          ", " + env.getGlobalPrefix() + className + ".attributes);\n";
+      }
+      // Emit the class decl
+      ScriptClass scriptClass =
+        new ScriptClass(className,
+                        superClassName,
+                        interfaceClassNames,
+                        decls,
+                        nodeModel.getClassAttrs(),
+                        classBody,
+                        kind);
+      if (modelOnly) {
+        env.addClassModel(scriptClass.toString(), className, definition);
+      } else {
+        env.compileScript(scriptClass.toString(), definition);
+      }
+      if ((! anonymous) && (tagName != null)) {
+        env.addTag(tagName, className);
+      }
+    } finally {
+      env.compilingExternalLibrary = prev;
     }
   }
 
@@ -697,9 +712,11 @@ public class ClassModel implements Comparable {
     // add attribute declarations and perhaps some other stuff that
     // the runtime wants.
 
+    boolean linking = (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)));
     assert (force ? (! modelOnly) : true) : "Forcing compile of model-only class " + tagName;
-    if (force || ((! isCompiled()) && (! modelOnly))) {
-      emitClassDeclaration(env);
+    // some backends need the class model in order to create a native lzo library
+    if (force || !linking || ((! isCompiled()) && (! modelOnly))) {
+        emitClassDeclaration(env, modelOnly);
     }
   }
 

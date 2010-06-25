@@ -975,13 +975,13 @@ public class SWF9External {
     public byte[] compileTranslationUnits(List tunits, String compileType)
       throws IOException
     {
-      return compileTranslationUnits(tunits, compileType, null);
+      return compileTranslationUnits(tunits, compileType, null, new HashSet());
     }
 
     /**
      * Compile the given translation units, producing a binary output.
      */
-    public byte[] compileTranslationUnits(List tunits, String compileType, Set swclibs)
+  public byte[] compileTranslationUnits(List tunits, String compileType, Set swclibs, Set externalClassNames)
       throws IOException
     {
       List cmd = new ArrayList();
@@ -1050,7 +1050,15 @@ public class SWF9External {
         // For LFC library, we list all the classes.
         for (Iterator iter = tunits.iterator(); iter.hasNext(); ) {
           TranslationUnit tunit = (TranslationUnit)iter.next();
-          cmd.add(tunit.getName());
+          if (!externalClassNames.contains(tunit.getName())) {
+            cmd.add(tunit.getName());
+          }
+        }
+        // explicitly do not link in any external classes
+        cmd.add("-externs");
+        for (Iterator iter = externalClassNames.iterator(); iter.hasNext(); ) {
+          String cname = (String)iter.next();
+          cmd.add(cname);
         }
 
         // If we're building a user-specified library (not the LFC), link against the LFC

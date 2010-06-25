@@ -627,7 +627,7 @@ public class ViewSchema extends Schema {
       String lzx = "";
       for (Iterator i = (new TreeSet(mClassMap.values())).iterator(); i.hasNext(); ) {
         ClassModel model = (ClassModel)i.next();
-        if (model.hasNodeModel() && model.isCompiled()) {
+        if ( (! model.modelOnly) && model.hasNodeModel() && model.isCompiled()) {
           lzx += model.toLZX(indent);
           lzx += "\n";
         }

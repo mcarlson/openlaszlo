@@ -93,6 +93,10 @@ public class CompilationEnvironment {
 
     final SymbolGenerator methodNameGenerator;
 
+    /** Used by as3 backend, when compiling a library, so we know whether to exclude class definitions
+        from being linked into a lzo, if they come from external includes */
+    public boolean compilingExternalLibrary = false;
+
     /** Output is written here.
      */
     private ObjectWriter mObjectWriter;
@@ -690,6 +694,16 @@ public class CompilationEnvironment {
             throw new CompilationError(elt, e);
         }
     }
+
+
+    void addClassModel(String script, String classname, Element elt) {
+        try {
+            getGenerator().addClassModel(script, classname);
+        } catch (org.openlaszlo.sc.CompilerException e) {
+            throw new CompilationError(elt, e);
+        }
+    }
+
 
     /**
      * @return a unique name in the SWF

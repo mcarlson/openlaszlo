@@ -110,6 +110,11 @@ class SWF9Writer extends ObjectWriter {
         return 1;
     }
 
+
+    void addClassModel(String script, String classname) {
+        mSCompiler.addClassModel(script, classname);
+    }
+
     public void importPreloadResource(File fileName, String name) 
         throws ImportResourceError
     {

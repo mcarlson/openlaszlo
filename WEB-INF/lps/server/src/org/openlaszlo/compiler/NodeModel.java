@@ -2355,73 +2355,79 @@ solution =
     provide a separate output stream to write the code to.
    */
     Map asMap(CompilationEnvironment cEnv) {
-        if (frozen) {
-          throw new CompilerImplementationError("Attempting to asMap when NodeModel frozen");
-        }
-        updateAttrs();
-        assert classAttrs.isEmpty();
-        ClassModel classModel = getParentClassModel();
-        Map map = new LinkedHashMap();
-        Map inits = new LinkedHashMap();
-        boolean hasMethods = false;
-        // Whether we make a class to hold the methods or not,
-        // implicit replication relies on non-method properties coming
-        // in as instance attributes, so we have to pluck them out
-        // here (and turn the attributes into just declarations, by
-        // setting their value to null).
-        //
-        // Node as map just wants to see all the attrs, so clean out
-        // the binding markers
-        for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
-            Map.Entry entry = (Map.Entry) i.next();
-            String key = (String) entry.getKey();
-            Object value = entry.getValue();
+      if (frozen) {
+        throw new CompilerImplementationError("Attempting to asMap when NodeModel frozen");
+      }
+      updateAttrs();
+      assert classAttrs.isEmpty();
+      ClassModel classModel = getParentClassModel();
+      Map map = new LinkedHashMap();
+      Map inits = new LinkedHashMap();
+      boolean hasMethods = false;
+      // Whether we make a class to hold the methods or not,
+      // implicit replication relies on non-method properties coming
+      // in as instance attributes, so we have to pluck them out
+      // here (and turn the attributes into just declarations, by
+      // setting their value to null).
+      //
+      // Node as map just wants to see all the attrs, so clean out
+      // the binding markers
+      for (Iterator i = attrs.entrySet().iterator(); i.hasNext(); ) {
+        Map.Entry entry = (Map.Entry) i.next();
+        String key = (String) entry.getKey();
+        Object value = entry.getValue();
 
-            if (value instanceof Method) {
-              hasMethods = true;
-            } else if (! (value instanceof NodeModel.BindingExpr)) {
-                inits.put(key, value);
-                attrs.put(key, null);
-            } else {
-                inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
-                attrs.put(key, null);
-            }
-        }
-        if (hasMethods) {
-            // If there are methods, make a class (but don't publish it)
-            classModel = new ClassModel(tagName, false, schema, element, cEnv);
-            classModel.setNodeModel(this);
-            classModel.emitClassDeclaration(cEnv);
+        if (value instanceof Method) {
+          hasMethods = true;
+        } else if (! (value instanceof NodeModel.BindingExpr)) {
+          inits.put(key, value);
+          attrs.put(key, null);
         } else {
-            // If no class needed, Put children into map
-            if (!children.isEmpty()) {
-                map.put("children", childrenMaps(cEnv));
-            }
+          inits.put(key, ((NodeModel.BindingExpr)value).getExpr());
+          attrs.put(key, null);
         }
+      }
+      if (hasMethods) {
+        // If there are methods, make a class (but don't publish it)
+        classModel = new ClassModel(tagName, false, schema, element, cEnv);
+        classModel.setNodeModel(this);
 
-        // Non-method attributes
-        if (!inits.isEmpty()) {
-            map.put("attrs", inits);
+        // We need to pass modelOnly for the case where we are
+        // compiling a .swc for an as3 lzo, and we need to be sure
+        // to tell the as3 backend to not link in any external
+        // class defs or anonymous subclasses thereof.
+        classModel.emitClassDeclaration(cEnv, cEnv.compilingExternalLibrary);
+      } else {
+        // If no class needed, Put children into map
+        if (!children.isEmpty()) {
+          map.put("children", childrenMaps(cEnv));
         }
-        // Allow forward references
-        if (! classModel.isCompiled()) {
-          // While we need to ensure local classes are emitted before
-          // they are used, we _don't_ force a compile here because
-          // the class may be external (model-only), which means it
-          // will be defined elsewhere.
-          classModel.compile(env);
-        }
-        if (classModel.anonymous || classModel.builtin || env.tagDefined(tagName) || "anonymous".equals(tagName)) {
-          // The class to instantiate
-          map.put("class", classModel.className);
-        } else {
-          // Non-anonymous classes may be deferred, so we must
-          // indirect through the tagname
-          map.put("tag", ScriptCompiler.quote(tagName));
-        }
+      }
 
-        return map;
+      // Non-method attributes
+      if (!inits.isEmpty()) {
+        map.put("attrs", inits);
+      }
+      // Allow forward references
+      if (! classModel.isCompiled()) {
+        // While we need to ensure local classes are emitted before
+        // they are used, we _don't_ force a compile here because
+        // the class may be external (model-only), which means it
+        // will be defined elsewhere.
+        classModel.compile(env);
+      }
+      if (classModel.anonymous || classModel.builtin || env.tagDefined(tagName) || "anonymous".equals(tagName)) {
+        // The class to instantiate
+        map.put("class", classModel.className);
+      } else {
+        // Non-anonymous classes may be deferred, so we must
+        // indirect through the tagname
+        map.put("tag", ScriptCompiler.quote(tagName));
+      }
+
+      return map;
     }
+
 
     void assignClassRoot(int depth) {
         if (! parentClassModel.isSubclassOf(schema.getClassModel("state"))) { depth++; }

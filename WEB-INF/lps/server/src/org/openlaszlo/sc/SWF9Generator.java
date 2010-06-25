@@ -1031,10 +1031,13 @@ public class SWF9Generator extends JavascriptGenerator {
   }
 
   
-  public InputStream callFlexCompiler() {
+  /**
+     externalClassNames is a list of classes to exclude from the .swc that is being built for an lzo library
+   */
+  public InputStream callFlexCompiler(Set externalClassNames) {
     String compileType = (String) options.get(Compiler.COMPILE_TYPE);
     try {
-      byte[] objcode = extCompiler.compileTranslationUnits(allTunits, compileType, mLZOlibraries);
+      byte[] objcode = extCompiler.compileTranslationUnits(allTunits, compileType, mLZOlibraries, externalClassNames);
       InputStream input = new ByteArrayInputStream(objcode);
       return input;
     } catch (CompilerError e) {

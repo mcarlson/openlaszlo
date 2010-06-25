@@ -18,6 +18,7 @@ import org.openlaszlo.utils.LZUtils;
 
 public class SWF10Compiler extends Compiler {
 
+  private Set externalClassNames = new HashSet();
 
   public SWF10Compiler (Map initialOptions) {
     super(initialOptions);
@@ -57,7 +58,12 @@ public class SWF10Compiler extends Compiler {
     ((SWF9Generator)cg).makeInterstitials(mParser.parse(""));
     ((SWF9Generator)cg).writeGlobalTUnitsToAS3();
     ((SWF9Generator)cg).writeMainTranslationUnit();
-    return ((SWF9Generator)cg).callFlexCompiler();
+    return ((SWF9Generator)cg).callFlexCompiler(externalClassNames);
+  }
+
+  public void addClassModel(String script, String classname) {
+    externalClassNames.add(classname);
+    compileBlock(script);
   }
 
   public void compileBlock(String source) {
