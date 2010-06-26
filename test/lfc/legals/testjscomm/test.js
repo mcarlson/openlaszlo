@@ -61,7 +61,11 @@ function getFoo() {
 function getBar() {
     return 'bar';
 }  
+
+function started() {
+    document.bgColor = '#cccccc';
+}  
 //* X_LZ_COPYRIGHT_BEGIN ***************************************************
-//* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.         *
+//* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.         *
 //* Use is subject to license terms.                                       *
 //* X_LZ_COPYRIGHT_END *****************************************************

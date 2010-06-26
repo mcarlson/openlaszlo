@@ -1,12 +1,8 @@
-<!--=======================================================================-->
-<!--                                                                       -->
-<!-- hello.lzx                                                             -->
-<!--                                                                       -->
-<!-- Laszlo Application Language (LZX) Example                             -->
-<!--                                                                       -->
-<!--=======================================================================-->
-
-<canvas height="700"> 
+<canvas height="300"> 
+    <script initstage="early">
+        // test call with no callback - see http://jira.openlaszlo.org/jira/browse/LPP-9118
+        lz.Browser.callJS('started');
+    </script>
     <attribute name="mytext" value="Hello!" type="text"/>
     <attribute name="browser" value="Hello!" type="text"/>
     <attribute name="foo" value="" type="text"/>
@@ -41,7 +37,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
