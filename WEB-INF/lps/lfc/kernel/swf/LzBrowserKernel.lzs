@@ -45,75 +45,50 @@ static function loadJS ( js, target ){
   * Runs a Javascript method in the browser, optionally returning the result  
   * 
   * @param String js: Browser javascript method name to execute
-  * @param Function callback: Optionall callback function to get the return value of the javascript call
+  * @param Function callback: Optional callback function to get the return value
+  * of the javascript call.  If false, the call will not be queued at app 
+  * startup time.
   * @param Optional arguments to call
   */
-
 static function callJS (js, callback) :* {
-    if (LzBrowserKernel.jsready != true) {
-        LzBrowserKernel.__jslocked = true;
-    }
     if (LzBrowserKernel.__jslocked == true) {
         if (callback != false) {
-            var o = [].slice.call(arguments);
-            LzBrowserKernel.__jscallq.push(o);
-            //Debug.write('queued', LzBrowserKernel.__jscallq.length, o); 
+            var args = [].slice.call(arguments);
+            LzBrowserKernel.__jscallq.push(args);
+            //Debug.write('queued', LzBrowserKernel.__jscallq.length, args); 
         }
-        return null;
-    }
-
-    if (callback instanceof Function) {
-        LzBrowserKernel.__jscallback = callback;
     } else {
-        LzBrowserKernel.__jscallback = null;
-    }
-    var args = [].slice.call(arguments, 2);
-    args.unshift(js, LzBrowserKernel.callJSReturn);
+        var args = [].slice.call(arguments, 2);
+        // Clear DojoExternalInterface callback, since we're calling back below
+        args.unshift(js, null);
 
-    LzBrowserKernel.__jslocked = true;
-    var result = DojoExternalInterface.call.apply(this, args);
-    //Debug.write('calling with args real', arguments, args, result);
+        var result = DojoExternalInterface.call.apply(null, args);
+        //Debug.write('calling with args real', arguments, args, result);
 
-    if (callback == false) {
-        LzBrowserKernel._dequeueJS();
+        if (callback instanceof Function) {
+            callback.call(null, result);
+        }
+
+        return result;
     }
-    return result;
 }
 
 /** @access private */ 
-static var jsready = false;
-/** @access private */ 
-static var __jscallback = null;
-/** @access private */ 
-static var __jslocked = false;
+static var __jslocked = true;
 /** @access private */ 
 static var __jscallq = [];
 
 // called from DojoExternalInterface
 /** @access private */ 
 static function __jsready () { 
-    //Debug.write('jsready', LzBrowserKernel.__jscallq);
-    LzBrowserKernel.jsready=true;
-    LzBrowserKernel._dequeueJS();
-}
-
-static function callJSReturn (a) {
-    //Debug.write('callJSReturn', a);
-    if (LzBrowserKernel.__jscallback) {
-        LzBrowserKernel.__jscallback(a);
-    }
     LzBrowserKernel._dequeueJS();
 }
 
 /** @access private */ 
-static function _dequeueJS (a) {
+static function _dequeueJS () {
     LzBrowserKernel.__jslocked = false;
-    LzBrowserKernel.__jscallback = null;
-    var queue = LzBrowserKernel.__jscallq;
-    if (queue.length > 0) {
-        var a = queue.shift();
-        //Debug.write('calling with args', a);
-        LzBrowserKernel.callJS.apply(LzBrowserKernel, a);
+    while (LzBrowserKernel.__jscallq.length > 0) {
+        LzBrowserKernel.callJS.apply(LzBrowserKernel, LzBrowserKernel.__jscallq.shift());
     }
 }
 
@@ -182,8 +157,8 @@ static function getLoadURL () {
  * that loaded the the lzx app or an Object containing all values 
  */
 static function getInitArg (name) {
-    if (! LzBrowserKernel.__initargs) {
-        var newargs = LzBrowserKernel.callJS('eval', null, 'lz.embed.applications["' + _root.id + '"].initargs');
+    if (! LzBrowserKernel.__initargs && LzBrowserKernel.__jslocked == false) {
+        var newargs = LzBrowserKernel.callJS('eval', false, 'lz.embed.applications["' + _root.id + '"].initargs');
 
         if (newargs) {
             // cache callJS results

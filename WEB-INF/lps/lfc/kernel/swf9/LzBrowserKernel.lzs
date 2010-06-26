@@ -52,17 +52,20 @@ static function loadJS (js:String, target:String='_self') :void {
 
 
 /**
-  * Runs a Javascript method in the browser, returning the result  
-  * @keywords flashspecific
+  * Runs a Javascript method in the browser, optionally returning the result  
+  * 
+  * @param String js: Browser javascript method name to execute
+  * @param Function callback: Optional callback function to get the return value
+  * of the javascript call.  If false, the call will not be queued at app 
+  * startup time.
+  * @param Optional arguments to call
   */
 static function callJS (...args) :* {
     var js:String = args[0];// String js: Browser javascript to execute
-    var callback:* = args[1];
+    var callback:* = (args.length > 1) ? args[1] : null;
     //DojoExternalInterface.call.apply(null, args);
-    if (LzBrowserKernel.jsready != true) {
-        LzBrowserKernel.__jslocked = true;
-    }
     if (LzBrowserKernel.__jslocked == true) {
+        // queue during startup, except for false callbacks
         if (callback != false) {
             var o:Array = [];
             for (var i:int = 0; i < args.length; i++) {
@@ -71,57 +74,38 @@ static function callJS (...args) :* {
             LzBrowserKernel.__jscallq.push(o);
             //Debug.write('queued', LzBrowserKernel.__jscallq.length, o); 
         }
-        return null;
+    } else {
+        // Clear DojoExternalInterface callback, since we're calling back below
+        args[1] = null;
+
+        var result = DojoExternalInterface.call.apply(null, args);
+        //Debug.write('calling with args real', args, result);
+
+        if (callback && callback instanceof Function) {
+            callback.call(null, result);
+        }
+
+        return result;
     }
-
-    LzBrowserKernel.__jscallback = callback;
-
-    args[1] = LzBrowserKernel.callJSReturn;
-
-    //LzBrowserKernel.__jslocked = true;
-    //Debug.write('calling with args real', args);
-    var result = DojoExternalInterface.call.apply(null, args);
-
-    if (callback == false) {
-        LzBrowserKernel._dequeueJS();
-    }
-    return result;
 }
 
 /** @access private */ 
-static var jsready :Boolean = false;
-/** @access private */ 
-static var __jscallback :* = null;
-/** @access private */ 
-static var __jslocked :Boolean = false;
+static var __jslocked :Boolean = true;
 /** @access private */ 
 static var __jscallq :Array = [];
 
-// called from DojoExternalInterface
+// called from DojoExternalInterface when it's ready
 /** @access private */ 
 static function __jsready () :void { 
     //Debug.write('jsready', LzBrowserKernel.__jscallq);
-    LzBrowserKernel.jsready = true;
-    LzBrowserKernel._dequeueJS();
-}
-
-static function callJSReturn (a:*) :void {
-    if (LzBrowserKernel.__jscallback) {
-        //Debug.write('callJSReturn', a, LzBrowserKernel.__jscallback);
-        LzBrowserKernel.__jscallback.call(null, a);
-    }
     LzBrowserKernel._dequeueJS();
 }
 
 /** @access private */ 
 static function _dequeueJS () :void {
-    //Debug.write('_dequeueJS');
     LzBrowserKernel.__jslocked = false;
-    LzBrowserKernel.__jscallback = null;
-    if (LzBrowserKernel.__jscallq.length > 0) {
-        var a:Array = LzBrowserKernel.__jscallq.shift();
-        //Debug.write('calling with args q', a);
-        LzBrowserKernel.callJS.apply(LzBrowserKernel, a);
+    while (LzBrowserKernel.__jscallq.length > 0) {
+        LzBrowserKernel.callJS.apply(LzBrowserKernel, LzBrowserKernel.__jscallq.shift());
     }
 }
 
@@ -197,8 +181,8 @@ static var __initargs:Object = null;
  * that loaded the the lzx app or an Object containing all values 
  */
 static function getInitArg (name:String=null) :* {
-  if (! LzBrowserKernel.__initargs) {
-    var newargs = LzBrowserKernel.callJS('eval', null, 'lz.embed.applications["' + LzBrowserKernel.getAppID() + '"].initargs');
+  if (! LzBrowserKernel.__initargs && LzBrowserKernel.__jslocked == false) {
+    var newargs = LzBrowserKernel.callJS('eval', false, 'lz.embed.applications["' + LzBrowserKernel.getAppID() + '"].initargs');
 
     if (newargs) {
       // cache callJS results
