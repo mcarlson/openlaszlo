@@ -939,10 +939,11 @@ class SWF9Writer extends ObjectWriter {
             style = "italic";
         }
 
-        sbuf.append("[Embed(mimeType='application/x-font-truetype', source='"+rpath+"', fontName='"+
+        sbuf.append("[Embed(mimeType='application/x-font', source='"+rpath+"', fontName='"+
                     face+"', fontWeight='"+weight+"'," +
                     "fontStyle='" + style + "'," +
-                    "advancedAntiAliasing='true'" +
+                    "advancedAntiAliasing='true'" +"," +
+                    "embedAsCFF='false'" +
                     ")]\n");
 
 
