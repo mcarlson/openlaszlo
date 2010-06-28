@@ -250,10 +250,10 @@ public class SWF9External {
           // Compiling the LFC
           f = File.createTempFile(WORK_DIR_PREFIX, "", new File(swf9tmpdirstr));
           if (!f.delete()) {
-            throw new CompilerError("getCompilationWorkDir: temp file does not exist");
+            throw new CompilerError("createCompilationWorkDir: temp file does not exist");
           }
           if (!f.mkdir()) {
-            throw new CompilerError("getCompilationWorkDir: cannot make workdir");
+            throw new CompilerError("createCompilationWorkDir: cannot make workdir");
           }
         } else {
           f = new File(swf9tmpdirstr + File.separator + appDirPrefix);
@@ -261,7 +261,7 @@ public class SWF9External {
         }
       }
       catch (IOException ioe) {
-        throw new CompilerError("getCompilationWorkDir: cannot get temp directory: " + ioe);
+        throw new CompilerError("createCompilationWorkDir: cannot get temp directory: "+ f+": "+ ioe);
       }
       return f;
     }
