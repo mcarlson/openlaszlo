@@ -181,8 +181,10 @@ lz.embed.iframemanager.restoreSelection = function(id) {
           @access public
     -->
     <attribute name="framename" value="" type="string"/>
+    <attribute name="focusable" value="true" type="boolean"/>
     <event name="onload"/>
     <event name="onready"/>
+    <event name="ontarget"/>
     <setter name="target" args="t">
         if (t == null) return;
         this.target = t;
@@ -205,7 +207,7 @@ lz.embed.iframemanager.restoreSelection = function(id) {
         }
         //Debug.write(t);
         this.__updatepos(null);
-        if (this['ontarget']) this.ontarget.sendEvent(t);
+        if (this.ontarget.ready) this.ontarget.sendEvent(t);
     </setter>
 
     <!--- Sets the visibility of the html tag
@@ -216,7 +218,7 @@ lz.embed.iframemanager.restoreSelection = function(id) {
     <setter name="visible" args="v">
         this.visible = v;
         if (this['iframeid']) lz.embed.iframemanager.setVisible(this.iframeid, v);
-        if (this['onvisible']) this.onvisible.sendEvent(v);
+        if (this.onvisible.ready) this.onvisible.sendEvent(v);
     </setter>
 
     <!--- Sets the URL the html tag should load
@@ -233,7 +235,7 @@ lz.embed.iframemanager.restoreSelection = function(id) {
         } else {
             this.__srcset = s;
         }
-        this.onsrc.sendEvent(s);
+        if (this.onsrc.ready) this.onsrc.sendEvent(s);
     </setter>
 
     <!--- @access private -->
@@ -284,7 +286,7 @@ lz.embed.iframemanager.restoreSelection = function(id) {
         if (this['src'] == null) return;
         this.setAttribute('loading', false);
         this.__updatepos(null);
-        this.onload.sendEvent();
+        if (this.onload.ready) this.onload.sendEvent(null);
     </method>
     <method name="bringToFront">
         super.bringToFront();

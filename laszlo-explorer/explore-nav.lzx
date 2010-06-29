@@ -436,6 +436,17 @@
         }
       ]]>
     </method>
+    <handler name="onload" args="ignore=null">
+      <![CDATA[
+        this.callJavascript('window.focus');
+      ]]>
+    </handler>
+
+    <handler name="onfocus" args="ignore=null">
+      <![CDATA[
+        this.callJavascript('window.focus');
+      ]]>
+    </handler>
   </html>
 
 
