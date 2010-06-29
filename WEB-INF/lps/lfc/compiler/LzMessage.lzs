@@ -1,7 +1,7 @@
 /**
  * support for debug messages
  *
- * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
  *            Use is subject to license terms.
  */
 
@@ -118,6 +118,13 @@ class LzBootstrapMessage {
    * newlines because the text kernel translates those on a platform
    * basis.  This function would be better called "markup escape"
    * perhaps.
+   *
+   * @devnote [2010-06-21 ptw] While XML defines 5 non-numeric
+   * entities
+   * (http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML)
+   * only `<` and `&` function as syntactic markers, so for the
+   * purposes of this method, only they need to be escaped to prevent
+   * them being interpreted as markup.
    */
   static function xmlEscape (input:*):* {
     if (input && ((typeof(input) == "string") || (input is String))) {
@@ -127,7 +134,7 @@ class LzBootstrapMessage {
         var c:String = input.charAt(i);
         switch (c) {
           case '<': output += "&lt;"; break;
-          case '>': output += "&gt;"; break;
+          case '&': output += "&amp;"; break;
           default: output += c;
         }
       }
@@ -164,7 +171,7 @@ if ($as3) {
 
 /**
  * Convert a String to HTML for display in the Debugger by escaping
- * the HTML characters in the String.
+ * the HTML syntax marker characters in the String.
  * @access private
  */
 String.prototype.toHTML = function () {
