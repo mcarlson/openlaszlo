@@ -51,6 +51,8 @@ lz.embed.iframemanager = {
             lz.embed.__setAttr(i, 'src', src);
             lz.embed.__setAttr(i, 'id', id);
             lz.embed.__setAttr(i, 'onload', onload);
+            // for Safari, see LPP-9098
+            lz.embed.__setAttr(i, 'tabindex', '-1');
             if (scrollbars != true) lz.embed.__setAttr(i, 'scrolling', 'no');
 
             this.appendTo(i, appendto);
