@@ -1672,7 +1672,18 @@ LzSprite.prototype.__globalmouseup = function ( e ){
     //Debug.info('__globalmouseup', LzMouseKernel.__lastMouseOver, e);
     if (LzMouseKernel.__lastMouseOver) {
         // send artificial onmouseover event - see LPP-8445
-        LzMouseKernel.__lastMouseOver.__mouseEvent('onmouseover', true);
+        var sendmouseover = true;
+        // the mouse went up on this sprite
+        if (this.quirks.ie_mouse_events) {
+            // cancel sending if the mouse isn't currently over __lastMouseOver
+            // see LPP-9107
+            if (! LzMouseKernel.__lastMouseOver.__isMouseOver()) {
+                sendmouseover = false;
+            }
+        }
+        if (sendmouseover) {
+            LzMouseKernel.__lastMouseOver.__mouseEvent('onmouseover', true);
+        }
         LzMouseKernel.__lastMouseOver = null;
     }
 }
