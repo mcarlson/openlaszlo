@@ -201,7 +201,8 @@ if ($profile) {
  * @access private
  */
 if ($dhtml) {
-  if (lz.embed.browser.isSafari && (lz.embed.browser.version == "531.21")) {
+  // This no longer appears to be present in Safari 5
+  if (lz.embed.browser.isSafari && (lz.embed.browser.version >= "531.21") && (lz.embed.browser.version < "533.16")) {
     Instance.prototype.addProperty('$lzsc$safarikludge', function $lzsc$safarikludge () {});
   }
 }
