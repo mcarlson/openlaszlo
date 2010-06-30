@@ -187,7 +187,7 @@ class LzDHTMLDebugService extends LzDebugService {
     }
     // Make the real console.  This is only called if the user code
     // did not actually instantiate a <debug /> tag
-    if (global['lzconsoledebug'] == 'true') {
+    if (LzBrowserKernel.getInitArg('lzconsoledebug') == 'true') {
       // Create a DHTML iframe console
       this.attachDebugConsole(new LzDHTMLDebugConsole(this.createDebugIframe()));
     } else {
