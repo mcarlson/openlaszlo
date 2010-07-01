@@ -1453,7 +1453,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             private function __drawPath(context) {
                 this.closePath();
                 context.clear();
-                context.beginFill(0xff00ff, 100);
+                context.beginFill(0xff00ff, 0);
                 this.__playPath(context);
                 context.endFill();
             }
@@ -1611,11 +1611,18 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
 
                 function clipButton() {
-                    if (! this.clickable) this.sprite.setClickable(true);
-                    var clickregion = this.sprite.clickregion
+                    if (! this.clickable) this.setAttribute('clickable', true);
+                    if (! this.sprite.clickregion) this.setAttribute('clickregion', null);
+                    var clickregion:Sprite = this.sprite.clickregion
                     if (! this.clickcontext) {
                         this.sprite.hitArea = clickregion;
-                        this.sprite.clickbutton.hitTestState = clickregion;
+                        // update sizes in case scale changes
+                        this.sprite.clickregionwidth = this.width;
+                        this.sprite.clickregionheight = this.height;
+                        // Add the clickregion as a child sprite to ensure the 
+                        // mouse is active
+                        this.sprite.addChild(clickregion);
+                        //Debug.warn('clipButton', clickregion, this.sprite);
                         this.clickcontext = clickregion.graphics;
                     }
                     this.__drawPath(this.clickcontext);
