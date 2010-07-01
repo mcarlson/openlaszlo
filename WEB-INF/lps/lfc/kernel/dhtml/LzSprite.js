@@ -623,6 +623,8 @@ LzSprite.quirks = {
     ,forcemeasurescrollheight: false
     ,resize2dcanvas: false
     ,textmeasurementalphastring: false
+    // See LPP-9101
+    ,textlinksneedmouseevents:false
 }
 
 LzSprite.prototype.capabilities = {
@@ -1379,7 +1381,8 @@ if (LzSprite.quirks.ie_alpha_image_loader) {
 }
 
 LzSprite.prototype.setClickable = function(c) {
-    c = c == true;
+    // coerce to boolean
+    c = !!c;
     if (this.clickable == c) return;
     //Debug.info('setClickable', c);
     if (this.__LZimg != null) {
@@ -1513,7 +1516,7 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
             LzKeyboardKernel.__updateControlKeys(e);
 
             if (LzKeyboardKernel.__cancelKeys) {
-                  e.cancelBubble = true;
+                e.cancelBubble = true;
             }
         }
     }

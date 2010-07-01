@@ -29,6 +29,11 @@ class LzTextscrollEvent extends LzNotifyingEvent {
   /**
     * @access private
     */
+  static var LzDeclaredTextscrollEvent:LzDeclaredEventClass;
+
+  /**
+    * @access private
+    */
   function LzTextscrollEvent(eventSender:LzEventable,eventName:String, d:* = null) {
     this.__senderscope = eventSender cast LzText;
     super(eventSender, eventName, d);
@@ -52,7 +57,6 @@ class LzTextscrollEvent extends LzNotifyingEvent {
       }
     }
   }
-  static var LzDeclaredTextscrollEvent:LzDeclaredEventClass;
 }
 
 /** Shared DeclaredEventClass for textscroll events.  This must be a assigned here - DHTML complains about making a static property of LzTextscrollEvent in the class declaration above
@@ -60,6 +64,44 @@ class LzTextscrollEvent extends LzNotifyingEvent {
  */
 LzTextscrollEvent.LzDeclaredTextscrollEvent = new LzDeclaredEventClass(LzTextscrollEvent);
 
+
+/**
+ * The LzTextlinkEvent is used to activate textfields for links after the 
+ * ontextlink event is registered.  Can only be used with LzText.
+ *
+ * @access private
+ */
+class LzTextlinkEvent extends LzNotifyingEvent {
+  /**
+    * @access private
+    */
+  private var __senderscope:LzEventable;
+
+  /**
+    * @access private
+    */
+  static var LzDeclaredTextlinkEvent:LzDeclaredEventClass;
+
+  function LzTextlinkEvent(eventSender:LzEventable, eventName:String, d:* = null) {
+    this.__senderscope = eventSender;
+    super(eventSender, eventName, d);
+  }
+
+  /**
+    * @access private
+    */
+  protected override function notify(ready:Boolean) :void {
+    var scope:LzText = this.__senderscope cast LzText;
+    if (scope && scope.tsprite) {
+      scope.tsprite.activateLinks(ready);
+    }
+  }
+}
+
+/** Shared DeclaredEventClass for textlink events.  This must be a assigned here - DHTML complains about making a static property of LzTextlinkEvent in the class declaration above
+ * @access private
+ */
+LzTextlinkEvent.LzDeclaredTextlinkEvent = new LzDeclaredEventClass(LzTextlinkEvent);
 
 /**
  * <p>This class is used for non-editable text fields (as opposed to
@@ -1116,6 +1158,11 @@ dynamic class LzText extends LzView with LzFormatter {
       if (! ('gridFit' in args) ) {
         this.$lzc$set_gridFit ("subpixel");
       }
+    }
+
+    if (LzSprite.quirks && LzSprite.quirks.textlinksneedmouseevents) {
+      // Turn on mouse events when the event is registered
+      this.ontextlink = LzTextlinkEvent.LzDeclaredTextlinkEvent;
     }
   }
 

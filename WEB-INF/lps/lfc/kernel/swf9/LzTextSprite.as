@@ -35,7 +35,7 @@ public class LzTextSprite extends LzSprite {
         #passthrough  {
 
         public var textfield:TextField = null;
-        var textformat:TextFormat = null;
+        public var textformat:TextFormat = null;
 
         public static const PAD_TEXTWIDTH:Number = 4;
         public static const PAD_TEXTHEIGHT:Number = 4;
@@ -84,14 +84,7 @@ public class LzTextSprite extends LzSprite {
         public function LzTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,false);
             // owner:*, isroot:Boolean
-            var tfield:TextField = this.textfield = createTextField(0,0,400,20);
-            tfield.addEventListener(TextEvent.LINK, textLinkHandler);
-            tfield.addEventListener(MouseEvent.CLICK, handleTextfieldMouse);
-            tfield.addEventListener(MouseEvent.DOUBLE_CLICK, handleTextfieldMouse);
-            tfield.addEventListener(MouseEvent.MOUSE_DOWN, handleTextfieldMouse);
-            tfield.addEventListener(MouseEvent.MOUSE_UP, handleTextfieldMouse);
-            tfield.addEventListener(MouseEvent.MOUSE_OVER, handleTextfieldMouse);
-            tfield.addEventListener(MouseEvent.MOUSE_OUT, handleTextfieldMouse);
+            textfield = createTextField(0,0,400,20);
         }
 
         private var _ignoreclick:Boolean = false;
@@ -121,7 +114,7 @@ public class LzTextSprite extends LzSprite {
                 } else {
                     this.__mouseEvent(e);
                 }
-            } else if (this.textfield.selectable) {
+            } else if (textfield.selectable) {
                 // ignore mouse-event for swf8 compatibility
                 this.__ignoreMouseEvent(e);
             } else {
@@ -231,7 +224,7 @@ public class LzTextSprite extends LzSprite {
         }
 
         function get forwardsMouse () :Boolean {
-            return ! (this.clickable || this.textfield.selectable);
+            return ! (this.clickable || textfield.selectable);
         }
 
         private static const ZERO_POINT:Point = new Point(0, 0);
@@ -239,7 +232,6 @@ public class LzTextSprite extends LzSprite {
         function getNextMouseObject (e:MouseEvent) :DisplayObject {
             const FUDGE:int = 1;
             const FUDGE_WIDTH:int = 4; // needs to be 4, flash bug?
-            var tfield:TextField = this.textfield;
             var stage:Stage = LFCApplication.stage;
             var x:Number = e.stageX, y:Number = e.stageY;
             if (e.type == MouseEvent.MOUSE_OUT) {
@@ -250,23 +242,23 @@ public class LzTextSprite extends LzSprite {
                 } else {
                     // we need to determine/approximate the point the cursor
                     // was before it left the textfield
-                    var zero:Point = tfield.localToGlobal(ZERO_POINT);
-                    x = Math.max(zero.x + FUDGE, Math.min(x, zero.x + tfield.width - FUDGE_WIDTH));
-                    y = Math.max(zero.y + FUDGE, Math.min(y, zero.y + tfield.height - FUDGE));
+                    var zero:Point = textfield.localToGlobal(ZERO_POINT);
+                    x = Math.max(zero.x + FUDGE, Math.min(x, zero.x + textfield.width - FUDGE_WIDTH));
+                    y = Math.max(zero.y + FUDGE, Math.min(y, zero.y + textfield.height - FUDGE));
                 }
             } else if (e.type == MouseEvent.MOUSE_OVER) {
                 // some mouse-over events are sent too early, in which case the mouse-cursor
                 // isn't yet over the textfield, therefore need to adjust values
-                var zero:Point = tfield.localToGlobal(ZERO_POINT);
-                x = Math.max(zero.x + FUDGE, Math.min(x, zero.x + tfield.width - FUDGE_WIDTH));
-                y = Math.max(zero.y + FUDGE, Math.min(y, zero.y + tfield.height - FUDGE));
+                var zero:Point = textfield.localToGlobal(ZERO_POINT);
+                x = Math.max(zero.x + FUDGE, Math.min(x, zero.x + textfield.width - FUDGE_WIDTH));
+                y = Math.max(zero.y + FUDGE, Math.min(y, zero.y + textfield.height - FUDGE));
             }
 
             var tindex:int = -1;
             var objs:Array = stage.getObjectsUnderPoint(new Point(x, y));
             for (var i:int = objs.length - 1; i >= 0; --i) {
                 var obj:DisplayObject = objs[i];
-                if (obj === tfield) {
+                if (obj === textfield) {
                     tindex = i;
                     break;
                 }
@@ -315,10 +307,11 @@ public class LzTextSprite extends LzSprite {
             if (this.clickable == c) return;
             setShowHandCursor(c);
             this.clickable = c;
+            this.updateMouseEnabled();
         }
 
         public function addScrollEventListener():void {
-            this.textfield.addEventListener(Event.SCROLL, __handleScrollEvent);
+            textfield.addEventListener(Event.SCROLL, __handleScrollEvent);
         }
 
         var scrollevents = false;
@@ -363,13 +356,13 @@ public class LzTextSprite extends LzSprite {
 
         override public function setWidth( w:Number ):void {
             super.setWidth(w);
-            this.textfield.width = w;
+            textfield.width = w;
             this.__handleScrollEvent();
         }
 
         override public function setHeight( h:Number ):void {
             super.setHeight(h);
-            this.textfield.height = h;
+            textfield.height = h;
             this.__handleScrollEvent();
         }
 
@@ -381,7 +374,6 @@ public class LzTextSprite extends LzSprite {
             tfield.width = w;
             tfield.height = h;
             tfield.border = false;
-            tfield.mouseEnabled = true;
             tfield.tabEnabled = LFCApplication.textfieldTabEnabled;
             //tfield.cacheAsBitmap = true;
             addChild(tfield);
@@ -389,16 +381,14 @@ public class LzTextSprite extends LzSprite {
         }
 
         public function __initTextProperties (args:Object) :void {
-            var textclip:TextField = this.textfield;
-
-            textclip.autoSize = TextFieldAutoSize.NONE;
+            textfield.autoSize = TextFieldAutoSize.NONE;
 
             //inherited attributes, documented in view
             this.fontname = args.font;
             this.fontsize = args.fontsize;
             this.fontstyle = args.fontstyle;
             this.textcolor = args.fgcolor;
-            textclip.background = false;
+            textfield.background = false;
 
             // To compute our width:
             // + if text is multiline:
@@ -419,11 +409,11 @@ public class LzTextSprite extends LzSprite {
             if (! args.hassetheight) {
                 this.sizeToHeight = true;
                 if (this.multiline) {
-                    textclip.autoSize = TextFieldAutoSize.LEFT;
+                    textfield.autoSize = TextFieldAutoSize.LEFT;
                 }
             } else if (args['height'] != null) {
                 // Does setting height of the text object do the right thing in swf9?
-                textclip.height = args.height;
+                textfield.height = args.height;
             }
             // Default the scrollheight to the visible height.
             this.scrollheight = this.height;
@@ -436,7 +426,7 @@ public class LzTextSprite extends LzSprite {
             if (this.sizeToHeight) {
                 var h = this.lineheight;
                 //TODO [anba 20080602] is this ok for multiline? 
-                if (this.multiline) h *= textclip.numLines;
+                if (this.multiline) h *= textfield.numLines;
                 h += 4;//2*2px gutter, see flash docs for flash.text.TextLineMetrics 
                 this.setHeight(h);
             }
@@ -448,11 +438,11 @@ public class LzTextSprite extends LzSprite {
 
 
         public function setBorder ( onroff:Boolean):void {
-            this.textfield.border = (onroff == true);
+            textfield.border = (onroff == true);
         }
 
         public function setEmbedFonts ( onroff:Boolean ):void {
-            this.textfield.embedFonts = (onroff == true);
+            textfield.embedFonts = (onroff == true);
         }
 
         /*
@@ -512,16 +502,15 @@ public class LzTextSprite extends LzSprite {
         public function appendText( t:String ):void {
             this.text += t;
 
-            var tfield:TextField = this.textfield;
             if (! this.html) {
-                tfield.appendText(t);
-            } else if (tfield.styleSheet == null) {
+                textfield.appendText(t);
+            } else if (textfield.styleSheet == null) {
                 // reset textformat to workaround flash player bug (FP-77)
-                tfield.defaultTextFormat = this.textformat;
-                tfield.htmlText = this.text;
+                textfield.defaultTextFormat = this.textformat;
+                textfield.htmlText = this.text;
             } else {
                 // you can't set defaultTextFormat if a style sheet is applied
-                tfield.htmlText = this.text;
+                textfield.htmlText = this.text;
             }
             if (this.initted) this.owner._updateSize();
         }
@@ -544,16 +533,15 @@ public class LzTextSprite extends LzSprite {
         public function setText ( t:String ):void {
             this.text = t;
 
-            var tfield:TextField = this.textfield;
             if (! this.html) {
-                tfield.text = t;
-            } else if (tfield.styleSheet == null) {
+                textfield.text = t;
+            } else if (textfield.styleSheet == null) {
                 // reset textformat to workaround flash player bug (FP-77)
-                tfield.defaultTextFormat = this.textformat;
-                tfield.htmlText = t;
+                textfield.defaultTextFormat = this.textformat;
+                textfield.htmlText = t;
             } else {
                 // you can't set defaultTextFormat if a style sheet is applied
-                tfield.htmlText = t;
+                textfield.htmlText = t;
             }
 
             if (this.resize && (this.multiline == false)) {
@@ -566,7 +554,7 @@ public class LzTextSprite extends LzSprite {
 
             //multiline resizable fields adjust their height
             if (this.sizeToHeight) {
-                var theight:Number = tfield.textHeight;
+                var theight:Number = textfield.textHeight;
                 if (theight == 0) theight = this.lineheight;
                 this.setHeight(theight + LzTextSprite.PAD_TEXTHEIGHT);
             }
@@ -588,7 +576,6 @@ public class LzTextSprite extends LzSprite {
             //            Debug.write("__setFormat this.font=", this.font, 'this.fontname = ',this.fontname,
             //'cfontname=', cfontname);
 
-            var tfield:TextField = this.textfield;
             var tf:TextFormat = new TextFormat();
             this.textformat = tf;
             tf.kerning = true;
@@ -597,7 +584,7 @@ public class LzTextSprite extends LzSprite {
             tf.color = this.textcolor;
 
             // If there is no font found, assume a device font
-            tfield.embedFonts = (this.font != null);
+            textfield.embedFonts = (this.font != null);
 
             tf.bold = (this.fontstyle == "bold" || this.fontstyle =="bolditalic");
             tf.italic = (this.fontstyle == "italic" || this.fontstyle =="bolditalic");
@@ -612,16 +599,16 @@ public class LzTextSprite extends LzSprite {
             tf.letterSpacing = this.letterspacing;
 
             // you can't set defaultTextFormat if a style sheet is applied
-            var stylesheet:StyleSheet = tfield.styleSheet;
-            tfield.styleSheet = null;
-            tfield.defaultTextFormat = tf;
+            var stylesheet:StyleSheet = textfield.styleSheet;
+            textfield.styleSheet = null;
+            textfield.defaultTextFormat = tf;
 
             // measure sample text
-            var text:String = tfield[this.html ? 'htmlText' : 'text'];
-            tfield.text = "__ypgSAMPLE__";
-            var lm:TextLineMetrics = tfield.getLineMetrics(0);
-            tfield.styleSheet = stylesheet;
-            tfield[this.html ? 'htmlText' : 'text'] = text;
+            var text:String = textfield[this.html ? 'htmlText' : 'text'];
+            textfield.text = "__ypgSAMPLE__";
+            var lm:TextLineMetrics = textfield.getLineMetrics(0);
+            textfield.styleSheet = stylesheet;
+            textfield[this.html ? 'htmlText' : 'text'] = text;
 
             var lh:Number = lm.ascent + lm.descent + lm.leading;
             if (lh !== this.lineheight) {
@@ -638,11 +625,11 @@ public class LzTextSprite extends LzSprite {
             // maps to Laszlo model.
             this.multiline = (ml == true);
             if (this.multiline) {
-                this.textfield.multiline = true;
-                this.textfield.wordWrap = true;
+                textfield.multiline = true;
+                textfield.wordWrap = true;
             } else {
-                this.textfield.multiline = false;
-                this.textfield.wordWrap = false;
+                textfield.multiline = false;
+                textfield.wordWrap = false;
             }
             if (this.initted) this.owner._updateSize();
         }
@@ -652,98 +639,97 @@ public class LzTextSprite extends LzSprite {
          * @param Boolean isSel: true if the text may be selected by the user
          */
         public function setSelectable ( isSel:Boolean ):void {
-            this.textfield.selectable = isSel;
+            textfield.selectable = isSel;
+            this.updateMouseEnabled();
         }
       
         public function getTextWidth (force=null):Number {
-            var tf:TextField = this.textfield;
-            var ml:Boolean = tf.multiline;
-            var mw:Boolean = tf.wordWrap;
-            tf.multiline = false;
-            tf.wordWrap = false;
-            var twidth:Number = (tf.textWidth == 0) ? 0 : tf.textWidth + LzTextSprite.PAD_TEXTWIDTH;
-            tf.multiline = ml;
-            tf.wordWrap = mw;
+            var ml:Boolean = textfield.multiline;
+            var mw:Boolean = textfield.wordWrap;
+            textfield.multiline = false;
+            textfield.wordWrap = false;
+            var twidth:Number = (textfield.textWidth == 0) ? 0 : textfield.textWidth + LzTextSprite.PAD_TEXTWIDTH;
+            textfield.multiline = ml;
+            textfield.wordWrap = mw;
             return twidth;
         }
 
         public function getLineHeight ( ):Number {
-            return this.textfield.textHeight;
+            return textfield.textHeight;
         }
 
         public function getTextfieldHeight (force=null) :Number {
-            var textclip:TextField = this.textfield;
-            var tca:String = textclip.autoSize;
-            var tcw:Number = textclip.width;
-            var tch:Number = textclip.height;
+            var tca:String = textfield.autoSize;
+            var tcw:Number = textfield.width;
+            var tch:Number = textfield.height;
 
             // turn on autoSize temporarily
-            textclip.autoSize = TextFieldAutoSize.LEFT;
+            textfield.autoSize = TextFieldAutoSize.LEFT;
             // measure height and reset to the original values
-            var h:Number = textclip.height;
+            var h:Number = textfield.height;
 
             // Measure test string if the field is empty
             if (h == LzTextSprite.PAD_TEXTHEIGHT) {
-                var tcp:Boolean = textclip.wordWrap;
+                var tcp:Boolean = textfield.wordWrap;
                 // Make sure the test text does not wrap!
-                textclip.wordWrap = false;
-                textclip.htmlText = "__ypgSAMPLE__";
-                h = textclip.height;
-                textclip.wordWrap = tcp;
-                textclip.htmlText = "";
+                textfield.wordWrap = false;
+                textfield.htmlText = "__ypgSAMPLE__";
+                h = textfield.height;
+                textfield.wordWrap = tcp;
+                textfield.htmlText = "";
             }
 
-            textclip.autoSize = tca;
-            textclip.height = tch;
-            textclip.width = tcw;
+            textfield.autoSize = tca;
+            textfield.height = tch;
+            textfield.width = tcw;
 
             return h;
         }
 
 
 function setHScroll(s:Number) :void {
-    this.textfield.scrollH = this.hscroll = s;
+    textfield.scrollH = this.hscroll = s;
 }
 
 function setAntiAliasType( aliasType:String ):void {
     var atype:String = (aliasType == 'advanced') ? AntiAliasType.ADVANCED : AntiAliasType.NORMAL;
-    this.textfield.antiAliasType = atype;
+    textfield.antiAliasType = atype;
     if (this.initted) this.owner._updateSize();
 }
 
 function getAntiAliasType():String {
-    return this.textfield.antiAliasType;
+    return textfield.antiAliasType;
 }
 
 function setGridFit( gridFit:String ):void{
-    this.textfield.gridFitType = gridFit;
+    textfield.gridFitType = gridFit;
     if (this.initted) this.owner._updateSize();
 }
 
 function getGridFit():String {
-    return this.textfield.gridFitType;
+    return textfield.gridFitType;
 }
 
 function setSharpness( sharpness:Number ):void {
-    this.textfield.sharpness = sharpness;
+    textfield.sharpness = sharpness;
 }
 
 function getSharpness():Number {
-    return this.textfield.sharpness;
+    return textfield.sharpness;
 }
 
 function setThickness( thickness:Number ):void{
-    this.textfield.thickness = thickness;
+    textfield.thickness = thickness;
 }
 
 function getThickness():Number {
-    return this.textfield.thickness;
+    return textfield.thickness;
 }
 
 function setMaxLength(val:Number) {
     // Runtime does not understand Infinity
     if (val == Infinity) { val = null; }
-    this.textfield.maxChars = val;
+    textfield.maxChars = val;
     if (this.initted) this.owner._updateSize();
 }
 
@@ -757,18 +743,18 @@ function setMaxLength(val:Number) {
  */
 function setPattern (val:String) :void {
     if (val == null || val == "") {
-        this.textfield.restrict = null;
+        textfield.restrict = null;
     } else if (val.substring(0,1) == "[" &&
                val.substring(val.length-2, val.length) == "]*") {
-        this.textfield.restrict = val.substring(1, val.length - 2);
+        textfield.restrict = val.substring(1, val.length - 2);
     } else if ($debug) {
         Debug.error('LzTextSprite.setPattern argument %w must be of the form "[...]*"', val);
     }
 }
 
 function setSelection(start:Number, end:Number) :void {
-    this.textfield.setSelection(start, end);
-    this.textfield.alwaysShowSelection = true;
+    textfield.setSelection(start, end);
+    textfield.alwaysShowSelection = true;
 }
 
 function setResize ( val:Boolean ) :void {
@@ -777,18 +763,18 @@ function setResize ( val:Boolean ) :void {
 }
 
 function setScroll ( h:Number ) :void {
-    this.textfield.scrollV = this.scroll = h;
+    textfield.scrollV = this.scroll = h;
 }
 function getScroll() :Number {
-    return this.textfield.scrollV;
+    return textfield.scrollV;
 }
 
 function getMaxScroll() :Number {
-    return this.textfield.maxScrollV;
+    return textfield.maxScrollV;
 }
 
 function getBottomScroll() :Number {
-    return this.textfield.bottomScrollV;
+    return textfield.bottomScrollV;
 }
 
 function lineNoToPixel (n:Number):Number {
@@ -800,11 +786,11 @@ function pixelToLineNo (n:Number):Number {
 }
 
 function setYScroll (n:Number) :void {
-  this.textfield.scrollV = this.scroll = this.pixelToLineNo((- n));
+  textfield.scrollV = this.scroll = this.pixelToLineNo((- n));
 }
 
 function setXScroll (n:Number) :void {
-  this.textfield.scrollH = this.hscroll = (- n);
+  textfield.scrollH = this.hscroll = (- n);
 }
 
 function setWordWrap (wrap:Boolean) :void {
@@ -812,10 +798,10 @@ function setWordWrap (wrap:Boolean) :void {
 }
 
 function getSelectionPosition() :int {
-    return this.textfield.selectionBeginIndex;
+    return textfield.selectionBeginIndex;
 }    
 function getSelectionSize() :int {
-    return this.textfield.selectionEndIndex - this.textfield.selectionBeginIndex;
+    return textfield.selectionEndIndex - textfield.selectionBeginIndex;
 }    
 
     function setTextAlign (align:String) :void {
@@ -843,6 +829,36 @@ function getSelectionSize() :int {
         this.textdecoration = decoration;
         this.__setFormat();
         // note: don't need to recompute height
+    }
+
+    protected var mouseactive:Boolean = false;
+    function activateLinks(active:Boolean) :void {
+        if (this.mouseactive == active) return;
+        this.mouseactive = active;
+        if (active) {
+            textfield.addEventListener(TextEvent.LINK, textLinkHandler);
+            textfield.addEventListener(MouseEvent.CLICK, handleTextfieldMouse);
+            textfield.addEventListener(MouseEvent.DOUBLE_CLICK, handleTextfieldMouse);
+            textfield.addEventListener(MouseEvent.MOUSE_DOWN, handleTextfieldMouse);
+            textfield.addEventListener(MouseEvent.MOUSE_UP, handleTextfieldMouse);
+            textfield.addEventListener(MouseEvent.MOUSE_OVER, handleTextfieldMouse);
+            textfield.addEventListener(MouseEvent.MOUSE_OUT, handleTextfieldMouse);
+        } else {
+            textfield.removeEventListener(TextEvent.LINK, textLinkHandler);
+            textfield.removeEventListener(MouseEvent.CLICK, handleTextfieldMouse);
+            textfield.removeEventListener(MouseEvent.DOUBLE_CLICK, handleTextfieldMouse);
+            textfield.removeEventListener(MouseEvent.MOUSE_DOWN, handleTextfieldMouse);
+            textfield.removeEventListener(MouseEvent.MOUSE_UP, handleTextfieldMouse);
+            textfield.removeEventListener(MouseEvent.MOUSE_OVER, handleTextfieldMouse);
+            textfield.removeEventListener(MouseEvent.MOUSE_OUT, handleTextfieldMouse);
+        }
+    }
+
+    protected function updateMouseEnabled() :void {
+        var active:Boolean = ! forwardsMouse;
+        this.mouseEnabled = active;
+        this.mouseChildren = active;
+        this.activateLinks(active);
     }
 
     }#

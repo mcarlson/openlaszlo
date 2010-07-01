@@ -168,6 +168,7 @@ public class LzSprite extends Sprite {
             id = LFCApplication.stage.loaderInfo.parameters['id'];
         } else {
             this.mouseEnabled = true;
+            this.mouseChildren = false;
             this.hitArea = LzSprite.emptySprite;
         }
     }
@@ -248,6 +249,7 @@ public class LzSprite extends Sprite {
     */
     public function addChildSprite(sprite:LzSprite):void {
         addChild(sprite);
+        this.mouseChildren = true;
         //trace('addChildSprite ', sprite, 'added to ' ,this.owner);
     }
 
@@ -1178,7 +1180,7 @@ public class LzSprite extends Sprite {
             }
         } else {
             if ($debug) {
-                Debug.write('unhandled play', framenumber, rel);
+                Debug.warn('unhandled play', framenumber, rel);
             }
         }
     }
@@ -2009,6 +2011,8 @@ public class LzSprite extends Sprite {
         ,fixtextselection:false
         // See http://www.actionscript.org/forums/showthread.php3?t=137599
         ,loaderinfoavailable:false
+        // See LPP-9101
+        ,textlinksneedmouseevents:true
     };
 
     /** Update browser quirks
