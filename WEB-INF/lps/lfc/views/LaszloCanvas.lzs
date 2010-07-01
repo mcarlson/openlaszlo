@@ -52,19 +52,19 @@ dynamic class LzCanvas extends LzView {
   static var attributes = new LzInheritedHash(LzView.attributes);
 
 /** @access private */
-    attributes.bgcolor = new LzStyleConstraintExpr("bgcolor","background-color","color",0xffffff,false);
+    attributes.bgcolor = new LzStyleConstraintExpr("bgcolor","color","background-color",0xffffff,false);
 /** @access private */
-    attributes.font = new LzStyleConstraintExpr("font","font-family","string","Verdana,Vera,sans-serif",false);
+    attributes.font = new LzStyleConstraintExpr("font","string","font-family","Verdana,Vera,sans-serif",false);
 /** @access private */
-    attributes.fontsize = new LzStyleConstraintExpr("fontsize","font-size","number",11,false);
+    attributes.fontsize = new LzStyleConstraintExpr("fontsize","number","font-size",11,false);
 /** @access private */
-    attributes.fontstyle = new LzStyleConstraintExpr("fontstyle","font-style","string","plain",false);
+    attributes.fontstyle = new LzStyleConstraintExpr("fontstyle","string","font-style","plain",false);
 /** @access private */
-    attributes.fgcolor = new LzStyleConstraintExpr("fgcolor","font-color","color",0,false);
+    attributes.fgcolor = new LzStyleConstraintExpr("fgcolor","color","font-color",0,false);
 /** @access private */
-    attributes.width = new LzStyleConstraintExpr("width","width","string","100%",false);
+    attributes.width = new LzStyleConstraintExpr("width","string","width","100%",false);
 /** @access private */
-    attributes.height = new LzStyleConstraintExpr("height","height","string","100%",false);
+    attributes.height = new LzStyleConstraintExpr("height","string","height","100%",false);
 
     /**
       * @access private
