@@ -1000,7 +1000,7 @@ public class SWF9External {
       // which will be mapped to the appropriate class in
       // callJavaCompileCommand
 
-      if (compileType == Config.APP) {
+      if (compileType == Config.APP || compileType == Config.SNIPPET) {
         outfilebase = "app.swf";
         cmd.add("mxmlc");
         cmd.add(getFlexPathname("bin" + File.separator + "mxmlc" + exeSuffix));
@@ -1043,8 +1043,7 @@ public class SWF9External {
 
       String runtime = ((String)options.get(Compiler.RUNTIME));
       if (compileType == Config.LFCLIB ||
-          compileType == Config.LZOLIB ||
-          compileType == Config.SNIPPET) {
+          compileType == Config.LZOLIB) {
         // must be last before list of classes to follow.
         cmd.add("-include-classes");
         // For LFC library, we list all the classes.
@@ -1128,7 +1127,7 @@ public class SWF9External {
         cmd.add("-compiler.incremental=true");
       }
 
-      if (compileType == Config.APP) {
+      if (compileType == Config.APP || compileType == Config.SNIPPET) {
 
         // TODO [hqm 2010-06] This static link flag started to be
         // needed when we moved to flex_sdk_4.0.0.14159, otherwise you

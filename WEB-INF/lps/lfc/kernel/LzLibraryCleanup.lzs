@@ -1,7 +1,7 @@
 /**
   * LzLibraryCleanup.as
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @topic Kernel
@@ -10,8 +10,9 @@
 
 // This will always be the last view instantiated by a library. It's job is to send
 // the "onload" event to the LzLibrary with the given name. 
+// This class needs to be dynamic, as it extends LzNode
 
-class LzLibraryCleanup extends LzNode {
+dynamic class LzLibraryCleanup extends LzNode {
 
 /** @access private
   * @modifiers override 

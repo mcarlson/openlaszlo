@@ -187,6 +187,13 @@ class ImportCompiler extends ToplevelCompiler {
                 ObjectWriter writer;
 
                 String runtime = env.getProperty(env.RUNTIME_PROPERTY);
+                
+                // compileTimeConstants must be initialized in the
+                // ObjectWriter in order for the script compiler to
+                // properly do compile time evalulation of things like
+                // "if ($debug) ..."
+                props.put("compileTimeConstants", env.getCompileTimeConstants());
+
                 if (env.isAS3()) {
                     props.setProperty(org.openlaszlo.sc.Compiler.SWF9_LOADABLE_LIB, "true");
                     // Compile the main app and all libraries using the same temp as3 dir, so all
