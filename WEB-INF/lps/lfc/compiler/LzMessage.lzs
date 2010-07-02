@@ -122,7 +122,7 @@ class LzBootstrapMessage {
    * @devnote [2010-06-21 ptw] While XML defines 5 non-numeric
    * entities
    * (http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML)
-   * only `<` and `&` function as syntactic markers, so for the
+   * only `&lt;` and `&amp;` function as syntactic markers, so for the
    * purposes of this method, only they need to be escaped to prevent
    * them being interpreted as markup.
    */
