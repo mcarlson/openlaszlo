@@ -16,6 +16,7 @@ import java.util.*;
 
 import org.jdom.Element;
 
+import org.openlaszlo.server.LPS;
 import org.openlaszlo.sc.ParseTreePrinter;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.JavascriptCompressor;
@@ -32,16 +33,35 @@ class IntermediateWriter extends DHTMLWriter {
   JavascriptCompressor mCompressor;
   org.openlaszlo.sc.Compiler.Parser mParser;
 
+  // Prefixes that will be searched by FileResolver
+  String componentsPath;
+  String fontsPath;
+  String LFCPath;
+
   IntermediateWriter(Properties props, OutputStream stream,
-                CompilerMediaCache cache,
-                boolean importLibrary,
-                CompilationEnvironment env,
-                Element root) {
-    super(props, stream, cache, importLibrary, env);
-    this.root = root;
-    mCompressor = new JavascriptCompressor(props);
-    mParser = new org.openlaszlo.sc.Compiler.Parser();
-  }
+                     CompilerMediaCache cache,
+                     boolean importLibrary,
+                     CompilationEnvironment env,
+                     Element root)
+    throws CompilationError
+    {
+      super(props, stream, cache, importLibrary, env);
+      this.root = root;
+      mCompressor = new JavascriptCompressor(props);
+      mParser = new org.openlaszlo.sc.Compiler.Parser();
+
+      // NOTE: [2010-07-02 ptw] The directories that are "unsearched"
+      // for adjustRelativePath must agree with the directories that are
+      // searched by FileResover.resolveInternal
+      try {
+        // Make sure these end with "/" as they are directories
+        componentsPath = FileUtils.toURLPath(new File(LPS.getComponentsDirectory()).getCanonicalFile()) + "/";
+        fontsPath = FileUtils.toURLPath(new File(LPS.getFontDirectory()).getCanonicalFile()) + "/";
+        LFCPath = FileUtils.toURLPath(new File(LPS.getLFCDirectory()).getCanonicalFile()) + "/";
+      } catch (IOException ioe) {
+        throw new CompilationError(ioe);
+      }
+    }
 
   public void open(String compileType) {
     // We don't do anything except write input to output
@@ -83,23 +103,33 @@ class IntermediateWriter extends DHTMLWriter {
 
   List resourceList = new LinkedList();
 
-    String adjustResourcePath(String src) {
+  String adjustResourcePath(String src) {
+    try {
+      return new URL(src).toString();
+    } catch (MalformedURLException e) {
       try {
-        return new URL(src).toString();
-      } catch (MalformedURLException e) {
-        try {
-          String outdir = FileUtils.toURLPath(mEnv.getObjectFile().getCanonicalFile().getParentFile());
-          File file = new File(src).getCanonicalFile();
-          return FileUtils.adjustRelativePath(file.getName(),
-                                              outdir,
-                                              FileUtils.toURLPath(file.getParentFile()));
-        } catch (IOException f) {
-          return src;
+        File file = new File(src).getCanonicalFile();
+        String path = FileUtils.toURLPath(file);
+
+        if (path.startsWith(componentsPath)) {
+          return path.substring(componentsPath.length());
         }
+        if (path.startsWith(fontsPath)) {
+          return path.substring(fontsPath.length());
+        }
+        if (path.startsWith(LFCPath)) {
+          return path.substring(LFCPath.length());
+        }
+
+        String outdir = FileUtils.toURLPath(mEnv.getObjectFile().getCanonicalFile().getParentFile());
+        return FileUtils.adjustRelativePath(file.getName(),
+                                            outdir,
+                                            FileUtils.toURLPath(file.getParentFile()));
+      } catch (IOException f) {
+        return src;
       }
     }
-
-
+  }
 
   class ResourceDescriptor {
     String name;
@@ -149,7 +179,6 @@ class IntermediateWriter extends DHTMLWriter {
 
 
 
-  /** This is just used for outputting the lzs script for debugging, before it's been parsed at all by the script compiler */
   public void finish(boolean isMainApp) throws IOException {
     if (mCloseCalled) {
       throw new IllegalStateException("IntermediateWriter.close() called twice");

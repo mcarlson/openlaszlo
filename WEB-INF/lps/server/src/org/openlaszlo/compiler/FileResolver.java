@@ -140,6 +140,9 @@ class DefaultFileResolver implements FileResolver {
             pathname = pnbase + ".png";
         }
 
+        // NOTE: [2010-07-02 ptw] The directories that are searched
+        // for resolving must agree with the directories that are
+        // "unsearched" by IntermediateWriter.adjustRelativePath
         // FIXME: [ebloch] this vector should be in a properties file
         Vector v = new Vector();
         if (pathname.startsWith("/")) {
