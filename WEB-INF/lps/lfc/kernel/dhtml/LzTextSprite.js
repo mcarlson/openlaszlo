@@ -317,12 +317,14 @@ LzTextSprite.prototype.setMultiline = function(m) {
     this.setText(this.text, true);
 }
 
-/*
+/**
  * @devnote [2010-06-21 ptw] (LPP-9134) The restrict attribute is a
  * general RegExp specifying the permitted characters, but for
  * compatibility with Flash, we limit it to a character set in the
  * form `[...]*`.  If you think using RegExp to check this condition
  * would be a better idea, see the referenced bug first.
+ *
+ * @access private
  */
 LzTextSprite.prototype.setPattern = function ( val ){
     if (val == null || val == "") {

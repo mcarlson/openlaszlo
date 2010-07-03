@@ -259,9 +259,13 @@ LzTextSprite.prototype.setMaxLength = function ( val ){
 }
 
 /**
-  * @access private
-  * Set the maximum number of chars a textfield can contain
-  */
+ * @devnote [2010-06-21 ptw] (LPP-9134) The textfield pattern is just
+ * the permitted character set description, without the enclosing
+ * `[...]*`.  If you think using RegExp to check this condition would
+ * be a better idea, see the referenced bug first.
+ *
+ * @access private
+ */
 LzTextSprite.prototype.setPattern = function ( val ){
     if (val == null || val == "") {
         this.__LZtextclip.restrict = null;
