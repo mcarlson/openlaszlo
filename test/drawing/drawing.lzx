@@ -122,7 +122,7 @@
     </resizedrawview>
 
     <resizedrawview clip="true">
-        <text>clip="true" must be set on the class for mouse events to work in swf9/10...</text>
+        <text>Currently unsupported in DHTML.  clip="true" must be set on the class for mouse events to work in swf9/10...</text>
         <method name="redraw" args="ignore=null">
             if (! this.context) return;
             var width = this.width;
