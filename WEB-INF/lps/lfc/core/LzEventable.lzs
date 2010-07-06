@@ -130,14 +130,15 @@ class LzEventable {
    * calling the setter.
    * @access private
    */
-  protected var __LZskipsetter:Object = {};
+  protected var customSetters:Object = {};
 
   /**
-   * If __LZskipsetter[prop] is true, this method will be called by 
+   * If customSetters[prop] is true, this method will be called by 
    * setAttribute() instead of the setter/property being updated.
    * @access private
    */
-  protected function __skipSetter(prop:String, val) {
+  protected function __invokeCustomSetter(prop:String, val):Boolean {
+    return false;
   }
 
   /**
@@ -161,11 +162,12 @@ class LzEventable {
     }
     if (this.__LZdeleted) { return; }
 
-    if (this.__LZskipsetter[prop]) {
-      // Optionally do something, then
-      this.__skipSetter(prop, val);
-      // skip the setter
-      return;
+    // If this property has skipsetter set
+    if (this.customSetters[prop]) {
+      if (this.__invokeCustomSetter(prop, val) == true) {
+        // Return early to skip setter
+        return;
+      }
     }
 
     // Must agree with NodeModel in tag compiler

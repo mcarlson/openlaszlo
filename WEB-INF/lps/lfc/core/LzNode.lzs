@@ -2511,8 +2511,8 @@ public dynamic class LzNode extends LzEventable {
    // Overwrite old list of transitions
    this.__transitionAttributes = transitions;
    // Register/unregister for callbacks for transition attributes
-   this.__LZskipsetter = transitions
-   //Debug.info('set_transition', css, transitions, this.__LZskipsetter);
+   this.customSetters = transitions
+   //Debug.info('set_transition', css, transitions, this.customSetters);
  }
 
  /**
@@ -2522,13 +2522,17 @@ public dynamic class LzNode extends LzEventable {
   *
   * @access private
   */
- override protected function __skipSetter(prop:String, val) {
+ override protected function __invokeCustomSetter(prop:String, val):Boolean {
+   // If not inited, continue with setter
+   if (this.inited != true) return false;
+
    var ta = this.__transitionAttributes && this.__transitionAttributes[prop];
    // avoid animating to the same value
    if (ta && this[prop] !== val) {
      //Debug.warn('__animateTransition', prop, val, ta);
      this.animate(prop, val, ta.duration, false, {motion: ta.motion});
    }
+   return true;
  }
 
 } // End of LzNode
