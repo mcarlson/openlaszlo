@@ -48,7 +48,6 @@
             assertEquals(300, hsv.h, "Convert tohsv .h");
             assertEquals(1, hsv.s, "Convert tohsv .s");
             assertEquals(1, hsv.v, "Convert tohsv .v");
-            assertEquals(8323199, LzColorUtils.fromhsv(300, 1, .5), "Convert fromhsv ");
         </method>
         <method name="addTests"> 
             this.addTest("testdectohex");
