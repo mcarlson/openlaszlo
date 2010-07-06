@@ -129,6 +129,7 @@ class LzColorUtils {
       var key = 'tohsv' + rgb;
       if (cache[key]) return cache[key];
       if (++cache.counter > 1000) { cache = {counter: 0}; }
+      rgb = LzColorUtils.hextoint(rgb);
 
       var r = (rgb >> 16 & 0xff)/0xff, g = (rgb >> 8 & 0xff)/0xff, b = (rgb & 0xff)/0xff;
       var min = Math.min(r, Math.min(g, b)), max = Math.max(r, Math.max(g, b));
