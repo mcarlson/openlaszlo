@@ -284,7 +284,7 @@ public class LzSprite extends Sprite {
                 context.beginBitmapFill(bmp);
                 var height = this.repeaty ? this.lzheight : this.resourceheight;
                 var width = this.repeatx ? this.lzwidth : this.resourcewidth;
-                LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, width + (this.padding * 2), height + (this.padding * 2), this.cornerradius);
+                LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, width + (this.padding * 2), height + (this.padding * 2), cornerradius[0], cornerradius[1], cornerradius[2], cornerradius[3]);
                 context.endFill();
                 // disposing here messes with the fill - store to dispose later
                 this.__repeatbitmap = bmp;
@@ -316,11 +316,11 @@ public class LzSprite extends Sprite {
 
     private function drawBorder(context:Graphics):void {
         var offset = this.padding + this.borderWidth;
-        LzKernelUtils.rect(context, 0 - offset, 0 - offset, this.lzwidth + (offset * 2), this.lzheight + (offset * 2), this.cornerradius);
+        LzKernelUtils.rect(context, 0 - offset, 0 - offset, this.lzwidth + (offset * 2), this.lzheight + (offset * 2), cornerradius[0], cornerradius[1], cornerradius[2], cornerradius[3]);
     }
 
     private function drawBackgroundFill(context:Graphics):void {
-        LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, this.lzwidth + (this.padding * 2), this.lzheight + (this.padding * 2), this.cornerradius);
+        LzKernelUtils.rect(context, 0 - this.padding, 0 - this.padding, this.lzwidth + (this.padding * 2), this.lzheight + (this.padding * 2), cornerradius[0], cornerradius[1], cornerradius[2], cornerradius[3]);
     }
 
     private var _frame:int = 1;
@@ -1936,9 +1936,9 @@ public class LzSprite extends Sprite {
         mc.filters = filters;
     }
 
-    var cornerradius = 0;
+    var cornerradius:Array = [0, 0, 0, 0];
     function setCornerRadius(radius) {
-        this.cornerradius = radius;
+        cornerradius = radius;
         this.drawBackground();
     }
 

@@ -46,7 +46,7 @@ class LzKernelUtils {
         return val;
     }
 
-    public static function rect(context,x,y,width,height,topleftradius=0,bottomleftradius=null,bottomrightradius=null,toprightradius=null) {
+    public static function rect(context,x,y,width,height,topleftradius=0,toprightradius=null,bottomrightradius=null,bottomleftradius=null) {
         // the radius can't be bigger than our width/height
         var maxsize = Math.min(width, height) * .5;
 

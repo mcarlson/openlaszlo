@@ -3227,22 +3227,30 @@ LzSprite.prototype.updateShadow = function(shadowcolor, shadowdistance, shadowan
 }
 
 LzSprite.prototype.cornerradius = null;
-LzSprite.prototype.setCornerRadius = function(radius) {
-    var radius = radius > 0 ? this.CSSDimension(radius) : '';
-    this.cornerradius = radius;
+LzSprite.prototype.setCornerRadius = function(radii) {
+    var css = '';
+    // The four values for each radii are given in the order top-left, top-right, bottom-right, bottom-left. 
+    for (var i = 0, l = radii.length; i < l; i++) {
+        radii[i] = this.CSSDimension(radii[i]);
+    }
+    css = radii.join(' ');
+    if (css == this.cornerradius) return;
+    this.cornerradius = css;
+    //Debug.info('setCornerRadius %w', css);
+
     var stylename = LzSprite.__styleNames.borderRadius;
-    this.__LZdiv.style[stylename] = radius;
+    this.__LZdiv.style[stylename] = css;
     if (this.__LZclick) {
-        this.__LZclick.style[stylename] = radius;
+        this.__LZclick.style[stylename] = css;
     }
     if (this.__LZcontext) {
-        this.__LZcontext.style[stylename] = radius;
+        this.__LZcontext.style[stylename] = css;
     }
     if (this.__LZcanvas) {
-        this.__LZcanvas.style[stylename] = radius;
+        this.__LZcanvas.style[stylename] = css;
     }
     if (this.__LZimg) {
-        this.__LZimg.style[stylename] = radius;
+        this.__LZimg.style[stylename] = css;
     }
 }
 

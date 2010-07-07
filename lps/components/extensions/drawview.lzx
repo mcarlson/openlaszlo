@@ -269,7 +269,7 @@
       @param Number bottomrightradius: Optional radius of rounding for bottomright corner.
       @param Number toprightradius: Optional radius of rounding for topright corner.
     -->
-    <method name="rect" args="x,y,width,height=0,topleftradius=0,bottomleftradius=null,bottomrightradius=null,toprightradius=null" />
+    <method name="rect" args="x,y,width,height=0,topleftradius=0,toprightradius=null,bottomrightradius=null,bottomleftradius=null" />
 
     <!---
       Draws an oval at the origin x, y with a radius radius.  If yRadius is specified, radius is the x radius of the oval.
@@ -367,9 +367,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             this._drawArc(x, y, radius, arc, startAngle * this.__radtodegfactor);
         }
 
-        function rect(x,y,width,height,topleftradius=0,bottomleftradius=null,bottomrightradius=null,toprightradius=null) {
+        function rect(x,y,width,height,topleftradius=0,toprightradius=null,bottomrightradius=null,bottomleftradius=null) {
             // use shared method
-            LzKernelUtils.rect(this,x,y,width,height,topleftradius,bottomleftradius,bottomrightradius,toprightradius);
+            LzKernelUtils.rect(this,x,y,width,height,topleftradius,toprightradius,bottomrightradius,bottomleftradius);
         }
 
         function oval(x, y, radius, yRadius = NaN) {

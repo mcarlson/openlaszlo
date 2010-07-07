@@ -3596,6 +3596,7 @@ var shadowdistance = 10;
   */
 function $lzc$set_shadowdistance(distance) {
     if (this.capabilities['dropshadows']) {
+        if (distance < .01) distance = 0;
         this.shadowdistance = distance;
         this.__updateShadow();
         if (this.onshadowdistance.ready) {
@@ -3656,6 +3657,7 @@ var shadowblurradius = 4;
   */
 function $lzc$set_shadowblurradius(blurradius) {
     if (this.capabilities['dropshadows']) {
+        if (blurradius < .01) blurradius = 0;
         this.shadowblurradius = blurradius;
         this.__updateShadow();
         if (this.onshadowblurradius.ready) {
@@ -3746,11 +3748,11 @@ var oncornerradius = LzDeclaredEvent;
 
 /** The corner radius for the background
  * @access public
- * @lzxtype number
- * @type Number
+ * @lzxtype string
+ * @type String
  * @lzxdefault 0
  */
-var cornerradius = 4;
+var cornerradius = '4';
 
 /**
   * @param number radius: The corner radius for this view's background
@@ -3758,7 +3760,25 @@ var cornerradius = 4;
   */
 function $lzc$set_cornerradius(radius) {
     if (this.capabilities['cornerradius']) {
-        this.sprite.setCornerRadius(radius);
+        if (this.cornerradius !== radius) {
+            // handle list of border radii per http://www.w3.org/TR/css3-background/#the-border-radius
+            // The four values for each radii are given in the order top-left, top-right, bottom-right, bottom-left. 
+            var radii = String(radius).split(' ');
+            var l = radii.length;
+            if (l == 0) return;
+            // If top-right is omitted it is the same as top-left. 
+            if (l <= 1) radii[1] = radii[0];
+            // If bottom-left is omitted it is the same as top-right. 
+            if (l <= 3) radii[3] = radii[1];
+            // If bottom-right is omitted it is the same as top-left. 
+            if (l <= 2) radii[2] = radii[0];
+
+            // Convert to numbers
+            for (var i = 0, l = radii.length; i < l; i++) {
+                radii[i] = parseFloat(radii[i]);
+            }
+            this.sprite.setCornerRadius(radii);
+        }
     } else if ($debug) {
         LzView.__warnCapability('view.cornerradius', 'cornerradius'); 
     }
