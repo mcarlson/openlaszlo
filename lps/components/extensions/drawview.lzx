@@ -265,9 +265,9 @@
       @param Number width: Width
       @param Number height: Height
       @param Number topleftradius: Optional radius of rounding for topleft corner.  If no other radius parameters are specified, topleftradius is used for all corners.
-      @param Number bottomleftradius: Optional radius of rounding for bottomleft corner.
-      @param Number bottomrightradius: Optional radius of rounding for bottomright corner.
       @param Number toprightradius: Optional radius of rounding for topright corner.
+      @param Number bottomrightradius: Optional radius of rounding for bottomright corner.
+      @param Number bottomleftradius: Optional radius of rounding for bottomleft corner.
     -->
     <method name="rect" args="x,y,width,height=0,topleftradius=0,toprightradius=null,bottomrightradius=null,bottomleftradius=null" />
 
