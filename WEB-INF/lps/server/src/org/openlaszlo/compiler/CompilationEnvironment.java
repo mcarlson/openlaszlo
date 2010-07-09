@@ -119,6 +119,13 @@ public class CompilationEnvironment {
      */
     private CompilerMediaCache mMediaCache = null;
 
+    /**
+     * libraries and explanations discovered in the schema for
+     * handleAutoincludes
+     */
+    private Map mExplanations = new HashMap();
+    private List mLibraries = null;
+
     /** {canonical filenames} for libraries that have been imported;
      * used to prevent recursive processing and including the same
      * library more than once. */
@@ -566,6 +573,18 @@ public class CompilationEnvironment {
      */
     FileResolver getFileResolver() {
         return mFileResolver;
+    }
+
+    Map getExplanations() {
+        return mExplanations;
+    }
+
+    List getLibraries() {
+        return mLibraries;
+    }
+
+    void setLibraries(List l) {
+        mLibraries = l;
     }
 
     Set getImportedLibraryFiles() {

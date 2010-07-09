@@ -273,23 +273,21 @@ abstract class ToplevelCompiler extends ElementCompiler {
                   // emitted where the auto-include would have been.
                   // (unless you are library-compiling _that_
                   // auto-include!)
-                  if ((autoIncluded == null) || env.isExternal(canonical)) {
-                    String value = (String)autoincludes.get(key);
-                    if (defined.contains(key)) {
-                      if (visited.containsKey(canonical)) {
-                        // Annotate as explicit
-                        if (explanations != null) {
-                          explanations.put(value, "explicit include");
-                        }
-                        // but include as auto
-                        additionalLibraries.add(canonical);
-                      }
-                    } else {
+                  String value = (String)autoincludes.get(key);
+                  if (defined.contains(key)) {
+                    if (visited.containsKey(canonical)) {
+                      // Annotate as explicit
                       if (explanations != null) {
-                        explanations.put(value, "reference to <" + key + "> tag");
+                        explanations.put(value, "explicit include");
                       }
+                      // but include as auto
                       additionalLibraries.add(canonical);
                     }
+                  } else {
+                    if (explanations != null) {
+                      explanations.put(value, "reference to <" + key + "> tag");
+                    }
+                    additionalLibraries.add(canonical);
                   }
                 }
             }
@@ -383,13 +381,13 @@ abstract class ToplevelCompiler extends ElementCompiler {
         // why they were required
         Canvas canvas = env.getCanvas();
 
-        Map explanations = new HashMap();
-        for (Iterator iter = getLibraries(env, element, explanations, null, new HashSet()).iterator();
+        List libraries = env.getLibraries();
+        for (Iterator iter = libraries.iterator();
              iter.hasNext(); ) {
             File file = (File) iter.next();
             Compiler.importLibrary(file, env);
         }
-        
+
         Element info;
         // canvas info += <include name= explanation= [size=]/> for LFC
         if (env.isSWF() || env.isAS3()) {
@@ -415,6 +413,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
         }
 
         // canvas info += <include name= explanation=/> for each library
+        Map explanations = env.getExplanations();
         for (Iterator iter = explanations.entrySet().iterator();
              iter.hasNext(); ) {
             Map.Entry entry = (Map.Entry) iter.next();

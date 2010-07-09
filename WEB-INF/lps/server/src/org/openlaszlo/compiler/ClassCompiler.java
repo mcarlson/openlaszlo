@@ -75,7 +75,6 @@ class ClassCompiler extends ViewCompiler  {
         // Get meta attributes
         String classname = elt.getAttributeValue("name");
         String superName = elt.getAttributeValue("extends");
-        String mixinSpec = elt.getAttributeValue("with");
         
         if (classname == null ||
             (schema.enforceValidIdentifier && !ScriptCompiler.isIdentifier(classname))) {

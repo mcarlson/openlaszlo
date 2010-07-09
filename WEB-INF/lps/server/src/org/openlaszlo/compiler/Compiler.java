@@ -784,11 +784,14 @@ public class Compiler {
             }
         ToplevelCompiler tlc = (ToplevelCompiler) ecompiler;
 
-        Set visited = new HashSet();
         // Update schema for auto-includes
         // Note:  this call does _not_ share visited with the update
         // calls intentionally.
-        for (Iterator iter = tlc.getLibraries(env, root, null, externalLibraries, new HashSet()).iterator();
+        List libraries = tlc.getLibraries(env, root, env.getExplanations(), externalLibraries, new HashSet());
+        // Save the libraries for handleAutoincludes
+        env.setLibraries(libraries);
+        Set visited = new HashSet();
+        for (Iterator iter = libraries.iterator();
              iter.hasNext(); ) {
             File library = (File) iter.next();
             Compiler.updateSchemaFromLibrary(library, env, schema, visited, externalLibraries);
