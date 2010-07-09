@@ -798,7 +798,9 @@ public dynamic class LzNode extends LzEventable {
       }
     } else if (styleValue !== (void 0)) {
       // (void 0) is the marker for 'no style property'
-      this.setAttribute(attr, styleValue);
+      if (this[attr] !== styleValue) {
+        this.setAttribute(attr, styleValue);
+      }
     } else if (fallback is LzInitExpr) {
       this.applyConstraintExpr(fallback);
     } else {
@@ -807,7 +809,9 @@ public dynamic class LzNode extends LzEventable {
       // initially to `null`, because it has a constraint, but
       // LPP-4182 wants an attribute with no fallback and no style to
       // be undefined.
-      this.setAttribute(attr, fallback);
+      if (this[attr] !== fallback) {
+        this.setAttribute(attr, fallback);
+      }
     }
   }
 
