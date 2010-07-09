@@ -2898,6 +2898,10 @@ LzSprite.prototype.__copystyles = function(from, to) {
     to.style.display = from.style.display;
     to.style.clip = from.style.clip;
     to.style.zIndex = from.style.zIndex;
+    if (this.rotation != 0) {
+        var stylename = LzSprite.__styleNames.transform;
+        to.style[stylename] = from.style[stylename];
+    }
 }
 
 /**
@@ -2908,8 +2912,19 @@ LzSprite.prototype.getContextMenu = function() {
     return this.__contextmenu;
 }
 
+LzSprite.prototype.rotation = 0;
 LzSprite.prototype.setRotation = function(r) {    
-    this.__LZdiv.style[LzSprite.__styleNames.transform] = 'rotate(' + r + 'deg)';
+    if (this.rotation == r) return;
+    this.rotation = r;
+    var css = 'rotate(' + r + 'deg)'
+    var stylename = LzSprite.__styleNames.transform;
+    this.__LZdiv.style[stylename] = css;
+    if (this.quirks.fix_clickable) {
+        this.__LZclickcontainerdiv.style[stylename] = css;
+    }
+    if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
+        this.__LZcontextcontainerdiv.style[stylename] = css;
+    }
 }
 
 LzSprite.prototype.backgroundrepeat = null;
