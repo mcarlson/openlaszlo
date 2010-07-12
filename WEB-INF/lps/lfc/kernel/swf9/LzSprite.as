@@ -290,16 +290,18 @@ public class LzSprite extends Sprite {
                 this.__repeatbitmap = bmp;
             }
         }
-        if (this.borderWidth) {
-            var colorobj = LzColorUtils.inttocolorobj(borderColor);
-            context.beginFill(colorobj.color, alpha);
-            this.drawBorder(context);
-            context.endFill();
-        }
         if (bgcolor != null) {
             context.beginFill(this.bgcolor, alpha);
             this.drawBackgroundFill(context);
             context.endFill();
+        }
+        if (this.borderWidth) {
+            var colorobj = LzColorUtils.inttocolorobj(borderColor);
+            context.lineStyle(this.borderWidth, colorobj.color, alpha);
+            //context.beginFill(colorobj.color, alpha);
+            this.drawBorder(context);
+            context.lineStyle(undefined);
+            //context.endFill();
         }
     }
 
