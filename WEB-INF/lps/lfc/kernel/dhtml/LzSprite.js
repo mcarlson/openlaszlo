@@ -657,6 +657,7 @@ LzSprite.prototype.capabilities = {
     ,css2boxmodel: true
     ,medialoading: true
     ,backgroundrepeat: true
+    ,touchevents: false
 }
 
 /**
@@ -825,13 +826,14 @@ LzSprite.__updateQuirks = function () {
                 capabilities["threedtransform"] = true;
             }
 
-            // turn off mouseover activation for iphone
             if (browser.isIphone) {
+                // turn off mouseover activation for touch browsers
                 //quirks['activate_on_mouseover'] = false;
                 //quirks['listen_for_mouseover_out'] = false;
                 quirks['canvas_div_cannot_be_clipped'] = true;
+                capabilities['touchevents'] = true;
             }
-            
+
             // required as of 3.2.1 to get test/lztest/lztest-textheight.lzx to show multiline inputtext properly
             quirks['inputtext_strips_newlines'] = true;
             quirks['prevent_selection'] = true;
@@ -915,6 +917,10 @@ LzSprite.__updateQuirks = function () {
             // Remap alt/option key also sends control since control-click shows context menu (see LPP-2584 - Lzpix: problem with multi-selecting images in Safari 2.0.4, dhtml)
             quirks['alt_key_sends_control'] = true;
             quirks['match_swf_letter_spacing'] = true;
+        }
+
+        if (browser.OS == 'Android') {
+            capabilities['touchevents'] = true;
         }
 
         // Adjust styles for quirks
@@ -1464,19 +1470,27 @@ LzSprite.prototype.__setClickable = function(c, div) {
     if (div._clickable == c) return;
     div._clickable = c;
     var f = c ? LzSprite.prototype.__clickDispatcher : null;
-    div.onclick = f;
-    // Prevent context menus in Firefox 1.5 - see LPP-2678
-    div.onmousedown = f;
-    div.onmouseup = f;
-    div.onmousemove = f;
-    if (this.quirks.ie_mouse_events) {
-        div.ondrag = f;
-        div.ondblclick = f;
-        div.onmouseover = f;
-        div.onmouseout = f;
-    } else if (this.quirks.listen_for_mouseover_out) {
-        div.onmouseover = f;
-        div.onmouseout = f;
+
+    if (this.capabilities.touchevents) {
+        // touch events are mutually exclusive with mouse events...
+        div.ontouchstart = f;
+        div.ontouchmove = f;
+        div.ontouchend = f;
+    } else {
+        div.onclick = f;
+        // Prevent context menus in Firefox 1.5 - see LPP-2678
+        div.onmousedown = f;
+        div.onmouseup = f;
+        div.onmousemove = f;
+        if (this.quirks.listen_for_mouseover_out) {
+            div.onmouseover = f;
+            div.onmouseout = f;
+        } 
+        if (this.quirks.ie_mouse_events) {
+            // special events for IE
+            div.ondrag = f;
+            div.ondblclick = f;
+        }
     }
 }
 
@@ -1491,8 +1505,9 @@ LzSprite.prototype.__clickDispatcher = function(e) {
     // Skip context menu events. They should be handled by LzMouseKernel
     if (e.button == 2) return false;
 
-    this.owner.__mouseEvent(e);
-    return false;
+    // allow true return values to be sent back to the DOM
+    var result = this.owner.__mouseEvent(e);
+    return result || false;
 }
 
 /**
@@ -1521,7 +1536,39 @@ LzSprite.prototype.__mouseEvent = function(e , artificial){
         }
     }
 
-    if (this.quirks.ie_mouse_events) {
+    if (this.capabilities.touchevents) {
+        // TODO: [max 4-30-2010] Send true over/out events by detecting 
+        // when the global mouse position is over/out
+        if (eventname == 'ontouchstart') {
+            if (e.touches.length != 1) {
+                //Debug.warn('more than 1 finger', e.target.owner.owner);
+                return true;
+            }
+            eventname = 'onmousedown';
+            // Send artificial onmouseover event
+            //Debug.info('ontouchstart', e.target.owner);
+            this.__mouseEvent('onmouseover', true);
+        } else if (eventname == 'ontouchmove') {
+            if (e.touches.length != 1) {
+                //Debug.warn('more than 1 finger', e.target.owner.owner);
+                return true;
+            }
+            eventname = 'onmousemove';
+            //Debug.info('ontouchmove', e.target.owner);
+        } else if (eventname == 'ontouchend') {
+            if (e.touches.length != 0) {
+                //Debug.warn('more than 0 fingers', e.target.owner.owner);
+                return true;
+            }
+            eventname = 'onmouseup';
+            //Debug.info('ontouchend', e.target.owner);
+            // Send artificial events later, so the onmouseup event fires first
+            var callback = lz.BrowserUtils.getcallbackfunc(this, '__mouseEvent', ['onmouseout', true]);
+            setTimeout(callback, 0);
+            var callback = lz.BrowserUtils.getcallbackfunc(this, '__mouseEvent', ['onclick', true]);
+            setTimeout(callback, 0);
+        }
+    } else if (this.quirks.ie_mouse_events) {
         // rename ie-specific events to be compatible
         if (eventname == 'onmouseenter') {
             eventname = 'onmouseover';
@@ -3274,9 +3321,10 @@ LzSprite.prototype.setCornerRadius = function(radii) {
 LzSprite.prototype.__csscache;
 LzSprite.prototype.setCSS = function(name, value, isdimension) {
     if (isdimension) value = this.CSSDimension(value);
-    //Debug.warn('setCSS', name, value);
     var callback = this['set_' + name];
+    Debug.warn('setCSS', name, value, callback, this);
     if (callback) {
+        Debug.warn('setCSS', value);
         callback.call(this, value);
     } else {
         this.applyCSS(name, value);
@@ -3348,6 +3396,28 @@ LzSprite.prototype.set_borderWidth = function(width) {
     }
     if (this.__LZcontext) {
         this.__LZcontext.style.borderWidth = width;
+    }
+    // Don't apply to __LZcanvas or the __LZimg because they're contained by 
+    // __LZdiv
+}
+
+LzSprite.prototype.set_padding = function(padding) {
+    if (this.padding === padding) return;
+    this.padding = padding;
+    if (this.quirks.size_blank_to_zero) {
+        if (this.__sizedtozero && padding != null) {
+            this.__restoreSize();
+        }
+    }
+    if (padding == 0) {
+        padding = '';
+    }
+    // make sure these match the size of the __LZdiv to catch clicks
+    if (this.__LZclick) {
+        this.__LZclick.style.padding = padding;
+    }
+    if (this.__LZcontext) {
+        this.__LZcontext.style.padding = padding;
     }
     // Don't apply to __LZcanvas or the __LZimg because they're contained by 
     // __LZdiv

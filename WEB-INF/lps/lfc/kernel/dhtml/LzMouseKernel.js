@@ -32,6 +32,21 @@ var LzMouseKernel = {
         if (window['LzKeyboardKernel'] && LzKeyboardKernel['__updateControlKeys']) {
             LzKeyboardKernel.__updateControlKeys(e);
         }
+        if (LzSprite.prototype.capabilities.touchevents) {
+            var maxfingers = 1;
+            if (eventname == 'ontouchstart') {
+                eventname = 'onmousedown';
+            } else if (eventname == 'ontouchmove') {
+                eventname = 'onmousemove';
+            } else if (eventname == 'ontouchend') {
+                eventname = 'onmouseup';
+                maxfingers = 0;
+            }
+            if (e.touches.length != maxfingers) {
+                //Debug.warn('more than %w fingers for %w', %w, e.target.owner.owner);
+                return true;
+            }
+        }
 
         var lzinputproto = window['LzInputTextSprite'] && LzInputTextSprite.prototype;
         if (lzinputproto && lzinputproto.__lastshown != null) {
@@ -138,20 +153,34 @@ var LzMouseKernel = {
         LzMouseKernel.__sendEvent(ison ? 'onmouseenter' : 'onmouseleave');
         var lzembed = lz.embed;
         if (ison) {
-            lzembed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
-            lzembed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
-            lzembed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
-            lzembed.attachEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
+            if (LzSprite.prototype.capabilities.touchevents) {
+                // register for global touch events
+                lzembed.attachEventHandler(document, 'touchstart', LzMouseKernel, '__mouseEvent');
+                lzembed.attachEventHandler(document, 'touchmove', LzMouseKernel, '__mouseEvent');
+                lzembed.attachEventHandler(document, 'touchend', LzMouseKernel, '__mouseupEvent');
+            } else {
+                lzembed.attachEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
+                lzembed.attachEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
+                lzembed.attachEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+                lzembed.attachEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
+            }
             // Correct possible cross-domain issues - see LPP-8093
             try {
                 if (window.top != window) lzembed.attachEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
             } catch (e) {
             }
         } else {
-            lzembed.removeEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
-            lzembed.removeEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
-            lzembed.removeEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
-            lzembed.removeEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
+            if (LzSprite.prototype.capabilities.touchevents) {
+                // register for global touch events
+                lzembed.removeEventHandler(document, 'touchmove', LzMouseKernel, '__mouseEvent');
+                lzembed.removeEventHandler(document, 'touchend', LzMouseKernel, '__mouseupEvent');
+                lzembed.removeEventHandler(document, 'touchstart', LzMouseKernel, '__mouseEvent');
+            } else {
+                lzembed.removeEventHandler(document, 'mousemove', LzMouseKernel, '__mouseEvent');
+                lzembed.removeEventHandler(document, 'mousedown', LzMouseKernel, '__mouseEvent');
+                lzembed.removeEventHandler(document, 'mouseup', LzMouseKernel, '__mouseupEvent');
+                lzembed.removeEventHandler(document, 'click', LzMouseKernel, '__mouseEvent');
+            }
             // Correct possible cross-domain issues - see LPP-8093
             try {
                 if (window.top != window) lzembed.removeEventHandler(window.top.document, 'mouseup', LzMouseKernel, '__mouseupEvent');
@@ -246,8 +275,20 @@ var LzMouseKernel = {
         if (el) el.style.display = isclickable ? '' : 'none';
     }
     ,__sendMouseMove: function(e, offsetx, offsety) {
+        var sendmousemove = 'mousemove' == e.type;
+        if (LzSprite.prototype.capabilities.touchevents) {
+            var touches = e.touches;
+            // read the position of the first finger
+            var touch = touches && touches[0];
+            if (touch) {
+                LzMouseKernel.__x = touch.pageX; 
+                LzMouseKernel.__y = touch.pageY;
+                //console.log('new pos'+ ([LzMouseKernel.__x, LzMouseKernel.__y, e.type, e.target.owner.owner]).join(', '));
+            }
+            // always send onmousemove for touch events
+            sendmousemove = true;
         // see http://www.quirksmode.org/js/events_properties.html#position
-        if (e.pageX || e.pageY) {
+        } else if (e.pageX || e.pageY) {
             LzMouseKernel.__x = e.pageX;
             LzMouseKernel.__y = e.pageY;
         } else if (e.clientX || e.clientY) {
@@ -263,7 +304,8 @@ var LzMouseKernel = {
         if (offsety) {
             LzMouseKernel.__y += offsety;
         }
-        if (e.type == 'mousemove') {
+
+        if (sendmousemove) {
             LzMouseKernel.__sendEvent('onmousemove');
         }
     }
