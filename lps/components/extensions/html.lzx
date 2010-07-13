@@ -53,7 +53,8 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
     if (callbackDel) callback = function(retVal) {
                                     callbackDel.execute(retVal);
                                 };
-    lz.Browser.callJS('lz.embed.iframemanager.callJavascript', callback, id, methodName, null, args);
+    // Return the value obtained if it is available immediately.
+    return lz.Browser.callJS('lz.embed.iframemanager.callJavascript', callback, id, methodName, null, args);
 }
 
 lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
@@ -322,9 +323,10 @@ lz.embed.iframemanager.restoreSelection = function(id) {
       @param String methodName: The name of the method to call
       @param LzDelegate callbackDel: An optional LzDelegate which will be called with the return value from the method call.
       @param ...args: Optional arguments to pass to the method.
+      @return *: returns the value if it can immediately be returned.
     -->
     <method name="callJavascript" args="methodName, callbackDel = null, ...args">
-        lz.embed.iframemanager.callJavascript(this.iframeid, methodName, callbackDel, args);
+        return lz.embed.iframemanager.callJavascript(this.iframeid, methodName, callbackDel, args);
     </method>
     <!---
       Restores a selection in the iframe.  Currently only works in IE 7.
