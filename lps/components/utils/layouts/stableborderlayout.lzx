@@ -1,4 +1,5 @@
 <library>
+<include href="utils/layouts/layout.lzx"/>
 <class name="stableborderlayout" extends="layout" >
     <!--- The axis in which this layout operates. One of 'x' or 'y'. -->
     <attribute name="axis" setter="this.setAxis( axis )" type="string" />

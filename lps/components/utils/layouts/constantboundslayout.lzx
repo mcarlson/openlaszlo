@@ -1,4 +1,5 @@
 <library>
+    <include href="utils/layouts/layout.lzx"/>
     <class name="constantboundslayout" extends="layout">
 
         <!--- The constant value that is applied to the attribute
@@ -84,7 +85,7 @@ this will effect how layouts position it relative to other views.</p>
        </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

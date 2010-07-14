@@ -1,4 +1,5 @@
 <library>
+<include href="utils/layouts/layout.lzx"/>
 <class name="resizelayout" extends="layout" >
 
     <!--- The axis in which this layout operates either 'x' or 'y'.  -->
