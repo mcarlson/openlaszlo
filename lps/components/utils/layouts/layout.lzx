@@ -90,7 +90,6 @@
    -->
   <setter name="locked" args="locked ">
       if ( this.locked == locked ) return;
-      this.locked = locked;
       if ( locked ){
           this.lock();
       } else {
