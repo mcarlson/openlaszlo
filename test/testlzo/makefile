@@ -16,6 +16,7 @@ all:
 	${LZC} -c --runtime=swf10,dhtml --lzolibs extclass.lzo libdir/lib2.lzx
 	${LZC} --runtime=swf10 main.lzx
 	${LZC} --runtime=dhtml main.lzx
+	${LZC} --runtime=swf10 libdir/library.lzx
 
 
 
