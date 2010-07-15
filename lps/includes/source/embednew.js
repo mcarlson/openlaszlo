@@ -295,7 +295,7 @@ lz.embed = {
         if (properties.cancelkeyboardcontrol) {
             options.cancelkeyboardcontrol = properties.cancelkeyboardcontrol;
         }
-        if (properties.serverroot) {
+        if (properties.serverroot != null) {
             options.serverroot = properties.serverroot;
         }
         if (properties.approot != null && typeof(properties.approot) == "string") {
@@ -343,8 +343,10 @@ lz.embed = {
 
         if (! lz.embed.lfcloaded) {
             lz.embed.__appqueue.push(url);
-            if (properties.lfcurl && properties.serverroot) {
-                lz.embed.lfc(properties.lfcurl, properties.serverroot);
+            if (properties.lfcurl) {
+                lz.embed.lfc(properties.lfcurl, options.serverroot);
+            } else {
+                alert('WARNING: lz.embed.dhtml() requires an LFC to be loaded, either with a call to lz.embed.lfc(url, serverroot) or by specifying the lfcurl property in the call to lz.embed.dhtml().'); 
             }
         } else {
             lz.embed.dhtmlapploaded = true;
@@ -396,7 +398,7 @@ lz.embed = {
 
         var sp = url.split('?');
         url = sp[0];
-        if (sp.length == 1) return {url: url, flashvars: '', query: ''};
+        if (sp.length == 1) return {url: url, flashvars: '', query: '', initargs: {}};
 
         var queryvals = this.__parseQuery(sp[1]);
         var query = '';
