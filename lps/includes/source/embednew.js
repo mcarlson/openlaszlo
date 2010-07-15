@@ -224,6 +224,8 @@ lz.embed = {
               this.__dhtmlLoadLibrary('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
             }
         }
+        // Set to false to signify we're loading...
+        lz.embed.lfcloaded = false;
         this.__dhtmlLoadLibrary(url, lz.embed.__lfcloaded);
     }
 
@@ -345,8 +347,9 @@ lz.embed = {
             lz.embed.__appqueue.push(url);
             if (properties.lfcurl) {
                 lz.embed.lfc(properties.lfcurl, options.serverroot);
-            } else {
-                alert('WARNING: lz.embed.dhtml() requires an LFC to be loaded, either with a call to lz.embed.lfc(url, serverroot) or by specifying the lfcurl property in the call to lz.embed.dhtml().'); 
+            } else if (lz.embed.lfcloaded != null) {
+                // can't warn here because of the dev console :(
+                //alert('WARNING: lz.embed.dhtml() requires an LFC to be loaded, either with a call to lz.embed.lfc(url, serverroot) or by specifying the lfcurl property in the call to lz.embed.dhtml().'); 
             }
         } else {
             lz.embed.dhtmlapploaded = true;
