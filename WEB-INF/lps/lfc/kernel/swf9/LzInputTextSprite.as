@@ -26,8 +26,8 @@ public class LzInputTextSprite extends LzTextSprite {
     #passthrough  {
 
 
-    function LzInputTextSprite (newowner:LzView = null, args:Object = null) {
-        super(newowner);
+    function LzInputTextSprite (newowner:LzView = null, args:Object = null, useTLF:Boolean = false) {
+        super(newowner, null, useTLF);
 
         this.password = args && args.password ? true : false;
         textfield.displayAsPassword = this.password;
@@ -39,13 +39,18 @@ public class LzInputTextSprite extends LzTextSprite {
 
     override public function __initTextProperties (args:Object) :void {
         super.__initTextProperties(args);
-        // We do not support html in input fields.
-        this.html = false;
-
-        if (this.enabled) {
-            textfield.type = TextFieldType.INPUT;
+        // We do not support html in input fields.  TODO [2010-07 hqm]
+        // But an LzTLFTextField input type field has to be type HTML
+        // right now because that's the only way a
+        // TextContainerManager and EditManager will be created.
+        //
+        // I need to figure out how to make the escaping work
+        // consistently between TextField and LzTLFTextField for this
+        // input text case.
+        if (textfield is LzTLFTextField)  {
+            this.html = true;
         } else {
-            textfield.type = TextFieldType.DYNAMIC;
+            this.html = false;
         }
 
         /*

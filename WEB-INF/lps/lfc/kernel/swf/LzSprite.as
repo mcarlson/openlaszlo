@@ -79,6 +79,8 @@ LzSprite.prototype.capabilities = {
     ,dropshadows: true
     ,medialoading: true
     ,backgroundrepeat: true
+    ,directional_layout: false
+
 }
 
 /**

@@ -466,8 +466,8 @@ public class ClassModel implements Comparable {
     LFCTag2JSClass.put("node", "LzNode");
     LFCTag2JSClass.put("view", "LzView");
     LFCTag2JSClass.put("text", "LzText");
-    LFCTag2JSClass.put("tlftext", "LzTLFText");
-    LFCTag2JSClass.put("tlfinputtext", "LzTLFInputText");
+    //    LFCTag2JSClass.put("tlftext", "LzTLFText");
+    //    LFCTag2JSClass.put("tlfinputtext", "LzTLFInputText");
     LFCTag2JSClass.put("inputtext", "LzInputText");
     LFCTag2JSClass.put("canvas", "LzCanvas");
     LFCTag2JSClass.put("script", "LzScript");

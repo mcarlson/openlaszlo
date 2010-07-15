@@ -123,7 +123,7 @@ var isprite:LzInputTextSprite;
   * @access private
   */
 override function __makeSprite(args) {
-    this.sprite = this.tsprite = this.isprite = new LzInputTextSprite(this, args);
+      this.sprite = this.tsprite = this.isprite = new LzInputTextSprite(this, args, this.hasdirectionallayout);
 }
 
 /** @access private */
@@ -230,7 +230,11 @@ function setHTML (htmlp) {
 * @access private
 */
 override function getText ( ){
-    return (this.sprite cast LzInputTextSprite).getText();    
+    if (this.isprite != null) {
+        return this.isprite.getText();
+    } else {
+        return "";
+    }
 }
 
 /** 

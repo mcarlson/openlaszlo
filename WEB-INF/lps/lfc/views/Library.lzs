@@ -11,8 +11,8 @@
 #include "views/LzText.lzs"
 #include "views/LzInputText.lzs"
 
-#include "views/LzTLFText.lzs"
-#include "views/LzTLFInputText.lzs"
+    //#include "views/LzTLFText.lzs"
+    //#include "views/LzTLFInputText.lzs"
 
 #include "views/LzViewLinkage.lzs"
 #include "views/LaszloCanvas.lzs"

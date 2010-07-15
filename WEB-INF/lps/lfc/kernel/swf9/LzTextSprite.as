@@ -28,13 +28,20 @@ public class LzTextSprite extends LzSprite {
         import flash.text.TextFieldAutoSize;
         import flash.text.TextFormat;
         import flash.text.TextLineMetrics;
+        import flashx.textLayout.formats.Direction;
         import flash.ui.*;
         import flash.utils.getDefinitionByName;
+
     }#
 
         #passthrough  {
 
-        public var textfield:TextField = null;
+        // TODO [hqm 2010-07] textfield should really be declared with
+        // type TextField, but we need to be able to support setting
+        // it to our LzTLFTextField. Is there some common interface
+        // declaration we could make that would include both
+        // flash.text.TextField and our compatibility class?
+        public var textfield:* = null;
         public var textformat:TextFormat = null;
 
         public static const PAD_TEXTWIDTH:Number = 4;
@@ -81,10 +88,16 @@ public class LzTextSprite extends LzSprite {
         public var scrollheight:Number = 0;
         public var html:Boolean = true;
 
-        public function LzTextSprite (newowner:LzView = null, args:Object = null) {
+        public var direction:String = Direction.LTR;
+
+        public function LzTextSprite (newowner:LzView = null, args:Object = null, useTLF:Boolean=false) {
             super(newowner,false);
             // owner:*, isroot:Boolean
-            textfield = createTextField(0,0,400,20);
+            if (useTLF) {
+                textfield = createTLFTextField(0,0,400,20);
+            } else {
+                textfield = createTextField(0,0,400,20);
+            }
         }
 
         private var _ignoreclick:Boolean = false;
@@ -138,6 +151,22 @@ public class LzTextSprite extends LzSprite {
                 // don't cancel "onmouseup" if another sprite was selected
                 e.stopPropagation();
             }
+        }
+
+
+        /** setDirection
+         * sets reading order of text, legal values are 'ltr' and 'rtl'
+         * @param dir reading order direction
+         */
+        public function setDirection (dir:String):void {
+            if (dir == "ltr") {
+                this.direction = Direction.LTR;
+            } else if (dir == "rtl") {
+                this.direction = Direction.RTL;
+            } else {
+                Debug.error('setDirection value "', dir, '" unknown, use "ltr" or "rtl"');
+            }
+            textfield.direction = dir;
         }
 
         private function setTextfieldCursor (lzsprite:LzSprite) :void {
@@ -380,6 +409,26 @@ public class LzTextSprite extends LzSprite {
             return tfield;
         }
 
+
+        // TODO [hqm 2010-07] make this private
+        public function createTLFTextField(nx:Number, ny:Number, w:Number, h:Number):LzTLFTextField {
+            var tfield:LzTLFTextField = new LzTLFTextField();
+            tfield.width = w;
+            tfield.height = h;
+            tfield.x = nx;
+            tfield.y = ny;
+            tfield.border = false;
+            tfield.antiAliasType = AntiAliasType.ADVANCED;
+            tfield.text = "";
+            tfield.tabEnabled = LFCApplication.textfieldTabEnabled;
+            //tfield.cacheAsBitmap = true;
+            addChild(tfield);
+            tfield.renderImmediate = true;
+            return tfield;
+        }
+
+
+
         public function __initTextProperties (args:Object) :void {
             textfield.autoSize = TextFieldAutoSize.NONE;
 
@@ -599,25 +648,45 @@ public class LzTextSprite extends LzSprite {
             tf.letterSpacing = this.letterspacing;
 
             // you can't set defaultTextFormat if a style sheet is applied
+
             var stylesheet:StyleSheet = textfield.styleSheet;
             textfield.styleSheet = null;
             textfield.defaultTextFormat = tf;
 
             // measure sample text
-            var text:String = textfield[this.html ? 'htmlText' : 'text'];
-            textfield.text = "__ypgSAMPLE__";
+            var prevtext:String = this.text;
+            // TODO [hqm 2010-07] setting type to plain 'text' for
+            // LzTLFTextField has a bug with being unable to read out
+            // the line height immediately, so need to use type=html
+            // for now.
+            if (textfield is LzTLFTextField) {
+                textfield.renderImmediate = true;
+                textfield.htmlText = "__ypgSAMPLE__";
+            } else {
+                textfield.text = "__ypgSAMPLE__";
+            }
+            // we've got text metrics, We can turn off forced rendering now, 
             var lm:TextLineMetrics = textfield.getLineMetrics(0);
+
+            if (textfield is LzTLFTextField) {
+                textfield.renderImmediate = false;
+            }
+
             textfield.styleSheet = stylesheet;
-            textfield[this.html ? 'htmlText' : 'text'] = text;
+            textfield[this.html ? 'htmlText' : 'text'] = prevtext;
 
             var lh:Number = lm.ascent + lm.descent + lm.leading;
             if (lh !== this.lineheight) {
-              this.lineheight = lh;
-              // Tell the owner the linescale has changed
-              this.owner.scrollevent('lineHeight', lh);
+                this.lineheight = lh;
+                // Tell the owner the linescale has changed
+                this.owner.scrollevent('lineHeight', lh);
             }
+
             if (this.initted) this.owner._updateSize();
+
         }
+
+
 
 
         public function setMultiline ( ml:Boolean ):void {

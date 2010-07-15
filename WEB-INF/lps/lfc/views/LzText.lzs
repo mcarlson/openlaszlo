@@ -219,6 +219,14 @@ dynamic class LzText extends LzView with LzFormatter {
    */
   var selectable = false;
 
+
+  /** If true, sprite will use TLF text framework class that supports bidirectional text layout.
+   * @lzxtype booleanLiteral
+   * @type Boolean
+   * @keywords final
+   */
+  var hasdirectionallayout = false;
+
   /** @lzxtype event */
   var onselectable:LzDeclaredEventClass = LzDeclaredEvent;
 
@@ -228,6 +236,28 @@ dynamic class LzText extends LzView with LzFormatter {
     this.tsprite.setSelectable(isSel);
     if (this.onselectable.ready) this.onselectable.sendEvent(isSel);
   }
+
+  /** Text direction, either "ltr" (default) or "rtl"
+   * @lzxtype String
+   * @type String
+   */
+  var direction:String = "ltr";
+
+  /** @lzxtype event */
+  var ondirection:LzDeclaredEventClass = LzDeclaredEvent;
+
+  /** @access private */
+    function $lzc$set_direction(dir:String) {
+        this.direction = dir;
+        if (this.capabilities.directional_layout) {
+            this.tsprite.setDirection(dir);
+        } else if ($debug) {
+            LzView.__warnCapability('text.directional_layout', 'direction'); 
+        }
+
+        if (this.ondirection.ready) this.ondirection.sendEvent(dir);
+  }
+
 
   /*
    * Advanced font interface
@@ -398,7 +428,7 @@ dynamic class LzText extends LzView with LzFormatter {
     } else if ($debug && this.scrollevents) {
       // Max's assertion that line attributes match the sprite
       if (this[name] != this.sprite[name]) {
-        Debug.warn("%w.%s: %d != %d", this, name, this[name], this.sprite[name]);
+          Debug.warn("%w.%s: %d != %d", this, name, this[name], this.sprite[name]);
       }
     }
   }
@@ -1053,7 +1083,7 @@ dynamic class LzText extends LzView with LzFormatter {
   /** @access private */
   override function construct ( parent, args ) {
     this.multiline = ('multiline' in args) ? args.multiline : null;
-
+    this.hasdirectionallayout = ('hasdirectionallayout' in args) ? args.hasdirectionallayout : false;
     super.construct(parent, args);
 
     // Attributes that should cascade
@@ -1196,8 +1226,7 @@ dynamic class LzText extends LzView with LzFormatter {
    * @access private
    */
   override function __makeSprite(args) {
-    //Debug.write('__makeSprite', args);
-    this.sprite = this.tsprite = new LzTextSprite(this, args);
+      this.sprite = this.tsprite = new LzTextSprite(this, args, this.hasdirectionallayout);
   }
 
   /*

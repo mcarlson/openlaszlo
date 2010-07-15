@@ -658,6 +658,8 @@ LzSprite.prototype.capabilities = {
     ,medialoading: true
     ,backgroundrepeat: true
     ,touchevents: false
+    ,directional_layout: false
+
 }
 
 /**

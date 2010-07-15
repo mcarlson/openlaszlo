@@ -60,7 +60,7 @@ public class LzTLFInputTextSprite extends LzTLFTextSprite {
 
         public function LzTLFInputTextSprite (newowner:LzView = null, args:Object = null) {
             super(newowner,args);
-            tcm.editingMode = EditingMode.READ_WRITE;
+            textContainerManager.editingMode = EditingMode.READ_WRITE;
             container.mouseChildren = true;
             container.mouseEnabled = true;
         }
@@ -72,9 +72,9 @@ public class LzTLFInputTextSprite extends LzTLFTextSprite {
         function setEnabled (enabled:Boolean) :void {
             this.enabled = enabled;
             if (this.enabled) {
-                tcm.editingMode = EditingMode.READ_WRITE;
+                textContainerManager.editingMode = EditingMode.READ_WRITE;
             } else {
-                tcm.editingMode = EditingMode.READ_SELECT;
+                textContainerManager.editingMode = EditingMode.READ_SELECT;
             }
         }
 
@@ -85,9 +85,9 @@ public class LzTLFInputTextSprite extends LzTLFTextSprite {
             this.html = false;
 
             if (this.enabled) {
-                tcm.editingMode = EditingMode.READ_WRITE;
+                textContainerManager.editingMode = EditingMode.READ_WRITE;
             } else {
-                tcm.editingMode = EditingMode.READ_SELECT;
+                textContainerManager.editingMode = EditingMode.READ_SELECT;
             }
 
             /*

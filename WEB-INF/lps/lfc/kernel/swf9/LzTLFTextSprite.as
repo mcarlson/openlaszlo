@@ -16,40 +16,38 @@
 
 public class LzTLFTextSprite extends LzSprite {
     #passthrough (toplevel:true) {
-    import flash.display.Sprite;
-    import flash.display.Sprite;
-    import flash.events.MouseEvent;
-    import flash.events.Event;
-    import flash.events.TextEvent;
-    import flashx.textLayout.events.*;
-    import flashx.textLayout.operations.*;
-    import flash.geom.Rectangle;
-    import flashx.textLayout.elements.Configuration;
-    import flashx.textLayout.events.CompositionCompleteEvent;
-    import flashx.textLayout.events.FlowOperationEvent;
    
-    import flashx.textLayout.container.ContainerController;
-    import flashx.textLayout.elements.Configuration;
-    import flashx.textLayout.elements.IConfiguration;
-    import flashx.textLayout.formats.TextLayoutFormat;
-    import flashx.textLayout.formats.TextAlign;
+    import flash.display.DisplayObject;
+    import flash.display.Sprite;
+    import flash.events.Event;
+    import flash.events.MouseEvent;
+    import flash.events.TextEvent;
+    import flash.geom.Rectangle;
     import flash.text.engine.FontPosture;
     import flash.text.engine.Kerning;
     import flash.text.engine.TextBaseline;
-    import flashx.textLayout.formats.WhiteSpaceCollapse;
-    import flashx.textLayout.edit.EditingMode;
-    import flashx.textLayout.conversion.TextConverter;
-    import flashx.textLayout.formats.Direction;
-    
+    import flashx.textLayout.container.ContainerController;
     import flashx.textLayout.container.TextContainerManager;
+    import flashx.textLayout.conversion.TextConverter;
     import flashx.textLayout.edit.EditManager;
+    import flashx.textLayout.edit.EditingMode;
+    import flashx.textLayout.edit.ISelectionManager;
+    import flashx.textLayout.edit.SelectionState;
+    import flashx.textLayout.elements.Configuration;
+    import flashx.textLayout.elements.IConfiguration;
+    import flashx.textLayout.elements.LinkElement;
     import flashx.textLayout.elements.ParagraphElement;
     import flashx.textLayout.elements.TextFlow;
-    import flashx.textLayout.edit.SelectionState;
+    import flashx.textLayout.events.*;
+    import flashx.textLayout.events.CompositionCompleteEvent;
+    import flashx.textLayout.events.FlowOperationEvent;
     import flashx.textLayout.events.SelectionEvent;
-    import flashx.textLayout.edit.ISelectionManager;
+    import flashx.textLayout.formats.Direction;
+    import flashx.textLayout.formats.LineBreak;
+    import flashx.textLayout.formats.TextAlign;
     import flashx.textLayout.formats.TextLayoutFormat;
-    import flash.text.engine.FontPosture;
+    import flashx.textLayout.formats.WhiteSpaceCollapse;
+    import flashx.textLayout.operations.*;
     import flashx.undo.UndoManager;
     }#
 
@@ -102,7 +100,7 @@ public class LzTLFTextSprite extends LzSprite {
         // TODO [hqm 2010-06] TLF objects, these are declared public right now for debugging
         public var editManager:EditManager = null;
         public var undoManager:UndoManager = null;
-        public var tcm:LzTextContainerManager;
+        public var textContainerManager:LzTextContainerManager;
         public var textFlow:TextFlow;
         // The text sprite layout puts its stuff in here
         public var container:Sprite; 
@@ -125,22 +123,16 @@ public class LzTLFTextSprite extends LzSprite {
                 layoutFormat.paddingRight = LzTLFTextSprite.TEXTPADDING;
             config.textFlowInitialFormat = layoutFormat;
             
-            tcm = new LzTextContainerManager(container, null, this);
-            tcm.editingMode = EditingMode.READ_SELECT;
+            textContainerManager = new LzTextContainerManager(container, null, this);
+            textContainerManager.editingMode = EditingMode.READ_SELECT;
             // install event listeners on EditManager or ContainerController
-
-            //            tcm.addEventListener( SelectionEvent.SELECTION_CHANGE, selectionChangeHandler);
-
-
-            /*
-              tfield.addEventListener(TextEvent.LINK, textLinkHandler);
-              tfield.addEventListener(MouseEvent.CLICK, handleTextfieldMouse);
-              tfield.addEventListener(MouseEvent.DOUBLE_CLICK, handleTextfieldMouse);
-              tfield.addEventListener(MouseEvent.MOUSE_DOWN, handleTextfieldMouse);
-              tfield.addEventListener(MouseEvent.MOUSE_UP, handleTextfieldMouse);
-              tfield.addEventListener(MouseEvent.MOUSE_OVER, handleTextfieldMouse);
-              tfield.addEventListener(MouseEvent.MOUSE_OUT, handleTextfieldMouse);
-            */
+            //            textContainerManager.addEventListener( SelectionEvent.SELECTION_CHANGE, selectionChangeHandler);
+            // Converts a click on a LinkElement to a "TextEvent.LINK"
+            // event.  For some (stupid?) reason textFlow does not
+            // generate it's own TextEvent.LINK event, when you click
+            // on a link.
+            textContainerManager.addEventListener(MouseEvent.CLICK, handleLinkClick);
+            this.addEventListener(TextEvent.LINK, textLinkHandler);
         }
 
         // This is too late to stop the selection behavior
@@ -191,7 +183,7 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         public function addScrollEventListener():void {
-            tcm.addEventListener(TextLayoutEvent.SCROLL, __handleScrollEvent);
+            textContainerManager.addEventListener(TextLayoutEvent.SCROLL, __handleScrollEvent);
         }
 
         var scrollevents = false;
@@ -212,10 +204,10 @@ public class LzTLFTextSprite extends LzSprite {
                 //Debug.info('__handleScrollEvent', 'scrollHeight', lineNoToPixel(textfield.maxScrollV));
                 owner.scrollevent('scrollHeight', lineNoToPixel(maxscroll) + owner.height);
             }
-            if (hscroll !== tcm.horizontalScrollPosition) {
-                hscroll = tcm.horizontalScrollPosition;
+            if (hscroll !== textContainerManager.horizontalScrollPosition) {
+                hscroll = textContainerManager.horizontalScrollPosition;
                 //Debug.info('__handleScrollEvent', 'scrollLeft', textfield.scrollH);
-                owner.scrollevent('scrollLeft', tcm.horizontalScrollPosition);
+                owner.scrollevent('scrollLeft', textContainerManager.horizontalScrollPosition);
             }
             if (maxhscroll !== getMaxScrollH()) {
                 maxhscroll = getMaxScrollH();
@@ -230,21 +222,32 @@ public class LzTLFTextSprite extends LzSprite {
             this.owner.ontextlink.sendEvent(e.text);
         }
 
+        private function handleLinkClick(event:FlowElementMouseEvent):void
+        {
+            if (event.flowElement is LinkElement)
+            {
+                event.preventDefault();
+                dispatchEvent(new TextEvent(TextEvent.LINK,
+                                            LinkElement(event.flowElement).href));
+            }
+        }
+
+
         public function makeTextLink(str:String, value:String) :String {
             return '<a href="event:'+value+'">'+str+'</a>';
         }
 
         override public function setWidth( w:Number ):void {
             super.setWidth(w);
-            tcm.compositionWidth = w;
-            tcm.updateContainer();
+            textContainerManager.compositionWidth = w;
+            textContainerManager.updateContainer();
             this.__handleScrollEvent();
         }
 
         override public function setHeight( h:Number ):void {
             super.setHeight(h);
-            tcm.compositionHeight = h;
-            tcm.updateContainer();
+            textContainerManager.compositionHeight = h;
+            textContainerManager.updateContainer();
             this.__handleScrollEvent();
         }
 
@@ -265,7 +268,7 @@ public class LzTLFTextSprite extends LzSprite {
                 //                    textclip.autoSize = TextFieldAutoSize.LEFT;
                 //}
             } else if (args['height'] != null) {
-                tcm.compositionHeight = args.height;
+                textContainerManager.compositionHeight = args.height;
             }
             // Default the scrollheight to the visible height.
             this.scrollheight = this.height;
@@ -277,15 +280,15 @@ public class LzTLFTextSprite extends LzSprite {
             if (this.sizeToHeight) {
                 var h = fontsize;
                 //TODO [anba 20080602] is this ok for multiline? 
-                if (this.multiline) h *= tcm.numLines;
+                if (this.multiline) h *= textContainerManager.numLines;
                 h += 4;//2*2px gutter, see flash docs for flash.text.TextLineMetrics 
                 this.setHeight(h);
             }
 
             this.__setFormat();
             addScrollEventListener();
-            tcm.compose();
-            tcm.updateContainer();
+            textContainerManager.compose();
+            textContainerManager.updateContainer();
             __handleScrollEvent();
         }
 
@@ -308,7 +311,7 @@ public class LzTLFTextSprite extends LzSprite {
                 Debug.error('setDirection value "', dir, '" unknown, use "ltr" or "rtl"');
             }
             textFlow.direction = layoutFormat.direction = this.direction;
-            tcm.updateContainer();
+            textContainerManager.updateContainer();
         }
 
         /*
@@ -318,7 +321,7 @@ public class LzTLFTextSprite extends LzSprite {
         public function setFontSize ( fsize:Number ):void {
             //Debug.info("setFontSize", fsize);
             fontsize= textFlow.fontSize = layoutFormat.fontSize = fsize;
-            tcm.compose();
+            textContainerManager.compose();
             setText(text );
         }
 
@@ -351,7 +354,7 @@ public class LzTLFTextSprite extends LzSprite {
          */
         public function setTextColor ( col:* ):void {
             textFlow.color = layoutFormat.color = col;
-            tcm.updateContainer();            
+            textContainerManager.updateContainer();            
         }
 
         /**
@@ -362,11 +365,19 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         public function appendText( t:String ):void {
-            setText(text+t);
+            t = t.replace(linebreakPat, '<br/>');
+            var aflow:TextFlow = TextConverter.importToFlow(t,
+                                                            html ? TextConverter.TEXT_FIELD_HTML_FORMAT : TextConverter.PLAIN_TEXT_FORMAT,
+                                                            config);
+
+            while (aflow.numChildren) {
+                textFlow.addChild(aflow.getChildAt(0));
+            }
+            textFlow.flowComposer.updateAllControllers();
         }
 
         public function getText():String {
-            return this.tcm.getText();
+            return this.textContainerManager.getText();
         }
 
         /** setText( String:text )
@@ -376,12 +387,16 @@ public class LzTLFTextSprite extends LzSprite {
         */
 
 
+        private var linebreakPat:RegExp = /\n/g; 
+
+
         /**
          * setText sets the text of the field to display
          * @param String t: the string to which to set the text
          */
         public function setText ( t:String ):void {
             this.text = t;
+            t = t.replace(linebreakPat, '<br/>');
             textFlow = TextConverter.importToFlow(t,
                                                   html ? TextConverter.TEXT_FIELD_HTML_FORMAT : TextConverter.PLAIN_TEXT_FORMAT,
                                                   config);
@@ -391,13 +406,13 @@ public class LzTLFTextSprite extends LzSprite {
             textFlow.alignmentBaseline = flash.text.engine.TextBaseline.DESCENT;
             textFlow.whiteSpaceCollapse = flashx.textLayout.formats.WhiteSpaceCollapse.PRESERVE;
 
-            tcm.setTextFlow(textFlow);
+            textContainerManager.setTextFlow(textFlow);
             // hqm [2010-06] This call to beginInteraction creates our
             // custom EditManager or SelectionManager, which is the
             // only way I have found to get mouse events, such as
             // mouseOver, mouseOut.
-            tcm.beginInteraction();
-            tcm.updateContainer();
+            textContainerManager.beginInteraction();
+            textContainerManager.updateContainer();
 
 
             if (this.resize && (this.multiline == false)) {
@@ -414,8 +429,8 @@ public class LzTLFTextSprite extends LzSprite {
                 if (theight == 0) { theight = fontsize; }
                 this.setHeight(theight + (2 * LzTLFTextSprite.TEXTPADDING));
             }
-
-
+            // Update scroll params on owner LzText
+            __handleScrollEvent(null);
 
             if (this.initted) this.owner._updateSize();
         }
@@ -435,7 +450,7 @@ public class LzTLFTextSprite extends LzSprite {
             //            Debug.write("__setFormat this.font=", this.font, 'this.fontname = ',this.fontname,
             //'cfontname=', cfontname);
 
-            //SET TCM OR FLOW LAYOUT PROPERTIES?? 
+            //SET TEXTCONTAINERMANAGER OR FLOW LAYOUT PROPERTIES?? 
 
             layoutFormat.fontFamily = cfontname;
             layoutFormat.fontSize = this.fontsize;
@@ -473,19 +488,19 @@ public class LzTLFTextSprite extends LzSprite {
             this.selectable = isSel;
             container.mouseChildren = isSel || clickable;
             container.mouseEnabled = isSel || clickable;
-            tcm.editingMode = EditingMode.READ_SELECT;
+            textContainerManager.editingMode = EditingMode.READ_SELECT;
             // TODO [hqm 2010-06] will this be sufficient to force the cursor to change?
-            tcm.updateContainer();
+            textContainerManager.updateContainer();
         }
 
 
         public function getTextWidth (force=null):Number {
-            var ocw:Number = tcm.compositionWidth;
-            tcm.compositionWidth = Infinity;
-            tcm.updateContainer();
-            var bounds:Rectangle = tcm.getContentBounds();
-            tcm.compositionWidth = ocw;
-            tcm.updateContainer();
+            var ocw:Number = textContainerManager.compositionWidth;
+            textContainerManager.compositionWidth = Infinity;
+            textContainerManager.updateContainer();
+            var bounds:Rectangle = textContainerManager.getContentBounds();
+            textContainerManager.compositionWidth = ocw;
+            textContainerManager.updateContainer();
             //            return bounds.width + ( 2 * LzTLFTextSprite.TEXTPADDING);
             return Math.round(bounds.width + 1);
             
@@ -498,7 +513,7 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         public function getTextfieldHeight (force=null) :Number {
-            var bounds:Rectangle = tcm.getContentBounds();
+            var bounds:Rectangle = textContainerManager.getContentBounds();
             if (multiline) {
                 return Math.round( bounds.height  + ( 2 * LzTLFTextSprite.TEXTPADDING));
             } else {
@@ -508,7 +523,7 @@ public class LzTLFTextSprite extends LzSprite {
 
 
         function setHScroll(s:Number) :void {
-            tcm.horizontalScrollPosition = s;
+            textContainerManager.horizontalScrollPosition = s;
         }
 
         function setAntiAliasType( aliasType:String ):void {
@@ -587,23 +602,23 @@ public class LzTLFTextSprite extends LzSprite {
 
         function setScroll ( h:Number ) :void {
             this.scroll = h;
-            tcm.verticalScrollPosition = h;
+            textContainerManager.verticalScrollPosition = h;
         }
 
         function getScroll() :Number {
-            return Math.ceil(tcm.verticalScrollPosition);
+            return Math.ceil(textContainerManager.verticalScrollPosition);
         }
 
         function getMaxScroll() :Number {
             // TODO [hqm 2010-06] how do we compute this? controller.getContentBounds() - controller.compositionHeight???
-            var bounds:Rectangle = tcm.getContentBounds();
-            return Math.max (0, Math.ceil(bounds.height - tcm.compositionHeight));
+            var bounds:Rectangle = textContainerManager.getContentBounds();
+            return Math.max (0, Math.ceil(bounds.height - textContainerManager.compositionHeight));
         }
 
         function getMaxScrollH() :Number {
             // TODO [hqm 2010-06] how do we compute this? controller.getContentBounds() - controller.compositionHeight???
-            var bounds:Rectangle = tcm.getContentBounds();
-            return Math.max (0, bounds.width - tcm.compositionWidth);
+            var bounds:Rectangle = textContainerManager.getContentBounds();
+            return Math.max (0, bounds.width - textContainerManager.compositionWidth);
         }
 
         function getBottomScroll() :Number {
@@ -619,11 +634,11 @@ public class LzTLFTextSprite extends LzSprite {
         }
 
         function setYScroll (n:Number) :void {
-         tcm.verticalScrollPosition = scroll = pixelToLineNo((- n));
+         textContainerManager.verticalScrollPosition = scroll = pixelToLineNo((- n));
         }
 
         function setXScroll (n:Number) :void {
-            tcm.horizontalScrollPosition =  hscroll = (- n);
+            textContainerManager.horizontalScrollPosition =  hscroll = (- n);
         }
 
         function setWordWrap (wrap:Boolean) :void {
@@ -673,6 +688,16 @@ public class LzTLFTextSprite extends LzSprite {
         function __onChanged (event:Event) :void { }
 
         function __lostFocus (event:Event) :void { }
+
+
+        function get forwardsMouse () :Boolean {
+            return ! (this.clickable || this.selectable);
+        }
+
+        function getNextMouseObject (e:MouseEvent) :DisplayObject {
+            return null;
+        }
+
 
     }#
 }

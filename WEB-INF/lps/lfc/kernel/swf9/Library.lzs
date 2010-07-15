@@ -19,8 +19,10 @@
 #include "kernel/swf9/LzTLFEditManager.as"
 #include "kernel/swf9/LzTLFSelectionManager.as"
 #include "kernel/swf9/LzTextContainerManager.as"
-#include "kernel/swf9/LzTLFTextSprite.as"
-#include "kernel/swf9/LzTLFInputTextSprite.as"
+#include "kernel/swf9/LzTLFTextFieldHostFormat.as"
+#include "kernel/swf9/LzTLFTextFieldStyleResolver.as"
+#include "kernel/swf9/LzTLFTextField.as"
+
 
 #include "kernel/swf9/LzFontManager.as"
 #include "kernel/swf9/LzTimeKernel.as"

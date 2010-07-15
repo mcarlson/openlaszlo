@@ -149,6 +149,8 @@ public class LzSprite extends Sprite {
     ,medialoading: true
     ,backgroundrepeat: true
     ,clickregion: true
+    ,directional_layout: true
+
     };
     var capabilities = LzSprite.capabilities;
 

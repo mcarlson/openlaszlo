@@ -61,6 +61,13 @@ public class LFCApplication {
         LFCApplication._sprite.removeEventListener(Event.ADDED_TO_STAGE, initLFC);
         // Allow anyone to access the stage object
         LFCApplication.stage = LFCApplication._sprite.stage;
+
+
+        // `logdebug` is set by the server to tell Debug.__write to log
+        // back to the server
+        Debug.log_all_writes = (!! LzBrowserKernel.getInitArg('logdebug'));
+
+
         runToplevelDefinitions()
 
         if (Capabilities.playerType == "ActiveX") {
@@ -98,7 +105,6 @@ public class LFCApplication {
     public function runToplevelDefinitions() {
         // overridden by swf9 script compiler
     }
-
 }
 
 } // end #pragma block

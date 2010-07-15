@@ -1,0 +1,85 @@
+<canvas width="100%" height="80%" layout="axis:y;spacing:4">
+
+<class name="ttext" extends="text"
+       onmouseover="Debug.info('onmouseover')"
+       onmouseup="Debug.info('onmouseup')"
+       onmousedown="Debug.info('onmousedown')"
+       onmouseout="Debug.info('onmouseout')"
+       >
+  <attribute name="hasdirectionallayout" value="true"/>
+</class>
+
+<view layout="axis:x;spacing:4">
+  <text>single line text:</text>
+  <view layout="axis:y;spacing:4">
+    
+    <ttext id="t1" clickable="false" bgcolor="#cccccc">auto width single line non-selectable, non-clickable</ttext>
+    <ttext id="t11" clickable="false" width="400" bgcolor="#cccccc">400 width single line non-selectable, non-clickable</ttext>
+
+    <ttext id="t2" fontsize="18" bgcolor="#cccccc" 
+           onclick="Debug.info('onclick')"
+           clickable="true" >clickable, auto width single line fontsize 18</ttext>
+    <ttext id="t3" fontsize="12" font="Courier" bgcolor="#cccccc" 
+           onclick="Debug.info('onclick')"
+           clickable="true" >clickable, auto width single line courier fontsize 12</ttext>
+    <text hasdirectionallayout="true" id="t4" bgcolor="#cccccc" selectable="true" >auto width single line selectable</text>
+    <ttext id="t5" bgcolor="#cccccc" clickable="true" >clickable auto width single line clickable</ttext>
+    <text id="t6" fontsize="24" hasdirectionallayout="true" direction="rtl" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ RTL </text>
+    <text id="t7" fontsize="24" hasdirectionallayout="true" direction="ltr" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ LTR </text>
+                
+
+  </view>
+</view>
+
+
+<view layout="axis:x;spacing:4">
+  <text>single line inputtext:</text>
+  <view layout="axis:y;spacing:4">
+    <inputtext id="i1" bgcolor="#cccccc" hasdirectionallayout="true" width="250"> single line input text</inputtext>
+    <inputtext id="i2" fontsize="24" bgcolor="#cccccc"  width="450" hasdirectionallayout="true"> single line input text fontsize 24</inputtext>
+  </view>
+</view>
+
+
+<view layout="axis:x;spacing:4">
+  <text>multiline text:</text>
+   <text width="200" height="200" id="k1"  bgcolor="#cccc00" 
+         hasdirectionallayout="true"
+         multiline="true" > Multiline non-selectable text with width of 200 height 200
+and default font and font size.
+   </text>
+
+   <text width="200" height="200" id="k2"  bgcolor="#cc00cc" 
+          selectable="true" hasdirectionallayout="true"
+              multiline="true" 
+              > Multiline selectable text with width of 200 height 200
+and default font and font size.
+   </text>
+
+   <inputtext width="200" height="200" id="k3"  bgcolor="#cccccc" 
+              multiline="true" 
+              hasdirectionallayout="true"
+              onmouseover="Debug.info('onmouseover')"
+              onmouseup="Debug.info('onmouseup')"
+              onmousedown="Debug.info('onmousedown')"
+              onmouseout="Debug.info('onmouseout')"
+              
+> 
+Multiline input text with width of 200 height 200
+and default font and font size.
+   </inputtext>
+
+    <inputtext id="k4"
+               width="200" multiline="true" height="200" bgcolor="#cccccc"
+               fontsize="24" hasdirectionallayout="true" direction="rtl" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ RTL </inputtext>
+
+</view>
+
+
+
+  </canvas>
+  
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

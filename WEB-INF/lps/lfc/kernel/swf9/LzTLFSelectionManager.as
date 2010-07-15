@@ -14,6 +14,8 @@
     Custom EditManager for LzTLFSprite
  */
 
+
+
 public class LzTLFSelectionManager extends SelectionManager {
 
     #passthrough (toplevel:true) {
@@ -27,25 +29,24 @@ public class LzTLFSelectionManager extends SelectionManager {
         import flash.ui.Mouse;
     }#
 
-    var lzsprite:LzTLFTextSprite;
-    
-    var mouseIsDown:Boolean = false;
+        #passthrough {
+        public var textfield:LzTLFTextField;
+        public var mouseIsDown:Boolean = false;
 
 
-    #passthrough {
-        public function LzTLFSelectionManager(owner:LzTLFTextSprite)
+        public function LzTLFSelectionManager(owner:LzTLFTextField)
         {
             super();
-            this.lzsprite = owner;
+            this.textfield = owner;
         }
 
 
         override public function mouseOverHandler(event:MouseEvent):void {
-            if (lzsprite.selectable) {
+            if (textfield.selectable) {
                 super.mouseOverHandler(event);
             } 
-            if (lzsprite.clickable)  {
-                lzsprite.__mouseEvent(event);
+            if (textfield.clickable)  {
+                //textfield.__mouseEvent(event);
             }
             frobCursor();
             //Debug.info('mouseOverHandler', this, event);
@@ -53,24 +54,25 @@ public class LzTLFSelectionManager extends SelectionManager {
 
 
         override public function mouseOutHandler(event:MouseEvent):void {
-            if (lzsprite.selectable) {
+            if (textfield.selectable) {
                 super.mouseOutHandler(event);
             }
 
-            if (lzsprite.clickable) {
-                lzsprite.__mouseEvent(event);
+            if (textfield.clickable) {
+                //textfield.__mouseEvent(event);
                 mouseIsDown = false;
             }
 
+            frobCursor();
             //Debug.info("mouseOutHandler", this, event);
         }
 
         // process cut copy paste select-all
         override public function editHandler(event:Event):void {
             //Debug.info("editHandler", this, event);            
-            if (lzsprite.selectable || lzsprite.clickable)  {
+            if (textfield.selectable || textfield.clickable)  {
                 super.editHandler(event);
-                lzsprite.__mouseEvent(event as MouseEvent);
+                textfield.__mouseEvent(event as MouseEvent);
             }
         }
 
@@ -80,10 +82,10 @@ public class LzTLFSelectionManager extends SelectionManager {
         //}
         
         public override function  activateHandler(event:Event):void {
-            if (lzsprite.selectable || lzsprite.clickable) {
+            if (textfield.selectable || textfield.clickable) {
                 super.activateHandler(event);
             }
-            //Debug.info(" activateHandler", lzsprite.selectable, event);
+            //Debug.info(" activateHandler", textfield.selectable, event);
         }
 
         public override function  deactivateHandler(event:Event):void {
@@ -101,25 +103,27 @@ public class LzTLFSelectionManager extends SelectionManager {
             //Debug.info(" focusChangeHandler", event);
         }
 
-        protected function frobCursor() {
-            if (lzsprite.selectable)  {
-                LzMouseKernel.setCursorLocal(flash.ui.MouseCursor.IBEAM);
-            } else if (lzsprite.clickable) {
-                LzMouseKernel.setCursorLocal(flash.ui.MouseCursor.BUTTON);
+        protected function frobCursor():void {
+            //Debug.info("frobCursor is disabled");
+            return;
+            if (textfield.selectable)  {
+                textfield.setCursorLocal(flash.ui.MouseCursor.IBEAM);
+            } else if (textfield.clickable) {
+                textfield.setCursorLocal(flash.ui.MouseCursor.BUTTON);
             }  else {
-                LzMouseKernel.setCursorLocal(flash.ui.MouseCursor.ARROW);
+                textfield.setCursorLocal(flash.ui.MouseCursor.ARROW);
             }
         }
 
         // Disables selectability
         public override function  focusInHandler(event:FocusEvent):void {
             //Debug.info(" focusInHandler", event);
-            if (lzsprite.selectable) {
+            if (textfield.selectable) {
                 super.focusInHandler(event);
             }
 
-            if (lzsprite.clickable) {
-                lzsprite. __gotFocus(event);
+            if (textfield.clickable) {
+                textfield. __gotFocus(event);
             }
 
             frobCursor();
@@ -127,7 +131,7 @@ public class LzTLFSelectionManager extends SelectionManager {
         }
         public override function  focusOutHandler(event:FocusEvent):void {
             super.focusOutHandler(event);
-            lzsprite.__lostFocus(event);
+            textfield.__lostFocus(event);
             //Debug.info(" focusOutHandler", event);
         }
         public override function  imeStartCompositionHandler(event:IMEEvent):void {
@@ -136,7 +140,7 @@ public class LzTLFSelectionManager extends SelectionManager {
         }
         public override function  keyDownHandler(event:KeyboardEvent):void {
             super.keyDownHandler(event);
-            LzKeyboardKernel.__keyboardEvent(event);
+            textfield.__keyboardEvent(event);
             //Debug.info(" keyDownHandler", event);
         }
         public override function  keyFocusChangeHandler(event:FocusEvent):void {
@@ -145,7 +149,7 @@ public class LzTLFSelectionManager extends SelectionManager {
         }
         public override function  keyUpHandler(event:KeyboardEvent):void {
             super.keyUpHandler(event);
-            LzKeyboardKernel.__keyboardEvent(event);
+            textfield.__keyboardEvent(event);
             //Debug.info(" keyUpHandler", event);
         }
         public override function  menuSelectHandler(event:ContextMenuEvent):void {
@@ -155,27 +159,27 @@ public class LzTLFSelectionManager extends SelectionManager {
 
         public override function  mouseDoubleClickHandler(event:MouseEvent):void {
             super.mouseDoubleClickHandler(event);
-            lzsprite.handleMouse_DOUBLE_CLICK(event);
+            textfield.handleMouse_DOUBLE_CLICK(event);
             //Debug.info(" mouseDoubleClickHandler", event);
         }
         public override function  mouseDownHandler(event:MouseEvent):void {
-            if (lzsprite.selectable) {
+            if (textfield.selectable) {
                 super.mouseDownHandler(event);
             } 
-            if (lzsprite.clickable) {
-                lzsprite.__mouseEvent(event);
+            if (textfield.clickable) {
+                //                textfield.__mouseEvent(event);
                 mouseIsDown = true;
             }
             frobCursor();
             //Debug.info(" mouseDownHandler", event);
         }
         public override function  mouseMoveHandler(event:MouseEvent):void { //
-            if (lzsprite.selectable) {
+            if (textfield.selectable) {
                 super.mouseMoveHandler(event);
             }
 
-            if (lzsprite.clickable) {
-                lzsprite.__mouseEvent(event);
+            if (textfield.clickable) {
+                //    textfield.__mouseEvent(event);
             }
             frobCursor();
             ////Debug.info(" mouseMoveHandler", event);
@@ -186,16 +190,16 @@ public class LzTLFSelectionManager extends SelectionManager {
             // TODO [hqm 2010-06] The global stage mouseup handler ALWAYS
             // seems gets fired before we ever get here, and causes the LFC to 
             // fire the onmouseupoutside event
-            if (lzsprite.clickable) {
-                lzsprite.__mouseEvent(event);
+            if (textfield.clickable) {
+                //textfield.__mouseEvent(event);
                 // This is how we generate a CLICK event
                 if (mouseIsDown) {
-                    LzMouseKernel.handleMouseEvent(lzsprite.owner, 'onclick');
+                    textfield.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
                     mouseIsDown = false;
                 }
             }
 
-            if (lzsprite.selectable) {
+            if (textfield.selectable) {
                 super.mouseUpHandler(event);
             }
 
@@ -210,11 +214,11 @@ public class LzTLFSelectionManager extends SelectionManager {
 
         public override function  textInputHandler(event:flash.events.TextEvent):void {
             super.textInputHandler(event);
-            lzsprite.__onChanged(event);
+            textfield.__onChanged(event);
             //Debug.info(" textInputHandler", event);
         }
 
 
+
     }#
 }
-

@@ -425,7 +425,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
    * @access private
    */
   override function __write (msg) {
-    if (this.log_all_writes || (!! globalValue('logdebug'))) {
+    if (this.log_all_writes || (!! LzBrowserKernel.getInitArg('logdebug'))) {
       this.logger.log(msg);
     }
     this.console.addText(msg);
