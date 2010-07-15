@@ -11,6 +11,7 @@ package org.openlaszlo.xml.internal;
 import org.jdom.Element;
 import java.util.*;
 
+
 /**
  * Describes the content model of an XML document.
  *
@@ -20,31 +21,21 @@ import java.util.*;
 public abstract class Schema {
     
     /** Hold mapping from Javascript type names to Types */
-    static Map typeNames = new HashMap();
+    protected static Map typeNames = new HashMap();
 
     /** Represents the type of an attribute whose type isn't known. */
     public static final Type UNKNOWN_TYPE = newType("unknown");
-    /** Represents an _ECMAScript_ String. */
-    public static final Type STRING_TYPE = newType("string");
-    /** Represents XML CDATA. */
-    public static final Type XML_CDATA_TYPE = newType("text");
-    /** Represents a XML CONTENT. */
-    public static final Type XML_CONTENT_TYPE = newType("html");
-    /** Represents a number. */
-    public static final Type NUMBER_TYPE = newType("number");
-    /** Represents an XML ID. */
-    public static final Type ID_TYPE = newType("ID");
 
     /** The type of an attribute. */
     public static class Type {
-        private String mName;
+        protected String name;
 
         public Type(String name) {
-            mName = name;
+            this.name = name;
         }
-        
+
         public String toString() {
-            return mName;
+            return name;
         }
     }
     
@@ -52,22 +43,14 @@ public abstract class Schema {
      * @return a unique type corresponding to typeName
      */
     public static Type newType(String typeName) {
-      if (typeNames.containsKey(typeName)) {
-        return (Type)typeNames.get(typeName);
-      }
-      Type newtype = new Type(typeName);
-      typeNames.put(typeName, newtype);
-      return newtype;
+        assert (! typeNames.containsKey(typeName));
+        Type newtype = new Type(typeName);
+        typeNames.put(typeName, newtype);
+        return newtype;
     }
-    
 
     public static void addTypeAlias(String typeName, Type type) {
         typeNames.put(typeName, type);
-    }
-
-    /** Look up the Type object from a Javascript type name */
-    public Type getTypeForName (String typeName) {
-        return (Type) typeNames.get(typeName);
     }
 
     /** An empty Schema, all of whose attribute types are unknown. */

@@ -797,6 +797,8 @@ public class Compiler {
             Compiler.updateSchemaFromLibrary(library, env, schema, visited, externalLibraries);
         }
         tlc.updateSchema(root, schema, visited);
+        // Now resolve the types
+        schema.resolveTypes();
         // Now sort and resolve the classes
         schema.resolveClasses();
     }

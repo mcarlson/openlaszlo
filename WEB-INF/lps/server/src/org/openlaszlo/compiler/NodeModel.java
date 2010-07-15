@@ -2063,17 +2063,7 @@ solution =
             }
         } else {
             // parse attribute type and compare to parent type
-            type = schema.getTypeForName(typestr);
-            if (type == null) {
-                throw new CompilationError(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="unknown attribute type: " + p[0]
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                NodeModel.class.getName(),"051018-1211", new Object[] {typestr})
-, element);
-            }
+            type = schema.getTypeForName(typestr, element);
 
             // If we are trying to declare the attribute with a
             // conflicting type to the parent, throw an error

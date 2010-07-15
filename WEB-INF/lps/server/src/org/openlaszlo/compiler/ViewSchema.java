@@ -57,6 +57,23 @@ public class ViewSchema extends Schema {
      */
     public boolean enforceValidIdentifier = false;
 
+    /** Represents an _ECMAScript_ String. */
+    public static final Type STRING_TYPE = newType("string");
+    /** Represents XML CDATA. */
+    public static final Type XML_CDATA_TYPE = newType("text");
+    /** Represents a XML CONTENT. */
+    // NOTE: [2010-06-16 ptw] (LPP-9027) For the time being, 'html'
+    // and 'text' are treated as synonyms
+    // public static final Type XML_CONTENT_TYPE = newType("html");
+    public static final Type XML_CONTENT_TYPE = XML_CDATA_TYPE;
+    static {
+      addTypeAlias("html", XML_CDATA_TYPE);
+    }
+    /** Represents a number. */
+    public static final Type NUMBER_TYPE = newType("number");
+    /** Represents an XML ID. */
+    public static final Type ID_TYPE = newType("ID");
+
     /** Type of script expressions. */
     public static final Type EXPRESSION_TYPE          = newType("expression");
 
@@ -140,6 +157,87 @@ public class ViewSchema extends Schema {
 
     public CompilationEnvironment getCompilationEnvironment() {
         return mEnv;
+    }
+
+    public static class UserType extends Schema.Type {
+      // If non-null, the element that defines the type
+      private Element definition;
+      // If non-null, the first forward-reference to the type
+      private Element reference;
+
+      public UserType(String name, Element definition, Element reference) {
+        super(name);
+        this.definition = definition;
+        this.reference = reference;
+      }
+      public UserType(String name, Element definition) {
+        this(name, definition, null);
+      }
+      public UserType(String name) {
+        this(name, null, null);
+      }
+      public Type resolve(CompilationEnvironment env) {
+        if (reference != null && definition == null) {
+          env.warn("Reference to undefined <type> " + name, reference);
+          return UNKNOWN_TYPE;
+        }
+        return this;
+      }
+      public Element getDefinition() {
+        return definition;
+      }
+      public void setDefinition(Element definition) {
+        this.definition = definition;
+      }
+    }
+
+    /**
+     * Creates a user-defined type
+     */
+    public Type defineType(String typeName, Element definition) {
+      // A brand new type
+      if (! typeNames.containsKey(typeName)) {
+        Type newtype = new UserType(typeName, definition);
+        typeNames.put(typeName, newtype);
+        return newtype;
+      }
+      // Maybe the definition of a forward-referenced type?
+      Type t = (Type)typeNames.get(typeName);
+      if ((t instanceof UserType) && (((UserType) t).getDefinition() == null)) {
+        ((UserType) t).setDefinition(definition);
+        return t;
+      }
+      // A duplicate!
+      String builtin = "builtin ";
+      String also = "";
+      if (t instanceof UserType) {
+        Element other = ((UserType) t).getDefinition();
+        builtin = "";
+        also =  "; also defined at " + Parser.getSourceMessagePathname(other) + ":" + Parser.getSourceLocation(other, Parser.LINENO);
+      }
+      CompilationError cerr = new CompilationError("Duplicate <type> definition for " + builtin + typeName + also , definition);
+      throw(cerr);
+    }
+
+    /** Look up the Type object from a Javascript type name, possibly
+     * creating a forward reference. */
+    public Type getTypeForName (String typeName, Element reference) {
+      if (typeNames.containsKey(typeName)) {
+        return (Type)typeNames.get(typeName);
+      }
+      Type newtype = new UserType(typeName, null, reference);
+      typeNames.put(typeName, newtype);
+      return newtype;
+    }
+
+    /** Ensure all types that have been referenced have definitions */
+    public void resolveTypes() {
+      for (Iterator i = typeNames.entrySet().iterator(); i.hasNext(); ) {
+        Type t = (Type)((Map.Entry) i.next()).getValue();
+          if (t instanceof UserType) {
+            ((UserType) t).resolve(mEnv);
+          }
+        }
     }
 
     /** Set the attributes to the type.
@@ -433,15 +531,8 @@ public class ViewSchema extends Schema {
         }
     }
 
-    public Type getTypeForName(String name) {
-      // NOTE: [2010-06-16 ptw] (LPP-9027) For the time being, 'html'
-      // and 'text' are treated as synonyms
-      if (name.equals("html")) { name = "text"; }
-      return super.getTypeForName(name);
-    }
-
     /** Adds a ClassModel entry into the class table for CLASSNAME. */
-  private void makeNewStaticClass (String classname, CompilationEnvironment env) {
+    private void makeNewStaticClass (String classname, CompilationEnvironment env) {
       ClassModel info = new ClassModel(classname, this, env);
         if (sInputTextElements.contains(classname)) {
             info.isInputText = true;
@@ -605,8 +696,8 @@ public class ViewSchema extends Schema {
 
     public void resolveClasses () {
       TreeMap classMap = new TreeMap(mClassMap);
-      for (Iterator i = classMap.keySet().iterator(); i.hasNext(); ) {
-        ((ClassModel)classMap.get(i.next())).resolve(mEnv);
+      for (Iterator i = classMap.entrySet().iterator(); i.hasNext(); ) {
+        ((ClassModel) ((Map.Entry) i.next()).getValue()).resolve(mEnv);
       }
     }
 

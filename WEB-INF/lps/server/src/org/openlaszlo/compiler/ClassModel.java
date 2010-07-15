@@ -382,7 +382,7 @@ public class ClassModel implements Comparable {
                     attrType = ViewSchema.EXPRESSION_TYPE;
                   }
                 } else {
-                  attrType = schema.getTypeForName(attrTypeName);
+                  attrType = schema.getTypeForName(attrTypeName, child);
                 }
 
                 if (attrType == null) {
