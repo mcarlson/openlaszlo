@@ -37,9 +37,10 @@ lz.embed.iframemanager.sendToBack = function(id) {
 lz.embed.iframemanager.scrollBy = function(id, x, y) {
     lz.Browser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
 }
-lz.embed.iframemanager.__gotload = function(id) {
+lz.embed.iframemanager.__iframecallback = function(id, name, value) {
+    // receives calls from the iframe
     var view = lz.embed.iframemanager.owners[id];
-    if (view) view.__gotload();
+    if (view) view.__iframecallback(name, value);
 }
 lz.embed.iframemanager.__gotMouseEvent = function(id, eventname) {
     var view = lz.embed.iframemanager.owners[id];
@@ -75,6 +76,10 @@ lz.embed.iframemanager.storeSelection = function(id) {
 
 lz.embed.iframemanager.restoreSelection = function(id) {
     lz.Browser.callJS('lz.embed.iframemanager.restoreSelection', null, id);
+}
+
+lz.embed.iframemanager.setHTML = function(id, html) {
+    lz.Browser.callJS('lz.embed.iframemanager.setHTML', null, id, html);
 }
 </script>
 </otherwise>
@@ -128,19 +133,16 @@ lz.embed.iframemanager.restoreSelection = function(id) {
     <attribute name="history" value="true"/>
     <!--- The minimum height of the iframe: embedded swfs won't load with a size less than 1
           @type Number
-          @lzxtype number
           @access public
     -->
     <attribute name="minimumheight" type="number" value="0"/>
     <!--- The minimum width of the iframe: embedded swfs won't load with a size less than 1
           @type Number
-          @lzxtype number
           @access public
     -->
     <attribute name="minimumwidth" type="number" value="0"/>
     <!--- If true, attempt to listen for mouse events on the iframe.  Cross-domain security restrictions apply, so if the content loaded in the iframe is from a different domain, mouse events won't be sent.
           @type Boolean
-          @lzxtype boolean
           @access public
     -->
     <attribute name="mouseevents" type="boolean" value="true"/>
@@ -157,7 +159,6 @@ lz.embed.iframemanager.restoreSelection = function(id) {
     </setter>
     <!--- If true, show native context menus in the iframe.  Otherwise, show OpenLaszlo context menus.  Note that this only works in DHTML because it's not possible to programatically display a context menu in Flash.
           @type Boolean
-          @lzxtype boolean
           @access public
     -->
     <attribute name="shownativecontextmenu" type="boolean" value="true"/>
@@ -209,6 +210,17 @@ lz.embed.iframemanager.restoreSelection = function(id) {
         //Debug.write(t);
         this.__updatepos(null);
         if (this.ontarget.ready) this.ontarget.sendEvent(t);
+    </setter>
+    <!--- The HTML that the iframe starts out containing.
+          @type String
+          @access public
+    -->
+    <attribute name="html" type="html" value=""/>
+    <setter name="html" args="t">
+        this.html = t;
+        if (this.loading != false) {
+            lz.embed.iframemanager.setHTML(this.iframeid, t);
+        }
     </setter>
 
     <!--- Sets the visibility of the html tag
@@ -283,12 +295,25 @@ lz.embed.iframemanager.restoreSelection = function(id) {
         if (this['__shownativecontextmenu']) lz.embed.iframemanager.setShowNativeContextMenu(id, this.__shownativecontextmenu);
     </method>
     <!--- @access private -->
-    <method name="__gotload">
-        if (this['src'] == null) return;
-        this.setAttribute('loading', false);
-        this.__updatepos(null);
-        if (this.onload.ready) this.onload.sendEvent(null);
-    </method>
+    <method name="__iframecallback" args="name, value"><![CDATA[
+        if (name == 'load') {
+            //special handling for load events
+            if (this['src'] == null) {
+                // set to the initial html
+                if (this.html) {
+                    lz.embed.iframemanager.setHTML(this.iframeid, this.html);
+                }
+                // skip onload event
+                return;
+            }
+            this.setAttribute('loading', false);
+            this.__updatepos(null);
+        } 
+        // send an event for the callback
+        var evt = this['on' + name];
+        //Debug.warn('__iframecallback', name, value, evt);
+        if (evt && evt.ready) evt.sendEvent(value);
+    ]]></method>
     <method name="bringToFront">
         super.bringToFront();
         if (this['isfront'] == true || ! this['iframeid']) return;

@@ -61,6 +61,7 @@ lz.embed.iframemanager = {
         if (i) {
             this.__finishCreate(id, owner, name, scrollbars, appendto, defaultz, canvasref);
         } else {
+            // IE takes a while to create the iframe sometimes...
             // init call queue and set timeout to finish startup after the element can be found..
             this.__callqueue[id] = [ ['__finishCreate', id, owner, name, scrollbars, appendto, defaultz, canvasref] ];
             setTimeout('lz.embed.iframemanager.__checkiframe("' + id + '")', 10); 
@@ -151,6 +152,16 @@ lz.embed.iframemanager = {
         }
         return this.framesColl[id];
     }
+    ,setHTML: function(id, html) { 
+        // must be called after the iframe loads, or it will be overwritten
+        if (html && html != '') {
+            var win = lz.embed.iframemanager.getFrameWindow(id);
+            if (win) {
+                Debug.warn('setHTML', id, html, win);
+                win.document.body.innerHTML = html;
+            }
+        }
+    }
     ,setSrc: function(id, s, history) { 
         if (this.__callqueue[id]) { 
             this.__callqueue[id].push(['setSrc', id, s, history]);
@@ -234,16 +245,16 @@ lz.embed.iframemanager = {
     }
     ,__gotload: function(id) { 
         var iframe = lz.embed.iframemanager.getFrame(id);
-        //console.log('__gotload', iframe;
+        //console.log('__gotload', id, iframe);
         if (! iframe || ! iframe.owner) return;
 
-        if (iframe.owner.__gotload) {
-            iframe.owner.__gotload();
+        if (iframe.owner.__iframecallback) {
+            iframe.owner.__iframecallback('load');
         } else {
             // Flash
-            //console.log('calling method', 'lz.embed.iframemanager.__gotload(\'' + id + '\')');
+            //console.log('calling method', 'lz.embed.iframemanager.__iframecallback("' + id + '", "load")');
             if (lz.embed[iframe.owner]) {
-                lz.embed[iframe.owner].callMethod('lz.embed.iframemanager.__gotload(\'' + id + '\')');
+                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "', 'load')");
             } else {
                 // installing a new player now...
                 return;
@@ -371,6 +382,7 @@ lz.embed.iframemanager = {
                 }
             }
         } else {
+            // Flash
             // deal with IE event names
             if (eventname == 'onmouseleave') {
                 eventname = 'onmouseout';
