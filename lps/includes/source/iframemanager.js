@@ -157,7 +157,6 @@ lz.embed.iframemanager = {
         if (html && html != '') {
             var win = lz.embed.iframemanager.getFrameWindow(id);
             if (win) {
-                Debug.warn('setHTML', id, html, win);
                 win.document.body.innerHTML = html;
             }
         }
@@ -243,23 +242,31 @@ lz.embed.iframemanager = {
         iframe._defaultz = 99900;
         this.setZ(id, iframe._defaultz);
     }
-    ,__gotload: function(id) { 
+    ,asyncCallback: function(id, event, arg) {
         var iframe = lz.embed.iframemanager.getFrame(id);
-        //console.log('__gotload', id, iframe);
         if (! iframe || ! iframe.owner) return;
-
-        if (iframe.owner.__iframecallback) {
-            iframe.owner.__iframecallback('load');
-        } else {
+        if (iframe.owner.__iframecallback) {      
+            // dhtml
+            iframe.owner.__iframecallback(event, arg);
+        }
+        else {
             // Flash
-            //console.log('calling method', 'lz.embed.iframemanager.__iframecallback("' + id + '", "load")');
             if (lz.embed[iframe.owner]) {
-                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "', 'load')");
+                arg = (arg) ? ", '" + arg + "'" : '';
+                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "', '" + event + "'" + arg + ")");
             } else {
                 // installing a new player now...
                 return;
             }
         }
+    }
+    ,__gotload: function(id) { 
+        var iframe = lz.embed.iframemanager.getFrame(id);
+        //console.log('__gotload', id, iframe);
+        if (! iframe || ! iframe.owner) return;
+
+        lz.embed.iframemanager.asyncCallback(id, 'load');
+
         this.__loading[id] = false;
         if (document.all) {
             // document.all is IE-only
