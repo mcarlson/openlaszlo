@@ -1861,9 +1861,12 @@ LzSprite.prototype.setPattern = function ( v ){
 
 LzSprite.prototype.setVisible = function ( v ){
     if (this.visible === v) return;
-    //Debug.info('setVisible', v, this.owner.getUID());
+    //Debug.info('setVisible', v, this.owner);
     this.visible = v;
-    this.__LZdiv.style.display = (v && this.opacity != 0) ? '' : 'none';
+    var divdisplay = (v && this.opacity != 0) ? '' : 'none';
+    this.__LZdiv.style.display = divdisplay;
+    // cache value - see __processHiddenParents()
+    this.__csscache.__LZdivdisplay = divdisplay;
     //this.applyCSS('display', (v && this.opacity != 0) ? '' : 'none');
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
@@ -3324,9 +3327,9 @@ LzSprite.prototype.__csscache;
 LzSprite.prototype.setCSS = function(name, value, isdimension) {
     if (isdimension) value = this.CSSDimension(value);
     var callback = this['set_' + name];
-    Debug.warn('setCSS', name, value, callback, this);
+    //Debug.warn('setCSS', name, value, callback, this);
     if (callback) {
-        Debug.warn('setCSS', value);
+        //Debug.warn('setCSS', value);
         callback.call(this, value);
     } else {
         this.applyCSS(name, value);
