@@ -151,6 +151,8 @@ public class SWF9External {
         mInfo.workDir = workdir;
       }
 
+      mWrittenClassFiles.clear();
+
       // If this is not an incremental compile, erase all files in the working directory
       if (!options.getBoolean(Compiler.DEBUG_EVAL)) {
         if (!options.getBoolean(Compiler.REUSE_WORK_DIRECTORY) || options.getBoolean(Compiler.CHECK_MATCHING_OPTIONS)) {
@@ -169,17 +171,37 @@ public class SWF9External {
       writeOptionsFile();
     }
 
-    public static void deleteDirectoryFiles(File dir) {
+  // Delete any .as files that we don't remember writing, meaning any
+  // .as files which are not in the mWrittenClassFiles list.
+  void removeUnknownASFiles(File dir) throws IOException {
+    try {
       if (dir.isDirectory()) {
         File[] children = dir.listFiles();
         for (int i=0; i<children.length; i++) {
           File f = children[i];
-          if (f.isFile()) {
+          String cpath = f.getCanonicalPath();
+          if (f.isFile() && cpath.endsWith(".as") && !mWrittenClassFiles.contains(cpath)) {
+            System.err.println("removing unknown .as file "+f);
             f.delete();
           }
         }
+      }    
+    } catch (IOException ioe) {
+      throw new CompilerError("removeUnknownASFiles: " + ioe);
+    }
+  }
+
+  public static void deleteDirectoryFiles(File dir) {
+    if (dir.isDirectory()) {
+      File[] children = dir.listFiles();
+      for (int i=0; i<children.length; i++) {
+        File f = children[i];
+        if (f.isFile()) {
+          f.delete();
+        }
       }
     }
+  }
 
 
     /**
@@ -1182,6 +1204,10 @@ public class SWF9External {
         outf.delete();
       }
 
+      // In incremental mode, some files may be left over from previous compiles of deleted classes,
+      // so remove any unaccounted-for .as files.
+      removeUnknownASFiles(workdir);
+
       // Call the Flex compiler, either in its own exec'ed process or in a thread 
       if (execFlex()) {
         execCompileCommand(cmd, workdir.getPath(), tunits, outfilename);
@@ -1277,6 +1303,9 @@ public class SWF9External {
   long mElapsed = 0;
   long mFlexTime = 0;
 
+  // track what files were written, so we can delete any that are not in the set
+  HashSet mWrittenClassFiles = new HashSet();
+
     /**
      * Write a file given by the translation unit, and using the
      * given pre and post text.
@@ -1296,9 +1325,14 @@ public class SWF9External {
       File diskfile = new File(infilename);
       long startTime = System.nanoTime();
 
-      if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
+      try {
+        mWrittenClassFiles.add(diskfile.getCanonicalPath());
+      } catch (IOException ioe) {
+        throw new CompilerError("Exception in SWF9External.writeFile: " + ioe);
+      }
 
-        if (diskfile.exists()) {
+      if (options.getBoolean(Compiler.INCREMENTAL_COMPILE)) {
+        if (!diskfile.getName().equals("LzApplication.as") && diskfile.exists()) {
           long lastWritten = diskfile.lastModified();
           long classModified = tunit.getLastModified();
 
