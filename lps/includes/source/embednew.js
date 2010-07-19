@@ -141,6 +141,7 @@ lz.embed = {
             ,_sendMouseWheel: embed._sendMouseWheel
             ,_sendAllKeysUp: embed._sendAllKeysUpSWF
             ,_setCanvasAttributeDequeue: embed._setCanvasAttributeDequeue
+            ,_setCanvasAttributeQ: []
             ,_sendPercLoad: embed._sendPercLoad
             ,setGlobalFocusTrap: embed.__setGlobalFocusTrapSWF
             ,initargs: queryvals.initargs
@@ -255,7 +256,8 @@ lz.embed = {
      * LFC.
      */
     dhtml: function (properties) {
-        if (lz.embed.dhtmlapploaded) {
+        var embed = lz.embed;
+        if (embed.dhtmlapploaded) {
             // TODO: generate an iframe
             alert('Warning: skipping lz.embed.dhtml() call for ' + properties.url + '. Only one DHTML application can be loaded per window.  Use iframes to load more than one DHTML application.');
             return;
@@ -278,8 +280,8 @@ lz.embed = {
         }
         var url = queryvals.url + '?lzt=object&' + queryvals.query;
 
-        var appenddiv = lz.embed._getAppendDiv(properties.id, properties.appenddivid);
-        if (! properties.skipchromeinstall && lz.embed.browser.isIE && lz.embed.browser.version < 7) {
+        var appenddiv = embed._getAppendDiv(properties.id, properties.appenddivid);
+        if (! properties.skipchromeinstall && embed.browser.isIE && embed.browser.version < 7) {
           // This will fail for the dev console in IE 6 - see LPP-8687
           if (window['CFInstall']) {
             // detect and install chrome frame
@@ -289,11 +291,11 @@ lz.embed = {
         // NOTE: [2009-08-24 ptw] We set the embed width/height to
         // 100% and the appenddiv to the desired size, so the platform
         // can adjust the appenddiv size to effect a dynamic canvas
-        appenddiv.style.height = lz.embed.CSSDimension(properties.height);
-        appenddiv.style.width = lz.embed.CSSDimension(properties.width);
+        appenddiv.style.height = embed.CSSDimension(properties.height);
+        appenddiv.style.width = embed.CSSDimension(properties.width);
 
         // use global default options hash for now
-        var options = lz.embed.options;
+        var options = embed.options;
         if (properties.cancelkeyboardcontrol) {
             options.cancelkeyboardcontrol = properties.cancelkeyboardcontrol;
         }
@@ -308,51 +310,53 @@ lz.embed = {
         }
 
         // properties read by root sprite
-        lz.embed.__propcache = {
+        embed.__propcache = {
             bgcolor: properties.bgcolor
             ,width: properties.width
             ,height: properties.height
             ,id: properties.id
-            ,appenddiv: lz.embed._getAppendDiv(properties.id, properties.appenddivid)
+            ,appenddiv: embed._getAppendDiv(properties.id, properties.appenddivid)
             ,url: url
             ,options: options
         };
 
-        if (lz.embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
+        if (embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
         // Add entry for this application 
-        var app = lz.embed[properties.id] = lz.embed.applications[properties.id] = { 
+        var app = embed[properties.id] = embed.applications[properties.id] = { 
             runtime: 'dhtml'
             ,_id: properties.id
-            ,_ready: lz.embed._ready
+            ,_ready: embed._ready
             ,_onload: []
             ,loaded: false
-            ,setCanvasAttribute: lz.embed._setCanvasAttributeDHTML
-            ,getCanvasAttribute: lz.embed._getCanvasAttributeDHTML
-            ,callMethod: lz.embed._callMethodDHTML
-            ,_sendAllKeysUp: lz.embed._sendAllKeysUpDHTML
+            ,setCanvasAttribute: embed._setCanvasAttributeDHTML
+            ,getCanvasAttribute: embed._getCanvasAttributeDHTML
+            ,_setCanvasAttributeDequeue: embed._setCanvasAttributeDequeue
+            ,_setCanvasAttributeQ: []
+            ,callMethod: embed._callMethodDHTML
+            ,_sendAllKeysUp: embed._sendAllKeysUpDHTML
             ,initargs: queryvals.initargs
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
-            lz.embed.history.active = false;
+            embed.history.active = false;
         }
 
         if (properties.cancelmousewheel == true) {
-            lz.embed.mousewheel.setEnabled(false);
+            embed.mousewheel.setEnabled(false);
         }
         // Make sure we have focus (see LPP-8242)
-        if (lz.embed.browser.OS == 'Windows' && lz.embed.browser.isFirefox) { window.focus(); }
+        if (embed.browser.OS == 'Windows' && embed.browser.isFirefox) { window.focus(); }
 
-        if (! lz.embed.lfcloaded) {
-            lz.embed.__appqueue.push(url);
+        if (! embed.lfcloaded) {
+            embed.__appqueue.push(url);
             if (properties.lfcurl) {
-                lz.embed.lfc(properties.lfcurl, options.serverroot);
-            } else if (lz.embed.lfcloaded != null) {
+                embed.lfc(properties.lfcurl, options.serverroot);
+            } else if (embed.lfcloaded != null) {
                 // can't warn here because of the dev console :(
                 //alert('WARNING: lz.embed.dhtml() requires an LFC to be loaded, either with a call to lz.embed.lfc(url, serverroot) or by specifying the lfcurl property in the call to lz.embed.dhtml().'); 
             }
         } else {
-            lz.embed.dhtmlapploaded = true;
+            embed.dhtmlapploaded = true;
             this.__dhtmlLoadLibrary(url)
         }
     }
@@ -487,11 +491,7 @@ lz.embed = {
                 lz.embed.dojo.comm[this._id].setCanvasAttribute(name, value + '');
             }
         } else {
-            if (this._setCanvasAttributeQ == null) {
-                this._setCanvasAttributeQ = [[name,value, hist]];
-            } else {
-                this._setCanvasAttributeQ.push([name, value, hist]);
-            }
+            this._setCanvasAttributeQ.push([name, value, hist]);
         }
     }
     ,/**
@@ -504,11 +504,15 @@ lz.embed = {
      * @param hist:Boolean value - if true, add a history event.
      */
     _setCanvasAttributeDHTML: function (name, value, hist) {
-        if (hist) {
-            lz.embed.history._store(name, value);
-        } else if (canvas) {
+        if (this.loaded && canvas) {
+            if (hist) {
+                lz.embed.history._store(name, value);
+            } else if (canvas) {
 #pragma "passThrough=true"
-            canvas.setAttribute(name, value);
+                canvas.setAttribute(name, value);
+            }
+        } else {
+            this._setCanvasAttributeQ.push([name, value, hist]);
         }
     }
     ,/** @access private */
@@ -539,7 +543,7 @@ lz.embed = {
             }
             this._callmethod = null;
         }
-        if (this._setCanvasAttributeQ) {
+        if (this._setCanvasAttributeQ.length > 0) {
             this._setCanvasAttributeDequeue();
         }
         if (cref) this.canvas = cref;
