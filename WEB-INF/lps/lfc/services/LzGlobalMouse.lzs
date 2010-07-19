@@ -164,6 +164,11 @@ public final class LzGlobalMouseService extends LzEventable {
      */
     var onmouseenter :LzDeclaredEventClass = LzDeclaredEvent;
 
+    /** Sent for all mouse events
+     * @access public
+     * @lzxtype event
+     */
+    var onmouseevent :LzDeclaredEventClass = LzDeclaredEvent;
 
     /** Sent whenever the mouse button is clicked
      * @access public
@@ -202,6 +207,10 @@ public final class LzGlobalMouseService extends LzEventable {
         var ev:LzDeclaredEventClass = this[eventname];
         if (ev) {
             if (ev.ready) { ev.sendEvent(view); }
+            if (this.onmouseevent.ready) {
+                // send generic mouse event
+                this.onmouseevent.sendEvent({type: eventname, target: view});
+            }
         } else if ($debug) {
             Debug.debug("Unknown mouse event %s", eventname);
         }

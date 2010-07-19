@@ -121,6 +121,12 @@ public final class LzKeysService extends LzEventable {
      * @access public
      */
     var onmousewheeldelta :LzDeclaredEventClass = LzDeclaredEvent;
+    /**
+     * Sent for all key events
+     * @lzxtype event
+     * @access public
+     */
+    var onkeyevent :LzDeclaredEventClass = LzDeclaredEvent;
 
     /** For mapping key names (control, shift, alt) back to character codes
       * @access private */
@@ -191,6 +197,10 @@ public final class LzKeysService extends LzEventable {
             // check for IME
             if (dkhash[229] != true) {
                 if (this.onkeydown.ready) this.onkeydown.sendEvent( kC );
+                if (this.onkeyevent.ready) {
+                    // send generic key event
+                    this.onkeyevent.sendEvent({type: 'onkeydown', key: kC});
+                }
             }
         }
         if (firstkeydown) {
@@ -235,12 +245,22 @@ public final class LzKeysService extends LzEventable {
             if (kC == this.keyCodes.control) {
                 this.downKeysHash = {};
                 // Only send a key-up event if we know the key is already down
-                if (isDown && this.onkeyup.ready) this.onkeyup.sendEvent( kC );
+                if (isDown) {
+                    if (this.onkeyup.ready) this.onkeyup.sendEvent( kC );
+                    if (this.onkeyevent.ready) {
+                        // send generic key event
+                        this.onkeyevent.sendEvent({type: 'onkeyup', key: kC});
+                    }
+                }
 
                 // send all additional key-up events
                 for (var k:String in dkhash) {
                     if (this.onkeyup.ready) {
                         this.onkeyup.sendEvent( k );
+                    }
+                    if (this.onkeyevent.ready) {
+                        // send generic key event
+                        this.onkeyevent.sendEvent({type: 'onkeyup', key: k});
                     }
                 }
                 return;
@@ -253,7 +273,13 @@ public final class LzKeysService extends LzEventable {
         }
 
         // Only send a key-up event if we know the key is already down
-        if (isDown && this.onkeyup.ready) this.onkeyup.sendEvent( kC );
+        if (isDown) {
+            if (this.onkeyup.ready) this.onkeyup.sendEvent( kC );
+            if (this.onkeyevent.ready) {
+                // send generic key event
+                this.onkeyevent.sendEvent({type: 'onkeyup', key: kC});
+            }
+        }
     }
 
     /**
@@ -451,6 +477,10 @@ public final class LzKeysService extends LzEventable {
         if (lz.GlobalMouse.__mouseactive) {
             this.mousewheeldelta = d;
             if (this.onmousewheeldelta.ready) this.onmousewheeldelta.sendEvent(d);
+            if (this.onkeyevent.ready) {
+                // send generic key event
+                this.onkeyevent.sendEvent({type: 'onmousewheeldelta', key: d});
+            }
         }
     }
 
