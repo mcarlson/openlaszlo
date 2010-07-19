@@ -192,7 +192,7 @@ public class ViewCompiler extends ElementCompiler {
     static void collectMixinElement(Element element, Set names) {
         String mixinSpec = element.getAttributeValue("with");
         if (mixinSpec != null) {
-          String mixins[] = mixinSpec.trim().split("\\s+,\\s+");
+          String mixins[] = mixinSpec.trim().split("\\s*,\\s*");
           for (int i = 0; i < mixins.length; i++) {
             names.add(mixins[i]);
           }
