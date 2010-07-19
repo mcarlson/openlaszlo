@@ -1863,11 +1863,8 @@ LzSprite.prototype.setVisible = function ( v ){
     if (this.visible === v) return;
     //Debug.info('setVisible', v, this.owner);
     this.visible = v;
-    var divdisplay = (v && this.opacity != 0) ? '' : 'none';
-    this.__LZdiv.style.display = divdisplay;
-    // cache value - see __processHiddenParents()
-    this.__csscache.__LZdivdisplay = divdisplay;
-    //this.applyCSS('display', (v && this.opacity != 0) ? '' : 'none');
+    // use applyCSS to ensure cached value is set - see __processHiddenParents()
+    this.applyCSS('display', (v && this.opacity != 0) ? '' : 'none');
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
             this.__LZclick.style.display = v && this.clickable ? '' : 'none'
