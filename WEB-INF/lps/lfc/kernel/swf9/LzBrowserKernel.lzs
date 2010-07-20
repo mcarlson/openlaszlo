@@ -89,6 +89,20 @@ static function callJS (...args) :* {
     }
 }
 
+/**
+  * Runs a Javascript method in the browser, optionally returning the result  
+  * Used for LFC/internal calls 
+  */ 
+static function callJSInternal(...args) :* {
+    var result;
+    try {
+        result = DojoExternalInterface.call.apply(null, args);
+    } catch (e) {
+        // ignore
+    }
+    return result;
+}
+
 /** @access private */ 
 static var __jslocked :Boolean = true;
 /** @access private */ 
@@ -115,7 +129,7 @@ static function _dequeueJS () :void {
   */
 static function setHistory(n:*) :void {
     //Debug.write('__setHistory', n);
-    LzBrowserKernel.callJS('lz.embed.history.set', null, n);
+    LzBrowserKernel.callJSInternal('lz.embed.history.set', null, n);
 }
 
 static function getPersistedObject(n:String) :SharedObject {
@@ -182,7 +196,7 @@ static var __initargs:Object = null;
  */
 static function getInitArg (name:String=null) :* {
   if (! LzBrowserKernel.__initargs && LzBrowserKernel.__jslocked == false) {
-    var newargs = LzBrowserKernel.callJS('eval', false, 'lz.embed.applications["' + LzBrowserKernel.getAppID() + '"].initargs');
+    var newargs = LzBrowserKernel.callJSInternal('eval', null, 'lz.embed.applications["' + LzBrowserKernel.getAppID() + '"].initargs');
 
     if (newargs) {
       // cache callJS results

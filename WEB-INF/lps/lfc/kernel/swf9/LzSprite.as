@@ -182,8 +182,8 @@ public class LzSprite extends Sprite {
      * @access private
      */
     public static function setRootX (v) {
-        DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'position', 'absolute')
-        DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'left', LzKernelUtils.CSSDimension(v))
+        LzBrowserKernel.callJSInternal('lz.embed.__swfSetAppAppendDivStyle', null, id, 'position', 'absolute')
+        LzBrowserKernel.callJSInternal('lz.embed.__swfSetAppAppendDivStyle', null, id, 'left', LzKernelUtils.CSSDimension(v))
     }
 
     /**
@@ -193,7 +193,7 @@ public class LzSprite extends Sprite {
      * @access private
      */
     public static function setRootWidth (v) {
-        DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'width', LzKernelUtils.CSSDimension(v))
+        LzBrowserKernel.callJSInternal('lz.embed.__swfSetAppAppendDivStyle', null, id, 'width', LzKernelUtils.CSSDimension(v))
     }
 
     /**
@@ -203,8 +203,8 @@ public class LzSprite extends Sprite {
      * @access private
      */
     public static function setRootY (v) {
-        DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'position', 'absolute')
-        DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'top', LzKernelUtils.CSSDimension(v))
+        LzBrowserKernel.callJSInternal('lz.embed.__swfSetAppAppendDivStyle', null, id, 'position', 'absolute')
+        LzBrowserKernel.callJSInternal('lz.embed.__swfSetAppAppendDivStyle', null, id, 'top', LzKernelUtils.CSSDimension(v))
     }
 
     /**
@@ -214,7 +214,7 @@ public class LzSprite extends Sprite {
      * @access private
      */
     public static function setRootHeight (v) {
-        DojoExternalInterface.call('lz.embed.__swfSetAppAppendDivStyle', null, id, 'height', LzKernelUtils.CSSDimension(v))
+        LzBrowserKernel.callJSInternal('lz.embed.__swfSetAppAppendDivStyle', null, id, 'height', LzKernelUtils.CSSDimension(v))
     }
 
     /**
