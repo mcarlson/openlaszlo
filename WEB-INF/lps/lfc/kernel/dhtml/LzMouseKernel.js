@@ -323,8 +323,15 @@ var LzMouseKernel = {
         var quirks = LzSprite.quirks;
         if (document.elementFromPoint) {
             var swf8mode = quirks.swf8_contextmenu;
-            var x = LzMouseKernel.__x;
-            var y = LzMouseKernel.__y;
+            // elementFromPoint() expects x/y to be offset by scrolling
+            // See LPP-9203
+            if (window.pageXOffset) {
+                var x = e.pageX - window.top.pageXOffset;
+                var y = e.pageY - window.top.pageYOffset;
+            } else {
+                var x = e.clientX;
+                var y = e.clientY;
+            }
             var rootdiv = LzSprite.__rootSprite.__LZdiv;
             var arr = [];
 
