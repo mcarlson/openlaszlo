@@ -1,108 +1,128 @@
 <chapter id="comp-overview">
 
 
-<title>Getting More from Components</title>
-<!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
-<para>OpenLaszlo components are high-level objects that implement common user-interface functions. 
-</para>
+ <title>Getting More from Components</title>
+ <!-- remove commented out sample code that was ignored by the build. IORIO 20 nov 2007 -->
+ <para>OpenLaszlo components are high-level objects that implement common user-interface functions. </para>
 
-<para>
-Sources for LZ components are <ulink url="../../lps/components/">here.</ulink>
-</para>
+ <para> Sources for LZ components are <ulink url="../../lps/components/">here.</ulink>
+ </para>
 
-<para>
-Earlier chapters have shown simple usage of components.
-This chapter describes various more advanced
-ways to use components, and contains summary descriptions of how to extend components and create new ones.
-(These topics are covered in greater depth in later chapters.) 
-</para>
+ <para> Earlier chapters have shown simple usage of components. This chapter describes various more
+  advanced ways to use components, and contains summary descriptions of how to extend components and
+  create new ones. (These topics are covered in greater depth in later chapters.) </para>
 
-<para/><section><title>Customizing components</title>
-<para>
-All components have several attributes, such as background color and text color, to which you can assign different values to
-change the component's appearance. You can set individual values for a single component, and you can also set a "style" for
-a group.
-</para>
-<para/><section><title>Using the &lt;style&gt; tag</title>
-<para>
-There are several styles defined as classes (whitestyle, silverstyle, bluestyle, greenstyle, goldstyle, and purplestyle).
- You may create an instance of one of these, create a new style, or create an instance with one or more modified attributes.
-</para>
-<para>
-Different styles may be used in different parts of an application, to highlight a single component or to distinguish a group of components. 
-The style of a component applies to itself and any component within it.
-</para>
-<para>
-Styles may be defined to establish a consistent "look" for a group of components. 
-There are a number of pre-defined styles. If you don't declare a default style, the OpenLaszlo components use whitestyle. 
-To specify a different default style, define a style with isdefault="true".
-</para>
-<para>
-In the example below, section one and two of the tabslider and the checkboxes inside them appear gold. Section Three and the components inside it appear green.
-</para>
-<example role="live-example">
-   <title>The &lt;style&gt; tag</title>
-   <programlisting language="lzx">
+
+ <section>
+  <title>Customizing components</title>
+  <para> All components have several attributes, such as background color and text color, to which
+   you can assign different values to change the component's appearance. You can set individual
+   values for a single component, and you can also set a "style" for a group. </para>
+
+  <section>
+   <title>Using the &lt;style&gt; tag</title>
+   <para> There are several styles defined as classes (whitestyle, silverstyle, bluestyle,
+    greenstyle, goldstyle, and purplestyle). You may create an instance of one of these, create a
+    new style, or create an instance with one or more modified attributes. </para>
+   <para> Different styles may be used in different parts of an application, to highlight a single
+    component or to distinguish a group of components. The style of a component applies to itself
+    and any component within it. </para>
+   <para> Styles may be defined to establish a consistent "look" for a group of components. There
+    are a number of pre-defined styles. If you don't declare a default style, the OpenLaszlo
+    components use whitestyle. To specify a different default style, define a style with
+    isdefault="true". </para>
+   <para> In the example below, section one and two of the tabslider and the checkboxes inside them
+    appear gold. Section Three and the components inside it appear green. </para>
+   <example role="live-example">
+    <title>The &lt;style&gt; tag</title>
+    <programlisting language="lzx">
    <textobject><textdata fileref="programs/comp-overview-$1.lzx"/></textobject> 
    </programlisting>
-</example>
+   </example>
 
-<para>
-</para>
-<para/></section></section><section><title>Data-backed versus instance components</title>
-<para>
-Many components, such as lists and combination, or "combo" boxes, are driven by data that is in XML format.  For some components, you supply the data to the component "inline", that is, within the actual tag that defines an instance. For others, data comes from an associated dataset.
-</para>
-<para>
-To see how these compare, inspect the reference pages for <indexterm><primary>combobox</primary></indexterm><sgmltag class="element">&lt;combobox&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: combobox-->
- and <indexterm><primary>datacombobox</primary></indexterm><sgmltag class="element">&lt;datacombobox&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: datacombobox-->
-. The choice of which to use depends on personal preference and the nature of the problem you're trying to solve.  Data-backed components such as <indexterm><primary>datacombobox</primary></indexterm><sgmltag class="element">&lt;datacombobox&gt;</sgmltag> provide a nice separation between data and presentation and make it easier to consume data from external sources. Instance components like <indexterm><primary>combobox</primary></indexterm><sgmltag class="element">&lt;combobox&gt;</sgmltag> are conceptually simpler and often more convenient and easier to understand. 
-</para>
-<para/></section><section><title>Building your own components</title>
-<para>
-As you design more powerful applications you may find that the existing components do not meet your needs. In that situation you
-can build your own custom components. Designing your own components is a subject beyond the scope of this chapter, but here is
-a brief description of what's involved.
-</para>
-<para>Implementing
-new components has two general aspects:
-</para>
-<itemizedlist spacing="compact"><listitem><para>devising the component's behavior</para></listitem><listitem><para>devising its visual appearance.</para></listitem></itemizedlist>
-<para>
-</para>
-<para/><section><title>Implementing behavior</title>
+   <para> </para>
 
-<para>
-To learn how
-to do this, first make sure that you understand classes and how to extend them, as explained in
-<xref linkend="introductory-classes"/> and <xref linkend="class-inheritance"/>.
-Then read the <ulink url="../component-design/">Component Design Guide</ulink>
-on extending components.  
-</para>
-<para/></section><section><title>Implementing appearance</title>
-<para>
-Designing the visual appearance of a new component requires a designer's eye and meticulous attention to detail—at the level
-of placement of individual pixels. 
-</para>
-<para>
-The role of the graphic designer on Laszlo projects is explained in the <ulink url="../design/" type="">Designer's Guide</ulink>.  In addition, we recommend
-that you study the construction of the LZ components, as explained in <xref linkend="custom-components"/>.
+  </section>
+ </section>
+ <section>
+  <title>Data-backed versus instance components</title>
+  <para> Many components, such as lists and combination, or "combo" boxes, are driven by data that
+   is in XML format. For some components, you supply the data to the component "inline", that is,
+   within the actual tag that defines an instance. For others, data comes from an associated
+   dataset. </para>
+  <para> To see how these compare, inspect the reference pages for <indexterm>
+    <primary>combobox</primary>
+   </indexterm><sgmltag class="element">&lt;combobox&gt;</sgmltag><remark role="fixme"
+    >[unknown tag]</remark>
+   <!--unknown tag: combobox--> and <indexterm>
+    <primary>datacombobox</primary>
+   </indexterm><sgmltag class="element">&lt;datacombobox&gt;</sgmltag><remark role="fixme"
+    >[unknown tag]</remark>
+   <!--unknown tag: datacombobox--> . The choice of which to use depends on personal preference and
+   the nature of the problem you're trying to solve. Data-backed components such as <indexterm>
+    <primary>datacombobox</primary>
+   </indexterm><sgmltag class="element">&lt;datacombobox&gt;</sgmltag> provide a nice
+   separation between data and presentation and make it easier to consume data from external
+   sources. Instance components like <indexterm>
+    <primary>combobox</primary>
+   </indexterm><sgmltag class="element">&lt;combobox&gt;</sgmltag> are conceptually simpler
+   and often more convenient and easier to understand. </para>
 
-</para>
+ </section>
+ <section>
+  <title>Building your own components</title>
+  <para> As you design more powerful applications you may find that the existing components do not
+   meet your needs. In that situation you can build your own custom components. Designing your own
+   components is a subject beyond the scope of this chapter, but here is a brief description of
+   what's involved. </para>
+  <para>Implementing new components has two general aspects: </para>
+  <itemizedlist spacing="compact">
+   <listitem>
+    <para>devising the component's behavior</para>
+   </listitem>
+   <listitem>
+    <para>devising its visual appearance.</para>
+   </listitem>
+  </itemizedlist>
+  <section>
+   <title>Implementing behavior</title>
 
-<para/></section><section><title>Example: Extending the &lt;alert&gt; component</title>
-<para>
-As explained above, sometimes you can create your own new component by subclassing, or <glossterm>extending</glossterm> an existing component.  Here
-the <indexterm><primary>alert</primary></indexterm><sgmltag class="element">&lt;alert&gt;</sgmltag><remark role="fixme">[unknown tag]</remark>
-<!--unknown tag: alert-->
- class is extended to create a new component called "myalert".  It is trivially different
-from the default <indexterm><primary>alert</primary></indexterm><sgmltag class="element">&lt;alert&gt;</sgmltag>; its only difference is that it centers nicely over the survey box.
-</para>
-<example role="live-example"><title>extending a component</title><programlisting>
+   <para> To learn how to do this, first make sure that you understand classes and how to extend
+    them, as explained in <xref linkend="introductory-classes"/> and <xref
+     linkend="class-inheritance"/>. Then read <xref linkend="custom-components"/>. </para>
+
+  </section>
+  <section>
+   <title>Implementing appearance</title>
+   <para> Designing the visual appearance of a new component requires a designer's eye and
+    meticulous attention to detail—at the level of placement of individual pixels. </para>
+   <para> The role of the graphic designer on Laszlo projects is explained in <xref
+     linkend="designers"/>. In addition, we recommend that you study the construction of the LZ
+    components, as explained in <xref linkend="custom-components"/>. </para>
+
+
+  </section>
+  <section>
+   <title>Example: Extending the &lt;alert&gt; component</title>
+   <para> As explained above, sometimes you can create your own new component by subclassing, or
+     <glossterm>extending</glossterm> an existing component. Here the <indexterm>
+     <primary>alert</primary>
+    </indexterm><sgmltag class="element">&lt;alert&gt;</sgmltag><remark role="fixme"
+     >[unknown tag]</remark>
+    <!--unknown tag: alert--> class is extended to create a new component called "myalert". It is
+    trivially different from the default <indexterm>
+     <primary>alert</primary>
+    </indexterm><sgmltag class="element">&lt;alert&gt;</sgmltag>; its only difference is
+    that it centers nicely over the survey box. </para>
+   <example role="live-example">
+    <title>extending a component</title>
+    <programlisting>
     &lt;class extends="alert" name="myalert" x="${Math.max(survey.width - this.width, 0)/2}" y="${Math.max(survey.height - this.height, 0)/3}"&gt;
     &lt;/class&gt;
-</programlisting></example>
+</programlisting>
+   </example>
 
-<para/></section></section></chapter>
+
+  </section>
+ </section>
+</chapter>
