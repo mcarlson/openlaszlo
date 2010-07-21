@@ -61,12 +61,12 @@ lz.embed = {
      * {url: 'myapp.lzx?lzt=swf', bgcolor: '#000000', width: '800', height: '600', id: 'lzapp', accessible: true, history: true/false}
      *
      * @param minimumVersion:Number the version the flash player should 
-     * upgrade to if necessary.  Defaults to 10 for security reasons.
+     * upgrade to if necessary.  Defaults to 10.1 for security reasons.
      */
     ,swf: function (properties, minimumVersion) {
         var embed = lz.embed;
-        // Upgrade to flash player 10 for security reasons
-        if (minimumVersion == null) minimumVersion = 10;
+        // Upgrade to flash player 10.1 for security reasons
+        if (minimumVersion == null) minimumVersion = 10.1;
 
         if (! properties.id) {
             // Generate a unique ID

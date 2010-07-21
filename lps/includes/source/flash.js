@@ -556,9 +556,11 @@ lz.embed.dojo.Info.prototype = {
         //    Returns true if the player is equal
         //    or above the given version, false otherwise.
         
-        // make the revision a decimal (i.e. transform revision 14 into
-        // 0.14
-        reqVer = parseFloat("." + reqVer);
+        if (this.versionMajor < 9) {
+            // make the revision a decimal (i.e. transform revision 14 into
+            // 0.14
+            reqVer = parseFloat("." + reqVer);
+        }
         
         if(this.versionMajor >= reqMajorVer && this.versionMinor >= reqMinorVer
              && this.versionRevision >= reqVer){
@@ -598,7 +600,7 @@ lz.embed.dojo.Info.prototype = {
                 this.versionRevision = versionArray[2];
                 
                 // 7.0r24 == 7.24
-                var versionString = this.versionMajor + "." + this.versionRevision;
+                var versionString = this.versionMajor + "." + this.versionMinor;
                 this.version = parseFloat(versionString);
                 
                 this.capable = true;
@@ -1285,7 +1287,7 @@ lz.embed.dojo.Install.prototype = {
         }
 
         // pay attention to the minimum requirements  
-        if (dojo.minimumVersion > dojo.info.versionMajor) {
+        if (dojo.minimumVersion > dojo.info.version) {
             return true;
         }        
 
