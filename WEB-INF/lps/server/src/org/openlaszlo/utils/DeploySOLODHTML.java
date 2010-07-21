@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -193,16 +193,13 @@ public class DeploySOLODHTML {
         //  src="/legals/lps/includes/embed-dhtml.js"
         wrapper = wrapper.replaceAll(lpspath + "/", "");
         
-        // Replace object file URL with SOLO filename
-        // Lz.dhtmlEmbed({url: 'animation.lzx?lzt=object&lzr=dhtml&_canvas_debug=false',
-        //                 bgcolor: '#eaeaea', width: '800', height: '300', id: 'lzapp'});
+        // Replace serverroot and lfcurl:
+        // lz.embed.dhtml({url: 'html.lzx?lzt=object&lzr=dhtml', lfcurl: '/trunk2/lps/includes/lfc/LFCdhtml.js', serverroot: '/trunk2/', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp', accessible: 'false', cancelmousewheel: false, cancelkeyboardcontrol: false, skipchromeinstall: false, usemastersprite: false, approot: ''});
+        wrapper = wrapper.replaceFirst("lfcurl:(.*?),",
+                                       "lfcurl: 'lps/includes/lfc/LFCdhtml.js',");
+        wrapper = wrapper.replaceFirst("serverroot:(.*?),",
+                                       "serverroot: 'lps/resources/',");
 
-        // Replace the resourceroot with a relative path
-        // lz.embed.lfc('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
-
-        wrapper = wrapper.replaceFirst("lz.embed.lfc(.*?);",
-                                       "lz.embed.lfc('lps/includes/lfc/LFCdhtml.js', 'lps/resources/');");
-        
         // replace title
         // wrapper = wrapper.replaceFirst("<title>.*</title>", "<title>"+title+"</title>\n");
         // extract width and height with regexp

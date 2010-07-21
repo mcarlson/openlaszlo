@@ -203,10 +203,12 @@ probably not what you want.
         //wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*'", ".lzx.js'");
         wrapper = wrapper.replaceAll("[.]lzx[?]lzt=object.*?'", ".lzx.js'");
 
-        // Replace the serverroot with a relative path
-        // Lz.dhtmlEmbedLFC('/trunk/lps/includes/lfc/LFCdhtml.js', '/trunk');
-        wrapper = wrapper.replaceFirst("lz.embed.lfc(.*?);",
-                                       "lz.embed.lfc('lps/includes/lfc/LFCdhtml.js', 'lps/resources/');");
+        // Replace serverroot and lfcurl:
+        // lz.embed.dhtml({url: 'html.lzx?lzt=object&lzr=dhtml', lfcurl: '/trunk2/lps/includes/lfc/LFCdhtml.js', serverroot: '/trunk2/', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp', accessible: 'false', cancelmousewheel: false, cancelkeyboardcontrol: false, skipchromeinstall: false, usemastersprite: false, approot: ''});
+        wrapper = wrapper.replaceFirst("lfcurl:(.*?),",
+                                       "lfcurl: 'lps/includes/lfc/LFCdhtml.js',");
+        wrapper = wrapper.replaceFirst("serverroot:(.*?),",
+                                       "serverroot: 'lps/resources/',");
 
         // debugging print
         if (false) {
@@ -403,7 +405,6 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
 
          byte lbytes[] = wrapper.getBytes();
          //Write out a copy of the lzhistory wrapper as appname.lzx.html
-         out.println("<br>copyFileToZipFile dstfixed="+htmlfile+" lookup "+zippedfiles.contains(htmlfile));
          copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
 
          // Compress the include files
