@@ -481,7 +481,9 @@ dynamic class LzBootstrapDebugService {
    * @access private
    */
   function deprecated (obj, method, replacement) {
-    Debug.info("%w.%s is deprecated.  Use %w.%s instead", obj, method, obj, replacement);
+      Debug.info("%w.%=s is deprecated.  Use %w.%=s instead",
+                 obj, method, Debug.methodName(obj, method),
+                 obj, replacement, Debug.methodName(obj, replacement));
   }
 
   /**

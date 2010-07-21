@@ -163,7 +163,7 @@ class LzAS3DebugService extends LzDebugService {
    * declaration after 7034 is resolved
    */
 #passthrough{
-  // all methods are coerced to public when compiling for debug
+  // (LPP-7034) all methods are coerced to public when compiling for debug
   public override function functionName (fn, mustBeUnique:Boolean=false) {
     if (fn is Class) {
       // JS2 constructors are Class
@@ -195,6 +195,33 @@ class LzAS3DebugService extends LzDebugService {
     return super.functionName(fn, mustBeUnique);
   };
 }#
+
+ /**
+  * @access private
+  * @devnote Tip o' the pin to andre.bargull@udo.edu for sorting this
+  * out.  Find the name of a method by goveling over the introspective
+  * class data
+  */
+#passthrough {
+  // (LPP-7034) all methods are coerced to public when compiling for debug
+  public override function methodName (o:*, f:Function):String {
+    // works only reliably in debug-mode
+    var type:XML = flash.utils.describeType(o);
+    var methodNames:XMLList = type.method.@name;
+    for each (var name:String in methodNames) {
+      if (o[name] === f) {
+        return name;
+      }
+    }
+    for (var name:String in o) {
+      if (o[name] === f) {
+        return name;
+      }
+    }
+    return null;
+  }
+}#
+
 
   /**
    * Adds unenumerable object properties for DHMTL runtime

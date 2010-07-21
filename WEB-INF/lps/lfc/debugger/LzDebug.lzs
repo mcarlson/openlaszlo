@@ -1,4 +1,4 @@
-/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+/* -*- mode: c-basic-offset: 2; -*- */
 
 /**
   *
@@ -925,6 +925,26 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
   };
 
   /**
+   * Compute a method name if you can
+   *
+   * @param Object o: the instance to look for the method in
+   * @param Function f: the method whose name to compute
+   * @return String: the method name
+   *
+   * @access private
+   *
+   * @devnote In JS1 runtimes, this is the same as functionName, but
+   * in as3, where methods are automatically closed over, we resort to
+   * platform-dependent introspection to find the name
+   *
+   * @devnote TODO: [2008-09-23 ptw] (LPP-7034) Remove public
+   * declaration after 7034 is resolved
+   */
+  public function methodName (o:*, f:Function):String {
+    return this.functionName(f);
+  }
+
+  /**
    * Compute the description for __String
    *
    * May be overridden in subclasses to add descriptions for
@@ -1188,11 +1208,11 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
         // Enforce circular
         if ((id !== null) && (circular != null) && (circular[id])) {
           var cache = circular[id];
-          // If we have a readable description for this already, it is
+          // If we have a description for this already, it is
           // stored in the circular table, instead of `true`
           if (cache && (cache !== true)) {
-            s = cache;
-            isreadable = true;
+            s = cache.description;
+            isreadable = cache.readable;
 //             Debug.debug("circular[%d] => %s", id, s);
           } else {
             // Force printing of ID
@@ -1214,9 +1234,9 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
           var d  = this.__StringDescription(thing, escape, limit, readable, depth);
           s = d.description;
           isreadable = d.readable;
-          // Cache description for circular
-          if (s && isreadable && (id !== null)) {
-            circular[id] = s;
+          // Cache readable description for circular
+          if (s && (id !== null)) {
+            circular[id] = d;
           }
         }
       } finally {

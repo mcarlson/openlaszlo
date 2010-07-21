@@ -8,10 +8,10 @@
         Most subclasses require you to call getValue() to get the
         value of the attribute.  -->
         <attribute name="value" value="null"/>
-        <!--- The type of value of the item. Default is none,
+        <!--- The type of value of the item. Default is 'expression',
              which will attempt to heuristicate the type from the
              value. -->
-        <attribute name="type" value="" type="string" />
+        <attribute name="type" type="string" value="expression"/>
 
         <!--- returns the value that is represented by this component
         -->
@@ -80,7 +80,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1,4 +1,4 @@
-/* -*- mode: JavaScript; c-basic-offset: 2; -*- */
+/* -*- mode: c-basic-offset: 2; -*- */
 
 /**
   * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
@@ -116,6 +116,33 @@ var globalValue = function (name:String) {
   }
   return void 0;
 };
+
+
+// TODO [2010-07-21 ptw] (LPP-8961) We don't use this yet, so I have
+// commented it out to avoid uneccesary global pollution; but it
+// should be compatible with any sensible definition of Function/bind.
+//
+// /**
+//  * Support bound methods in js1 and currying in general
+//  *
+//  * NOTE [2010-07-21 ptw] (LPP-8961) This is the equivalent of
+//  * Prototype's Function/bind, but in our (LZS) syntax, and annotated
+//  * for our debugger (when in debug mode).
+//  *
+//  * @access private
+//  */
+// Function.prototype.bind = function (object, ...schonfinkel) {
+//     var method = this;
+//     var bound = function (...args) {
+//         return method.apply(object, schonfinkel.concat(args));
+//     };
+//     if ($debug) {
+//         bound[Debug.FUNCTION_NAME] =
+//             Debug.formatToString("%w.%=s", object, bound, Debug.methodName(object, method));
+//         // TODO [2020-07-20 ptw] Add any curried args to the _dbg_name
+//     }
+//     return bound;
+// }
 
 // Runtime support for `subclassof`
 var $lzsc$issubclassof = function (one:Class, other:Class) {

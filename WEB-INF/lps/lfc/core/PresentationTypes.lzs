@@ -11,68 +11,62 @@
  * and from a String representation.
  *
  * If an inherited class does not implement present(),
- * PresentationType.present() will be used.
+ * PresentationType/present() will be used.
  *
  * @access private
  */
-class PresentationType {
-  static var nullValue = null;
-  static function accept(value) {
-    return value;
+class PresentationTypeClass {
+  static const nullValue = null;
+  var _dbg_typename = 'type';
+  var _dbg_name = function () {
+    return this.constructor.lzxtype;
   }
-  static function present(value) {
+  function accept(value) {
+    if ($debug) {
+      Debug.error("%w.accept must be defined", this);
+    }
+  }
+  function present(value) {
     return String(value);
   }
 };
-
-/**
- * Default presentation type
- *
- * If no type is specified, we just pass the value straight through,
- * for backward compatibility.
- *
- * NOTE [2009-01-15 ptw] This is never what you want, it exists only
- * for backwards compatibility.  After 4.2, make this issue a
- * deprecation warning if it is invoked.
- *
- * @access private
- */
-class DefaultPresentationType extends PresentationType {
-  static var accept = PresentationType.accept;
-  static function present(value) {
-    return value;
-  }
-}
-
 
 /**
  * String presentation type
  *
  * @access private
  */
-class StringPresentationType extends PresentationType {
-  static var nullValue = "";
-  static function accept(value) {
+class StringPresentationTypeClass extends PresentationTypeClass {
+  static const lzxtype = 'string';
+  static const nullValue = "";
+  override function accept(value) {
     return String(value);
   }
-  static var present = PresentationType.present;
 }
+/** @access private */
+var StringPresentationType = new StringPresentationTypeClass();
 
 /**
  * text presentation type
  *
  * `accept` will escape the 5 XML entities, `present` will unescape them
  *
+ * @devnote NOTE [2010-07-20 ptw] To ensure markup is not interpreted,
+ * you really only have to escape the two syntactical markers &lt; and
+ * &amp;.
+ *
  * @access private
  */
-class TextPresentationType extends PresentationType {
+class TextPresentationTypeClass extends PresentationTypeClass {
+  static const lzxtype = 'text';
+  static const nullValue = "";
   /** The five XML entities
    * (See http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references#Predefined_entities_in_XML)
    * @access private */
   static const xmlEscapes:Object = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
 
-  static function accept(value:String):* {
-    const escChars:Object = TextPresentationType.xmlEscapes;
+  override function accept(value) {
+    const escChars:Object = TextPresentationTypeClass.xmlEscapes;
     var result:String = "";
     for (var i:int = 0, l:int = value.length; i < l; i++) {
       var c:String = value.charAt(i);
@@ -81,7 +75,7 @@ class TextPresentationType extends PresentationType {
     return result;
   }
 
-  static function present(value:*):String {
+  override function present(value) {
     var result:String = "";
     for (var i:int = 0, l:int = value.length; i < l; i++) {
       var c:String = value.charAt(i);
@@ -106,15 +100,18 @@ class TextPresentationType extends PresentationType {
     return result;
   }
 }
+/** @access private */
+var TextPresentationType = new TextPresentationTypeClass();
 
 /**
  * Boolean presentation type
  *
  * @access private
  */
-class BooleanPresentationType extends PresentationType {
-  static var nullValue = false;
-  static function accept(value) {
+class BooleanPresentationTypeClass extends PresentationTypeClass {
+  static const nullValue = false;
+  static const lzxtype = 'boolean';
+  override function accept(value) {
     // NOTE: [2009-01-13 ptw] Boolean("false") would not do what we
     // expect (a non-empty string is considered true).
     switch (value.toLowerCase()) {
@@ -124,17 +121,19 @@ class BooleanPresentationType extends PresentationType {
         return true;
     }
   }
-  static var present = PresentationType.present;
 }
+/** @access private */
+var BooleanPresentationType = new BooleanPresentationTypeClass();
 
 /**
  * Number presentation type
  *
  * @access private
  */
-class NumberPresentationType extends PresentationType {
-  static var nullValue = 0;
-  static function accept(value) {
+class NumberPresentationTypeClass extends PresentationTypeClass {
+  static const nullValue = 0;
+  static const lzxtype='number';
+  override function accept(value) {
     // NOTE [2009-03-02 ptw] Only required for swf8 whose Number
     // does not understand Infinity
     if ($swf8) {
@@ -145,24 +144,26 @@ class NumberPresentationType extends PresentationType {
     }
     return Number(value);
   }
-  static var present = PresentationType.present;
 }
+/** @access private */
+var NumberPresentationType = new NumberPresentationTypeClass();
 
 /**
  * Color presentation type
  *
  * @access private
  */
-class ColorPresentationType extends PresentationType {
-  static var nullValue = 0;
-  static function accept(value) {
+class ColorPresentationTypeClass extends PresentationTypeClass {
+  static const nullValue = 0;
+  static const lzxtype = 'color';
+  override function accept(value) {
     // handle 'transparent' semaphore from compiler (for canvas)
     if (value == -1) {
         return null;
     }
     return LzColorUtils.hextoint(value);
   }
-  static function present(value) {
+  override function present(value) {
     // look up color names
     var ctab = lz.colors;
     for (var name in ctab) {
@@ -173,6 +174,8 @@ class ColorPresentationType extends PresentationType {
     return LzColorUtils.inttohex(value);
   }
 }
+/** @access private */
+var ColorPresentationType = new ColorPresentationTypeClass();
 
 /**
  * Expression presentation type
@@ -186,9 +189,10 @@ class ColorPresentationType extends PresentationType {
  *
  * @access private
  */
-class ExpressionPresentationType extends PresentationType {
-  static var nullValue = null;
-  static function accept(value) {
+class ExpressionPresentationTypeClass extends PresentationTypeClass {
+  static const nullValue = null;
+  static const lzxtype = 'expression';
+  override function accept(value) {
     switch (value) {
       case "undefined": return void 0;
       case "null": return null;
@@ -214,21 +218,24 @@ class ExpressionPresentationType extends PresentationType {
   // Presentation is just the default string conversion.  JSON would
   // be better because it would preserve the type (distinguish between
   // literals and strings, e.g., `null` vs. `"null"`)
-  static var present = PresentationType.present;
 }
+/** @access private */
+var ExpressionPresentationType = new ExpressionPresentationTypeClass();
 
 /**
  * Size presentation type
  *
  * @access private
  */
-class SizePresentationType extends PresentationType {
-  static var nullValue = null;
-  static function accept(value) {
+class SizePresentationTypeClass extends PresentationTypeClass {
+  static const nullValue = null;
+  static const lzxtype = 'size';
+  override function accept(value) {
     // sizeExpression can be null
     if (value == "null") { return null; }
     // TODO: handle percentage values?
     return Number(value);
   }
-  static var present = PresentationType.present;
 }
+/** @access private */
+var SizePresentationType = new SizePresentationTypeClass();

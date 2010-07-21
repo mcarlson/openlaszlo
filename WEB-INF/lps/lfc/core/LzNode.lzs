@@ -1369,14 +1369,6 @@ public dynamic class LzNode extends LzEventable {
     // Alternatively, look for `tag`
     if (! x) {
       if (e['tag']) { x = lz[ e.tag ]; }
-      // Finally, backward compatibility
-      // TODO: [2008-10-26 ptw] Remove after 4.3
-      if ((! x) && e['name']) {
-        if ($debug) {
-          Debug.deprecated(arguments.callee, 'name', 'class');
-        }
-        x = lz[ e.name ];
-      }
     }
     // TODO: [2005-03-24 ptw] Remove this if we ever enable
     // warnings in the LFC as this will be redundant
@@ -2385,14 +2377,14 @@ public dynamic class LzNode extends LzEventable {
   * Converts a string to a value using the presentation type's accept
   * method
   */
- function acceptTypeValue(type, value) {
+  function acceptTypeValue(type, value) {
    var presentationtype = type ? LzNode.presentationtypes[type] : null;
    // don't coerce null (or undefined) values
    if (value != null) {
      if (presentationtype != null) {
        value = presentationtype.accept(value);
-     } else {
-       value = DefaultPresentationType.accept(value);
+     } else if ($debug) {
+       Debug.warn("No <type> named %w", type);
      }
    }
    return value;
@@ -2423,13 +2415,12 @@ public dynamic class LzNode extends LzEventable {
    * Returns the value converted to a string by the
    * presentationtype's present method
    */
- function presentTypeValue(type, value) {
+  function presentTypeValue(type, value) {
    var presentationtype = LzNode.presentationtypes[type];
-   if (presentationtype != null && presentationtype['present']) {
+   if (presentationtype != null) {
      value = presentationtype.present(value);
-   } else {
-     // default because static methods aren't inherited...
-     value = PresentationType.present(value);
+   } else if ($debug) {
+     Debug.warn("No <type> named %w", type);
    }
    //Debug.write('presentAttribute', name, type, value, typeof value, presentationtype);
    return value;
