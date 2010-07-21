@@ -625,6 +625,8 @@ LzSprite.quirks = {
     ,textmeasurementalphastring: false
     // See LPP-9101
     ,textlinksneedmouseevents:false
+    // See LPP-9177
+    ,dont_clip_clickdivs:false
 }
 
 LzSprite.prototype.capabilities = {
@@ -844,6 +846,7 @@ LzSprite.__updateQuirks = function () {
             // LPP-8591 when measuring text div scrollheight, need to first set it to zero
             quirks['forcemeasurescrollheight'] = true;
         } else if (browser.isOpera) {
+            // doesn't help: stylenames.userSelect = 'OUserSelect';
             // Fix bug in where if any parent of an image is hidden the size is 0
             quirks['invisible_parent_image_sizing_fix'] = true;
             quirks['no_cursor_colresize'] = true;
@@ -856,8 +859,16 @@ LzSprite.__updateQuirks = function () {
             // Opera uses "\r\n" for newlines, which gives different text-lengths
             // compared to SWF and to other browsers
             quirks['text_ie_carriagereturn'] = true;
-            // compared to SWF and to other browsers
+            // Opera needs to use alphanumeric strings for text measurement
             quirks['textmeasurementalphastring'] = true;
+            if (browser.version >= 10.60) {
+                // CSS3 word-wrap is broken, see LPP-9177
+                defaultStyles.lzswftext.wordWrap = 'normal';
+                defaultStyles.lzswfinputtext.wordWrap = 'normal';
+                defaultStyles.lzswfinputtextmultiline.wordWrap = 'normal';
+                // Opera can't deal with clipped clickdivs, see LPP-9177
+                quirks['dont_clip_clickdivs'] = true;
+            }
         } else if (browser.isFirefox) {
             stylenames.borderRadius = 'MozBorderRadius';
             stylenames.boxShadow = 'MozBoxShadow';
@@ -2359,7 +2370,9 @@ LzSprite.prototype.__updateClip = function() {
     }
 
     if (quirks.fix_clickable) {
-        this.__LZclickcontainerdiv.style.clip = s;
+        if (quirks.dont_clip_clickdivs != true) {
+            this.__LZclickcontainerdiv.style.clip = s;
+        }
     }
     if (quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
         this.__LZcontextcontainerdiv.style.clip = s;
