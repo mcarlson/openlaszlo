@@ -1110,18 +1110,20 @@ var opacity =   1;
 
 /** @access private */
 function $lzc$set_opacity(v) {
-    if (this.capabilities.opacity) {
-        this.sprite.setOpacity(v);
-    } else if ($debug) {
-        LzView.__warnCapability('view.opacity', 'opacity'); 
+    if (this.opacity !== v) {
+        this.opacity = v;
+        if (this.capabilities.opacity) {
+            this.sprite.setOpacity(v);
+        } else if ($debug) {
+            LzView.__warnCapability('view.opacity', 'opacity'); 
+        }
+        var newoviz = v != 0;
+        if ( this.__LZvizO != newoviz ){
+            this.__LZvizO = newoviz;
+            this.__LZupdateShown();
+        }
     }
-    this.opacity = v;
     if (this.onopacity.ready) this.onopacity.sendEvent( v );
-    var newoviz = v != 0;
-    if ( this.__LZvizO != newoviz ){
-        this.__LZvizO = newoviz;
-        this.__LZupdateShown();
-    }
 }
 
 /**

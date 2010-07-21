@@ -1874,19 +1874,19 @@ LzSprite.prototype.setVisible = function ( v ){
     if (this.visible === v) return;
     //Debug.info('setVisible', v, this.owner);
     this.visible = v;
+    var divdisplay = v ? '' : 'none';
     // use applyCSS to ensure cached value is set - see __processHiddenParents()
-    this.applyCSS('display', (v && this.opacity != 0) ? '' : 'none');
+    this.applyCSS('display', divdisplay);
     if (this.quirks.fix_clickable) {
         if (this.quirks.fix_ie_clickable && this.__LZclick) {
             this.__LZclick.style.display = v && this.clickable ? '' : 'none'
             //this.applyCSS('display', v && this.clickable ? '' : 'none', '__LZclick');
         }
-        var vis = v ? '' : 'none';
-        this.__LZclickcontainerdiv.style.display = vis;
-        //this.applyCSS('display', vis, '__LZclickcontainerdiv');
+        this.__LZclickcontainerdiv.style.display = divdisplay;
+        //this.applyCSS('display', divdisplay, '__LZclickcontainerdiv');
         if (this.quirks.fix_contextmenu && this.__LZcontextcontainerdiv) {
-            this.__LZcontextcontainerdiv.style.display = vis;
-            //this.applyCSS('display', vis, '__LZcontextcontainerdiv');
+            this.__LZcontextcontainerdiv.style.display = divdisplay;
+            //this.applyCSS('display', divdisplay, '__LZcontextcontainerdiv');
         }
     }
 }
@@ -1949,7 +1949,6 @@ LzSprite.prototype.setOpacity = function ( o ){
     if (o != this._opacity) { 
         //Debug.info('setOpacity', o);
         this._opacity = o;
-        this.applyCSS('display', (this.visible && o != 0) ? '' : 'none');
 
         if (this.quirks.ie_opacity) {
             this.__LZdiv.style.filter = this.setFilter('opacity', o == 1 ? '' : "alpha(opacity=" + parseInt(o * 100) + ")" );
