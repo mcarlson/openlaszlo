@@ -1,4 +1,5 @@
 <library>
+    <include href="utils/dataselectionmanager.lzx"/>
     <!-- note: when changing code in this class, please reveiw listselector
         which must match these APIs and shares some code with this class -->
 
@@ -282,7 +283,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

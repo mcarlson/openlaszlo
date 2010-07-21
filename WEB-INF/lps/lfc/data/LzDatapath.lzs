@@ -691,8 +691,8 @@ function setClonePointer( p /*:LzDataNodeMixin*/ ) :void {
     }
 }
 
-/**
-  * @access private
+/** Sets the selection state of the datapath, used by dataselectionmanager.lzx
+  * @access public
   */
 override function setSelected (torf) /* :void */ {
     this.p.sel = torf;

@@ -170,12 +170,6 @@
     </insert>
   </interface>
 
-  <interface name="command" extends="node">
-    <insert>
-      <attribute name="key" value="expression"/>
-    </insert>
-  </interface>
-
   <interface name="contextmenuitem" extends="node">
     <!-- add virtual attributes -->
     <insert>
@@ -230,8 +224,6 @@
   <interface name="view" extends="node">
     <insert>
       <containsElements>
-        <element>dataselectionmanager</element>
-        <element>selectionmanager</element>
         <element>text</element>
         <element>inputtext</element>
         <element>node</element>

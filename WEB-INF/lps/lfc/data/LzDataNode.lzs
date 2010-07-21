@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -122,8 +122,8 @@ var __LZo :int = -1;
 var __LZcoDirty :Boolean = true;
 
 /**
-  * Selection state of this node, see LzDataSelectionManager
-  * @access private
+  * Selection state of this node, used by dataselectionmanager
+  * @access public
   */
 var sel :Boolean = false;
 

@@ -13,6 +13,7 @@
 <include href="utils/layouts" />
 <include href="utils/states/resizestate.lzx" />
 <include href="utils/states/dragstate.lzx" />
+<include href="utils/command.lzx"/>
 <include href="newcontent.lzx" />
 
 <include href="lz/tooltip/tooltip.lzx" />

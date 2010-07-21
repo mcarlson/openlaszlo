@@ -2302,6 +2302,8 @@ var oncolortransform = LzDeclaredEvent;
   *
   * @runtimes as2, as3
   * @param Object o: A color transformation dictionary
+  * @lzxtype expression
+  * @type Object
   */
 var colortransform:Object;
 
