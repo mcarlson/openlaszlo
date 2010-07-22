@@ -475,9 +475,6 @@ public class ClassModel implements Comparable {
     LFCTag2JSClass.put("animator", "LzAnimator");
     LFCTag2JSClass.put("layout", "LzLayout");
     LFCTag2JSClass.put("state", "LzState");
-    LFCTag2JSClass.put("command", "LzCommand");
-    LFCTag2JSClass.put("selectionmanager", "LzSelectionManager");
-    LFCTag2JSClass.put("dataselectionmanager", "LzDataSelectionManager");
     LFCTag2JSClass.put("datapointer", "LzDatapointer");
     LFCTag2JSClass.put("dataprovider", "LzDataProvider");
     LFCTag2JSClass.put("datapath", "LzDatapath");
