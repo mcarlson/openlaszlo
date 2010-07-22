@@ -549,6 +549,7 @@ public class SWF9External {
             System.err.println("Stray error string from external compiler: " + str);
             // Capture it in an error message not tied to a particular line
             lastError = new ExternalCompilerError();
+            errors.add(lastError);
           }
           lastError.addCodeLine(str);
         }
