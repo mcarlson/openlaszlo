@@ -55,6 +55,7 @@ if ($profile) {
 #include "helpers/Library.lzs"
 #include "data/Library.lzs"
 #include "services/Library.lzs"
+#include "utils/Library.lzs"
 
 if ($as3) {
     // Initialize the DojoExternalInterface class

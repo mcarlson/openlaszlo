@@ -19,12 +19,10 @@ var LzResourceLibrary:Object = {};
 #include "kernel/LzLibraryCleanup.lzs"
 
 if ($as3) {
-    #include "kernel/LzFont.lzs"
     #include "kernel/swf9/Library.lzs"
 } else if ($dhtml) {
     #include "kernel/dhtml/Library.lzs"
 } else if ($as2) {
-    #include "kernel/LzFont.lzs"
     #include "kernel/swf/Library.lzs"
 } else if ($debug) {
     Debug.error('kernel/Library.lzs unsupported runtime %s', $runtime);
