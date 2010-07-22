@@ -176,7 +176,7 @@ lzrte.rtemanager = {
             //            plugins.push ('dijit._editor.plugins.EnterKeyHandling');
             lzrte.rtemanager.__editor = new dijit.Editor({height: '90%', plugins: plugins}, id);
         }
-        if (console && console.debug) console.debug("Created editor", lzrte.rtemanager.__editor);
+        //if (console && console.debug) console.debug("Created editor", lzrte.rtemanager.__editor);
 
         // Capturing mouse clicks and key presses is enough to find out when the text changes
         // The onChange event in dijit.Editor doesn't fire until the editor loses focus.
@@ -185,7 +185,7 @@ lzrte.rtemanager = {
     }
 
     ,rte_start: function(initial_text) {
-        if (console && console.debug) console.debug("rte_start");
+        //if (console && console.debug) console.debug("rte_start");
         if (lzrte.rtemanager.isEditing())
             return;
         if (lzrte.rtemanager.isLoaded()) {
@@ -205,7 +205,7 @@ lzrte.rtemanager = {
             contents = lzrte.rtemanager.getText();
             if (lzrte.rtemanager.isEditing())
                 lzrte.rtemanager.__editor.close ();
-            if (console && console.debug) console.debug("rte_stop", contents);
+            //if (console && console.debug) console.debug("rte_stop", contents);
         }
 
         return contents;
@@ -266,7 +266,7 @@ lzrte.rtemanager = {
         //__text is the initial text to show
         lzrte.rtemanager.__rte_start (lzrte.rtemanager.__text);
   
-        if (console && console.debug) console.debug("editor_loaded");
+        //if (console && console.debug) console.debug("editor_loaded");
 
         // Generate an on_editorready event. The rte component will send the oneditorready event
         lzrte.rtemanager.generate_event (lzrte.rtemanager.__frameid, '_editorready');
@@ -290,7 +290,7 @@ lzrte.rtemanager = {
 
     // Call to initialize() package.
     ,initialize: function() {
-        if (console && console.debug) console.debug("initialize");
+        //if (console && console.debug) console.debug("initialize");
         if (lzrte.rtemanager.isLoaded())
             return;
         // Install the css and theme
