@@ -47,7 +47,7 @@
 <attribute name="key" value="null"/>;
 <!--- @access private -->
 <setter name="key" args="k">
-    var oldKeys = this.keys;
+    var oldKeys = this['keys'];
     if (oldKeys) {
       lz.Keys.removeKeyComboCall(this, oldKeys);
     }
