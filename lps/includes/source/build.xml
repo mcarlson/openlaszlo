@@ -34,12 +34,22 @@
         <mergemapper to="../excanvas.js" />
       </compositemapper>
     </uptodate>
+
+    <!-- Whether the compressed rtemanager is up to date -->
+    <uptodate property="rtemanager.uptodate" >
+      <srcfiles dir="." includes="rtemanager.js" />
+      <compositemapper>
+        <mergemapper to="../rtemanager.js" />
+      </compositemapper>
+    </uptodate>
+
   </target>
 
   <target name="clean" depends="init">
     <delete failonerror="false">
       <fileset dir=".." includes="embed-compressed.js" />
       <fileset dir=".." includes="excanvas.js" />
+      <fileset dir=".." includes="rtemanager.js" />
     </delete>
   </target>
 
@@ -75,11 +85,20 @@
     </ant>
   </target>
 
+  <target name="rtemanager"
+          depends="init"
+          unless="rtemanager.uptodate">
+    <ant target="compress">
+      <property name="output" value="../rtemanager.js" />
+      <property name="source" value="rtemanager.js" />
+    </ant>
+  </target>
+
   <target name="doc">
   </target>
 
   <target name="build" description="Build all the includes, unless they're already up to date"
-          depends="init,embed,excanvas">
+          depends="init,embed,excanvas,rtemanager">
   </target>
 
   <target name="all"

@@ -1,0 +1,81 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas width="100%" height="100%">
+    <include href="extensions/rte.lzx"/>
+
+    <!-- Displays the rte editor in a window -->
+    <class name="rte_editor" extends="window" resizable="true" closeable="true">
+      <simplelayout/>
+      <event name="ontext"/>
+      <attribute name="text" type="html"/>
+      <rte width="100%" height="${classroot.height-this.y-44}" name="myrte">
+        <handler name="oninit">
+           Debug.write("oninit is running");
+        </handler>
+        <handler name="oneditorready">
+            //Debug.write("oneditorready", parent.text);
+            this.setText(parent.text);
+        </handler>
+        <handler name="ontext" args='txt'>
+             parent.setAttribute('text', txt);
+        </handler>
+      </rte>
+
+      <handler name="ontext" args="txt">
+          //Debug.write("ontext:", txt);
+      </handler>
+   
+      // I created LPP-9197 so I don't have to do this manually
+      <method name="close" args="...ignore"> 
+//          myrte.setAttribute('visible', false);
+          myrte.destroy(); 
+          super.close(); 
+      </method> 
+
+    </class>
+
+    <!-- A <text> element that brings creates a rte_editor when clicked -->
+    <class name="texteditor" extends="text">
+      <attribute name="editor" value="null" />
+
+      <method name="retrieveText" args="text">
+        this.setAttribute('text', text);
+      </method>
+
+      <handler name="onclick">
+        this.editor = new lz.rte_editor (canvas,{title:'editor', width:600, height:400, resizable:true, closeable:true, text: this.text});        
+        this.textdel = new LzDelegate (this, 'retrieveText');
+        this.textdel.register(this.editor, 'ontext');
+      </handler>
+    </class>
+
+
+<simplelayout axis="y" spacing="10"/>
+
+<texteditor><b>Note: This is an alpha release of the rte component. This demo works only in dhtml (for now)</b></texteditor>
+
+<texteditor>When you click on this text, you can edit it.</texteditor>
+<texteditor>This is another text object you can edit.</texteditor>
+
+<rte width="600" height="400" scrollbars="false">
+This is an <b>inline</b> rte editor with custom buttons.
+  <method name="rte_clear" args="ignore">
+    this.setAttribute ('text', '');
+  </method>
+  <method name="rte_bold" args="ignore">  <![CDATA[
+    this.setAttribute ('text', this.text = '<b>' + this.getText() + '</b>');
+    ]]>
+  </method>
+  <handler name="oneditorready">
+    this.addButton ({value:'Clear'}, new LzDelegate(this, 'rte_clear'));
+    this.addButton ({type: 'image', src:'http://openlaszlo.org/lps4.8/lps/includes/logo_web_sm.gif', height:'60', alt:'All Bold', title:'All Bold'}, new LzDelegate(this, 'rte_bold'));
+  </handler>
+</rte>
+
+<!--
+<rte width="600" height="400" scrollbars="false" toolbar_order='bold,italic,underline'>Simple Editor</rte>
+-->
+
+</canvas>

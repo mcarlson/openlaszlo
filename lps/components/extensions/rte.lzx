@@ -1,0 +1,213 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<library>
+
+<class name="rte" extends="html">
+ 
+    <!--- The ontext event is generated whenever the rte text content changes. -->
+    <event name="ontext"/>
+
+    <!--- The oneditor event is generated whenever the rte editor is completely loaded. -->
+    <event name="oneditorready"/>
+
+    <!--- dijit.Editor toolbar order. An empty string (default) will use the
+          default order. The complete list of toolbar icons is shown. A '|' inserts a separator between
+          blocks of toolbars. A '||' will force a linebreak in the toolbar.
+          TBD
+          @initarg String
+          @access public
+    -->
+    <attribute name="toolbar_order" type="string" value="undo,redo,|,cut,copy,paste,|,bold,italic,underline,strikethrough,|,insertOrderedList,insertUnorderedList,indent,outdent,|,justifyLeft,justifyRight,justifyCenter,justifyFull,|,foreColor,hiliteColor,|,createLink,unlink,insertImage,|,print,smiley,||,fontName,fontSize"/>
+
+    <!--- Additional dijit.Editor plugins to load. An empty string (default)
+          will load only the plugins used by default. Comma separated list
+          of plugin names.
+          TBD
+          @initarg String
+          @access public
+    -->
+    <attribute name="extra_plugins" type="string" value=""/>
+
+
+    <!--- root url where Dojo library is loaded. An empty string (default)
+          will load the library from Google. This path must end with a '/'
+          TBD
+          @initarg String
+          @access public
+    -->
+    <attribute name="dojo_root" type="string" value=""/>
+
+    <!--- dojo theme to use. Default value is 'tundra'
+          TBD
+          @initarg String
+          @access public
+    -->
+    <attribute name="dojo_theme" type="string" value="tundra"/>
+
+    <!--- Dojo library to load (relative to dojo_root). This value is
+          ignored if dojo_root is empty. Common values are
+          dojo/dojo.js (default) and dojo/dojo.js.uncompressed.js
+          @initarg String
+          @access public
+    -->
+    <attribute name="dojo_js" type="string" value="dojo/dojo.js"/>
+
+    <!--- Dojo stylesheet root (relative to dojo_root). This value is
+          ignored if dojo_root is empty. Default value is 'dijit/themes/'
+          @initarg String
+          @access public
+    -->
+    <attribute name="dojo_css" type="string" value="dijit/themes/"/>
+
+
+    <!--- The initial value of the text to edit. The text is updated while
+          the rte is running.
+          @type html
+          @access public
+    -->
+    <attribute name="text" type="html"/>
+
+    <!--- @access private -->
+    <method name="$lzc$set_text" args="v">
+        this.text = v;
+        // This can fire before the object is ready
+        if (this.editorready) {
+          callJavascript('lzrte.rtemanager.setText', null, v);
+        }
+    </method>
+
+
+    <!---
+        Set the edit text. If the rte editor is running, the html in the
+        editor is changed.
+        @param String html: Replaces the edit text with the specified html.
+    -->
+    <method name="setText" args="html">
+        this.$lzc$set_text(html)
+    </method>
+
+    <!--- 
+        Returns the string displayed in this component.
+        @return String: the string displayed.
+     -->
+    <method name="getText">
+        return super.callJavascript("lzrte.rtemanager.getText", null, this.iframeid);
+    </method>
+   
+    <!--- If true, the rte editor is ready to receive commands
+          @type Boolean
+          @access public
+          @keywords readonly
+    -->
+    <attribute name="editorready" value="false"/>
+
+    <!---
+        Insert the specified html in the editor.
+        @param String html: html to insert at the insertion point.
+    -->
+    <method name="insertHtml" args="html">
+        super.callJavascript('lzrte.rtemanager.insertHtml', null, html);
+    </method>
+
+
+    <!--- @keywords private -->
+    <method name="construct" args="parent, args">  <![CDATA[
+        super.construct( parent, args );
+        this.button_mapping = new LzInheritedHash()
+        ]]>
+    </method>
+
+    <!---
+        Adds a button(or image button) above the rte with the specified
+        text and attributes.
+        @param Object attributes: attributes suitable for the html <input> tag
+        @param LzDelegate delegate: An LzDelegate which will be called with the user clicks on the text button.
+        @return String: unique button id
+    -->
+    <method name="addButton" args="attributes, delegate">
+        var id = super.callJavascript ('lzrte.rtemanager.addButton', null, attributes);
+        this.button_mapping[id] = delegate;
+        return id;
+    </method>
+
+    <!--- @access private -->
+    <handler name="onbuttonclick" args="id">
+        // One of the user buttons was clicked
+        var handler = this.button_mapping[id];
+        if (handler)
+            handler.execute (id);
+    </handler>
+
+    <!--- @access private -->
+    <handler name="onload">
+        //Debug.write("onload", this.iframeid);
+
+        // Set the plugin list
+        if (this.toolbar_order.length > 0)
+            callJavascript('lzrte.rtemanager.setPlugins', null, this.toolbar_order);
+
+        // Create a js object
+        callJavascript('lzrte.rtemanager.create', null, 'rte', this.iframeid);
+
+        // Start the editor
+        callJavascript('lzrte.rtemanager.rte_start', null, this.text);
+    </handler>
+
+    <!--- @access private -->
+    <event name="on_editorready"/>
+
+    <!--- @access private -->
+    <event name="on_text"/>
+
+    <!--- @access private -->
+    <handler name="on_editorready">
+        // The editor is ready. 
+        this.editorready = true;
+
+        // Any settext calls are ignored until this point. Display the current html text.
+        if (this.text)
+            this.setAttribute('text', this.text);
+
+        // Fire any oneditorready events
+        if (this.oneditorready.ready) this.oneditorready.sendEvent(true);
+    </handler>
+
+    <!--- @access private -->
+    <handler name="on_text" args="txt">
+        this.text = txt;
+        if (this.ontext.ready) this.ontext.sendEvent(txt);
+    </handler>
+
+
+    <!--- @access private -->
+    <handler name="oninit">
+        //TODO Find a better way to specify the path
+        //TODO THis only works for dhtml
+        var root = lz.embed.options.serverroot;
+        this.setAttribute('src', root + 'lps/includes/rtewrapper.html');
+        this.setAttribute('visible', true);
+    </handler>
+        
+    <!--- @keywords private -->
+    <setter name="visible" args="v">
+        if (!v)
+            callJavascript('lzrte.rtemanager.rte_stop', this.iframeid);
+        super.setAttribute ('visible', v);
+    </setter>
+
+    <!--- @keywords private -->
+    <method name="destroy" ><![CDATA[
+        var txt = this.getText ();
+        if (txt != this.text)
+            this.ontext.sendEvent(txt);
+
+        callJavascript('lzrte.rtemanager.destroy', this.iframeid);
+
+        super.destroy();
+    ]]></method> 
+
+</class>
+</library>
