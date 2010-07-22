@@ -1717,7 +1717,7 @@ LzSprite.prototype.setContextMenu = function ( cmenu ){
     this.__contextmenu = cmenu;
     cmenu = cmenu.kernel.__LZcontextMenu();
 
-    if (! (this.isroot || this instanceof LzTextSprite)) {
+    if (! (this instanceof LzTextSprite)) {
         // normal views install the context-menu on their background-clip
         var mb = this.__LZbgRef;
         if (cmenu == null) {
