@@ -420,7 +420,8 @@ public class ParseTreePrinter {
       return lnum(node, visitBinaryExpressionSequence(node, children));
     }
     if (node instanceof ASTExpressionList ||
-        node instanceof ASTFunctionCallParameters) {
+        node instanceof ASTFunctionCallParameters ||
+         node instanceof ASTMixinsList) {
       return lnum(node, visitExpressionList(node, children));
     }
     if (node instanceof ASTFormalParameterList) {
