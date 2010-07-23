@@ -218,8 +218,10 @@ lz.embed = {
         }
         lz.embed.options.serverroot = serverroot;
         if (lz.embed.browser.isIE) {
-            // Now handled by the HTML wrapper
-            //this.__dhtmlLoadScript(serverroot + 'lps/includes/excanvas.js';)
+            // warn if excanvas isn't included
+            if (! window['G_vmlCanvasManager']) {
+                alert('WARNING: excanvas.js was not loaded, and is required for IE DHTML.  Please ensure your HTML wrapper has a script include in the <head></head>, e.g. <!--[if IE]><script type="text/javascript" src="' + serverroot + 'lps/includes/excanvas.js"></script><![endif]-->"'); 
+            }
             if (lz.embed.browser.version < 7) {
               // load chrome frame
               this.__dhtmlLoadLibrary('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
