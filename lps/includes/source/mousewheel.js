@@ -27,7 +27,8 @@ lz.embed.mousewheel = {
     // wait until setCallback is called to listen for events
     ,setCallback: function (scope, mousewheelcallback) {
         var mousewheel = lz.embed.mousewheel;
-        if (mousewheel.__callbacks.length == 0) mousewheel.setEnabled(true);
+        // Use __enabled, which could have been set already
+        if (mousewheel.__callbacks.length == 0) mousewheel.setEnabled(this.__enabled);
         mousewheel.__callbacks.push(scope, mousewheelcallback);
         //console.log('setCallback', mousewheel.__callbacks);
     }
@@ -49,6 +50,6 @@ lz.embed.mousewheel = {
     }
 }
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/

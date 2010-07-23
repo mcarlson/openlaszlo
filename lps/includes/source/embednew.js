@@ -343,9 +343,8 @@ lz.embed = {
             embed.history.active = false;
         }
 
-        if (properties.cancelmousewheel == true) {
-            embed.mousewheel.setEnabled(false);
-        }
+        // explicitly say whether we want the mousewheel enabled
+        embed.mousewheel.setEnabled(! properties.cancelmousewheel);
         // Make sure we have focus (see LPP-8242)
         if (embed.browser.OS == 'Windows' && embed.browser.isFirefox) { window.focus(); }
 
