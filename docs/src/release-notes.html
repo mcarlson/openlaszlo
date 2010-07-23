@@ -50,14 +50,14 @@
 <hr>
 
 <p> OpenLaszlo @VERSIONID@ is an incremental release of OpenLaszlo 4,
-	and contains 10 bug fixes (see the JIRA
+	and contains over 15 bug fixes (see the JIRA
 	report  <a
 	 href="http://jira.openlaszlo.org/jira/secure/ReleaseNote.jspa?projectId=10020&amp;styleName=Html&amp;version=10750"
 	target="_blank">4.8
 	Release Notes</a> for details). In addition to the bug fixes, support has been added for incremental compilation and
   a compiler option that lets you store precompiled
   platform-specific object code for both the DHTML and SWF10 runtime in
-  a library format.</p>
+  a binary library format, described <a href="http://www.openlaszlo.org/node/414">here</a>.</p>
 
   <p>We strongly suggest that you refer to the <a href="http://www.openlaszlo.org/lps4.8/release-notes.html" target="_blank">Release Notes for OpenLaszlo
 4.8.0</a>, which was the release preceding OpenLaszlo
@@ -68,7 +68,7 @@ found at <a href="http://download.openlaszlo.org/4.7.3/release-notes.html" targe
 <h2>OpenLaszlo Credits</h2> <p>
 OpenLaszlo continues to be grateful for the significant contributions
 by Andr&#xE9; Bargull, whose numerous bug fixes and exacting techical
-reviews make OpenLaszlo more robust. We also want to thank Alexander
+reviews make OpenLaszlo more robust. We also want to thank Ono Keiji, Jaco Botha, Alexander
 Pakhunov, Chen Ding, Clint Dickson, Gioacchino Mazzurco, John
 Olmstead, Justin Hunt, Pasqualino 'Titto' Assini, Raju Bitter, and
 Rami Ojares, who took the time to isolate and report
@@ -78,36 +78,6 @@ the entire OpenLaszlo community for your support in so many ways, like
 submitting bug fixes, helping users on the OpenLaszlo forums, and participating in discussions to help make OpenLaszlo a better platform. 
 </p>
 
-<h2>Build System Changes</h2>
-<p>In OpenLaszlo @VERSIONID@ and trunk (5.0.x), we have updated our
-build tools.  If you are building from source, you will need to do the
-same. The build system now requires ant 1.7. </p>
-
-<p>The instructions have been updated on the wiki here:
-<a
-href="http://wiki.openlaszlo.org/SubversionBuildInstructions">http://wiki.openlaszlo.org/SubversionBuildInstructions</a></p>
-
-<p>Here is a quick summary of what you will need to do to update an existing build system:</p>
-<ol>
-  <li>Update the vendor files (ant and its supporting jars):<br>
-(<code>cd $LZ_VENDOR_ROOT; svn update</code>)
-  </li>
-
-<li>You will have to either install ant 1.7 from the zip file as
-  described in the wiki, or, if you are on OS X Snow Leopard, simply
-  set your <code>ANT_HOME</code> to <code>/usr/share/ant</code> (which is ant 1.7, as distributed
-  in Snow Leopard).</li>
-  
-<li>We recommend that you do <i>not</i> use the install_libs task in vendor as it will install many unnecessary jars.  Instead, copy just the ones you need to your <code>${HOME}/.ant/lib/</code> directory (you will need to ensure this directory exists):<br>
-
-<code>cp ${LZ_VENDOR_ROOT}/{ant-contrib,catalina-ant,jing,js}.jar ${HOME}/.ant/lib/</code>
-<br>
-is sufficient for basic builds.  If you also are building the documentation, you will also need the xalan and serializer jars.<br><br>
-If you are building on Cygwin, note that the <code>.ant/lib</code> must be in your Windows user directory, not your Cygwin directory, so say:<br>
-
-<code>cp ${LZ_VENDOR_ROOT}/{ant-contrib,catalina-ant,jing,js}.jar
-  "`cygpath -u "$USERPROFILE"`"/.ant/lib</code></li>
-</ol>
 
 <h2>Operating System, Browser, Runtime Compatibility</h2> 
 <p>
@@ -147,7 +117,7 @@ Windows Vista and Windows 7, OpenLaszlo @VERSIONID@ has not been fully qualified
 </p>
 <h2>Bugs Fixed in OpenLaszlo @VERSIONID@</h2> 
 <p>
-	The @VERSIONID@ release includes 10 bug fixes since OpenLaszlo
+	The @VERSIONID@ release includes over 15 bug fixes since OpenLaszlo
 4.8.0; we have provided links to our JIRA bug tracking system where you can view the details: 
 </p>
 <ul>
