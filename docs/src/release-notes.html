@@ -64,7 +64,67 @@
 @VERSIONID@.  Release notes for the previous minor release can be
 found at <a href="http://download.openlaszlo.org/4.7.3/release-notes.html" target="_blank">Release Notes for OpenLaszlo
 4.7.3</a>
-</p>
+  </p>
+  <h2>Incremental Compilation</h2>
+  <p>When compiling an application to the swf10 runtime, there is an incremental compilation mode which may help
+  to speed up recompiling the application.</p>
+  
+  <p>The incremental compilation mode should be from the <code>fcsh</code> compiler shell utility (located in <code>WEB-INF/bin/fcsh</code>). This is a utility
+  which is specific to compiling for the swf10 runtime. An application can be compiled within the <code>fcsh</code> shell,  and the shell left running. When the source code is modified, you can recompile the application from within the shell.</p> 
+  
+  <p>This should be substantially faster than invoking the compiler via <code>lzc</code>, because  internal  state of the flash 10 
+  backend compiler is kept in memory in the Java virtual machine, rather than having to be reloaded from 
+  disk.</p> 
+  <h3>Using Incremental Compilation</h3>
+  
+  <para>Where you would normally run <code>lzc --runtime=swf10 yourapp.lzx</code>, instead you use the modified <code>fcsh</code>
+  shell, as follows. It supports a <code>lzc</code> command which has the same arguments:</para>
+  
+  run <code>fcsh</code> shell script  (lives in <code>WEB-INF/bin</code>)
+  
+  <p><code>FLEX_HOME=../../WEB-INF/bin/..<br />
+    Adobe Flex Compiler SHell (fcsh)<br />
+    Version 4.0.0 build 6898<br />
+  Copyright (c) 2004-2007 Adobe Systems, Inc. All rights reserved.</code></p>
+  
+  
+  <code>(fcsh) lzc --runtime=swf9 app.lzx<br />
+    calling lzc<br />
+    Compiling: app.lzx to app.swf9.swf<br />
+    swf9 compiler options changes, cleaning working dir<br />
+    Executing compiler: (cd /var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app; /Users/hqm/openlaszlo/trunk/WEB-INF/bin/mxmlc -l<br />oad-config=/Users/hqm/openlaszlo/trunk/WEB-INF/frameworks/flex-config.xml -compiler.show-actionscript-warnings=false -co<br />mpiler.source-path+=/var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app -compiler.headless-server=true -c<br />ompiler.fonts.advanced-anti-aliasing=true -output /var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app/app.swf -default-size 800 600<br /> -compiler.library-path+=/Users/hqm/openlaszlo/trunk/lps/includes/lfc/LFC9.swc <br />-compiler.library-path+=/Users/hqm/openlaszlo/trunk/WEB-INF/flexlib -includes \$debug \$profile \$backtrace \$runtime \$swf7 \$swf8 \$as2 \$swf9 <br />\$swf10 \$as3 \$dhtml \$j2me \$svg \$js1 -target-player=9.0.0 -compiler.incremental=true -frame two LzSpriteApplication <br />-file-specs=/var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app/LzPreloader.as)<br />
+    option EMIT_AS3_ONLY set, returning without invoking flex compiler, call 'lcompile #' to compile as3<br />
+    lzc returned /Users/hqm/openlaszlo/trunk/demos/lzpix/app.swf9.swf<br />
+    fcsh: Assigned 1 as the compile target id<br />
+    Loading configuration file /Users/hqm/openlaszlo/trunk/WEB-INF/frameworks/flex-config.xml<br />
+    /var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app/app.swf (403317 bytes)<br />
+  (fcsh) </code>
+  
+  <p>then if you modify one or more <code>.lzx</code> files, you recompile incrementally by saying <code>lcompile 1</code> (or whatever the ID number
+  assigned by <code>fcsh</code> in the previous command)</p>
+  
+  <code>touch classes/pivotlayout.lzx</code>
+  
+  <code>(fcsh) lcompile 1<br />
+    lcompile, calling lzc with args: <br />
+    --lzxonly<br />
+    --incremental<br />
+    --runtime=swf9<br />
+    app.lzx<br />
+    Compiling: app.lzx to app.swf9.swf<br />
+    Executing compiler: (cd /var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app; /Users/hqm/openlaszlo/trunk/WEB-INF/bin/mxmlc -<br />load-config=/Users/hqm/openlaszlo/trunk/WEB-INF/frameworks/flex-config.xml -compiler.show-actionscript-warnings=false -compiler.so<br />urce-path+=/var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app -compiler.headless-server=true -compiler.font<br />s.advanced-anti-aliasing=true -output /var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app/app.swf -default-size 800 600 <br />-compiler.library-path+=/Users/hqm/openlaszlo/trunk/lps/includes/lfc/LFC9.swc -compiler.library-path+=/Users/hqm/openlaszlo/trunk/WEB-INF/flexlib <br />-includes \$debug \$profile \$backtrace \$runtime \$swf7 \$swf8 \$as2 \$swf9 \$swf10 \$as3 \$dhtml \$j2me \$svg \$js1 -target-player=9.0.0 -<br />compiler.incremental=true -frame two LzSpriteApplication -f<br />ile-specs=/var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app/LzPreloader.as)<br />
+    option EMIT_AS3_ONLY set, returning without invoking flex compiler, call 'lcompile #' to compile as3<br />
+    Loading configuration file /Users/hqm/openlaszlo/trunk/WEB-INF/frameworks/flex-config.xml<br />
+    Recompile: /private/var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/build/app/$lzc$class_pivotlayout.as<br />
+    Reason: The source file or one of the included files has been updated.<br />
+    Files changed: 1 Files affected: 0<br />
+    /var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app/app.swf (403318 bytes)<br />
+    renaming /var/folders/xh/xhmdrA41HCKjjiditeqN1k+++TI/-Tmp-/lzswf9/./build/app/app.swf to /Users/hqm/openlaszlo/trunk/demos/lzpix/app.swf9.swf<br />
+  (fcsh) </code>
+  
+  
+  <p>You can keep modifying files and calling <code>lcompile 1</code> to recompile incrementally.</p>
+  
 <h2>OpenLaszlo Credits</h2> <p>
 OpenLaszlo continues to be grateful for the significant contributions
 by Andr&#xE9; Bargull, whose numerous bug fixes and exacting techical
