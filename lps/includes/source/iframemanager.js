@@ -261,6 +261,7 @@ lz.embed.iframemanager = {
         }
     }
     ,__gotload: function(id) { 
+        if (this.__loading[id] != true) return;
         var iframe = lz.embed.iframemanager.getFrame(id);
         //console.log('__gotload', id, iframe);
         if (! iframe || ! iframe.owner) return;
