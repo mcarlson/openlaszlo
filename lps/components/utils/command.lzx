@@ -111,7 +111,7 @@
   var s= "";
   var keys = this.keys;
   if (keys) {
-    var dk = LzCommand.DisplayKeys;
+    var dk = lz.command.DisplayKeys;
     var k = "";
     var l= keys.length - 1;
     for (var i = 0; i < l; i++) {
