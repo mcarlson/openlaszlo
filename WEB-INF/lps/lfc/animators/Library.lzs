@@ -7,6 +7,6 @@
   * @access private
   */
 
-#include "controllers/LzAnimatorGroup.lzs"
-#include "controllers/LaszloAnimation.lzs"
+#include "animators/LzAnimatorGroup.lzs"
+#include "animators/LaszloAnimation.lzs"
 

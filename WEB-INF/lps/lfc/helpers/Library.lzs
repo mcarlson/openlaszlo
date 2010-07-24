@@ -14,4 +14,7 @@ if ($as2) {
     Debug.error('helpers/Library.lzs unsupported runtime %s', $runtime);
 }
 
+#include "helpers/LzContextMenu.lzs"
+#include "helpers/LzFont.lzs"
 #include "helpers/LzState.lzs"
+#include "helpers/LzURL.lzs"
