@@ -242,6 +242,17 @@ lz.embed.iframemanager = {
         iframe._defaultz = 99900;
         this.setZ(id, iframe._defaultz);
     }
+    ,setStyle: function (id, elementid, property, value) {
+        var win = lz.embed.iframemanager.getFrameWindow(id);
+        if (!win) return;
+        var elemid = win.document.getElementById(elementid);
+        if (elemid) {
+            try {
+                elemid.style[property] = value;
+            } catch (e) {
+            }
+        }
+    }
     ,asyncCallback: function(id, event, arg) {
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe || ! iframe.owner) return;
@@ -266,8 +277,6 @@ lz.embed.iframemanager = {
         //console.log('__gotload', id, iframe);
         if (! iframe || ! iframe.owner) return;
 
-        lz.embed.iframemanager.asyncCallback(id, 'load');
-
         this.__loading[id] = false;
         if (document.all) {
             // document.all is IE-only
@@ -284,6 +293,8 @@ lz.embed.iframemanager = {
             this.__playQueue(this.__calljsqueue[id]);
             delete this.__calljsqueue[id];
         }
+
+        lz.embed.iframemanager.asyncCallback(id, 'load');
     }
     // called in IE for onfocus event in swf - see LPP-5482 
     ,__refresh: function() { 

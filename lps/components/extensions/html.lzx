@@ -37,6 +37,9 @@ lz.embed.iframemanager.sendToBack = function(id) {
 lz.embed.iframemanager.scrollBy = function(id, x, y) {
     lz.Browser.callJS('lz.embed.iframemanager.scrollBy', null, id, x, y);
 }
+lz.embed.iframemanager.setStyle = function(id, elementid, property, value) {
+    lz.Browser.callJS('lz.embed.iframemanager.setStyle', null, id, elementid, property, value);
+}
 lz.embed.iframemanager.__iframecallback = function(id, name, value) {
     // receives calls from the iframe
     var view = lz.embed.iframemanager.owners[id];
@@ -335,6 +338,11 @@ lz.embed.iframemanager.setHTML = function(id, html) {
             lz.embed.iframemanager.sendToBack(this.iframeid);
         }
     </method>
+
+    <method name="setStyle" args="element, property, value">
+        if (this['iframeid']) lz.embed.iframemanager.setStyle(this.iframeid, element, property, value);
+    </method>
+
     <!---
       Scrolls the html tag to a specific position.
       @param Number x: x position to scroll to
