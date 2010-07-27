@@ -627,6 +627,8 @@ LzSprite.quirks = {
     ,textlinksneedmouseevents:false
     // See LPP-9177
     ,dont_clip_clickdivs:false
+    // See LPP-9202
+    ,explicitly_set_border_radius:false
 }
 
 LzSprite.prototype.capabilities = {
@@ -785,6 +787,10 @@ LzSprite.__updateQuirks = function () {
             defaultStyles['#lzTextSizeCache'].position = 'relative';
         } else if (browser.isSafari || browser.isChrome) {
             stylenames.borderRadius = 'WebkitBorderRadius';
+            stylenames.borderTopLeftRadius = 'WebkitBorderTopLeftRadius';
+            stylenames.borderTopRightRadius = 'WebkitBorderTopRightRadius';
+            stylenames.borderBottomRightRadius = 'WebkitBorderBottomRightRadius';
+            stylenames.borderBottomLeftRadius = 'WebkitBorderBottomLeftRadius';
             stylenames.boxShadow = 'WebkitBoxShadow';
             stylenames.userSelect = 'WebkitUserSelect';
             stylenames.transform = 'WebkitTransform';
@@ -807,6 +813,7 @@ LzSprite.__updateQuirks = function () {
                 capabilities['rotation'] = true;
                 capabilities['dropshadows'] = true;
                 capabilities['cornerradius'] = true;
+                quirks['explicitly_set_border_radius'] = true;
                 capabilities['rgba'] = true;
             }
 
@@ -1344,7 +1351,7 @@ LzSprite.prototype.__bindImage = function (im){
     }
     // Set to allow clipping, when backgroundImage/__csssprite is used
     if (this.cornerradius != null) {
-        im.style[LzSprite.__styleNames.borderRadius] = this.cornerradius;
+        this.__applyCornerRadius(im);
     }
 }
 
@@ -2670,7 +2677,7 @@ LzSprite.prototype.getContext = function (){
     
     // update the cornerradius of the canvas object, to allow clipping
     if (this.cornerradius != null) {
-        canvas.style[LzSprite.__styleNames.borderRadius] = this.cornerradius;
+        this.__applyCornerRadius(canvas);
     }
 
     if (lz.embed.browser.isIE) {
@@ -3313,20 +3320,33 @@ LzSprite.prototype.setCornerRadius = function(radii) {
     if (css == this.cornerradius) return;
     this.cornerradius = css;
     //Debug.info('setCornerRadius %w', css);
-
-    var stylename = LzSprite.__styleNames.borderRadius;
-    this.__LZdiv.style[stylename] = css;
+    this.__applyCornerRadius(this.__LZdiv);
     if (this.__LZclick) {
-        this.__LZclick.style[stylename] = css;
+        this.__applyCornerRadius(this.__LZclick);
     }
     if (this.__LZcontext) {
-        this.__LZcontext.style[stylename] = css;
+        this.__applyCornerRadius(this.__LZcontext);
     }
     if (this.__LZcanvas) {
-        this.__LZcanvas.style[stylename] = css;
+        this.__applyCornerRadius(this.__LZcanvas);
     }
     if (this.__LZimg) {
-        this.__LZimg.style[stylename] = css;
+        this.__applyCornerRadius(this.__LZimg);
+    }
+}
+
+LzSprite.prototype.__applyCornerRadius = function(div) {
+    var stylenames = LzSprite.__styleNames;
+    if (this.quirks.explicitly_set_border_radius) {
+        var radii = this.cornerradius.split(' ');
+        //explicitly set the four corners
+        div.style[stylenames.borderTopLeftRadius] = radii[0];
+        div.style[stylenames.borderTopRightRadius] = radii[1];
+        div.style[stylenames.borderBottomRightRadius] = radii[2];
+        div.style[stylenames.borderBottomLeftRadius] = radii[3];
+    } else {
+        // apply as-is
+        div.style[stylenames.borderRadius] = this.cornerradius;
     }
 }
 
