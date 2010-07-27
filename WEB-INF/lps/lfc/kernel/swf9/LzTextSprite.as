@@ -151,8 +151,10 @@ public class LzTextSprite extends LzSprite {
                 // don't cancel "onmouseup" if another sprite was selected
                 e.stopPropagation();
             }
+            var eventname:String = 'on' + e.type.toLowerCase();
+            //Debug.warn('__ignoreMouseEvent', eventname, this.owner);
+            LzMouseKernel.handleMouseEvent(this.owner, eventname);
         }
-
 
         /** setDirection
          * sets reading order of text, legal values are 'ltr' and 'rtl'
