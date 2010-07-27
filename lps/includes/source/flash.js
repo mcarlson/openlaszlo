@@ -820,6 +820,7 @@ lz.embed.dojo.Embed.prototype = {
 
         // now write everything out
         if (div) {
+#pragma "passThrough=true"
             div.innerHTML = objectHTML;
             div.setAttribute('style', containerStyle);
         } else {

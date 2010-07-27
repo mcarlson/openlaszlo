@@ -74,6 +74,21 @@ lz.embed = {
         }
 
         var url = properties.url;
+        if (! embed.dojo) {
+            // If we're already loading, return early
+            if (lz.embed.__dojoloaded == false) return;
+            lz.embed.__dojoloaded = false;
+            // load flash.js
+            var baseurl = embed.getServerRoot();
+            var callback = function() {
+                lz.embed.__dojoloaded = true;
+                //console.log('loaded flash.js');
+                lz.embed.swf(properties, minimumVersion);
+            }
+            lz.embed[properties.id] = {};
+            embed.__dhtmlLoadLibrary(baseurl + 'flash.js', callback);
+            return;
+        }
 
         var queryvals = this.__getqueryurl(url);
 
@@ -124,9 +139,8 @@ lz.embed = {
             ,appenddiv: appenddiv
         };
 
-        // Add entry for this application 
-        if (embed[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
-        var app = embed[properties.id] = embed.applications[properties.id] = { 
+        // make app schema
+        var app = { 
             runtime: 'swf'
             ,_id: properties.id
             ,appenddiv: appenddiv
@@ -146,11 +160,23 @@ lz.embed = {
             ,setGlobalFocusTrap: embed.__setGlobalFocusTrapSWF
             ,initargs: queryvals.initargs
         }
+
+        // Add entry for this application 
+        if (embed.applications[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
+
+        // copy old properties to new app
+        var oldapp = embed[properties.id]
+        if (oldapp) {
+            for (var i in oldapp) {
+                app[i] = oldapp[i];
+            }
+        }
+        embed[properties.id] = embed.applications[properties.id] = app;
         // listen for history unless properties.history == false
         if (properties.history == false) {
             embed.history.active = false;
         }
-        // for callbacks onload
+        // for onload callbacks
         embed.dojo.addLoadedListener(embed._loaded, app);
         embed.dojo.setSwf(swfargs, minimumVersion);
         appenddiv.style.height = embed.CSSDimension(properties.height);
@@ -227,9 +253,23 @@ lz.embed = {
               this.__dhtmlLoadLibrary('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
             }
         }
-        // Set to false to signify we're loading...
-        lz.embed.lfcloaded = false;
-        this.__dhtmlLoadLibrary(url, lz.embed.__lfcloaded);
+        if (lz.embed.lfcloaded == null) {
+            // Set to false to signify we're loading...
+            lz.embed.lfcloaded = false;
+            var callback = function() {
+                //console.log('loaded', url);
+                lz.embed.lfcloaded = true;
+                var queue = lz.embed.__appqueue;
+                if (queue.length) {
+                    for (var i = 0, l = queue.length; i < l; i++) {
+                        lz.embed.__dhtmlLoadLibrary(queue[i]);
+                    }
+                }
+            }
+            this.__dhtmlLoadLibrary(url, callback);
+        } else {
+            alert('WARNING: lz.embed.lfc() should only be called once.');
+        }
     }
 
     ,/**
@@ -397,6 +437,20 @@ lz.embed = {
         el.appendChild(script);
     }
 
+    ,getServerRoot: function () {
+        var el = document.getElementsByTagName("script");
+        var baseurl;
+        for (var i = 0, l = el.length; i < l; i++) {
+            // find base path for embed-compressed.js
+            var src = el[i].src;
+            var i = src && src.indexOf('embed-compressed.js');
+            if (i && i > -1) {
+                baseurl = src.substring(0, i);
+                break;
+            }
+        }
+        return baseurl;
+    }
     ,/** @access private */
     __getqueryurl: function (url) {
         // strip query string to only args required by the compiler
@@ -1114,18 +1168,7 @@ lz.embed = {
         }
     }
     ,/** @access private 
-         called by the LFC to tell us it's loaded */
-    __lfcloaded: function() {
-        lz.embed.lfcloaded = true;
-        var queue = lz.embed.__appqueue;
-        if (queue.length) {
-            for (var i = 0, l = queue.length; i < l; i++) {
-                lz.embed.__dhtmlLoadLibrary(queue[i]);
-            }
-        }
-    }
-    ,/** @access private 
-         apps waiting for startup */
+         DHTML apps waiting for startup */
     __appqueue: []
 
     ,/**

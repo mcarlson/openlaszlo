@@ -21,7 +21,7 @@
 
     <!-- Whether the compressed embed is up to date -->
     <uptodate property="embed.uptodate" >
-      <srcfiles dir="." includes="embednew.js,flash.js,embed-library.lzs" />
+      <srcfiles dir="." includes="embednew.js,iframemanager.js,mousewheel.js,lzhistory.js,embed-library.lzs" />
       <compositemapper>
         <mergemapper to="../embed-compressed.js" />
       </compositemapper>
@@ -43,6 +43,13 @@
       </compositemapper>
     </uptodate>
 
+    <!-- Whether the compressed flash is up to date -->
+    <uptodate property="flash.uptodate" >
+      <srcfiles dir="." includes="flash.js,regexp.js,flash-library.lzs" />
+      <compositemapper>
+        <mergemapper to="../flash.js" />
+      </compositemapper>
+    </uptodate>
   </target>
 
   <target name="clean" depends="init">
@@ -50,6 +57,7 @@
       <fileset dir=".." includes="embed-compressed.js" />
       <fileset dir=".." includes="excanvas.js" />
       <fileset dir=".." includes="rtemanager.js" />
+      <fileset dir=".." includes="flash.js" />
     </delete>
   </target>
 
@@ -94,11 +102,20 @@
     </ant>
   </target>
 
+  <target name="flash"
+          depends="init"
+          unless="flash.uptodate">
+    <ant target="compress">
+      <property name="output" value="../flash.js" />
+      <property name="source" value="flash-library.lzs" />
+    </ant>
+  </target>
+
   <target name="doc">
   </target>
 
   <target name="build" description="Build all the includes, unless they're already up to date"
-          depends="init,embed,excanvas,rtemanager">
+          depends="init,embed,excanvas,rtemanager,flash">
   </target>
 
   <target name="all"

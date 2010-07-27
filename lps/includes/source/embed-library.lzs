@@ -5,10 +5,8 @@ try {
 }    
 
 #include "embednew.js"
-#include "flash.js"
 #include "iframemanager.js"
 #include "mousewheel.js"
 #include "lzhistory.js"
-#include "regexp.js"
-// Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.  Use is
+// Copyright 2008-2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is
 // subject to license terms.
