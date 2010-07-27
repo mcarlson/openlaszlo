@@ -468,40 +468,72 @@ class LzUtilsClass {
     var colornames = lz.colors;
 
     // Unpack a javascript list from a string, giving each item the appropriate type 
-    function __unpackList(argstr:String, scope = null) {
+    function __parseArgs(argstr:String, scope = null) {
         if (argstr == '') return [];
         if (scope == null) scope = canvas;
-        var args = argstr.split(',');
-        // cast arguments to type
+
+        // look for strings, pushing onto a list of args as we go
+        var args = [];
+        var lastquote = null;
+        var currarg = '';
+        for (var i = 0, l = argstr.length; i < l; i++) {
+            var lc = c;
+            var c = argstr.charAt(i);
+            if (c == '"' || c == "'") {
+                if (lastquote == null) {
+                    // a string is beginning
+                    lastquote = c;
+                } else if (lastquote == c) {
+                    // out of the string
+                    lastquote = null;
+                }
+            } else if (c == ',') {
+                if (! lastquote) {
+                    args.push(currarg);
+                    currarg = '';
+                    continue;
+                }
+            } else if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                if (! lastquote && (lc == ' ' || lc == '\t' || lc == '\n' || lc == '\r')) {
+                    // ignore contiguous whitespace outside strings
+                    continue;
+                }
+            }
+            // append char to current arg
+            currarg += c;
+        }
+        // always add the current arg
+        args.push(currarg);
+
+        // cast arguments from string to inferred type
         for (var i = 0; i < args.length; i++) {
             var a = args[i];
+
+            // null
             if (a == '') continue;
 
-            // strip whitespace
-            while (a.charAt(0) == ' ') {
-                a = a.substring(1, a.length);
-            }
-
+            var firstchar = a.charAt(a);
             var n = parseFloat(a);
             if (! isNaN(n)) {
-                //number
+                // number
                 args[i] = n;
                 //Debug.write('found number', args[i], a);
-            } else if (a.indexOf("'") != -1) {
-                // TODO - handle "
-                var s = a.indexOf("'") + 1;
-                var e = a.lastIndexOf("'");
-                args[i] = a.substring(s, e);
+            } else if (firstchar == '"' || firstchar == "'") {
+                // string
+                var e = a.lastIndexOf(firstchar);
+                args[i] = a.substring(1, e);
                 //Debug.write('found string', args[i], a);
             } else if (a == 'true' || a == 'false'){
+                // bookean
                 args[i] = a == 'true';
                 //Debug.write('found boolean', args[i], a);
             } else if (scope[a]) {
+                // lookup
                 args[i] = scope[a];
                 //Debug.write('found property', args[i], a);
             }
         }
-        //Debug.write('__unpackList', argstr, args);
+        //Debug.write('__parseArgs', argstr, args);
         return args;
     }
 
@@ -540,7 +572,7 @@ class LzUtilsClass {
             return val;
         }
 
-        var args = lz.Utils.__unpackList(argstr, scope);
+        var args = lz.Utils.__parseArgs(argstr, scope);
 
         //Debug.write('found val', val,'in', scope, 'args', args);  
         // return values don't work for global scopes in swf9, e.g. 'lz.Browser.getVersion()' - see LPP-7008
@@ -572,7 +604,7 @@ class LzUtilsClass {
         var obj = globalValue(js);
         if (! obj) return;
 
-        var args = lz.Utils.__unpackList(args);
+        var args = lz.Utils.__parseArgs(args);
         // nasty... but at least it goes to 11!
         var size = args.length;
         if (size == 0) {
