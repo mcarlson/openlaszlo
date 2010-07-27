@@ -1,0 +1,47 @@
+<canvas>
+    <include href="lztest/lztestmanager.lzx" /> 
+
+<!--
+  covers-tags : lztest smoketest
+-->
+
+<script><![CDATA[
+
+var suiteSimpleToo = new LzTestSuite("parseArgs Test Suite"); 
+
+suiteSimpleToo.testParseArgs = function() {
+    // this test verifies the __parseArgs method is working propertly, used by 
+    // lz.embed.callMethod() to call methods in Flash
+    var args = lz.Utils.__parseArgs("'foo',  \n   b a r k,    'true', 'false', 1, 0, true, false");
+    // string
+    LzTestManager.assertEquals(args[0], 'foo');
+    // bogus property
+    LzTestManager.assertEquals(args[1], null);
+    LzTestManager.assertEquals(args[2], 'true');
+    LzTestManager.assertEquals(args[3], 'false');
+    LzTestManager.assertEquals(args[4], 1);
+    LzTestManager.assertEquals(args[5], 0);
+    LzTestManager.assertEquals(args[6], true);
+    LzTestManager.assertEquals(args[7], false);
+    // test property lookup
+    var args = lz.Utils.__parseArgs("runtime");
+    LzTestManager.assertEquals(args[0], canvas.runtime);
+    // test quoting
+    var args = lz.Utils.__parseArgs('"string", \'another string\'');
+    LzTestManager.assertEquals(args[0], 'string');
+    LzTestManager.assertEquals(args[1], 'another string');
+}
+
+suiteSimpleToo.addTest(suiteSimpleToo.testParseArgs); 
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

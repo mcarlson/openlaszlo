@@ -489,13 +489,15 @@ class LzUtilsClass {
                 }
             } else if (c == ',') {
                 if (! lastquote) {
+                    //Debug.info('pushing arg', currarg);
                     args.push(currarg);
                     currarg = '';
                     continue;
                 }
             } else if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
-                if (! lastquote && (lc == ' ' || lc == '\t' || lc == '\n' || lc == '\r')) {
+                if (lastquote == null && (lc == ',' || lc == ' ' || lc == '\t' || lc == '\n' || lc == '\r')) {
                     // ignore contiguous whitespace outside strings
+                    //Debug.info('ignoring', c);
                     continue;
                 }
             }
@@ -514,6 +516,7 @@ class LzUtilsClass {
 
             var firstchar = a.charAt(a);
             var n = parseFloat(a);
+            //Debug.info('checking type of %w',a); 
             if (! isNaN(n)) {
                 // number
                 args[i] = n;
@@ -524,13 +527,17 @@ class LzUtilsClass {
                 args[i] = a.substring(1, e);
                 //Debug.write('found string', args[i], a);
             } else if (a == 'true' || a == 'false'){
-                // bookean
+                // boolean
                 args[i] = a == 'true';
                 //Debug.write('found boolean', args[i], a);
             } else if (scope[a]) {
                 // lookup
                 args[i] = scope[a];
                 //Debug.write('found property', args[i], a);
+            } else {
+                // null/failed lookup
+                args[i] = null;
+                //Debug.write('failed lookup for %w in %w: %w',a, scope, args[i]);
             }
         }
         //Debug.write('__parseArgs', argstr, args);
