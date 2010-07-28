@@ -83,12 +83,19 @@ class DojoExternalInterfaceClass {
         var parameters:Array = [];
         for(var i:int = 0; i < args.length; i++){
             if(i != 1){ // skip the callback
-				// TODO: should do objects and arrays properties also (sigh)
                 // \ characters cause problems and need to be escaped. 
 				var param = args[i];
-				if (typeof param == 'string') {
+				if (typeof param === 'string') {
                     if (param.indexOf("\\") > -1) {
                         param = param.split("\\").join("\\\\")
+                    }
+				} else if (typeof param === 'object') {
+					// TODO: should do nested objects and arrays properties also
+                    for (var key in param) {
+                        var val = param[key];
+                        if (typeof val === 'string' && val.indexOf("\\") > -1) {
+                            param[key] = val.split("\\").join("\\\\")
+                        }
                     }
 				}
                 parameters.push(param);

@@ -1132,42 +1132,6 @@ lz.embed = {
         }
     }
     ,/** @access private 
-         called by DojoExternalInterface. Decodes null string arguments and 
-         performs the method call, returning a value if available.  */
-    __unescapestring: function(isfocused) {
-        // look up method
-        var methodname = arguments[0];
-        var method = eval(methodname);
-
-        var scope = null;
-        var str = methodname.lastIndexOf('.');
-        if (str > -1) {
-            scope = eval(methodname.substring(0, str));
-        }
-        
-        if (! method || ! method is Function) {
-            return;
-        }
-
-        var args = [];
-        // skip the first item
-        for(var i = 1, l = arguments.length; i < l; i++){
-            var arg = arguments[i];
-            if (arg == '__#lznull') {
-                arg = '';
-            }
-            args[i - 1] = arg;
-        }
-
-        var result = method.apply(scope, args);
-        // unescape return value
-        if (result == '') {
-            return '__#lznull';
-        } else {
-            return result;
-        }
-    }
-    ,/** @access private 
          DHTML apps waiting for startup */
     __appqueue: []
 

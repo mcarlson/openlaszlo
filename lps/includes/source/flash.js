@@ -469,6 +469,53 @@ lz.embed.dojo = {
             dojo.comm[properties.id] = new dojo.Communicator(properties.id);
         }
     }
+
+    ,/** @access private 
+         called by swf8 DojoExternalInterface. Decodes null string arguments and
+         performs the method call, returning a value if available.  */
+    __unescapestring: function(isfocused) {
+        // look up method
+        var methodname = arguments[0];
+        var method = eval(methodname);
+
+        var scope = null;
+        var str = methodname.lastIndexOf('.');
+        if (str > -1) {
+            scope = eval(methodname.substring(0, str));
+        }
+        
+        if (! method || ! method is Function) {
+            return;
+        }
+
+        var args = [];
+        // skip the first item
+        for(var i = 1, l = arguments.length; i < l; i++){
+            var arg = arguments[i];
+            // deal with object keys
+            if (typeof arg === 'object') {
+                for (var key in arg) {
+                    if (arg[key] === '__#lznull') {
+                        arg[key] = '';
+                    }
+                }
+            } else if (typeof arg === 'string') {
+                if (arg === '__#lznull') {
+                    arg = '';
+                }
+            }
+            args[i - 1] = arg;
+        }
+        //console.log('__unescapestring decoded %w to %w', arguments, args);
+
+        var result = method.apply(scope, args);
+        // unescape return value
+        if (result === '') {
+            return '__#lznull';
+        } else {
+            return result;
+        }
+    }
 };
 
 
