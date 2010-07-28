@@ -532,24 +532,6 @@ lz.embed.dojo.Info = function(){
     //    the page is finished loading.
     //    
     //    This constructor must be called before the page is finished loading.    
-    
-    // Visual basic helper required to detect Flash Player ActiveX control 
-    // version information on Internet Explorer
-    if(lz.embed.browser.isIE){
-        document.writeln('<script language="VBScript" type="text/vbscript">');
-        document.writeln('Function VBGetSwfVer(i)');
-        document.writeln('  on error resume next');
-        document.writeln('  Dim swControl, swVersion');
-        document.writeln('  swVersion = 0');
-        document.writeln('  set swControl = CreateObject("ShockwaveFlash.ShockwaveFlash." + CStr(i))');
-        document.writeln('  if (IsObject(swControl)) then');
-        document.writeln('    swVersion = swControl.GetVariable("$version")');
-        document.writeln('  end if');
-        document.writeln('  VBGetSwfVer = swVersion');
-        document.writeln('End Function');
-        document.writeln('</script>');
-    }
-    
     this._detectVersion();
     this._detectCommunicationVersion();
 };
