@@ -5,18 +5,16 @@
 
 // Notes:
 //
+// image buttons. Users expect them to be relative to where the lzx file is, not relative to
+// where the rtewrapper.html file is.
+//
 // These objects are loaded by every iframe. I tried to load it once and reference it from the
 // iframe, but dojo uses globals and I couldn't get it to work.
-//
-// I have seen cases where the wrong lz.rtemanager is called when a button is clicked. Each iframe
-// has its own copy so I don't understand why the wrong one is found. See generate_event.
 //
 // Deferred loading dojo generates loading errors when you load a local copy of dojo. This doesn't
 // happen when you load a cross-domain version from Google.
 // (http://trac.dojotoolkit.org/ticket/11445)
 // I found that setting debugAtAllCosts=true fixes the problem.
-//
-// You currently should not open two or more editor simultaneously. The loading is messed up
 //
 // Heap leaks!
 //
@@ -24,8 +22,6 @@
 // and load it each time?
 //
 // solo issues
-//
-// Location of rtewrapper.html. In dhtml I can use lz.embed.options.serverroot, but not in swf
 //
 // Add Loading... or icon to show that rte editor is loading
 //
@@ -38,7 +34,7 @@ var djConfig = {
     //,parseOnLoad: true
     afterOnLoad: true
     ,require: ['dojo.parser', 'dijit.Editor', 'dijit.form.Form', 'dijit._editor.range', 'dijit._editor.plugins.LinkDialog', 'dijit._editor.plugins.Print', 'dijit._editor.plugins.TextColor', 'dijit._editor.plugins.FontChoice','dojox.editor.plugins.Smiley','dojox.editor.plugins.ToolbarLineBreak']
-    ,debugAtAllCosts: true   // Setting this fixes local loading of dojo
+    ,debugAtAllCosts: false   // Setting this to true fixes local loading of dojo
     ,addOnLoad: function() {
         lzrte.rteloader.editor_loaded();
     }
@@ -75,13 +71,10 @@ lzrte.rteloader = {
     ,__loaded: false    // true if dijit Editor is loaded
     ,__callbacks: []    // object names requesting notification when editor has loaded
 
+    // The default load path is from goolespis.com. This is a cross-domain version od dojo
     ,__dojoroot: 'http://ajax.googleapis.com/ajax/libs/dojo/1.4/'
-    //,__dojoroot: 'http://localhost:8080/trunk/dojo-release-1.4.3/'
-    //,__dojoroot: 'http://localhost:8080/trunk/dojo-release-1.5.0rc3/'
     ,__csspath: 'dijit/themes/'
     ,__jspath: 'dojo/dojo.xd.js'
-    //,__jspath: 'dojo/dojo.js.uncompressed.js'
-    //,__jspath: 'dojo/dojo.js'
 
     ,loadDojoCSS: function(doc, theme) {
         lzrte.util.loadCSS (doc, lzrte.rteloader.__dojoroot + lzrte.rteloader.__csspath + theme + '/' + theme + '.css');
@@ -176,16 +169,18 @@ lzrte.rtemanager = {
             //            plugins.push ('dijit._editor.plugins.EnterKeyHandling');
             lzrte.rtemanager.__editor = new dijit.Editor({height: '90%', plugins: plugins}, id);
         }
-        //if (console && console.debug) console.debug("Created editor", lzrte.rtemanager.__editor);
+        //console.debug("Created editor", lzrte.rtemanager.__editor);
 
-        // Capturing mouse clicks and key presses is enough to find out when the text changes
-        // The onChange event in dijit.Editor doesn't fire until the editor loses focus.
+        // Capturing mouse clicks and key presses is enough to find out when
+        // the text changes. The onChange event in dijit.Editor doesn't fire
+        // until the editor loses focus. It is still useful to capture this
+        // event.
+        dojo.connect(lzrte.rtemanager.__editor, 'onChange', lzrte.rtemanager.onchange);
         dojo.connect(lzrte.rtemanager.__editor, 'onClick', lzrte.rtemanager.onchange);
         dojo.connect(lzrte.rtemanager.__editor, 'onKeyUp', lzrte.rtemanager.onchange);
     }
 
     ,rte_start: function(initial_text) {
-        //if (console && console.debug) console.debug("rte_start");
         if (lzrte.rtemanager.isEditing())
             return;
         if (lzrte.rtemanager.isLoaded()) {
@@ -205,7 +200,7 @@ lzrte.rtemanager = {
             contents = lzrte.rtemanager.getText();
             if (lzrte.rtemanager.isEditing())
                 lzrte.rtemanager.__editor.close ();
-            //if (console && console.debug) console.debug("rte_stop", contents);
+            //console.debug("rte_stop", contents);
         }
 
         return contents;
@@ -239,26 +234,25 @@ lzrte.rtemanager = {
     ,onchange: function(e) {
         var txt = lzrte.rtemanager.getText();
         if (txt != lzrte.rtemanager.__text) {
-            // if (console && console.debug) console.debug("onchange:", txt);
+            //console.debug("onchange:", txt);
             lzrte.rtemanager.__text = txt;
-            lzrte.rtemanager.generate_event (lzrte.rtemanager.__frameid, '_text', txt);
+            lzrte.rtemanager.generate_event ('_text', txt);
         }
     }
 
 
     // Generate an event in lzx
-    // Note: frame_id is passed in because I have seen cases where the wrong lzrte.rtemanager is called
-    // in response to a button click.
-    ,generate_event: function(frameid, name,value) {
-        //if (console && console.debug) console.debug("lzrte.rtemanager.generate_event", lzrte.rtemanager.__frameid, frameid, name, value);
-        //        if (lzrte.rtemanager.__frameid)
-        //          lz.embed.iframemanager.asyncCallback (lzrte.rtemanager.__frameid, name, value);
-        lz.embed.iframemanager.asyncCallback (frameid, name, value);
+    ,generate_event: function(name,value) {
+        //console.debug("lzrte.rtemanager.generate_event", lzrte.rtemanager.__frameid, name, value);
+        if (lzrte.rtemanager.__frameid)
+            lz.embed.iframemanager.asyncCallback (lzrte.rtemanager.__frameid, name, value);
     }
 
     // Callback method when dijit is loaded
     ,editor_loaded: function() {
-        //if (console && console.debug) console.debug("rte.editor_loaded");
+        // Prevent this from firing more than once
+        if (lzrte.rtemanager.isLoaded())
+            return;
 
         lzrte.rtemanager.__loaded = true;
         lzrte.rtemanager.__loading = false;
@@ -266,10 +260,8 @@ lzrte.rtemanager = {
         //__text is the initial text to show
         lzrte.rtemanager.__rte_start (lzrte.rtemanager.__text);
   
-        //if (console && console.debug) console.debug("editor_loaded");
-
         // Generate an on_editorready event. The rte component will send the oneditorready event
-        lzrte.rtemanager.generate_event (lzrte.rtemanager.__frameid, '_editorready');
+        lzrte.rtemanager.generate_event ('_editorready');
     }
 
     // Return true if editor is loaded
@@ -290,7 +282,7 @@ lzrte.rtemanager = {
 
     // Call to initialize() package.
     ,initialize: function() {
-        //if (console && console.debug) console.debug("initialize");
+        //console.debug("initialize");
         if (lzrte.rtemanager.isLoaded())
             return;
         // Install the css and theme
@@ -300,6 +292,24 @@ lzrte.rtemanager = {
     }
 
     // Manage plugins
+
+    // Set a location of dojo root. The relative offset to the js and css is also
+    // specified. The css path probably will not change, but the js path will specify either
+    // a compressed or uncompressed version
+    ,setDojoPath: function(root, js, css) {
+        lzrte.rteloader.__dojoroot = root;
+        lzrte.rteloader.__jspath   = js;
+        lzrte.rteloader.__csspath  = css;
+
+        // Set debugAtAllCosts to true becaue I found deferred loading of dojo of a local version
+        // of dojo will generate errors on Firefox
+        djConfig.debugAtAllCosts = true;
+    }
+
+    // You can change the dojo theme. Current values are tundra, soria, nihilo
+    , setDojoTheme: function(theme) {
+        lzrte.rtemanager.__theme = theme;
+    }
 
     // Set the list and order of toolbar icons to show in the editor.
     ,setPlugins: function(list) {
@@ -317,13 +327,12 @@ lzrte.rtemanager = {
     // Attributes are passed as a json object
     ,addButton: function(attributes) {
         var id = lzrte.rtemanager.__frameid + '_rte_button_' + lzrte.rtemanager.button_counter++;
-        var frameid = lzrte.rtemanager.__frameid;
 
         if (dojo.byId(id))
           dojo.destroy(id);  // We already have a button of this name. Delete it
 
         // Default attributes
-        var attr = {id: id, type: 'button', onclick: function(){ lzrte.rtemanager.generate_event(frameid, 'buttonclick', id);}};
+        var attr = {id: id, type: 'button', onclick: function(){ lzrte.rtemanager.generate_event('buttonclick', id);}};
         for (var a in attributes) {
           attr[a] = attributes[a];
         }

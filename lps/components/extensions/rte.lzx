@@ -5,7 +5,7 @@
 
 <library>
 
-<class name="rte" extends="html">
+<class name="rte" extends="html" scrollbars="false">
  
     <!--- The ontext event is generated whenever the rte text content changes. -->
     <event name="ontext"/>
@@ -48,8 +48,8 @@
     <attribute name="dojo_theme" type="string" value="tundra"/>
 
     <!--- Dojo library to load (relative to dojo_root). This value is
-          ignored if dojo_root is empty. Common values are
-          dojo/dojo.js (default) and dojo/dojo.js.uncompressed.js
+          ignored if dojo_root is empty. Default value is 'dojo/dojo.js'.
+          If you want to load an uncompressed version of dojo, specify dojo/dojo.js.uncompressed.js
           @initarg String
           @access public
     -->
@@ -71,13 +71,13 @@
     <attribute name="text" type="html"/>
 
     <!--- @access private -->
-    <method name="$lzc$set_text" args="v">
-        this.text = v;
+    <setter name="text" args="t">
+        this.text = t;
         // This can fire before the object is ready
         if (this.editorready) {
-          callJavascript('lzrte.rtemanager.setText', null, v);
+          callJavascript('lzrte.rtemanager.setText', null, t);
         }
-    </method>
+    </setter>
 
 
     <!---
@@ -143,7 +143,13 @@
 
     <!--- @access private -->
     <handler name="onload">
-        //Debug.write("onload", this.iframeid);
+        // Change where dojo is found (if necessary)
+        if (this.dojo_root.length > 0) {
+            callJavascript('lzrte.rtemanager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
+        }
+
+        // The theme is always set
+        callJavascript('lzrte.rtemanager.setDojoTheme', null, this.dojo_theme);
 
         // Set the plugin list
         if (this.toolbar_order.length > 0)
@@ -183,14 +189,21 @@
 
 
     <!--- @access private -->
-    <handler name="oninit">
-        //TODO Find a better way to specify the path
-        //TODO THis only works for dhtml
-        var root = lz.embed.options.serverroot;
-        this.setAttribute('src', root + 'lps/includes/rtewrapper.html');
+    <method name="loadsrc" args="root">
+        this.setAttribute('src', root + 'rtewrapper.html');
         this.setAttribute('visible', true);
+    </method>
+
+    <!--- @access private -->
+    <handler name="oninit">  <![CDATA[
+        // Get the server root.
+        // Use a callback because the object may not be ready yet
+        var obj = this;
+        lz.Browser.callJS('lz.embed.getServerRoot', function(root) { obj.loadsrc(root);});
+      ]]>
     </handler>
         
+
     <!--- @keywords private -->
     <setter name="visible" args="v">
         if (!v)

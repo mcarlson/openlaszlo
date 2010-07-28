@@ -10,7 +10,7 @@
       <simplelayout/>
       <event name="ontext"/>
       <attribute name="text" type="html"/>
-      <rte width="100%" height="${classroot.height-this.y-44}" name="myrte">
+      <rte name="myrte" width="${classroot.width-this.x-10}" height="${classroot.height-this.y-10}">
         <handler name="oninit">
            Debug.write("oninit is running");
         </handler>
@@ -34,6 +34,15 @@
           super.close(); 
       </method> 
 
+      // Dragging the window captures the mouse
+      <dragstate name="drg"/>
+      <handler name="onmousedown">
+          this.drg.apply();
+      </handler>
+      <handler name="onmouseup">
+          this.drg.remove();
+      </handler>
+
     </class>
 
     <!-- A <text> element that brings creates a rte_editor when clicked -->
@@ -54,7 +63,7 @@
 
 <simplelayout axis="y" spacing="10"/>
 
-<texteditor><b>Note: This is an alpha release of the rte component. This demo works only in dhtml (for now)</b></texteditor>
+<texteditor><b>Note: This is a beta release of the rte component.</b></texteditor>
 
 <texteditor>When you click on this text, you can edit it.</texteditor>
 <texteditor>This is another text object you can edit.</texteditor>
@@ -70,7 +79,10 @@ This is an <b>inline</b> rte editor with custom buttons.
   </method>
   <handler name="oneditorready">
     this.addButton ({value:'Clear'}, new LzDelegate(this, 'rte_clear'));
-    this.addButton ({type: 'image', src:'http://openlaszlo.org/lps4.8/lps/includes/logo_web_sm.gif', height:'60', alt:'All Bold', title:'All Bold'}, new LzDelegate(this, 'rte_bold'));
+    this.addButton ({type: 'image', src:'../../examples/extensions/logo_small.png', width:'44', height:'44', alt:'All Bold', title:'All Bold'}, new LzDelegate(this, 'rte_bold'));
+
+    // Set the color
+    this.setStyle ('rte_div', 'backgroundColor', '#f0f0f0');
   </handler>
 </rte>
 
