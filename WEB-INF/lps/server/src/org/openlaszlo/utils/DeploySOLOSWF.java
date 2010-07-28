@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008-2010 Laszlo Systems, Inc.  All Rights Reserved.   *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -230,7 +230,7 @@ public class DeploySOLOSWF {
         ArrayList filenames = new ArrayList();
         // LPS includes, (originally copied from /lps/includes/*)
         filenames.add("lps/includes/embed-compressed.js");
-        filenames.add("lps/includes/blank.gif");
+        filenames.add("lps/includes/flash.js");
         filenames.add("lps/includes/spinner.gif");
 
         ArrayList appfiles = new ArrayList();

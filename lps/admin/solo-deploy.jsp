@@ -8,7 +8,7 @@
 <%@ page import="org.openlaszlo.utils.FileUtils.*" %>
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -325,6 +325,8 @@ String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?l
      ArrayList filenames = new ArrayList();
      // LPS includes, (originally copied from /lps/includes/*)
      filenames.add("lps/includes/embed-compressed.js");
+     filenames.add("lps/includes/flash.js");
+     filenames.add("lps/includes/spinner.gif");
 
      ArrayList appfiles = new ArrayList();
      listFiles(appfiles, appdir);
