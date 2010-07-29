@@ -1205,9 +1205,11 @@ public class SWF9External {
         outf.delete();
       }
 
-      // In incremental mode, some files may be left over from previous compiles of deleted classes,
-      // so remove any unaccounted-for .as files.
-      removeUnknownASFiles(workdir);
+      if (options.getBoolean(Compiler.INCREMENTAL_COMPILE) && !(compileType == Config.SNIPPET)) {
+        // In incremental mode, some files may be left over from previous compiles of deleted classes,
+        // so remove any unaccounted-for .as files.
+        removeUnknownASFiles(workdir);
+      }
 
       // Call the Flex compiler, either in its own exec'ed process or in a thread 
       if (execFlex()) {
