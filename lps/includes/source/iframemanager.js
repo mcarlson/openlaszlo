@@ -66,6 +66,7 @@ lz.embed.iframemanager = {
             this.__callqueue[id] = [ ['__finishCreate', id, owner, name, scrollbars, appendto, defaultz, canvasref] ];
             setTimeout('lz.embed.iframemanager.__checkiframe("' + id + '")', 10); 
         }
+
         return id + '';
     }
     // check to see if the iframe is available yet...
@@ -272,28 +273,32 @@ lz.embed.iframemanager = {
         }
     }
     ,__gotload: function(id) { 
-        if (this.__loading[id] != true) return;
         var iframe = lz.embed.iframemanager.getFrame(id);
         //console.log('__gotload', id, iframe);
         if (! iframe || ! iframe.owner) return;
 
-        this.__loading[id] = false;
-        if (document.all) {
-            // document.all is IE-only
-            // Show iframe container - see LPP-8753
-            if (iframe.parentElement) {
-                iframe.parentElement.style.display = '';
+        if (this.__loading[id] == true) {
+            // finish loading
+            this.__loading[id] = false;
+            if (document.all) {
+                // document.all is IE-only
+                // Show iframe container - see LPP-8753
+                if (iframe.parentElement) {
+                    iframe.parentElement.style.display = '';
+                }
+            }
+            // Enable mouse listeners if needed
+            if (this.__sendmouseevents[id]) {
+                this.__setSendMouseEvents(id, true);
+            }
+            if (this.__calljsqueue[id]) {
+                this.__playQueue(this.__calljsqueue[id]);
+                delete this.__calljsqueue[id];
             }
         }
-        // Enable mouse listeners if needed
-        if (this.__sendmouseevents[id]) {
-            this.__setSendMouseEvents(id, true);
-        }
-        if (this.__calljsqueue[id]) {
-            this.__playQueue(this.__calljsqueue[id]);
-            delete this.__calljsqueue[id];
-        }
 
+        // send callback to support setHTML() which must be called after the 
+        // initial load
         lz.embed.iframemanager.asyncCallback(id, 'load');
     }
     // called in IE for onfocus event in swf - see LPP-5482 
@@ -340,7 +345,11 @@ lz.embed.iframemanager = {
             this.__setSendMouseEvents(id, false);
             iframe.owner = null;
             iframe.appcontainer = null;
-            LzSprite.prototype.__discardElement(iframe);
+            if (LzSprite && LzSprite.prototype) {
+                LzSprite.prototype.__discardElement(iframe);
+            } else {
+                if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+            }
             delete lz.embed.iframemanager.__frames[id];
             delete lz.embed.iframemanager.__namebyid[id];
         }
@@ -364,7 +373,7 @@ lz.embed.iframemanager = {
             var method = iframe.eval(methodName);
             if (method) {
                 var retVal = method.apply(iframe, args);
-                //console.log('callJavascript', methodName, args, 'in', iframe, 'result', retVal);
+                //console.log('callJavascript', methodName, args, 'in', iframe, 'result', retVal, callbackDel);
                 if (callbackDel) callbackDel.execute(retVal);
                 return retVal;
             }

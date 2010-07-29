@@ -326,6 +326,8 @@ String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?l
      // LPS includes, (originally copied from /lps/includes/*)
      filenames.add("lps/includes/embed-compressed.js");
      filenames.add("lps/includes/flash.js");
+     filenames.add("lps/includes/iframemanager.js");
+     filenames.add("lps/includes/rtemanager.js");
      filenames.add("lps/includes/spinner.gif");
 
      ArrayList appfiles = new ArrayList();

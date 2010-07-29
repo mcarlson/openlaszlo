@@ -13,10 +13,28 @@
 // proxy object for browser lz.embed.iframemanager
 lz.embed.iframemanager = new LzInheritedHash();
 lz.embed.iframemanager.owners = new LzInheritedHash();
+// true when iframemanager.js is loaded
+lz.embed.iframemanager.__loaded = false;
+// called when iframemanager.js is loaded
+lz.embed.iframemanager.__createcallback = function(id) {
+    // Called after iframemanager loads and is ready
+    var view = lz.embed.iframemanager.owners[id];
+    //Debug.warn('__createcallback', lz.embed.iframemanager.owners, id, view)
+    if (view) {
+        this.__loaded = true;
+        view.setiframeid(id); 
+    }
+}
 lz.embed.iframemanager.create = function(owner, name, scrollbars) {
     lz.Browser.callJS('lz.embed.iframemanager.create', function (id) { 
-        lz.embed.iframemanager.owners[id] = owner;
-        owner.setiframeid(id); 
+        // Store a reference to the owner, then wait for __createcallback()
+        var iframemanager = lz.embed.iframemanager;
+        iframemanager.owners[id] = owner;
+        //Debug.warn('create', id, iframemanager.owners, owner);
+        if (iframemanager.__loaded) {
+            // set the iframeid immediately
+            owner.setiframeid(id); 
+        }
     }, canvas.id, name, scrollbars);
 }
 lz.embed.iframemanager.setPosition = function(id, x, y, width, height, v, z) {
@@ -67,8 +85,10 @@ lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
 
 lz.embed.iframemanager.setShowNativeContextMenu = function(id, show, showwarning) {
     <![CDATA[
-    if ($debug && showwarning) {
-        Debug.warn("The shownativecontextmenu attribute won't work in runtimes other than dhtml.");
+    if ($debug) {
+        if (showwarning) {
+            Debug.warn("The shownativecontextmenu attribute won't work in runtimes other than dhtml.");
+        }
     }
     ]]>
 }
@@ -262,6 +282,7 @@ lz.embed.iframemanager.setHTML = function(id, html) {
         } else {
             var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars);
         }
+        //Debug.warn('init', i);
         if (i) this.setiframeid(i);
     </method>
 
@@ -299,6 +320,8 @@ lz.embed.iframemanager.setHTML = function(id, html) {
     </method>
     <!--- @access private -->
     <method name="__iframecallback" args="name, value"><![CDATA[
+        // Called once when the initial javascript: src loads, and whenever 
+        // another src is set/done loading.
         if (name == 'load') {
             //special handling for load events
             if (this['src'] == null) {

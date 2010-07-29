@@ -207,7 +207,7 @@
     <!--- @keywords private -->
     <setter name="visible" args="v">
         if (!v)
-            callJavascript('lzrte.rtemanager.rte_stop', this.iframeid);
+            callJavascript('lzrte.rtemanager.rte_stop', null, this.iframeid);
         super.setAttribute ('visible', v);
     </setter>
 
@@ -217,7 +217,7 @@
         if (txt != this.text)
             this.ontext.sendEvent(txt);
 
-        callJavascript('lzrte.rtemanager.destroy', this.iframeid);
+        callJavascript('lzrte.rtemanager.destroy', null, this.iframeid);
 
         super.destroy();
     ]]></method> 

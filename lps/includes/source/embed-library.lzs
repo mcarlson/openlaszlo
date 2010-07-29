@@ -5,7 +5,7 @@ try {
 }    
 
 #include "embednew.js"
-#include "iframemanager.js"
+#include "iframemanagerstub.js"
 #include "mousewheel.js"
 #include "lzhistory.js"
 // Copyright 2008-2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is

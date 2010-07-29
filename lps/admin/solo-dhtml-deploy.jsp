@@ -382,6 +382,8 @@ String exampleURL = (request.getContextPath()+"/" + appUrl + "?lzr=dhtml&lzproxi
      filenames.add("lps/includes/blank.gif");
      filenames.add("lps/includes/spinner.gif");
      filenames.add("lps/includes/excanvas.js");	
+     filenames.add("lps/includes/iframemanager.js");	
+     filenames.add("lps/includes/rtemanager.js");
      filenames.add("lps/includes/laszlo-debugger.css");
      filenames.add("lps/includes/laszlo-debugger.html");
 

@@ -74,23 +74,21 @@ lz.embed = {
         }
 
         var url = properties.url;
-        if (! embed.dojo) {
-            // If we're already loading, return early
-            if (lz.embed.__dojoloaded == false) return;
-            lz.embed.__dojoloaded = false;
+        var flashjsurl = embed.getServerRoot() + 'flash.js'
+        if (! embed.jsloaded[flashjsurl]) {
             // load flash.js
-            var baseurl = embed.getServerRoot();
             var callback = function() {
-                lz.embed.__dojoloaded = true;
                 //console.log('loaded flash.js');
                 lz.embed.swf(properties, minimumVersion);
             }
-            lz.embed[properties.id] = {};
-            embed.__dhtmlLoadLibrary(baseurl + 'flash.js', callback);
+            // create placeholder arg to catch onload callbacks assigned while
+            // loading
+            embed[properties.id] = {};
+            embed.loadJSLib(flashjsurl, callback);
             return;
         }
 
-        var queryvals = this.__getqueryurl(url);
+        var queryvals = embed.__getqueryurl(url);
 
         // allow query string options to override properties hash values
         for (var i in queryvals.options) {
@@ -110,7 +108,7 @@ lz.embed = {
             queryvals.flashvars += '&bgcolor=' + escape(properties.bgcolor);
         }
 
-        var options = lz.embed.options;
+        var options = embed.options;
         if (properties.cancelkeyboardcontrol) {
             options.cancelkeyboardcontrol = properties.cancelkeyboardcontrol;
         }
@@ -242,31 +240,32 @@ lz.embed = {
             alert('WARNING: lz.embed.lfc() requires a valid serverroot to be specified.'); 
             return;
         }
-        lz.embed.options.serverroot = serverroot;
-        if (lz.embed.browser.isIE) {
+        var embed = lz.embed;
+        embed.options.serverroot = serverroot;
+        if (embed.browser.isIE) {
             // warn if excanvas isn't included
             if (! window['G_vmlCanvasManager']) {
                 alert('WARNING: excanvas.js was not loaded, and is required for IE DHTML.  Please ensure your HTML wrapper has a script include in the <head></head>, e.g. <!--[if IE]><script type="text/javascript" src="' + serverroot + 'lps/includes/excanvas.js"></script><![endif]-->"'); 
             }
-            if (lz.embed.browser.version < 7) {
+            if (embed.browser.version < 7) {
               // load chrome frame
-              this.__dhtmlLoadLibrary('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
+              embed.loadJSLib('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
             }
         }
-        if (lz.embed.lfcloaded == null) {
-            // Set to false to signify we're loading...
-            lz.embed.lfcloaded = false;
+        if (! embed.jsloaded[url]) {
             var callback = function() {
                 //console.log('loaded', url);
-                lz.embed.lfcloaded = true;
-                var queue = lz.embed.__appqueue;
+                var embed = lz.embed;
+                embed.lfcloaded = true;
+                var queue = embed.__appqueue;
                 if (queue.length) {
                     for (var i = 0, l = queue.length; i < l; i++) {
-                        lz.embed.__dhtmlLoadLibrary(queue[i]);
+                        embed.loadJSLib(queue[i]);
                     }
                 }
+                delete embed.__appqueue;
             }
-            this.__dhtmlLoadLibrary(url, callback);
+            embed.loadJSLib(url, callback);
         } else {
             alert('WARNING: lz.embed.lfc() should only be called once.');
         }
@@ -310,7 +309,7 @@ lz.embed = {
             properties.id = 'lzapp' + Math.round(Math.random() * 1000000);
         }
 
-        var queryvals = this.__getqueryurl(properties.url);
+        var queryvals = embed.__getqueryurl(properties.url);
 
         // allow query string options to override properties hash values
         for (var i in queryvals.options) {
@@ -398,7 +397,7 @@ lz.embed = {
             }
         } else {
             embed.dhtmlapploaded = true;
-            this.__dhtmlLoadLibrary(url)
+            embed.loadJSLib(url)
         }
     }
     ,/** A hash of applications installed on the page keyed by id */
@@ -412,32 +411,46 @@ lz.embed = {
         return o;
     }
 
-    ,__dhtmlLoadLibrary: function (url, callback) {
+    // jsloaded[url] is false while loading, true after load
+    ,jsloaded: {}
+    // Loads a JS library from the specified URL.
+    ,loadJSLib: function (url, callback) {
+        var embed = lz.embed;
+        // If we're already loading, return early
+        if (embed.jsloaded[url] === null) return;
+        embed.jsloaded[url] = false;
+        var loadercallback = function() {
+            // update loader state
+            lz.embed.jsloaded[url] = true;
+            // execute callback
+            //console.log('loaded', url, callback);
+            if (callback) callback();
+        }
+        //console.log('loading', url);
         var script = document.createElement('script');
-        this.__setAttr(script, 'type', 'text/javascript');
-        this.__setAttr(script, 'defer', 'defer');
-        if (callback) {
-            if (script.readyState){ //IE 
-                script.onreadystatechange = function(){
-                    if (script.readyState == "loaded" || script.readyState == "complete"){ 
-                        script.onreadystatechange = null;
-                        callback();
-                    }
+        embed.__setAttr(script, 'type', 'text/javascript');
+        embed.__setAttr(script, 'defer', 'defer');
+        if (script.readyState){ //IE 
+            script.onreadystatechange = function(){
+                if (script.readyState == "loaded" || script.readyState == "complete"){ 
+                    script.onreadystatechange = null;
+                    loadercallback();
                 }
-            } else { //Others 
-                script.onload = function(){
-                    callback();
-                }
+            }
+        } else { //Others 
+            script.onload = function(){
+                loadercallback();
             }
         }
 
-        this.__setAttr(script, 'src', url);
+        embed.__setAttr(script, 'src', url);
         // prefer adding scripts to the body - it's better for performance
         var el = document.getElementsByTagName("body")[0] || document.getElementsByTagName("head")[0]
         el.appendChild(script);
     }
 
     ,getServerRoot: function () {
+        if (lz.embed.__serverroot) return lz.embed.__serverroot;
         var el = document.getElementsByTagName("script");
         var baseurl;
         for (var i = 0, l = el.length; i < l; i++) {
@@ -449,6 +462,7 @@ lz.embed = {
                 break;
             }
         }
+        lz.embed.__serverroot = baseurl;
         return baseurl;
     }
     ,/** @access private */
@@ -462,7 +476,7 @@ lz.embed = {
         url = sp[0];
         if (sp.length == 1) return {url: url, flashvars: '', query: '', initargs: {}};
 
-        var queryvals = this.__parseQuery(sp[1]);
+        var queryvals = lz.embed.__parseQuery(sp[1]);
         var query = '';
         var flashvars = '';
         var options = {};
@@ -538,12 +552,13 @@ lz.embed = {
      * @param hist:Boolean value - if true, add a history event.
      */
     _setCanvasAttributeSWF: function (name, value, hist) {
+        var embed = lz.embed;
         //console.log('_setCanvasAttributeSWF', name, value, hist);
-        if (this.loaded && lz.embed.dojo.comm[this._id] && lz.embed.dojo.comm[this._id]['callMethod']) {
+        if (this.loaded && embed.dojo.comm[this._id] && embed.dojo.comm[this._id]['callMethod']) {
             if (hist) {
-                lz.embed.history._store(name, value);
+                embed.history._store(name, value);
             } else {
-                lz.embed.dojo.comm[this._id].setCanvasAttribute(name, value + '');
+                embed.dojo.comm[this._id].setCanvasAttribute(name, value + '');
             }
         } else {
             this._setCanvasAttributeQ.push([name, value, hist]);
@@ -573,13 +588,14 @@ lz.embed = {
     ,/** @access private */
     // called by flash/js 
     _loaded: function (id) {
+        var embed = lz.embed;
         //console.log('_loaded', id);
-        if (lz.embed[id].loaded) return;
-        if (lz.embed.dojo.info.commVersion == 8) {
+        if (embed[id].loaded) return;
+        if (embed.dojo.info.commVersion == 8) {
             // wait a bit longer for Flash to init
             setTimeout('lz.embed["'+ id +'"]._ready.call(lz.embed["'+ id +'"])', 100);
         } else {
-            lz.embed[id]._ready.call(lz.embed[id]);
+            embed[id]._ready.call(embed[id]);
         }
     }
     ,/** @access private */
@@ -867,9 +883,10 @@ lz.embed = {
     }
     ,/** @access private */
     _broadcastMethod: function(methodname) {
+        var embed = lz.embed;
         var args = [].slice.call(arguments, 1);
-        for (var i in lz.embed.applications) {
-            var app = lz.embed.applications[i];
+        for (var i in embed.applications) {
+            var app = embed.applications[i];
             if (app[methodname]) {
                 //console.log(methodname, app, arguments);
                 app[methodname].apply(app, args);
