@@ -10,15 +10,12 @@
       <simplelayout/>
       <event name="ontext"/>
       <attribute name="text" type="html"/>
-      <rte name="myrte" width="${classroot.width-this.x-10}" height="${classroot.height-this.y-10}">
-        <handler name="oninit">
-           Debug.write("oninit is running");
-        </handler>
+      <rte name="myrte" width="${classroot.content.width-this.x}" height="${classroot.content.height-this.y-5}">
         <handler name="oneditorready">
-            //Debug.write("oneditorready", parent.text);
             this.setText(parent.text);
         </handler>
         <handler name="ontext" args='txt'>
+             // Keep the text up to date
              parent.setAttribute('text', txt);
         </handler>
       </rte>
@@ -68,7 +65,7 @@
 <texteditor>When you click on this text, you can edit it.</texteditor>
 <texteditor>This is another text object you can edit.</texteditor>
 
-<rte width="600" height="400" scrollbars="false">
+<rte width="600" height="400">
 This is an <b>inline</b> rte editor with custom buttons.
   <method name="rte_clear" args="ignore">
     this.setAttribute ('text', '');
@@ -79,10 +76,10 @@ This is an <b>inline</b> rte editor with custom buttons.
   </method>
   <handler name="oneditorready">
     this.addButton ({value:'Clear'}, new LzDelegate(this, 'rte_clear'));
-    this.addButton ({type: 'image', src:'../../examples/extensions/logo_small.png', width:'44', height:'44', alt:'All Bold', title:'All Bold'}, new LzDelegate(this, 'rte_bold'));
+    this.addButton ({type: 'image', src:'logo_small.png', width:'44', height:'44', alt:'All Bold', title:'All Bold'}, new LzDelegate(this, 'rte_bold'));
 
     // Set the color
-    this.setStyle ('rte_div', 'backgroundColor', '#f0f0f0');
+    this.setStyle ('rte_buttons', 'backgroundColor', '#f0f0f0');
   </handler>
 </rte>
 

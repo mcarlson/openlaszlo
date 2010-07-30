@@ -123,14 +123,28 @@
     <!---
         Adds a button(or image button) above the rte with the specified
         text and attributes.
-        @param Object attributes: attributes suitable for the html <input> tag
+        @param Object attributes: attributes suitable for the html <input> tag. If the src attribute is used to point to an image, the path is relative to where the application is loaded from.
         @param LzDelegate delegate: An LzDelegate which will be called with the user clicks on the text button.
         @return String: unique button id
     -->
-    <method name="addButton" args="attributes, delegate">
+    <method name="addButton" args="attributes, delegate">   <![CDATA[
+        // Fix up relative paths. They are specified relative to where the
+        // application is stored but this won't work in the iframe.
+        for (var attr in attributes) {
+            if (attr == 'src') {
+                var src = attributes[attr];
+                if (src.length > 0 && !(src.indexOf('http') > -1 || src.charAt(0) == '/')) {
+                    // Relative path
+                    src = lz.Browser.getLoadURLAsLzURL().path + src;
+                    attributes[attr] = src;
+                }
+            }
+        }
+
         var id = super.callJavascript ('lzrte.rtemanager.addButton', null, attributes);
         this.button_mapping[id] = delegate;
         return id;
+        ]]>
     </method>
 
     <!--- @access private -->

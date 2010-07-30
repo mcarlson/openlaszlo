@@ -31,9 +31,9 @@
 // djConfig defines what dojo loads
 var djConfig = {
     //isDebug: true
-    //,parseOnLoad: true
+    //parseOnLoad: true
     afterOnLoad: true
-    ,require: ['dojo.parser', 'dijit.Editor', 'dijit.form.Form', 'dijit._editor.range', 'dijit._editor.plugins.LinkDialog', 'dijit._editor.plugins.Print', 'dijit._editor.plugins.TextColor', 'dijit._editor.plugins.FontChoice','dojox.editor.plugins.Smiley','dojox.editor.plugins.ToolbarLineBreak']
+    ,require: ['dojo.parser', 'dijit.Editor', 'dijit.layout.ContentPane', 'dijit.layout.BorderContainer', 'dijit.form.Form', 'dijit._editor.range', 'dijit._editor.plugins.AlwaysShowToolbar', 'dijit._editor.plugins.LinkDialog', 'dijit._editor.plugins.Print', 'dijit._editor.plugins.TextColor', 'dijit._editor.plugins.FontChoice','dojox.editor.plugins.Smiley','dojox.editor.plugins.ToolbarLineBreak']
     ,debugAtAllCosts: false   // Setting this to true fixes local loading of dojo
     ,addOnLoad: function() {
         lzrte.rteloader.editor_loaded();
@@ -72,7 +72,7 @@ lzrte.rteloader = {
     ,__callbacks: []    // object names requesting notification when editor has loaded
 
     // The default load path is from goolespis.com. This is a cross-domain version od dojo
-    ,__dojoroot: 'http://ajax.googleapis.com/ajax/libs/dojo/1.4/'
+    ,__dojoroot: 'http://ajax.googleapis.com/ajax/libs/dojo/1.5/'
     ,__csspath: 'dijit/themes/'
     ,__jspath: 'dojo/dojo.xd.js'
 
@@ -106,6 +106,8 @@ lzrte.rteloader = {
 
     // Called when dojo/dijit.Editor is loaded. This runs once per browser, not once per iframe
     ,editor_loaded: function() {
+        dojo.parser.parse (); // Manually parse the DOM
+
         lzrte.rteloader.__loaded = true;
         lzrte.rteloader.__loading = false;
 
@@ -144,8 +146,7 @@ lzrte.rtemanager = {
         lzrte.rtemanager.rte_stop ();
         
         if (lzrte.rtemanager.__editor) {
-            //lzrte.rtemanager.__editor.destroyRecursive ();
-            //delete lzrte.rtemanager.__editor;
+            lzrte.rtemanager.__editor.destroyRecursive ();
             lzrte.rtemanager.__editor = null;
             lzrte.rtemanager.__editing = false;
         }
@@ -158,7 +159,7 @@ lzrte.rtemanager = {
 
         var id = dojo.byId(lzrte.rtemanager.__id);
 
-        if (initial_text)
+        if (initial_text && id)
           id.innerHTML = initial_text;
 
         if (lzrte.rtemanager.__editor)
@@ -167,7 +168,9 @@ lzrte.rtemanager = {
             var plugins = lzrte.rtemanager.__plugins;
             // TODO. This has issues in IE when rte is in a window that gets removed
             //            plugins.push ('dijit._editor.plugins.EnterKeyHandling');
-            lzrte.rtemanager.__editor = new dijit.Editor({height: '90%', plugins: plugins}, id);
+            var extraplugins = ['dijit._editor.plugins.AlwaysShowToolbar'];
+            lzrte.rtemanager.__editor = new dijit.Editor({height: '100%', plugins: plugins, extraPlugins: extraplugins}, id);
+            dijit.byId('rte_div').resize();
         }
         //console.debug("Created editor", lzrte.rtemanager.__editor);
 
@@ -181,7 +184,7 @@ lzrte.rtemanager = {
     }
 
     ,rte_start: function(initial_text) {
-        if (lzrte.rtemanager.isEditing())
+        if (lzrte.rtemanager.isEditing() || lzrte.rtemanager.__loading)
             return;
         if (lzrte.rtemanager.isLoaded()) {
             lzrte.rtemanager.__rte_start(initial_text);
@@ -322,6 +325,7 @@ lzrte.rtemanager = {
     // Remove all buttons from above the rte
     ,removeAllButtons: function() {
         dojo.empty('rte_buttons');
+        dijit.byId('rte_div').resize();
     }
 
     // Attributes are passed as a json object
@@ -337,8 +341,9 @@ lzrte.rtemanager = {
           attr[a] = attributes[a];
         }
 
-        // Create the button
+        // Create the button and resize the layout
         dojo.create('input', attr, dojo.byId('rte_buttons'), 'last');
+        dijit.byId('rte_div').resize();
 
         return id;
     }
