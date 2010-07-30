@@ -456,9 +456,9 @@ lz.embed = {
         for (var i = 0, l = el.length; i < l; i++) {
             // find base path for embed-compressed.js
             var src = el[i].src;
-            var i = src && src.indexOf('embed-compressed.js');
-            if (i && i > -1) {
-                baseurl = src.substring(0, i);
+            var j = src && src.indexOf('embed-compressed.js');
+            if (j && j > -1) {
+                baseurl = src.substring(0, j);
                 break;
             }
         }
