@@ -74,20 +74,6 @@ lz.embed = {
         }
 
         var url = properties.url;
-        var flashjsurl = embed.getServerRoot() + 'flash.js'
-        if (! embed.jsloaded[flashjsurl]) {
-            // load flash.js
-            var callback = function() {
-                //console.log('loaded flash.js');
-                lz.embed.swf(properties, minimumVersion);
-            }
-            // create placeholder arg to catch onload callbacks assigned while
-            // loading
-            embed[properties.id] = {};
-            embed.loadJSLib(flashjsurl, callback);
-            return;
-        }
-
         var queryvals = embed.__getqueryurl(url);
 
         // allow query string options to override properties hash values
@@ -161,19 +147,35 @@ lz.embed = {
 
         // Add entry for this application 
         if (embed.applications[properties.id]) alert('Warning: an app with the id: ' + properties.id + ' already exists.'); 
-
-        // copy old properties to new app
-        var oldapp = embed[properties.id]
-        if (oldapp) {
-            for (var i in oldapp) {
-                app[i] = oldapp[i];
-            }
-        }
         embed[properties.id] = embed.applications[properties.id] = app;
+
         // listen for history unless properties.history == false
         if (properties.history == false) {
             embed.history.active = false;
         }
+
+        var flashjsurl = embed.getServerRoot() + 'flash.js'
+        if (! embed.jsloaded[flashjsurl]) {
+            // load flash.js
+            var callback = function() {
+                // flash.js is now loaded, proceed to embed the application
+                lz.embed._setSWF(url, app, swfargs, properties, minimumVersion);
+            }
+            embed.loadJSLib(flashjsurl, callback);
+        } else {
+            embed._setSWF(url, app, swfargs, properties, minimumVersion);
+        }
+    }
+
+    /**
+     * Calls the dojo.flash utility functions to embed the application,
+     * requires flash.js to work
+     * @access private
+     */
+    ,_setSWF: function (url, app, swfargs, properties, minimumVersion) {
+        var embed = lz.embed;
+        var options = embed.options;
+        var appenddiv = swfargs.appenddiv;
         // for onload callbacks
         embed.dojo.addLoadedListener(embed._loaded, app);
         embed.dojo.setSwf(swfargs, minimumVersion);
@@ -189,16 +191,16 @@ lz.embed = {
         }
         if ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && embed.browser.OS == 'Windows' && (embed.browser.isOpera || embed.browser.isFirefox)) {
             // fix for LPP-7724
-            var div = swfargs.appenddiv;
-            div.onmouseout = function(e) {
-                div.mouseisoutside = true;
+            appenddiv.onmouseout = function(e) {
+                appenddiv.mouseisoutside = true;
             }
-            div.onmouseover = function(e) {
-                div.mouseisoutside = false;
+            appenddiv.onmouseover = function(e) {
+                appenddiv.mouseisoutside = false;
             }
-            //embed.attachEventHandler(document, 'mouseup', div, '_gotmouseup');
-            div._gotmouseup = document.onmouseup = function(e) {
-                if (div.mouseisoutside) {
+            //embed.attachEventHandler(document, 'mouseup', appenddiv, '_gotmouseup');
+            // TODO: [20100730 anba] 'document.onmouseup'? Consider the case of multiple apps!
+            appenddiv._gotmouseup = document.onmouseup = function(e) {
+                if (appenddiv.mouseisoutside) {
                     // tell flash that the button went up outside
                     app.callMethod('lz.GlobalMouse.__mouseUpOutsideHandler()');
                     //console.log('mouseup ', embed[app._id]);
@@ -207,6 +209,7 @@ lz.embed = {
         }
         // workaround for tabbing outside app in IE in swf9/10 - LPP-8712
         if (embed.browser.isIE && url.indexOf('swf8') == -1 && ! options.cancelkeyboardcontrol) {
+            // TODO: [20100730 anba] 'document.onkeydown'? Consider the case of multiple apps!
             document.onkeydown = function(e) {
                 if (!e) e = window.event;
                 if (e.keyCode == 9) {
@@ -252,18 +255,20 @@ lz.embed = {
               embed.loadJSLib('http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js');
             }
         }
+        // TODO: [20100730 anba] maybe change to 'embed.jsloaded[url] !== void', in order
+        // to prevent the case lfc() is called multiple times while the lfc is loading?
         if (! embed.jsloaded[url]) {
             var callback = function() {
                 //console.log('loaded', url);
                 var embed = lz.embed;
                 embed.lfcloaded = true;
                 var queue = embed.__appqueue;
+                embed.__appqueue = [];
                 if (queue.length) {
                     for (var i = 0, l = queue.length; i < l; i++) {
                         embed.loadJSLib(queue[i]);
                     }
                 }
-                delete embed.__appqueue;
             }
             embed.loadJSLib(url, callback);
         } else {
@@ -413,19 +418,30 @@ lz.embed = {
 
     // jsloaded[url] is false while loading, true after load
     ,jsloaded: {}
+    // array of callbacks for each url
+    ,jscallbacks: {}
+    // handler executed when a library is loaded
+    ,loadJSLibHandler: function (url) {
+        var embed = lz.embed;
+        // update loader state
+        embed.jsloaded[url] = true;
+        // execute callbacks
+        var callbacks = embed.jscallbacks[url] || [];
+        delete embed.jscallbacks[url];
+        for (var i = 0, len = callbacks.length; i < len; ++i) {
+            callbacks[i]();
+        }
+    }
     // Loads a JS library from the specified URL.
     ,loadJSLib: function (url, callback) {
         var embed = lz.embed;
-        // If we're already loading, return early
-        if (embed.jsloaded[url] === null) return;
-        embed.jsloaded[url] = false;
-        var loadercallback = function() {
-            // update loader state
-            lz.embed.jsloaded[url] = true;
-            // execute callback
-            //console.log('loaded', url, callback);
-            if (callback) callback();
+        if (callback) {
+            // add callback to queue if defined
+            (embed.jscallbacks[url] || (embed.jscallbacks[url] = [])).push(callback);
         }
+        // If we're already loading or library already loaded, return early
+        if (embed.jsloaded[url] !== void 0) return;
+        embed.jsloaded[url] = false;
         //console.log('loading', url);
         var script = document.createElement('script');
         embed.__setAttr(script, 'type', 'text/javascript');
@@ -434,12 +450,13 @@ lz.embed = {
             script.onreadystatechange = function(){
                 if (script.readyState == "loaded" || script.readyState == "complete"){ 
                     script.onreadystatechange = null;
-                    loadercallback();
+                    embed.loadJSLibHandler(url);
                 }
             }
         } else { //Others 
             script.onload = function(){
-                loadercallback();
+                script.onload = null;
+                embed.loadJSLibHandler(url);
             }
         }
 
@@ -906,13 +923,25 @@ lz.embed = {
         if (! root) {
             root = document.createElement('div');
             this.__setAttr(root, 'id', divid);
-            // insert after the first script tag found...
-            var scripts = document.getElementsByTagName('script');
-            var lastscript = scripts[scripts.length-1];
-            if (! lastscript) {
+            // insert after the last script tag found:
+            // In general, scripts are executed sequentially and scripts
+            // block the execution of the rest of the page. That means the
+            // last script tag is also the currently running script tag.
+            // Big exception for this heuristic:
+            // Deferred scripts (1) and dynamically added scripts (2), see loadJSLib()
+            // (1) we're out of luck to find the executing script :-(
+            // (2) use the last non-deferred script, because all loadJSLib() scripts are deferred
+            var scripts = document.body.getElementsByTagName('script');
+            for (var i = scripts.length - 1; i >= 0; --i) {
+                var lastscript = scripts[i];
+                if (! lastscript.defer) {
+                    lastscript.parentNode.insertBefore(root, lastscript.nextSibling);
+                    break;
+                }
+            }
+            if (! root.parentNode) {
+                // no matching script tag found, add div to body
                 document.body.appendChild(root);
-            } else {
-                lastscript.parentNode.insertBefore(root, lastscript.nextSibling );
             }
         } else {
             // clear its contents
