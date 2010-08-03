@@ -1,0 +1,16 @@
+<library>
+
+  <!-- one lzo that shares the same mixin as other -->
+  <include href="../lzo-mixin-def.lzx" />
+
+  <class name="testmixinone" with="testmixin">
+
+  </class>
+
+  <testmixinone />
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

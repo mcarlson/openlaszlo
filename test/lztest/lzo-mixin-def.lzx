@@ -1,0 +1,12 @@
+<library>
+
+  <!-- a mixin that will be shared by onemixin and othermixin in lzo's -->
+  <mixin name="testmixin" >
+
+  </mixin>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -28,6 +28,19 @@ $LPS_HOME/WEB-INF/lps/server/bin/lzc --runtime=$runtime -c $TESTDIR/lzodir/lzo-l
 # get rid of the .lzx file, so only .lzo remains
 rm -f $TESTDIR/lzodir/lzo-lib-extref.lzx
 
+rm -f $TESTDIR/lzodir/lzo-lib-onemixin.lzo
+cp $TESTDIR/lzodir/lzo-lib-onemixin.lzx.proto $TESTDIR/lzodir/lzo-lib-onemixin.lzx
+# compile that file with lzc
+$LPS_HOME/WEB-INF/lps/server/bin/lzc --runtime=$runtime -c $TESTDIR/lzodir/lzo-lib-onemixin.lzx
+# get rid of the .lzx file, so only .lzo remains
+rm -f $TESTDIR/lzodir/lzo-lib-onemixin.lzx
+
+rm -f $TESTDIR/lzodir/lzo-lib-othermixin.lzo
+cp $TESTDIR/lzodir/lzo-lib-othermixin.lzx.proto $TESTDIR/lzodir/lzo-lib-othermixin.lzx
+# compile that file with lzc
+$LPS_HOME/WEB-INF/lps/server/bin/lzc --runtime=$runtime -c $TESTDIR/lzodir/lzo-lib-othermixin.lzx
+# get rid of the .lzx file, so only .lzo remains
+rm -f $TESTDIR/lzodir/lzo-lib-othermixin.lzx
 
 
 
