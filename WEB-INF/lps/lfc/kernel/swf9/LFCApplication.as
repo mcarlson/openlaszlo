@@ -28,6 +28,7 @@ public class LFCApplication {
     import flash.events.Event;
     import flash.events.FocusEvent;
     import flash.system.Capabilities;
+    import flash.text.TextField;
     }#
 
     // The application sprite
@@ -79,6 +80,10 @@ public class LFCApplication {
             stage.addEventListener(FocusEvent.KEY_FOCUS_CHANGE, preventFocusChange);
         }
 
+        // for swf8-compatibility (LPP-9007):
+        // non-selectable textfields should not gain focus by mouse
+        stage.addEventListener(FocusEvent.MOUSE_FOCUS_CHANGE, handleMouseFocusChange);
+
         // necessary for consistent behavior - in netscape browsers HTML is ignored
         stage.align = StageAlign.TOP_LEFT;
         stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -99,6 +104,16 @@ public class LFCApplication {
     private function preventFocusChange(event:FocusEvent):void {
         if (event.keyCode == 9) {
             event.preventDefault();
+        }
+    }
+
+    private function handleMouseFocusChange (event:FocusEvent) :void {
+        if (event.relatedObject is TextField) {
+            if (! (event.relatedObject cast TextField).selectable) {
+                event.preventDefault();
+                // remove keyboard control
+                LFCApplication.stage.focus = LFCApplication.stage;
+            }
         }
     }
 
