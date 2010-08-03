@@ -126,7 +126,7 @@ public class ClassModel implements Comparable {
                     "Undefined mixin " + mixinTagName + " for class " + tagName,
                     definition);
               }
-              String interstitialName = mixinTagName + "$" + superTagName;
+              String interstitialName = env.interstitialName(mixinTagName, superTagName);
               debugWith = mixinTagName + (debugWith.length() > 0 ? ", " : "") + debugWith;
               // Avoid adding the same interstitial to the schema twice - LPP-8234
               if (schema.getClassModelUnresolved(interstitialName) == null) {

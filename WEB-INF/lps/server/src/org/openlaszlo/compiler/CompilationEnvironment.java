@@ -150,6 +150,8 @@ public class CompilationEnvironment {
     /** Keep a list of tag to class maps so we can generate the
      * entries in a batch */
     private Map tagTable = new LinkedHashMap();
+    /** Keep a map of interstitials to unique/compact names */
+    private Map interstitialNames = new HashMap();
 
     /** Holds a set of unresolved references to resources, so we can
         check for undefined (possibly forward) references after all
@@ -206,7 +208,7 @@ public class CompilationEnvironment {
         } else {
           // Use a local symbol generator so that we recycle method
           // names for each new view, to keep the constant pool small.
-          this.methodNameGenerator = new SymbolGenerator("$m");
+          this.methodNameGenerator = new SymbolGenerator("$");
         }
         this.mSchema = new ViewSchema(this);
         // lzc depends on the properties being shared, because it sets
@@ -503,6 +505,16 @@ public class CompilationEnvironment {
 
     public Map getTags () {
         return tagTable;
+    }
+
+    public String interstitialName(String mixinTagName, String superTagName) {
+      String key =  mixinTagName + "$" + superTagName;
+      if (interstitialNames.containsKey(key)) {
+        return (String)interstitialNames.get(key);
+      }
+      String name = methodNameGenerator.next();
+      interstitialNames.put(key, name);
+      return name;
     }
 
     public void addResourceReference(String name, Element elt) {

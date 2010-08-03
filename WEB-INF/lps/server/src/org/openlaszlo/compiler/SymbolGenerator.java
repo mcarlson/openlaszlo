@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -32,6 +32,6 @@ public class SymbolGenerator {
      */
     public String next() {
         mIndex += 1;
-        return mSymbolPrefix + new Integer(mIndex).toString();
+        return mSymbolPrefix + Integer.toString(mIndex, 36);
     }
 }
