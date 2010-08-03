@@ -446,11 +446,13 @@ lz.embed = {
         var script = document.createElement('script');
         embed.__setAttr(script, 'type', 'text/javascript');
         embed.__setAttr(script, 'defer', 'defer');
+        var addto = document.getElementsByTagName("body")[0] || document.getElementsByTagName("head")[0]
         if (script.readyState){ //IE 
             script.onreadystatechange = function(){
                 if (script.readyState == "loaded" || script.readyState == "complete"){ 
                     script.onreadystatechange = null;
                     embed.loadJSLibHandler(url);
+                    addto.removeChild( script );
                 }
             }
         } else { //Others 
@@ -462,8 +464,7 @@ lz.embed = {
 
         embed.__setAttr(script, 'src', url);
         // prefer adding scripts to the body - it's better for performance
-        var el = document.getElementsByTagName("body")[0] || document.getElementsByTagName("head")[0]
-        el.appendChild(script);
+        addto.appendChild(script);
     }
 
     ,getServerRoot: function () {

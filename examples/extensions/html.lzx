@@ -9,6 +9,13 @@
         <simplelayout axis="y" spacing="2"/>
         <hbox width="100%">
             <edittext name="txt" text="html-test.html" width="300"/> 
+            <button>Set HTML
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.setAttribute('html', 'Setting HTML');
+                    }
+                </handler>
+            </button> 
             <button>Load
                 <handler name="onclick">
                     if (classroot.main) {
@@ -26,13 +33,6 @@
                     }
                 </handler>
             </button> 
-            <button>Destroy
-                <handler name="onclick">
-                    if (classroot.main) {
-                        classroot.main.destroy();
-                    }
-                </handler>
-            </button> 
             <button>Scroll
                 <handler name="onclick">
                     if (classroot.main) {
@@ -47,6 +47,13 @@
                     }
                 </handler>
             </button> 
+            <button>Bad method
+                <handler name="onclick">
+                    if (classroot.main) {
+                        classroot.main.callJavascript('nomethodwiththisname', null, '#ff0000'); 
+                    }
+                </handler>
+            </button> 
             <button>Invalid size
                 <handler name="onclick">
                     if (classroot.main) {
@@ -54,11 +61,10 @@
                     }
                 </handler>
             </button> 
-            <button>Bad method
+            <button>Destroy
                 <handler name="onclick">
                     if (classroot.main) {
-                        classroot.main.setAttribute('src', ''); 
-                        classroot.main.callJavascript('nomethodwiththisname', null, '#ff0000'); 
+                        classroot.main.destroy();
                     }
                 </handler>
             </button> 

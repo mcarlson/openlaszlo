@@ -443,8 +443,7 @@ LzSprite.__defaultStyles = {
         // CSS3 browsers, for swf compatibilty
         wordWrap: 'break-word',
         MsWordBreak: 'break-all',
-        outline: 'none',
-        resize: 'none'
+        outline: 'none'
     },
     lzswfinputtextmultiline: {
         fontFamily: 'Verdana,Vera,sans-serif',
@@ -468,7 +467,6 @@ LzSprite.__defaultStyles = {
         wordWrap: 'break-word',
         MsWordBreak: 'break-all',
         outline: 'none',
-        resize: 'none',
         whiteSpace: 'pre-wrap'
     },
     lztextlink: {
@@ -781,6 +779,9 @@ LzSprite.__updateQuirks = function () {
             quirks['use_filter_for_dropshadow'] = true;
             // LPP-8591 when measuring text div scrollheight, need to first set it to zero
             quirks['forcemeasurescrollheight'] = true;
+            // Add these for IE
+            defaultStyles['lzswfinputtext'].resize = 'none';
+            defaultStyles['lzswfinputtextmultiline'].resize = 'none';
             capabilities['dropshadows'] = true;
             // Force hasLayout for lzTextSizeCache in IE
             defaultStyles['#lzTextSizeCache'].zoom = 1;

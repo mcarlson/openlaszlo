@@ -239,12 +239,12 @@ lz.embed.iframemanager.setHTML = function(id, html) {
           @access public
     -->
     <attribute name="html" type="html" value=""/>
-    <setter name="html" args="t">
+    <setter name="html" args="t"><![CDATA[
         this.html = t;
-        if (this.loading != false) {
+        if (this['iframeid']) {
             lz.embed.iframemanager.setHTML(this.iframeid, t);
         }
-    </setter>
+    ]]></setter>
 
     <!--- Sets the visibility of the html tag
           @type Boolean
@@ -323,7 +323,8 @@ lz.embed.iframemanager.setHTML = function(id, html) {
         // Called once when the initial javascript: src loads, and whenever 
         // another src is set/done loading.
         if (name == 'load') {
-            //special handling for load events
+            // Special handling for load events.  If the src is still null, we
+            // know we can safely call setHTML()
             if (this['src'] == null) {
                 // set to the initial html
                 if (this.html) {
