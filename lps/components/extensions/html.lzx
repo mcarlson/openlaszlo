@@ -14,28 +14,21 @@
 lz.embed.iframemanager = new LzInheritedHash();
 lz.embed.iframemanager.owners = new LzInheritedHash();
 // true when iframemanager.js is loaded
-lz.embed.iframemanager.__loaded = false;
-// called when iframemanager.js is loaded
-lz.embed.iframemanager.__createcallback = function(id) {
+// called when iframemanager.js is loaded and an iframe has been created
+lz.embed.iframemanager.__setiframeid = function(id) {
     // Called after iframemanager loads and is ready
     var view = lz.embed.iframemanager.owners[id];
     //Debug.warn('__createcallback', lz.embed.iframemanager.owners, id, view)
     if (view) {
-        this.__loaded = true;
         view.setiframeid(id); 
     }
 }
 lz.embed.iframemanager.create = function(owner, name, scrollbars) {
-    lz.Browser.callJS('lz.embed.iframemanager.create', function (id) { 
-        // Store a reference to the owner, then wait for __createcallback()
-        var iframemanager = lz.embed.iframemanager;
-        iframemanager.owners[id] = owner;
-        //Debug.warn('create', id, iframemanager.owners, owner);
-        if (iframemanager.__loaded) {
-            // set the iframeid immediately
-            owner.setiframeid(id); 
-        }
-    }, canvas.id, name, scrollbars);
+    var callback = function(id) {
+        lz.embed.iframemanager.owners[id] = owner;
+        //Debug.warn('create', id);
+    }
+    return lz.Browser.callJS('lz.embed.iframemanager.create', callback, canvas.id, name, scrollbars);
 }
 lz.embed.iframemanager.setPosition = function(id, x, y, width, height, v, z) {
     lz.Browser.callJS('lz.embed.iframemanager.setPosition', null, id, x, y, width, height, v, z);
@@ -62,10 +55,6 @@ lz.embed.iframemanager.__iframecallback = function(id, name, value) {
     // receives calls from the iframe
     var view = lz.embed.iframemanager.owners[id];
     if (view) view.__iframecallback(name, value);
-}
-lz.embed.iframemanager.__gotMouseEvent = function(id, eventname) {
-    var view = lz.embed.iframemanager.owners[id];
-    if (view) LzMouseKernel.handleMouseEvent(view, eventname);
 }
 lz.embed.iframemanager.__destroy = function(id) {
     lz.Browser.callJS('lz.embed.iframemanager.__destroy', null, id);
@@ -196,6 +185,7 @@ lz.embed.iframemanager.setHTML = function(id, html) {
         if (this['onshownativecontextmenu'] && this.onshownativecontextmenu.ready) this.onshownativecontextmenu.sendEvent(show);
     ]]>
     </setter>
+    <attribute name="iframeid" value="null"/>
     <!--- Sets the view to listen to for x/y/width/height change events.  Defaults to this.parent.
           @type LzView
           @access public
@@ -278,12 +268,10 @@ lz.embed.iframemanager.setHTML = function(id, html) {
     <method name="init">
         super.init();
         if ($dhtml) {
-            var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0, canvas);
+            lz.embed.iframemanager.create(this, this.framename, this.scrollbars, this.sprite.__LZdiv, 0, canvas);
         } else {
-            var i = lz.embed.iframemanager.create(this, this.framename, this.scrollbars);
+            lz.embed.iframemanager.create(this, this.framename, this.scrollbars);
         }
-        //Debug.warn('init', i);
-        if (i) this.setiframeid(i);
     </method>
 
     <!--- @access private -->
@@ -335,7 +323,11 @@ lz.embed.iframemanager.setHTML = function(id, html) {
             }
             this.setAttribute('loading', false);
             this.__updatepos(null);
-        } 
+        } else if (name === 'mouseevent') {
+            // Delegate mouse events
+            this.__handleMouseEvent(value);
+            return;
+        }
         // send an event for the callback
         var evt = this['on' + name];
         //Debug.warn('__iframecallback', name, value, evt);
@@ -399,8 +391,20 @@ lz.embed.iframemanager.setHTML = function(id, html) {
     </method>
     <!--- @keywords private -->
     <method name="destroy">
-        if (this['iframeid']) lz.embed.iframemanager.__destroy(this.iframeid);
+        if (this['iframeid']) {
+            lz.embed.iframemanager.__destroy(this.iframeid);
+            delete this.iframeid;
+        }
         super.destroy();
+    </method>
+    <!--- @access private -->
+    <method name="__handleMouseEvent" args="eventname">
+        if ($dhtml) {
+            // currently handled by iframemanager.js
+        } else {
+            //Flash
+            LzMouseKernel.handleMouseEvent(this, eventname);
+        }
     </method>
     <switch>
         <when runtime="dhtml">

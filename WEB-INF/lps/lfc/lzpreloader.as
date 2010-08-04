@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @affects lzpreloader
@@ -30,6 +30,7 @@
 Stage.align = ('canvassalign' in global && global.canvassalign != null) ? global.canvassalign : "LT";
 Stage.scaleMode = ('canvasscale' in global && global.canvasscale != null) ? global.canvasscale : "noScale";
 
+flash.external.ExternalInterface.call("lz.embed.applications." + id + "._sendPercLoad", 0);
 /*
 // SWF-specific
 _root.createTextField("tfNewfield",1,100,10,150,700);

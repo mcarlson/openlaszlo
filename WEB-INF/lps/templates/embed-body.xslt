@@ -24,24 +24,36 @@ If you edit this file, please validate your work using http://validator.w3.org/
                 <script type="text/javascript" defer="defer">
                   lz.embed.resizeWindow('<xsl:value-of select="/canvas/@width"/>', '<xsl:value-of select="/canvas/@height"/>');
                   lz.embed.dhtml({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=object<xsl:value-of select="/canvas/request/@query_args"/>', lfcurl: '<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/lfc/<xsl:value-of select="/canvas/@lfc"/>', serverroot: '<xsl:value-of select="/canvas/request/@lps"/>/', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>', cancelmousewheel: false, cancelkeyboardcontrol: false, skipchromeinstall: false, usemastersprite: false, approot: '', appenddivid: 'appcontainer'});
-                  lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
-                    var s = document.getElementById('lzsplash');
-                    if (s) LzSprite.prototype.__discardElement(s);
+                  lz.embed.applications.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
+                    // called when this application is done loading
+                    var el = document.getElementById('lzsplash');
+                    if (el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
                   }
                 </script>
               </xsl:when>
               <xsl:otherwise>
                 <div id="appcontainer"></div>
+                <div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: {$canvaswidth}; height: {$canvasheight}; position: fixed; display: table"><p style="display: table-cell; vertical-align: middle; align: center;"><div id="lzsplashtext" style="display: block; margin: 20% auto; font-size:12px; font-family:Helvetica,sans-serif;" align="center">Loading...</div></p></div>
                 <script type="text/javascript" defer="defer">
                   lz.embed.resizeWindow('<xsl:value-of select="/canvas/@width"/>', '<xsl:value-of select="/canvas/@height"/>');
                   lz.embed.swf({url: '<xsl:value-of select="/canvas/request/@url"/>?lzt=swf<xsl:value-of select="/canvas/request/@query_args"/>', allowfullscreen: '<xsl:value-of select="/canvas/@allowfullscreen"/>', bgcolor: '<xsl:value-of select="/canvas/@bgcolor"/>', width: '<xsl:value-of select="/canvas/@width"/>', height: '<xsl:value-of select="/canvas/@height"/>', id: '<xsl:value-of select="/canvas/@id"/>', accessible: '<xsl:value-of select="/canvas/@accessible"/>', cancelmousewheel: false, appenddivid: 'appcontainer'});
 
-                  lz.embed.<xsl:value-of select="/canvas/@id"/>.onloadstatus = function loadstatus(p) {
+                  lz.embed.applications.<xsl:value-of select="/canvas/@id"/>.onloadstatus = function loadstatus(p) {
                     // called with a percentage (0-100) indicating load progress
+                    var el = document.getElementById('lzsplashtext');
+                    if (el) {
+                        el.innerHTML = p + '% loaded'
+                    }
                   }
 
-                  lz.embed.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
+                  lz.embed.applications.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
                     // called when this application is done loading
+                    var el = document.getElementById('lzsplash');
+                    if (el) {
+                        el.parentNode.removeChild(el);
+                    }
                   }
                 </script>
               </xsl:otherwise>

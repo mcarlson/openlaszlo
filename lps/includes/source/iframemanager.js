@@ -6,6 +6,7 @@ lz.embed.iframemanager = {
     __counter: 0
     ,__frames: {}
     ,__namebyid: {}
+    ,__ownerbyid: {}
     ,__loading: {}
     ,__callqueue: {}
     ,__calljsqueue: {}
@@ -13,8 +14,13 @@ lz.embed.iframemanager = {
     ,__hidenativecontextmenu: {}
     ,__selectionbookmarks: {}
     ,create: function(owner, name, scrollbars, appendto, defaultz, canvasref) {
-        //console.log(owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
+        //console.log('create: ' + owner + ', ' + name + ', ' + scrollbars + ', ' + appendto + ', ' + defaultz)
         var id = '__lz' + lz.embed.iframemanager.__counter++;
+        if (typeof owner == 'string') {
+            // Add to table of owners so we can destroy the correct iframes in 
+            // __reset();
+            lz.embed.iframemanager.__ownerbyid[id] = owner;
+        }
         var src = 'javascript:""';
         var onload = 'lz.embed.iframemanager.__gotload("' + id + '")';
 
@@ -125,6 +131,13 @@ lz.embed.iframemanager = {
             }
         }
         iframe.style.position = 'absolute';
+
+        if (typeof owner == 'string') {
+            // Use Flash-specific callback
+            lz.embed.applications[owner].callMethod('lz.embed.iframemanager.__setiframeid("' + id + '")');
+        } else {
+            owner.setiframeid(id);
+        }
     }
     ,appendTo: function(iframe, div) { 
         //console.log('appendTo', iframe, div, iframe.__appended);
@@ -265,7 +278,7 @@ lz.embed.iframemanager = {
             // Flash
             if (lz.embed[iframe.owner]) {
                 arg = (arg) ? ", '" + arg + "'" : '';
-                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "', '" + event + "'" + arg + ")");
+                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "','" + event + "','" + arg + "')");
             } else {
                 // installing a new player now...
                 return;
@@ -343,7 +356,9 @@ lz.embed.iframemanager = {
         var iframe = lz.embed.iframemanager.__frames[id];
         if (iframe) {
             // clear out mouse listeners
-            this.__setSendMouseEvents(id, false);
+            if (this.__sendmouseevents[id]) {
+                this.__setSendMouseEvents(id, false);
+            }
             iframe.owner = null;
             iframe.appcontainer = null;
             if (document.all) {
@@ -357,6 +372,7 @@ lz.embed.iframemanager = {
             }
             delete lz.embed.iframemanager.__frames[id];
             delete lz.embed.iframemanager.__namebyid[id];
+            delete lz.embed.iframemanager.__ownerbyid[id];
         }
     }
     ,callJavascript: function(id, methodName, callbackDel, args) {
@@ -387,8 +403,8 @@ lz.embed.iframemanager = {
         }
     }
     ,__mouseEvent: function(e, id) {
-        var lze = lz.embed;
-        var iframe = lze.iframemanager.getFrame(id);
+        var embed = lz.embed;
+        var iframe = embed.iframemanager.getFrame(id);
         if (! iframe) return;
 
         if (!e) {
@@ -399,10 +415,10 @@ lz.embed.iframemanager = {
         if (iframe.owner && iframe.owner.sprite && iframe.owner.sprite.__mouseEvent) {
             // dhtml
             if (eventname == 'oncontextmenu') {
-                if (! lze.iframemanager.__hidenativecontextmenu[id]) {
+                if (! embed.iframemanager.__hidenativecontextmenu[id]) {
                     return;
                 } else {
-                    var pos = lze.getAbsolutePosition(iframe); 
+                    var pos = embed.getAbsolutePosition(iframe); 
                     LzMouseKernel.__sendMouseMove(e, pos.x, pos.y)
                     return LzMouseKernel.__showContextMenu(e);
                 }
@@ -425,7 +441,7 @@ lz.embed.iframemanager = {
             } else if (eventname == 'oncontextmenu') {
                 return;
             }
-            lze[iframe.owner].callMethod('lz.embed.iframemanager.__gotMouseEvent(\'' + id + '\',\'' + eventname + '\')');
+            embed.iframemanager.asyncCallback(id,'mouseevent',eventname);
         }
     }
     ,setSendMouseEvents: function(id, send) {
@@ -498,6 +514,20 @@ lz.embed.iframemanager = {
             var range = win.document.body.createTextRange();
             range.moveToBookmark(bookmark);
             range.select();
+        }
+    }
+    /* Called when the flash movie reloads.  Destroy all iframes and allow them to be recreated */
+    ,__reset: function(appid) {
+        //if (! (typeof owner == 'string')) return;
+        if (lz.embed.iframemanager.__counter) {
+            var owners = lz.embed.iframemanager.__ownerbyid;
+            // Find frames by app id
+            for (var id in owners) {
+                //alert('destroy: ' + owners[id] + appid)
+                if (appid === owners[id]) {
+                    lz.embed.iframemanager.__destroy(id);
+                }
+            }
         }
     }
 }

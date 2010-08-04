@@ -446,12 +446,14 @@ lz.embed = {
         var script = document.createElement('script');
         embed.__setAttr(script, 'type', 'text/javascript');
         embed.__setAttr(script, 'defer', 'defer');
+        // prefer adding scripts to the body - it's better for performance
         var addto = document.getElementsByTagName("body")[0] || document.getElementsByTagName("head")[0]
         if (script.readyState){ //IE 
             script.onreadystatechange = function(){
                 if (script.readyState == "loaded" || script.readyState == "complete"){ 
                     script.onreadystatechange = null;
                     embed.loadJSLibHandler(url);
+                    // prevent memory leaks in IE
                     addto.removeChild( script );
                 }
             }
@@ -463,7 +465,6 @@ lz.embed = {
         }
 
         embed.__setAttr(script, 'src', url);
-        // prefer adding scripts to the body - it's better for performance
         addto.appendChild(script);
     }
 
@@ -960,7 +961,8 @@ lz.embed = {
     }
     ,/** @access private */
     _gotFocus: function() {
-        lz.embed._broadcastMethod('_sendAllKeysUp');
+        // Set a timeout to ensure the app has time to load, see LPP-9106
+        setTimeout("lz.embed._broadcastMethod('_sendAllKeysUp')", 1000);
     }
     ,/** @access private */
     _sendAllKeysUpSWF: function () {
@@ -975,7 +977,12 @@ lz.embed = {
     }
     ,/** @access private */
     _sendPercLoad: function(p) {
-        //alert('onpercload' + p);
+        //console.log('_sendPercLoad', p);
+        if (p < 100 && this.loaded) {
+            this.loaded = false;
+            lz.embed.resetloaded(this._id);
+            //alert('onpercload' + p + ', ' + this);
+        }
         if (this.onloadstatus && typeof this.onloadstatus == 'function') {
             this.onloadstatus(p);
         }
@@ -1208,6 +1215,18 @@ lz.embed = {
             // TODO: determine window offsets in IE
         }
     }
+    ,/**
+       * Called when the page is rereshed with current JS but Flash is reloaded.
+       * See LPP-
+       * @access private 
+       */
+    resetloaded: function(appid) {
+        //alert('resetloaded: ' + lz.embed.iframemanager);
+        //console.log('resetloaded');
+        if (lz.embed.iframemanager && lz.embed.iframemanager.__reset) {
+            lz.embed.iframemanager.__reset(appid);
+        }
+    }
 };
 
 // init browser detection
@@ -1228,13 +1247,13 @@ if(lz.embed.browser.isIE){
     document.writeln('  VBGetSwfVer = swVersion');
     document.writeln('End Function');
     document.writeln('</script>');
+
+    // Clean up global handlers
+    lz.embed.attachEventHandler(window, 'beforeunload', lz.embed, '_cleanupHandlers');
+    // Notice that you got focus
+    lz.embed.attachEventHandler(window, 'activate', lz.embed, '_gotFocus');
 }
 
-// Clean up global handlers
-lz.embed.attachEventHandler(window, 'beforeunload', lz.embed, '_cleanupHandlers');
 
 // Notice that you got focus
 lz.embed.attachEventHandler(window, 'focus', lz.embed, '_gotFocus');
-if (lz.embed.browser.isIE) {
-  lz.embed.attachEventHandler(window, 'activate', lz.embed, '_gotFocus');
-}
