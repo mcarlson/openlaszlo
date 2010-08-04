@@ -399,7 +399,7 @@ lz.embed.iframemanager = {
                 return retVal;
             }
         } catch (e) {
-            window.console && console.error('callJavascript() caught error:', e);
+            window.console && console.error && console.error('callJavascript() caught error:', e);
         }
     }
     ,__mouseEvent: function(e, id) {

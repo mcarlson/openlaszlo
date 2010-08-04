@@ -321,6 +321,8 @@ lz.embed.iframemanager.setHTML = function(id, html) {
                 // skip onload event
                 return;
             }
+            // Filter out extra onload calls, see LPP-9251
+            if (this.loading == false) return;
             this.setAttribute('loading', false);
             this.__updatepos(null);
         } else if (name === 'mouseevent') {
