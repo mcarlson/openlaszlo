@@ -536,6 +536,27 @@ LzTextSprite.prototype.setSelectable = function (s) {
         }
         this.__LZdiv.style[stylename] = selectstyle;
     }
+
+    this.__setClickable(s, this.__LZdiv);
+}
+
+// custom __mouseEvent handler for sele
+LzTextSprite.prototype.__mouseEvent = function(e , artificial){
+    if (artificial) {
+        var eventname = e;
+    } else {
+        // real event
+        var eventname = 'on' + e.type;
+        // No need to bubble these
+        e.cancelBubble = true;
+    }
+    // TODO: handle touch, ie-specific events
+
+    // Send a global mouse event
+    LzMouseKernel.__sendEvent(eventname, this.owner);
+
+    // Return true to ensure the default event happens, e.g drag to select
+    return true;
 }
 
 LzTextSprite.prototype.__cancelhandler = function () {
