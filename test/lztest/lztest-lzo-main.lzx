@@ -12,6 +12,8 @@
   <!-- test lzo's with shared mixin -->
   <include href="lzodir/lzo-lib-onemixin.lzx"/>
   <include href="lzodir/lzo-lib-othermixin.lzx"/>
+  <!-- test a mixin from an lzo -->
+  <include href="lzodir/lzo-lib-mixin-def.lzx" />
   <testclass name="foo" flavor="vanilla"/>
   <testclass name="bar" flavor="chocolate"/>
   <testclass name="baz" flavor="strawberry">
@@ -19,7 +21,7 @@
       return a + b;
     </method>
   </testclass>
-
+  <testclass name="mixed" with="lzomixin" />
 <script>
     
 var lzoSuite = new LzTestSuite("Use LZO library"); 
@@ -39,6 +41,7 @@ function test_values_defined() {
     
     LzTestManager.assertEquals(5, baz.doit(2,3), "test method on instance");
 
+    LzTestManager.assertEquals("LZO Mixin Method", mixed.lzomixinmethod(), "test lzo mixin method on instance");
 }
 
 lzoSuite.addTest( test_values_defined );

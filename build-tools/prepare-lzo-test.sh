@@ -42,6 +42,13 @@ $LPS_HOME/WEB-INF/lps/server/bin/lzc --runtime=$runtime -c $TESTDIR/lzodir/lzo-l
 # get rid of the .lzx file, so only .lzo remains
 rm -f $TESTDIR/lzodir/lzo-lib-othermixin.lzx
 
+rm -f $TESTDIR/lzodir/lzo-lib-mixin-def.lzo
+cp $TESTDIR/lzodir/lzo-lib-mixin-def.lzx.proto $TESTDIR/lzodir/lzo-lib-mixin-def.lzx
+# compile that file with lzc
+$LPS_HOME/WEB-INF/lps/server/bin/lzc --runtime=$runtime -c $TESTDIR/lzodir/lzo-lib-mixin-def.lzx
+# get rid of the .lzx file, so only .lzo remains
+rm -f $TESTDIR/lzodir/lzo-lib-mixin-def.lzx
+
 
 
 ################################################################

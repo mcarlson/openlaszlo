@@ -1,11 +1,11 @@
 <library>
 
-  <!-- a mixin that will be shared by onemixin and othermixin in lzo's -->
-  <mixin name="testmixin" >
-    <method name="foo" args="bar,baz">
-      Debug.info(bar,baz);
+  <!-- a mixin that will be lzo-compiled and then used in another file -->
+  <mixin name="lzomixin" >
+    <method name="lzomixinmethod">
+      return this.flavor;
     </method>
-    <attribute name="flavor" value="259" />
+    <attribute name="flavor" type="string" value="LZO Mixin Method" />
   </mixin>
 
 </library>
