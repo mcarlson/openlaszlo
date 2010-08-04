@@ -7,6 +7,8 @@
 package org.openlaszlo.compiler;
 import java.util.*;
 import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
+import org.jdom.output.Format;
 import org.openlaszlo.sc.Method;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.sc.ScriptClass;
@@ -27,6 +29,7 @@ public class ClassModel implements Comparable {
     protected boolean builtin = false;
     // This is null for the root class
     protected ClassModel superModel;
+    protected ClassModel interfaceModels[] = null;
     
     // This is null for the root class
     public final Element definition;
@@ -42,7 +45,6 @@ public class ClassModel implements Comparable {
 
     /* If superclass is a predefined system class, just store its name. */
     protected String superTagName = null;
-    protected String interfaceClassNames[] = null;
     protected boolean hasInputText = false;
     protected boolean isInputText = false;
     public Set requiredAttributes = new HashSet();
@@ -105,7 +107,7 @@ public class ClassModel implements Comparable {
           debugExtends = superTagName;
           debugWith = "";
           if (interfaceTagNames != null) {
-            interfaceClassNames = new String[interfaceTagNames.length];
+            interfaceModels = new ClassModel[interfaceTagNames.length];
             for (int i = interfaceTagNames.length - 1; i >= 0; i--) {
               String interfaceTagName = interfaceTagNames[i];
               ClassModel interfaceModel =  schema.getClassModelUnresolved(interfaceTagName);
@@ -114,7 +116,7 @@ public class ClassModel implements Comparable {
                     "Undefined interface " + interfaceTagName + " for class " + tagName,
                     definition);
               }
-              interfaceClassNames[i] = interfaceModel.className;
+              interfaceModels[i] = interfaceModel;
             }
           }
           if (mixinTagNames != null) {
@@ -443,6 +445,13 @@ public class ClassModel implements Comparable {
   }
 
   public String toLZX(String indent) {
+    // Mixins need to retain their implementation
+    // TODO: [2010-08-03 ptw] Figure out some way to obfuscate at
+    // least the bodies of the mixin's methods
+    if ("mixin".equals(kind)) {
+      XMLOutputter out = new XMLOutputter(Format.getCompactFormat());
+      return out.outputString(this.definition);
+    }
     String lzx = indent + "<interface name='" + tagName + "'" +
       ((superModel != null)?(" extends='" + superModel.tagName +"'"):"") + ">";
     // TODO: [2009-12-10 ptw] Should named views show up as attributes
@@ -520,6 +529,17 @@ public class ClassModel implements Comparable {
       // Allow forward references.
       if (! superModel.isCompiled()) {
         superModel.compile(env);
+      }
+      String interfaceClassNames[] = null;
+      if (interfaceModels != null) {
+        interfaceClassNames = new String[interfaceModels.length];
+        for (int i = interfaceModels.length - 1; i >= 0; i--) {
+          ClassModel interfaceModel =  interfaceModels[i];
+          interfaceClassNames[i] = interfaceModel.className;
+          if (! interfaceModel.isCompiled()) {
+            interfaceModel.compile(env);
+          }
+        }
       }
       String superClassName = superModel.className;
       // className will be a global
@@ -676,13 +696,16 @@ public class ClassModel implements Comparable {
                         nodeModel.getClassAttrs(),
                         classBody,
                         kind);
-      if (modelOnly) {
+      if (modelOnly ||
+          // See toLZX.  mixins are not compiled when not linking
+          ("mixin".equals(kind) &&
+           "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)))) {
         env.addClassModel(scriptClass.toString(), className, definition);
       } else {
         env.compileScript(scriptClass.toString(), definition);
-      }
-      if ((! anonymous) && (tagName != null)) {
-        env.addTag(tagName, className);
+        if ((! anonymous) && (tagName != null)) {
+          env.addTag(tagName, className);
+        }
       }
     } finally {
       env.compilingExternalLibrary = prev;
