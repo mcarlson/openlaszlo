@@ -27,6 +27,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         import flash.display.Graphics;
         import flash.display.Shape;
         import flash.display.Sprite;
+        import flash.display.BlendMode;
         import flash.events.Event;
         import flash.events.MouseEvent;
         import flash.events.TextEvent;
@@ -63,6 +64,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         import flashx.textLayout.elements.LinkElement;
         import flashx.textLayout.elements.TextFlow;
         import flashx.textLayout.events.FlowElementMouseEvent;
+        import flashx.textLayout.events.FlowOperationEvent;
         import flashx.textLayout.events.StatusChangeEvent;
         import flashx.textLayout.events.CompositionCompleteEvent;
         import flashx.textLayout.factory.TextFlowTextLineFactory;
@@ -74,7 +76,9 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         import flashx.textLayout.formats.TextLayoutFormat;
         import flashx.textLayout.edit.ISelectionManager;
         import flashx.textLayout.edit.SelectionState;
-
+        import flashx.textLayout.operations.SplitParagraphOperation;
+        import flashx.textLayout.operations.FlowOperation;
+        import flashx.textLayout.edit.SelectionFormat;
 
         import mx.core.IFlexModuleFactory;
         import mx.core.IFontContextComponent;
@@ -93,21 +97,11 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
 
         #passthrough {
 
-        // TODO [hqm 2010-07] these vars are being used as a transition, while copying code from LZTLFInputTextSprite.
-        // These are copies of state vars from LZTLFInputTextSprite.
-        // I need to figure out how to enable/disable selectability and cursor mouse behavior on the textfield.
-        // Can these be derived from TextField state vars? enabled := (type == INPUT)
-        // but what about 'clickable' and 'hasFocus'?
-        // hasFocus needs to be a state var on the sprite? 
-        //
-        // 
-        // 
-        // __lostFocus , __mouseEvent, __onChanged, handleMouse_DOUBLE_CLICK, __gotFocus
+
         public var _enabled:Boolean = false;
         public var _selectable:Boolean;
 
         public var clickable:Boolean = false;
-        public var hasFocus:Boolean = false;
 
         // This flag causes any changes to immediately re-layout the text flow, rather than
         // deferring until a stage RENDER or ENTER_FRAME event.
@@ -121,35 +115,6 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         // textfield.addEventListener(CompositionCompleteEvent.COMPOSITION_COMPLETE,
         // compositionCompleteHandler);
         public var renderImmediate:Boolean = false;
-
-        // TODO [hqm 2010-07] These trampoline methods should probably
-        // just dispatch events, in fact their callers in the
-        // Editmanager or Selectionmanager should probably be calling
-        // textfield.dispatchEvent directly, when I figure out which
-        // events these correspond to (the sprite should be listening
-        // for them already, whichever the ones are that the old
-        // TextField generates)
-        public function __lostFocus(event:*):void {
-            //            trace("LzTLFTextField__lostFocus", event);
-        }
-        public function __gotFocus(event:*):void {
-            //            trace("LzTLFTextField__gotFocus", event);
-        }
-        public function __mouseEvent(event:*):void {
-            dispatchEvent(event);
-        }
-        public function __onChanged(event:*):void {
-            _text = null;
-            dispatchEvent(new Event(Event.CHANGE));
-        }
-        public function handleMouse_DOUBLE_CLICK(event:*):void {
-            //trace("LzTLFTextField.handleMouse_DOUBLE_CLICK", event);
-        }
-
-        public function __keyboardEvent(event:*):void {
-            LzKeyboardKernel.__keyboardEvent(event);
-            //trace("LzTLFTextField.__keyboardEvent", event);
-        }
 
         public function setCursorLocal(cursor:String):void {
             LzMouseKernel.setCursorLocal(cursor);
@@ -185,7 +150,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
             // Note: We have to make a copy of the textFlowInitialFormat,
             // which has various formats set to "inherit",
             // and then modify it and set it back.
-            config = new Configuration();
+            config = ((TextContainerManager.defaultConfiguration) as Configuration).clone();
             format = new TextLayoutFormat(config.textFlowInitialFormat);
             format.whiteSpaceCollapse = "collapse";
             config.textFlowInitialFormat = format;
@@ -197,7 +162,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
             // Note: We have to make a copy of the textFlowInitialFormat,
             // which has various formats set to "inherit",
             // and then modify it and set it back.
-            config = new Configuration();
+            config = ((TextContainerManager.defaultConfiguration) as Configuration).clone();
             format = new TextLayoutFormat(config.textFlowInitialFormat);
             format.whiteSpaceCollapse = "preserve";
             config.textFlowInitialFormat = format;
@@ -472,19 +437,17 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         public function LzTLFTextField()
         {
             super();
-        
             // The mouse should not be aware of the TextLines.
             // Otherwise, LzTLFTextField will dispatch mouseOver and mouseOut
             // events over each line, thich TextField doesn't do.
-            mouseChildren = false;
-        
+            mouseChildren = true;
+            mouseEnabled = true;
             // Use a static TextField to initialize the defaultTextFormat.
             // This should be faster than creating a TextFormat object
             // and filling it out.
             // It will also take care of setting the 'font' field,
             // which is platform-dependent.
             _defaultTextFormat = textField.defaultTextFormat;
-        
             addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
         }
     
@@ -541,7 +504,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          *  to create TextLines in this Sprite.
          */
         // TODO only declared public for debugging, switch to private for production
-        public var textContainerManager:TextContainerManager;
+        public var textContainerManager:LzTextContainerManager;
     
         //--------------------------------------------------------------------------
         //
@@ -683,6 +646,8 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         //  alwaysShowSelection
         //----------------------------------
     
+        private var _alwaysShowSelection:Boolean = true;
+
         /**
          *  @see flash.text.TextField#alwaysShowSelection
          * 
@@ -692,8 +657,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function get alwaysShowSelection():Boolean
         {
-            Debug.info("notImplemented alwaysShowSelection", this);
-            return false;
+            return _alwaysShowSelection;
         }
     
         /**
@@ -701,7 +665,29 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function set alwaysShowSelection(value:Boolean):void
         {
-            Debug.info("notImplemented alwaysShowSelection", this);
+            if (value != _alwaysShowSelection) {
+                _alwaysShowSelection = value;
+
+                //public function SelectionFormat(rangeColor:uint = 0xffffff, rangeAlpha:Number = 1.0,
+                // rangeBlendMode:String = "difference", pointColor:uint = 0xffffff,
+                // pointAlpha:Number = 1.0, pointBlendMode:String = "difference", pointBlinkRate:Number = 500)
+
+                var config:Configuration = Configuration(TextFlow.defaultConfiguration).clone();
+                if (value) {
+                    config.unfocusedSelectionFormat = new SelectionFormat(0xffffff, 1, BlendMode.DIFFERENCE, 0xffffff, 0);
+                } else {
+                    config.unfocusedSelectionFormat = new SelectionFormat(0xffffff, 0, BlendMode.DIFFERENCE, 0xffffff, 0);
+                }
+
+                // Need to regenerate the textFlow, adobe sez you can't change it's config after it's been rendered:
+                // http://forums.adobe.com/thread/623430?tstart=0
+            
+                setFlag(FLAG_TEXT_LINES_INVALID |
+                        FLAG_GRAPHICS_INVALID);
+
+                validateNow();
+            }
+
         }
     
         //----------------------------------
@@ -1257,10 +1243,6 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         //----------------------------------
     
         /**
-         *  This property has not been implemented in LzTLFTextField
-         *  because LzTLFTextField does not support editing.
-         *  Accessing it will throw a runtime error.
-         *
          *  @see flash.text.TextField#maxChars
          * 
          *  @playerversion Flash 10
@@ -1269,8 +1251,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function get maxChars():int
         {
-            Debug.info("notImplemented maxChars", this);
-            return Infinity;
+            return textContainerManager.maxChars;
         }
     
         /**
@@ -1278,7 +1259,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function set maxChars(value:int):void
         {
-            Debug.info("notImplemented maxChars", this);
+            textContainerManager.maxChars = value;
         }
     
         //----------------------------------
@@ -1311,11 +1292,40 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function get maxScrollV():int
         {
-            // TODO [hqm 2010-06] how do we compute this? controller.getContentBounds() - controller.compositionHeight???
+            // We want to return the maxmimum (line) scroll value such
+            // that if you scroll to there, the bottom line of text
+            // will appear at the bottom of the visible text area.
+            //
+            // We are computing this by taking the text content height
+            // (contentBounds), and subtracting the visible view height.
+
+            // TODO [hqm 2010-07] I can't seem to get a correct value
+            // from the call to getContentbounds() unless I actually
+            // scroll the text field to a large value and back. The
+            // content height comes back too small otherwise. Is there
+            // something about getContentbounds that I don't know??
+
+            var prev:Number = textContainerManager.verticalScrollPosition;
+            textContainerManager.verticalScrollPosition = Infinity;
+            textContainerManager.verticalScrollPosition = prev;
+
             var bounds:Rectangle = textContainerManager.getContentBounds();
-            return Math.max (0, Math.ceil(bounds.height - textContainerManager.compositionHeight));
+            return Math.max (0, pixelsToLines(Math.ceil(bounds.height - textContainerManager.compositionHeight)) + 1);
         }
     
+        // For compatibility with TextField, The first "line" number starts at 1, not 0. 
+        public function pixelsToLines(pix:int):int {
+            var bounds:Rectangle = textContainerManager.getContentBounds();
+            var lineheight:Number = bounds.height / textContainerManager.numLines;
+            return Math.floor( (pix / Math.ceil(lineheight)) + 1);
+        }
+
+        public function linesToPixels(lines:int):int {
+            var bounds:Rectangle = textContainerManager.getContentBounds();
+            var lineheight:Number = bounds.height / textContainerManager.numLines;
+            return Math.floor(lines * Math.ceil(lineheight));
+        }
+
         //----------------------------------
         //  mouseWheelEnabled
         //----------------------------------
@@ -1400,10 +1410,6 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         //----------------------------------
     
         /**
-         *  This property has not been implemented in LzTLFTextField
-         *  because LzTLFTextField does not support scrolling.
-         *  Accessing it will throw a runtime error.
-         *  
          *  @see flash.text.TextField#restrict
          * 
          *  @playerversion Flash 10
@@ -1412,8 +1418,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function get restrict():String
         {
-            Debug.info("notImplemented restrict", this);
-            return "";
+            return textContainerManager.restrict;
         }
     
         /**
@@ -1421,7 +1426,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function set restrict(value:String):void
         {
-            Debug.info("notImplemented restrict", this);
+            textContainerManager.restrict = "["+value+"]";
         }
     
         //----------------------------------
@@ -1465,15 +1470,17 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function get scrollV():int
         {
-            return Math.ceil(textContainerManager.verticalScrollPosition);
+            return pixelsToLines(textContainerManager.verticalScrollPosition);
         }
     
         /**
-         *  @private
+         * For compatibility with TextField, the units are lines, not pixels
          */
         public function set scrollV(value:int):void
         {
-            textContainerManager.verticalScrollPosition = value;
+            if (textFlow != null) {
+                textContainerManager.verticalScrollPosition = linesToPixels(value-1);
+            }
         }
     
         //----------------------------------
@@ -1505,10 +1512,6 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         //----------------------------------
     
         /**
-         *  This property has not been implemented in LzTLFTextField
-         *  because LzTLFTextField does not support selection.
-         *  Accessing it will throw a runtime error.
-         *
          *  @see flash.text.TextField#selectionBeginIndex
          * 
          *  @playerversion Flash 10
@@ -1517,7 +1520,8 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function get selectionBeginIndex():int
         {
-            throw new Error(notImplemented("selectionBeginIndex"));
+            var selmgr:ISelectionManager = textContainerManager.beginInteraction();
+            return selmgr.absoluteStart;
         }
     
         //----------------------------------
@@ -1525,10 +1529,6 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         //----------------------------------
     
         /**
-         *  This property has not been implemented in LzTLFTextField
-         *  because LzTLFTextField does not support selection.
-         *  Accessing it will throw a runtime error.
-         * 
          *  @see flash.text.TextField#selectionEndIndex
          * 
          *  @playerversion Flash 10
@@ -1537,7 +1537,8 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function get selectionEndIndex():int
         {
-            throw new Error(notImplemented("selectionEndIndex"));
+            var selmgr:ISelectionManager = textContainerManager.beginInteraction();
+            return selmgr.absoluteEnd;
         }
     
         //----------------------------------
@@ -1854,16 +1855,12 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
                     textContainerManager.editingMode = EditingMode.READ_WRITE;
                     _enabled = true;
                     _selectable = true;
-                    mouseChildren = true;
-                    mouseEnabled = true;
                     textContainerManager.updateContainer();
-
                     // hqm [2010-06] This call to beginInteraction creates our
                     // custom EditManager or SelectionManager, which is the
                     // only way I have found to get mouse events, such as
                     // mouseOver, mouseOut.
                     textContainerManager.beginInteraction();
-
                 } else {
                     throw new Error("setting LzTLFTextField to type 'input' but textContainerManager is null, need to set htmlText first");
                 }
@@ -1872,6 +1869,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
                     _type = value;
                     // changed to an non-editable field
                     if (textContainerManager != null) {
+                        textContainerManager.beginInteraction();
                         textContainerManager.editingMode = EditingMode.READ_SELECT;
                     }
                 }
@@ -2499,20 +2497,8 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
          */
         public function setSelection(beginIndex:int, endIndex:int):void
         {
-            var selmgr:ISelectionManager = textFlow.interactionManager;
-            if (selmgr != null) {
-                selmgr.selectRange(beginIndex, endIndex);
-                // TODO [hqm 2010-06] is this call to setFocus
-                // required? Can you set selection without having the
-                // focus?  How does this compare with swf8 and HTML5
-                // behavior?
-                selmgr.setFocus();
-             
-                // TODO [hqm 2010-06] we need to decide how to display the selection region, if any,
-                // when the text view does not have the focus. What is the right behavior? Is it settable by user?
-
-                // selmgr.inactiveSelectionFormat = selmgr.unfocusedSelectionFormat = selmgr.currentSelectionFormat;
-            }
+            var selmgr:ISelectionManager = textContainerManager.beginInteraction();
+            selmgr.selectRange(beginIndex, endIndex);
         }
     
         /**
@@ -3179,7 +3165,7 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
         }
 
         private function scrollHandler(event:TextLayoutEvent):void {
-            Debug.info("LzTLFTextField scrollHandler", event.type, event.target);
+            //Debug.info("LzTLFTextField scrollHandler", event.type, event.target);
         }
     
         /**
@@ -3189,7 +3175,6 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
                                          compositionHeight:Number):void
         {
             textFlow = htmlImporter.importToFlow(explicitHTMLText);
-        
             // Unless there is a styleSheet, _htmlText is now invalid
             // and needs to be regenerated on demand,
             // because with htmlText what-you-set-is-not-what-you-get.
@@ -3205,10 +3190,16 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
                 StatusChangeEvent.INLINE_GRAPHIC_STATUS_CHANGE,
                 inlineGraphicStatusChangeHandler);
                     
-            if (!textContainerManager)
-                textContainerManager = new LzTextContainerManager(this, null, this);
-            
+            if (!textContainerManager) {
+                textContainerManager = new LzTextContainerManager(this, null);
+            }
+            var selmgr:ISelectionManager = textContainerManager.beginInteraction();
+
             textContainerManager.addEventListener(CompositionCompleteEvent.COMPOSITION_COMPLETE, compositionCompleteHandler);
+
+            textFlow.addEventListener(
+                FlowOperationEvent.FLOW_OPERATION_BEGIN,
+                textFlow_flowOperationBeginHandler);
 
             textContainerManager.compositionWidth = compositionWidth;
             textContainerManager.compositionHeight = compositionHeight;
@@ -3224,6 +3215,13 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
             textContainerManager.swfContext = fontContext as ISWFContext;
         
             textContainerManager.setTextFlow(textFlow);
+
+            //public function SelectionFormat(rangeColor:uint = 0xffffff, rangeAlpha:Number = 1.0,
+            // rangeBlendMode:String = "difference", pointColor:uint = 0xffffff,
+            // pointAlpha:Number = 1.0, pointBlendMode:String = "difference", pointBlinkRate:Number = 500)
+            selmgr.unfocusedSelectionFormat = new SelectionFormat(0xffff00, 1.0, "difference", 0xffffff, 1.0, "difference", 500);
+            selmgr.focusedSelectionFormat = new SelectionFormat(0x00ffff, 1.0, "difference", 0xffffff, 1.0, "difference", 500);
+            selmgr.inactiveSelectionFormat = new SelectionFormat(0xff00ff, 1.0, "difference", 0xffffff, 1.0, "difference", 500);
 
             // Add a formatResolver if there is a style sheet.  Force a flow
             // composer to be created, if there isn't one, so the format resolver
@@ -3245,6 +3243,24 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
             // TLF takes care of clipping so none should be needed here.
             clipWidth = _textWidth;
         }
+
+        function textFlow_flowOperationBeginHandler(event:FlowOperationEvent):void
+        {
+            //trace("operationBegin");
+        
+            //Debug.info("textFlow_flowOperationBeginHandler", event.operation);
+            var op:FlowOperation = event.operation;
+
+            // If the user presses the Enter key in a single-line TextView,
+            // we cancel the paragraph-splitting operation and instead
+            // simply dispatch an 'enter' event.
+            if (op is SplitParagraphOperation && !multiline)
+            {
+                //Debug.info("got SplitParagraphOperation");
+                event.preventDefault();
+            }
+        }
+
 
         /**
          *  @private
@@ -3359,6 +3375,13 @@ public class LzTLFTextField extends Sprite implements IFontContextComponent
 
             invalidate();
         }
+
+
+
+
+
+
+
     }#
 
 }

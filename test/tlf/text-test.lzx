@@ -1,4 +1,13 @@
-<canvas width="100%" height="80%" layout="axis:y;spacing:4">
+<canvas width="100%" height="66%" layout="axis:y;spacing:4">
+
+<include href="lz/button.lzx"/>
+
+<view x="600" bgcolor="#ccaacc">
+  <handler name="onidle" reference="lz.Idle">
+    disp.setAttribute('text', i2.getSelectionPosition()+"..."+i2.getSelectionSize());
+  </handler>
+  <text id="disp" width="600" text="selection i1 size"/>
+</view>
 
 <class name="ttext" extends="text"
        onmouseover="Debug.info('onmouseover')"
@@ -24,8 +33,8 @@
            clickable="true" >clickable, auto width single line courier fontsize 12</ttext>
     <text hasdirectionallayout="true" id="t4" bgcolor="#cccccc" selectable="true" >auto width single line selectable</text>
     <ttext id="t5" bgcolor="#cccccc" clickable="true" >clickable auto width single line clickable</ttext>
-    <text id="t6" fontsize="24" hasdirectionallayout="true" direction="rtl" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ RTL </text>
-    <text id="t7" fontsize="24" hasdirectionallayout="true" direction="ltr" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ LTR </text>
+    <text id="t6" selectable="true" fontsize="24" hasdirectionallayout="true" direction="rtl" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ RTL </text>
+    <text id="t7" selectable="true"  fontsize="24" hasdirectionallayout="true" direction="ltr" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ LTR </text>
                 
 
   </view>
@@ -35,8 +44,13 @@
 <view layout="axis:x;spacing:4">
   <text>single line inputtext:</text>
   <view layout="axis:y;spacing:4">
+    <inputtext id="n1" bgcolor="#cccccc" width="250"> NATIVE single line input text</inputtext>
     <inputtext id="i1" bgcolor="#cccccc" hasdirectionallayout="true" width="250"> single line input text</inputtext>
     <inputtext id="i2" fontsize="24" bgcolor="#cccccc"  width="450" hasdirectionallayout="true"> single line input text fontsize 24</inputtext>
+    <text>pattern = [abcd] maxlength = 4</text>
+    <inputtext id="i3" fontsize="12" pattern="[abcd]*" maxlength="4" 
+               bgcolor="#cccccc"  width="450" hasdirectionallayout="true">aaaa</inputtext>
+
   </view>
 </view>
 
@@ -59,10 +73,7 @@ and default font and font size.
    <inputtext width="200" height="200" id="k3"  bgcolor="#cccccc" 
               multiline="true" 
               hasdirectionallayout="true"
-              onmouseover="Debug.info('onmouseover')"
-              onmouseup="Debug.info('onmouseup')"
-              onmousedown="Debug.info('onmousedown')"
-              onmouseout="Debug.info('onmouseout')"
+
               
 > 
 Multiline input text with width of 200 height 200
@@ -74,6 +85,7 @@ and default font and font size.
                fontsize="24" hasdirectionallayout="true" direction="rtl" >א בְּרֵאשִׁית בָּרָא אֱלֹהִים אֵת הַשָּׁמַיִם וְאֵת הָאָרֶץ RTL </inputtext>
 
 </view>
+
 
 
 

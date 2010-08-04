@@ -28,6 +28,7 @@ public class LzTextSprite extends LzSprite {
         import flash.text.TextFieldAutoSize;
         import flash.text.TextFormat;
         import flash.text.TextLineMetrics;
+        import flash.text.TextFieldType;
         import flashx.textLayout.formats.Direction;
         import flash.ui.*;
         import flash.utils.getDefinitionByName;
@@ -128,8 +129,12 @@ public class LzTextSprite extends LzSprite {
                     this.__mouseEvent(e);
                 }
             } else if (textfield.selectable) {
-                // ignore mouse-event for swf8 compatibility
-                this.__ignoreMouseEvent(e);
+                if (type == MouseEvent.DOUBLE_CLICK) {
+                    this.handleMouse_DOUBLE_CLICK(e);
+                } else {
+                    // ignore mouse-event for swf8 compatibility
+                    this.__ignoreMouseEvent(e);
+                }
             } else {
                 // forward mouse-event to next sprite
                 this.__forwardMouseEventToSprite(e);
@@ -206,7 +211,7 @@ public class LzTextSprite extends LzSprite {
                     if (type == MouseEvent.MOUSE_OVER || type == MouseEvent.MOUSE_OUT) {
                         // don't report onmouseover/out events if object didn't change
                         var relObj:InteractiveObject = e.relatedObject;
-                        if (relObj is TextField && relObj.parent is LzTextSprite) {
+                        if ((relObj is TextField || relObj is LzTLFTextField) && relObj.parent is LzTextSprite) {
                             // not again a textfield!
                             var lztext:LzTextSprite = LzTextSprite(relObj.parent);
                             if (lztext.forwardsMouse) {
@@ -305,7 +310,7 @@ public class LzTextSprite extends LzSprite {
                 if (obj is Bitmap) {
                     // need to use parent for Bitmap
                     obj = obj.parent;
-                } else if (obj is TextField && obj.parent is LzTextSprite) {
+                } else if ((obj is TextField || obj is LzTLFTextField) && obj.parent is LzTextSprite) {
                     // skip all mouse-forwarding LzTextSprites
                     if (LzTextSprite(obj.parent).forwardsMouse) {
                         continue;
@@ -348,6 +353,10 @@ public class LzTextSprite extends LzSprite {
         var scrollevents = false;
         function setScrollEvents(on) {
             this.scrollevents = on;
+            // If you want to get updated before the next frame renders, need to set renderImmediate=true
+            if (textfield is LzTLFTextField) {
+                textfield.renderImmediate = true;
+            }
         }
 
         function __handleScrollEvent(e:Event = null) :void {
@@ -388,13 +397,13 @@ public class LzTextSprite extends LzSprite {
         override public function setWidth( w:Number ):void {
             super.setWidth(w);
             textfield.width = w;
-            this.__handleScrollEvent();
+            __handleScrollEvent();
         }
 
         override public function setHeight( h:Number ):void {
             super.setHeight(h);
             textfield.height = h;
-            this.__handleScrollEvent();
+            __handleScrollEvent();
         }
 
         private function createTextField(nx:Number, ny:Number, w:Number, h:Number):TextField {
@@ -412,8 +421,7 @@ public class LzTextSprite extends LzSprite {
         }
 
 
-        // TODO [hqm 2010-07] make this private
-        public function createTLFTextField(nx:Number, ny:Number, w:Number, h:Number):LzTLFTextField {
+        private function createTLFTextField(nx:Number, ny:Number, w:Number, h:Number):LzTLFTextField {
             var tfield:LzTLFTextField = new LzTLFTextField();
             tfield.width = w;
             tfield.height = h;
@@ -423,7 +431,6 @@ public class LzTextSprite extends LzSprite {
             tfield.antiAliasType = AntiAliasType.ADVANCED;
             tfield.text = "";
             tfield.tabEnabled = LFCApplication.textfieldTabEnabled;
-            //tfield.cacheAsBitmap = true;
             addChild(tfield);
             tfield.renderImmediate = true;
             return tfield;
@@ -563,6 +570,7 @@ public class LzTextSprite extends LzSprite {
                 // you can't set defaultTextFormat if a style sheet is applied
                 textfield.htmlText = this.text;
             }
+            __handleScrollEvent();
             if (this.initted) this.owner._updateSize();
         }
 
@@ -609,6 +617,9 @@ public class LzTextSprite extends LzSprite {
                 if (theight == 0) theight = this.lineheight;
                 this.setHeight(theight + LzTextSprite.PAD_TEXTHEIGHT);
             }
+
+            __handleScrollEvent();
+
             if (this.initted) this.owner._updateSize();
         }
 
@@ -667,10 +678,12 @@ public class LzTextSprite extends LzSprite {
             } else {
                 textfield.text = "__ypgSAMPLE__";
             }
-            // we've got text metrics, We can turn off forced rendering now, 
+
             var lm:TextLineMetrics = textfield.getLineMetrics(0);
 
             if (textfield is LzTLFTextField) {
+                // We've got the text metrics, We can turn off forced
+                // rendering now.
                 textfield.renderImmediate = false;
             }
 
@@ -826,6 +839,7 @@ function setPattern (val:String) :void {
 function setSelection(start:Number, end:Number) :void {
     textfield.setSelection(start, end);
     textfield.alwaysShowSelection = true;
+
 }
 
 function setResize ( val:Boolean ) :void {

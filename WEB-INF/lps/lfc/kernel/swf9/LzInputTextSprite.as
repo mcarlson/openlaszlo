@@ -21,6 +21,9 @@ public class LzInputTextSprite extends LzTextSprite {
         import flash.text.TextField;
         import flash.text.TextFormat;
         import flash.text.TextFieldType;
+        import flash.events.FocusEvent;
+        import flash.events.MouseEvent;
+
     }#
 
     #passthrough  {
@@ -69,21 +72,30 @@ public class LzInputTextSprite extends LzTextSprite {
  
         textfield.addEventListener(Event.CHANGE        , __onChanged);
         //textfield.addEventListener(TextEvent.TEXT_INPUT, __onTextInput);
+
+
         textfield.addEventListener(FocusEvent.FOCUS_IN , __gotFocus);
         textfield.addEventListener(FocusEvent.FOCUS_OUT, __lostFocus);
-
         this.hasFocus = false;
     }
+
 
     /**
      * Called from LzInputText#_gotFocusEvent() after focus was set by lz.Focus
      * @access private
      */
     public function gotFocus () :void {
-        if ( this.hasFocus ) { return; }
+        if ( this.hasFocus) { return; }
         // assign keyboard control
-        LFCApplication.stage.focus = this.textfield;
         this.select();
+
+        // N.B. [hqm 2010-07] For bidi text (LzTLFTextField), I had to
+        // put this call to set focus *after* the select() above,
+        // otherwise the focus gets blurred when you set the
+        // selection. This doesn't happen for native TextField. 
+        // JIRA LPP-9257 tracks this.
+        LFCApplication.stage.focus = this.textfield;
+
         this.hasFocus = true;
     }
 
@@ -124,24 +136,11 @@ public class LzInputTextSprite extends LzTextSprite {
 
     /**
      * @access private
-     * TODO [hqm 2008-01] Does we still need this workaround???
      */
     function __lostFocus (event:FocusEvent) :void {
-        // defer execution, see swf8 kernel
-        LzTimeKernel.setTimeout(this.__handlelostFocus, 1, event);
-    }
-
-    /**
-     * TODO [hqm 2008-01] Does this comment still apply? Do we still need this workaround???
-     *
-     * must be called after an idle event to prevent the selection from being 
-     * cleared prematurely, e.g. before a button click.  If the selection is 
-     * cleared, the button doesn't send mouse events.
-     * @access private
-     */
-    function __handlelostFocus (event:Event) :void {
         if (owner) owner.inputtextevent('onblur');
     }
+
 
     /**
      * Register to be called when the text field is modified. Convert this
@@ -183,7 +182,7 @@ public class LzInputTextSprite extends LzTextSprite {
      */
     static function findSelection() :LzInputText {
         var f:InteractiveObject = LFCApplication.stage.focus;
-        if (f is TextField && f.parent is LzInputTextSprite) {
+        if ((f is TextField || f is LzTLFTextField) && f.parent is LzInputTextSprite) {
             return (f.parent as LzInputTextSprite).owner;
         }
         return null;

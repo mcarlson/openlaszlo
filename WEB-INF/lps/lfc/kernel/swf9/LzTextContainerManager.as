@@ -20,6 +20,9 @@ public class LzTextContainerManager extends TextContainerManager {
         import flashx.textLayout.container.TextContainerManager;
         import flashx.textLayout.elements.IConfiguration;
         import flash.events.ContextMenuEvent;
+        import flash.events.FocusEvent;
+        import flash.events.MouseEvent;
+        import flash.events.TextEvent;
         import flash.ui.ContextMenu;
         import flashx.undo.IUndoManager;
         import flashx.textLayout.edit.ISelectionManager;
@@ -28,51 +31,26 @@ public class LzTextContainerManager extends TextContainerManager {
         
         #passthrough {
 
-        // Pointer back to the owner LzTLFTextField, so we can forward mouse and keyboard events, and
-        // check status flags like clickable, enabled, and selectable, in order to display proper cursor
-        public var textfield:LzTLFTextField;
+        // restrict entry of chars to anything in this regexp
+        public var restrict:String = null;
 
-        public function LzTextContainerManager(container:Sprite, configuration:IConfiguration, owner:LzTLFTextField) {
+        // max number of chars, an int value, 0 means unlimited
+        public var maxChars:int = 0;
+
+        public var password:Boolean = false;
+
+        public function LzTextContainerManager(container:Sprite, configuration:IConfiguration) {
             super(container, configuration);
-            this.textfield = owner;
         }
 
-        /**
-         *  @private
-         */
-        override public function drawBackgroundAndSetScrollRect(scrollX:Number, scrollY:Number):Boolean
-        {
-            return true;
+        override public function textInputHandler(event:TextEvent):void {
+            if (restrict == null || event.text.match(restrict)) {
+                if ((maxChars == 0) || ((maxChars > 0) && (getText("\n").length < maxChars))) {
+                    super.textInputHandler(event);
+                }
+            }
         }
 
-        override protected function createEditManager(undoManager:IUndoManager):IEditManager
-        {
-            //Debug.info("createEditManager LzTLFEditManager");
-            return new LzTLFEditManager(undoManager, textfield);
-        }
-
-        override protected function createSelectionManager():ISelectionManager
-        {
-            //Debug.info("createSelectionManager");
-            return new LzTLFSelectionManager(textfield);
-
-        }
-
-        override public function beginInteraction():ISelectionManager {
-            //Debug.info("beginInteraction");
-            return super.beginInteraction();
-        }
-
-        override public function menuSelectHandler(event:ContextMenuEvent):void
-        {
-            //Debug.info("menuSelectHandler", event);
-            super.menuSelectHandler(event);
-
-        }
-
-        public function makeContextMenu():ContextMenu {
-            return createContextMenu();
-        }
     }#
 }
 

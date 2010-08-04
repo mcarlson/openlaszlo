@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <canvas height="600">
+     <handler name="onmaxscroll" reference="tfield">
+       tfield.setAttribute('scroll', tfield.maxscroll);
+       //Debug.write('onmaxscroll event, scrolling to ', tfield.maxscroll);
+     </handler>
+
+   <view x="600" width="40" height="40"  bgcolor="green" onclick="tfield.setAttribute('scroll',1)"/>
+   <view x="600" y="50" width="40" height="40"  bgcolor="red" onclick="tfield.setAttribute('scroll', tfield.maxscroll)"/>
+   <text>text view height</text>
+   <slider x="600" y="100" name="theslider" 
+           minvalue="13" maxvalue="500" value="200" >
+     <handler name="onvalue">
+       tfield.setAttribute('height', this.value);
+     </handler>
+   </slider>
+
+   <text>scroll</text>
+   <slider x="600" y="140" name="scrollslider" 
+           minvalue="1" maxvalue="${tfield.maxscroll}" value="1" >
+     <handler name="onvalue">
+       tfield.setAttribute('scroll', this.value);
+     </handler>
+   </slider>
+   <button x="650" onclick="tfield.setAttribute('height', 100)">Set field height 100</button>
+   <view width="20" height="1" x="500" y="100" bgcolor="black"/> <text x="520" y="100">100</text>
+   <view width="15" height="1" x="500" y="150" bgcolor="black"/> <text x="520" y="150">150</text>
+   <view width="20" height="1" x="500" y="200" bgcolor="black"/> <text x="520" y="200">200</text>
+   <view width="15" height="1" x="500" y="250" bgcolor="black"/> <text x="520" y="250">250</text>
+    <text hasdirectionallayout="true" bgcolor="#cccccc"
+          name="tfield" multiline="true" height="150" width="500" scrollevents="true" clip="true"
+          selectable="true"
+          >
+        1 Apple set new records for itself with revenue of<br/>
+        2 $10.17 billion and net quarterly profit of $1.61 billion, or $1.78 per <br/>
+        3 diluted share. All figures are up from the same period last year’s $9.6 <br/>
+        4 billion revenue, net quarterly profit of $1.58 billion, or $1.76 per diluted<br/> 
+        5 share. Gross margin remained the same at 34.7 percent.<br/>
+        6 <br/>
+        7 The company is optimistic that it will stay profitable in the upcoming quarter. <br/>
+        8 “Our outstanding results generated over $3.6 billion in cash during the quarter,” <br/>
+        9 said Peter Oppenheimer, Apple’s CFO. “Looking ahead to the second fiscal quarter <br/>
+        10 of 2009, we expect revenue in the range of about $7.6 billion to $8 billion and <br/>
+        11 we expect diluted earnings per share in the range of about $.90 to $1.00.”<br/>
+        12<br/>
+        13 It’s no coincidence that we’ve been seeing more Apple products in people’s hands <br/>
+        14 during their commute, or more MacBooks in coffee shops. Apple said that it sold <br/>
+        15 2,524,000 Macs computers during the quarter, representing nine percent unit <br/>
+        16 growth over the year-ago quarter. 71 percent of those Macs were notebooks, <br/>
+        17 partially thanks to the introduction of the newly designed unibody MacBooks.<br/>
+        18 <br/>
+        19 Apple also sold more iPods than it ever before with 22,727,000 during the <br/>
+        20 quarter, representing three percent unit growth over the year-ago quarter. <br/>
+        21 Quarterly iPhone units sold were 4,363,000, representing 88 percent unit <br/>
+        22 growth over the year-ago quarter (but down from the previous quarter).<br/>
+        23 <br/>
+        24 “Even in these economically challenging times, we are incredibly pleased to <br/>
+        25 report our best quarterly revenue and earnings in Apple history--surpassing $10<br/> 
+        26 billion in quarterly revenue for the first time ever,” said Steve Jobs, <br/>
+        27 Apple’s CEO.<br/>
+        28 <br/>
+        29 Do you credit Apple's recent success to Steve Jobs? Or do you believe that<br/> 
+        30 Jobs' role in Apple is over perceived and the products that the company dishes <br/>
+        31 out should be credited to others like Ive?<br/>
+        32 THIS IS THE LAST LINE!
+    </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
