@@ -850,24 +850,48 @@ if ($debug) {
       <literal>Debug.markObjects()</literal>. This runs in the background and will mark all the
       objects that are currently in use. When you see the output <literal>Trace Done</literal> you
       can move on to the next step. </para>
-    <para> You exercise your application in a way that you expect not to result in any retained
-      storage (or some small amount of retained storage). Run
-      <literal>Debug.findNewObjects()</literal>. This also runs in the background and will find any
-      new objects that have been allocated since the <literal>markObjects</literal> call that have
-      not yet been garbage-collected. When you see the output <literal>Trace Done</literal> you can
-      move on to the next step. </para>
-    <para> Call <literal>Debug.whyAlive()</literal>. This returns a <emphasis role="em">leak
-      list</emphasis>, which you can call <literal>.toString()</literal> on to see
-        <literal>&lt;why&gt;</literal> (<literal>&lt;size&gt;</literal>):
-        <literal>&lt;what&gt;</literal> pairs. <literal>&lt;why&gt;</literal> is the
-      shortest path from <literal>_root</literal> that is keeping the object from being collected;
-        <literal>&lt;size&gt;</literal> is a count of the slots in that object and all its
+    <programlisting>
+     lzx> Debug.markObjects()
+     WARNING: Memory tracing is for experimental use only in this runtime.
+     Marking objects …
+     lzx> DEBUG: 1 loops @ 7590 iterations, 1194.00 milliseconds
+     … done!
+   </programlisting>
+    <para>You exercise your application in a way that you expect not to result in any retained
+      storage (or some small amount of retained storage). </para>
+    <programlisting>
+    lzx> canvas.thisIsALeak = {some: 'new', data: 42}
+    «Object#136| {data: 42, some: 'new'}»
+    </programlisting>
+    <para>Run <code>Debug.findNewObjects()</code>. This also runs in the background and will find
+      any new objects that have been allocated since the <code>markObjects()</code> call that have
+      not yet been garbage-collected. When you see the output <code>done!</code> you can move on to
+      the next step.</para>
+    <programlisting>
+    lzx> Debug.findNewObjects()
+    WARNING: Memory tracing is for experimental use only in this runtime.
+    Finding new objects …
+    lzx> DEBUG: 2 loops @ 3797 iterations, 674.50 milliseconds
+    … done!
+    </programlisting>
+    <para>Call <code>Debug.whyAlive()</code>. This returns a <emphasis>leak list</emphasis>. </para>
+    <programlisting>
+    lzx> Debug.whyAlive()
+    WARNING: Memory tracing is for experimental use only in this runtime.
+    18 smoots [1 objects @ ~18 smoots each]:
+    global.canvas.thisIsALeak: (£18) «Object#136| {…, data: 42, some: 'new'}»
+    «__LzLeaks(2)#140| 18 smoots [1 objects @ ~18 smoots each]»
+    lzx>
+  </programlisting>
+    <para>showing <emphasis>&lt;why&gt;: (&lt;size&gt;):
+      &lt;what&gt;</emphasis> pairs. <emphasis>&lt;why&gt;</emphasis> is the
+      shortest path from global that is keeping the object from being collected;
+        <emphasis>&lt;size&gt;</emphasis> is an approximation (in <ulink
+        url="http://en.wikipedia.org/wiki/Smoot">Smoots</ulink>) of the size of the object and its
       descendants, which is a rough indication of the cost of the object;
-        <literal>&lt;what&gt;</literal> is the debugger representation of the object. You
-      may want to set <literal>Debug.printLength</literal> to a larger value before converting to a
-      string. You can also inspect the <emphasis role="em">leak list</emphasis> to see the objects
-      that have been retained. </para>
-
+        <emphasis>&lt;what&gt;</emphasis> is the debugger representation of the object. You
+      can also inspect the <emphasis>leak list</emphasis> items to see the objects that have been
+      retained. </para>
   </section>
   <section>
     <title condition="dhtml">Debugging in DHTML</title>
