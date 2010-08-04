@@ -1006,7 +1006,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.__keepconstraint = false;
   }
 
-  /** text-align for this text
+/** textalign accepts one of [left, right, center, justify]
    * @lzxtype string
    * @type String
    */
@@ -1025,7 +1025,7 @@ dynamic class LzText extends LzView with LzFormatter {
     this.tsprite.setTextAlign(align);
   }
 
-  /** text-indent for this text
+/** textindent accepts any number which is interpreted as a px value
    * @lzxtype number
    * @type Number
    */
@@ -1040,7 +1040,7 @@ dynamic class LzText extends LzView with LzFormatter {
     }
   }
 
-  /** letter-spacing for this text
+/** letterspacing accepts any number which is interpreted as a px value
    * @lzxtype number
    * @type Number
    */
