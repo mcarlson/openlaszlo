@@ -44,16 +44,18 @@
     setAttribute('key', ['a', 'shift']) or setKeys(['j', 'control'])
     @type [String]
   -->
-<attribute name="key" value="null"/>;
+<attribute name="key" value="null"/>
 <!--- @access private -->
 <setter name="key" args="k">
     var oldKeys = this['keys'];
     if (oldKeys) {
       lz.Keys.removeKeyComboCall(this, oldKeys);
     }
-    // WTF?  See LPP-4982, LPP-7814
-    this.keys = k;
-    lz.Keys.callOnKeyCombo( this , k );
+    if (k) {
+        // WTF?  See LPP-4982, LPP-7814
+        this.keys = k;
+        lz.Keys.callOnKeyCombo( this , k );
+    }
 </setter>
 
 <!--- @access private -->
