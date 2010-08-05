@@ -423,7 +423,7 @@ new value.
 ?>
 
 </section>
-<section><title>Multiframe Resources</title>
+<section id="mulitframe-animation"><title>Animation with Multi-frame Resources</title>
 <para>You can animate a group of images by specifying the directory from which to load the images. All the
 files in that directory will be used for the animation.</para>
   <para>The following example uses the eight <literal>png</literal> files in <literal>resources/spinner/</literal> 

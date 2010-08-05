@@ -125,6 +125,8 @@ In this case, a GIF image:</para>
 
 <para>The resources nested within the resource tag are numbered starting with 1.</para>
 <para>As you can see, OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <sgmltag class="attribute" role="LzView.stretches">stretches</sgmltag> attribute of the view that contains the resource to either <literal>both</literal>, <literal>width</literal> or <literal>height</literal>.</para>
+  
+  <para>You can also use multi-frame resources for animation: see <xref linkend="mulitframe-animation" /> in the <emphasis>Animation</emphasis> chapter.</para>
 
 </section><section id="art_assets.swfs"><title condition="swf">Working with SWFs</title>
 
