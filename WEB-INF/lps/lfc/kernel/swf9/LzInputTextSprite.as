@@ -188,6 +188,14 @@ public class LzInputTextSprite extends LzTextSprite {
         return null;
     }
 
+    override function setSelection(start:Number, end:Number) :void {
+        LFCApplication.stage.focus = this.textfield;
+        super.setSelection(start, end);
+
+    }
+
+
+
     }#  // #passthrough
 
 } // End of LzInputTextSprite

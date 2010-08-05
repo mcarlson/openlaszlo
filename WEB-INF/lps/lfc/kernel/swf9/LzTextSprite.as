@@ -839,7 +839,6 @@ function setPattern (val:String) :void {
 function setSelection(start:Number, end:Number) :void {
     textfield.setSelection(start, end);
     textfield.alwaysShowSelection = true;
-
 }
 
 function setResize ( val:Boolean ) :void {
