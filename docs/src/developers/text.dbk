@@ -15,15 +15,15 @@
   <sgmltag class="element">&lt;inputtext&gt;</sgmltag>
   <remark role="fixme">[unknown tag]</remark>
   <!--unknown tag: inputtext-->
-  tags (
-  <indexterm>
+  tags
+  (<indexterm>
     <primary>lz.text</primary>
   </indexterm>
   <classname>lz.text</classname> and 
   <indexterm>
     <primary>lz.inputtext</primary>
   </indexterm>
-  <classname>lz.inputtext</classname>classes). It assumes you're
+  <classname>lz.inputtext</classname> classes). It assumes you're
   familiar with basic LZX concepts such as views (<xref linkend="views" />), methods, and attributes.</para>
   <para>For a gentle introduction, see 
   <xref linkend="text-tutorial" />.</para>
@@ -68,11 +68,9 @@
     easy to do with LZX constraints. Thus, text can be specified as
     an attribute in the opening tag of basecomponent and
     subclasses, which include all components. For example,</para>
-    <programlisting>&lt;button text="this is a fine kettle of
-    fish"&gt;</programlisting>
+    <programlisting>&lt;button text="this is a fine kettle of fish"&gt;</programlisting>
     <para>is equivalent to</para>
-    <programlisting>&lt;button&gt; this is a fine kettle of fish
-    &lt;/button&gt;</programlisting>
+    <programlisting>&lt;button&gt; this is a fine kettle of fish &lt;/button&gt;</programlisting>
     <para>LZX also includes a text object, 
     <literal>lz.text</literal>, which can be instantiated by using
     the 
@@ -83,17 +81,15 @@
     additional properties such as maximum length, selectability,
     and so forth, which are described later on in this chapter.
     Oddly enough, one of the attributes of the 
-    <sgmltag class="element">&lt;lz.text&gt;</sgmltag> object is 
+    <sgmltag class="element">&lt;text&gt;</sgmltag> object is 
     <literal>text</literal>.</para>
     <para>Thus,</para>
-    <programlisting>&lt;text id="sam" text="King Samuel was a fine
-    hamster"&gt;</programlisting>
+    <programlisting>&lt;text id="sam" text="King Samuel was a fine hamster"&gt;</programlisting>
     <para>is equivalent to</para>
-    <programlisting>&lt;text id="sam"&gt; King Samuel was a fine
-    hamster &lt;/text&gt;</programlisting>
+    <programlisting>&lt;text id="sam"&gt; King Samuel was a fine hamster &lt;/text&gt;</programlisting>
     <para>In each case we have defined an 
     <literal>lz.text</literal> object with an id of "sam" whose text
-    attribute is set to the string King Samuel was a fine hamster,
+    attribute is set to the string "King Samuel was a fine hamster",
     which can be marked up with the supported HTML markup supported
     by LZX, as defined below. In this document, we have tried to
     make clear when we are talking about text as text, and when we
@@ -109,11 +105,11 @@
     <title>Text width and height</title>
     <para>Generally speaking, unless an explicit width and height
     are specified as attributes, the text field will by default be
-    sized to a width and height which encloses its compile-time
-    text content. The text field can be set to automatically resize
+    sized to a width and height which encloses its
+    text content. The text field can be set to avoid to automatically resize
     itself when its value is modified at runtime, by setting the
     attribute 
-    <literal>resize="true"</literal>.</para>
+    <literal>resize="false"</literal>.</para>
     <para>The exception to this rule is when the 
     <indexterm>
       <primary>text</primary>
@@ -133,9 +129,7 @@
     </indexterm>
     <sgmltag class="element">&lt;text&gt;</sgmltag>, as explained
     below.</para>
-    <programlisting>&lt;text resize="true" bgcolor="#ffcccc"
-    name="t1"&gt;Initial text from
-    server.&lt;/text&gt;</programlisting>
+    <programlisting>&lt;text bgcolor="#ffcccc"&gt;Initial text from server.&lt;/text&gt;</programlisting>
     <para>Text can be set to automatically wrap at the right
     margin, by setting the attribute 
     <literal>multiline="true"</literal>.</para>
@@ -201,7 +195,7 @@
       <sgmltag class="element">&lt;img&gt;</sgmltag> is also
       supported, but with some caveats. See below.</para>
       <para>The examples below show how to use XHTML tags in text
-      content:</para>
+      content.</para>
       <para>For font style, the text element itself supports
       attributes for setting the font parameters. These are the 
       <indexterm>
@@ -288,18 +282,14 @@
         <title>Text Scrolling</title>
         <para>Text fields can be scrolled using the 
         <indexterm>
-          <primary>
-            <literal>setXScroll()</literal>
-          </primary>
+          <primary>xscroll</primary>
         </indexterm>
-        <methodname>setXScroll()</methodname> and 
+        <literal>xscroll</literal> and 
         <indexterm>
-          <primary>
-            <literal>setYScroll()</literal>
-          </primary>
+          <primary>yscroll</primary>
         </indexterm>
-        <methodname>setYScroll()</methodname> methods. The arguments
-        to these functions set the pixel position of the top line
+        <literal>yscroll</literal> attributes. These attributes
+        set the pixel position of the top line
         of text relative to the text view bounding box, and should
         be less than or equal to zero. When the text is scrolled
         horizontally or vertically, an 
@@ -358,9 +348,9 @@
       <literal>multiline=true</literal> output text field, the
       system computes a property 
       <indexterm>
-        <primary>text.scrollHeight</primary>
+        <primary>text.scrollheight</primary>
       </indexterm>
-      <sgmltag class="attribute">text.scrollHeight</sgmltag> which
+      <sgmltag class="attribute">text.scrollheight</sgmltag> which
       which you may examine. This field is not maintained for input
       text.</para>
       <para>There are two basic classes for displaying text, 
@@ -391,11 +381,6 @@
       <section>
         <title>Resizable text fields</title>
         <!-- changed to reflect the fact that resize is now true by default -->
-        <para>Take care when using text whose width must be
-        calculated at run time. Because the compiler does not know
-        what the text is (and the text field doesn't even know what
-        it is until the constraints evaluate), it can't really know
-        at construct time how wide to make itself.</para>
         <para>If you set 
         <literal>resize=false</literal>, the field will not expand to
         fit the text. In the example below, notice how the string is truncated as you move the slider.</para>
@@ -451,7 +436,7 @@
     <indexterm>
       <primary>text</primary>
     </indexterm>
-    <sgmltag class="attribute">text</sgmltag>attribute.</para>
+    <sgmltag class="attribute">text</sgmltag> attribute.</para>
     <example role="live-example">
       <title>Text views</title>
       <programlisting language="lzx">
@@ -478,9 +463,6 @@
       peculiarities:</para>
         
       <itemizedlist spacing="compact">
-        <listitem><para>Unlike lz.views, lz.text elements do not
-        auto-size to fit their contents. Use the resize or
-        multiline attributes to achieve this.</para></listitem>
         <listitem><para>Even though lz.text is a subclass of lz.view, you
         cannot nest views inside of it.</para></listitem>
         <listitem><para>Data-bound text fields will automatically display
@@ -578,15 +560,10 @@
       <sgmltag class="attribute">resize</sgmltag> attribute on a text field
       will cause it to be resized to fit its text content at
       runtime, whenever the 
-      <methodname role="LzText.prototype.setText">
-      setText()</methodname> method is called.</para>
-      <para>Note: If no initial text content is specified, i.e.,
-      you have an empty tag such as <literal>&lt;text/&gt;</literal>, then the text
-      view will be sized to some nonzero default width and height.
-      This helps in debugging applications, (especially in the case
-      of text views which are initialized from datapaths) because
-      zero width text fields would be invisible no matter what
-      their text value was set to at runtime.</para>
+      <indexterm>
+        <primary>text</primary>
+      </indexterm>
+      <sgmltag class="attribute">text</sgmltag> attribute is changed.</para>
       <example role="live-example">
         <title>Resizing text</title>
         <programlisting language="lzx">
@@ -655,7 +632,7 @@
                 <literal>&lt;font [color="#xxxxxx"] [face="Type Face"] [size="Type Size"]&gt;</literal>
               </entry>
               <entry>
-                <programlisting>&lt;font color="#ff0000" face="myfont" size="12"&gt;Red text in LPS font 'myfont'&lt;/font&gt;</programlisting>
+                <programlisting>&lt;font color="#ff0000" face="myfont" size="12"&gt;Red text in font 'myfont'&lt;/font&gt;</programlisting>
               </entry>
             </row>
             <row>
@@ -676,7 +653,7 @@
             </row>
             <row>
               <entry>
-                <literal>u</literal>
+                <literal>&lt;u&gt;</literal>
               </entry>
               <entry>
                 <programlisting>&lt;u&gt;underline text&lt;/u&gt;</programlisting>
@@ -906,6 +883,49 @@
         <programlisting language="lzx">
           <textobject>
             <textdata fileref="programs/text-$20.lzx" />
+          </textobject>
+        </programlisting>
+      </example>
+      <para />
+    </section>
+    <section id="text.advanced-styles">
+      <title>Advanced Styles</title>
+      <para>Supported advanced text styles include the
+      <sgmltag class="attribute">textalign</sgmltag>, <sgmltag class="attribute">textindent</sgmltag>,
+      <sgmltag class="attribute">letterspacing</sgmltag> and <sgmltag class="attribute">textdecoration</sgmltag>
+      attribute.</para>
+
+      <itemizedlist spacing="compact">
+        <listitem><para>
+          <literal>textalign</literal>:
+          Specifies how to align the text content within the <sgmltag class="element">&lt;text&gt;</sgmltag>
+          view. Valid values are <literal>left</literal> (default), <literal>center</literal>, <literal>right</literal>
+          and <literal>justify</literal>.
+        </para></listitem>
+
+        <listitem><para>
+          <literal>textindent</literal>:
+          By adjusting this attribute, you can describe how to indent the first line of a paragraph. The attribute is
+          interpreted as a pixel value with 0 being the default.
+        </para></listitem>
+
+        <listitem><para>
+          <literal>letterspacing</literal>:
+          Can be used to change the inter-character space. The attribute is interpreted as a pixel value,
+          negative values give narrower spacing whereas positive values give wider spacing. The default value is 0.
+        </para></listitem>
+
+        <listitem><para>
+          <literal>textdecoration</literal>:
+          Allows to add decorations to the text. Valid values are <literal>none</literal> (default) and <literal>underline</literal>.
+        </para></listitem>
+      </itemizedlist>
+
+      <example role="live-example">
+        <title>Advanced styles for text</title>
+        <programlisting language="lzx">
+          <textobject>
+            <textdata fileref="programs/text.advanced-styles.lzx" />
           </textobject>
         </programlisting>
       </example>
