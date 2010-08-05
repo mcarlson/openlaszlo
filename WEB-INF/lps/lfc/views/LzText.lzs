@@ -1032,7 +1032,7 @@ dynamic class LzText extends LzView with LzFormatter {
   var textindent :Number = 0;
   /** @access private */
   function $lzc$set_textindent (indent:Number) :void {
-    if (indent < 0 || isNaN(indent)) {
+    if (isNaN(indent)) {
       if ($debug) Debug.warn('invalid text indent', indent);
     } else {
       this.textindent = indent;
@@ -1047,7 +1047,7 @@ dynamic class LzText extends LzView with LzFormatter {
   var letterspacing :Number = 0;
   /** @access private */
   function $lzc$set_letterspacing (spacing:Number) :void {
-    if (spacing < 0 || isNaN(spacing)) {
+    if (isNaN(spacing)) {
       if ($debug) Debug.warn('invalid letter spacing', spacing);
     } else {
       this.letterspacing = spacing;
