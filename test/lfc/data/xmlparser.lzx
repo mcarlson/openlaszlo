@@ -29,8 +29,14 @@
         assertNull(LzDataElement.stringToLzData("<a><![CDATA[</a>"));
         assertNull(LzDataElement.stringToLzData("<a><!" + "--</a>"));
         assertNull(LzDataElement.stringToLzData("<?xml version=\"1.0\" >"));
-        assertNull(LzDataElement.stringToLzData("<a><b:c xmlns:b=\"abc\"></c></a>"));
-        assertNull(LzDataElement.stringToLzData("<a><b:c xmlns:b=\"abc\"></d:c></a>"));
+        if ($as3) {
+            // invalid xml, but parsed by flash
+            // this is a regression, wasn't valid before FlashPlayer10.1
+            // [https://bugs.adobe.com/jira/browse/FP-5177]
+        } else {
+            assertNull(LzDataElement.stringToLzData("<a><b:c xmlns:b=\"abc\"></c></a>"));
+            assertNull(LzDataElement.stringToLzData("<a><b:c xmlns:b=\"abc\"></d:c></a>"));
+        }
         if ($as2) {
             // invalid xml, but parsed by flash
         } else if ($as3) {
@@ -113,6 +119,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2009-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
