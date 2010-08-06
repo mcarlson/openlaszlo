@@ -133,8 +133,10 @@ lz.embed.iframemanager = {
         iframe.style.position = 'absolute';
 
         if (typeof owner == 'string') {
-            // Use Flash-specific callback
-            lz.embed.applications[owner].callMethod('lz.embed.iframemanager.__setiframeid("' + id + '")');
+            // Flash-specific callback
+            // Use timeout to ensure __setiframeid() is called after create() 
+            // returns - see LPP-9272
+            setTimeout("lz.embed.applications." +  owner + ".callMethod('lz.embed.iframemanager.__setiframeid(\"" + id + "\")')", 0);
         } else {
             owner.setiframeid(id);
         }
@@ -273,12 +275,13 @@ lz.embed.iframemanager = {
         if (iframe.owner.__iframecallback) {      
             // dhtml
             iframe.owner.__iframecallback(event, arg);
-        }
-        else {
+        } else {
             // Flash
             if (lz.embed[iframe.owner]) {
-                arg = (arg) ? ", '" + arg + "'" : '';
-                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "','" + event + "','" + arg + "')");
+                // quote arg if present
+                arg = (arg != null) ? ", '" + arg + "'" : '';
+                //console.log("lz.embed.iframemanager.__iframecallback('" + id + "','" + event + "'" + arg + ")")
+                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "','" + event + "'" + arg + ")");
             } else {
                 // installing a new player now...
                 return;
