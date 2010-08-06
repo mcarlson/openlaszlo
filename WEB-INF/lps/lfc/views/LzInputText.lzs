@@ -63,7 +63,7 @@ dynamic public class LzInputText extends LzText {
   }
 
 /** If true, the inputtext contents will be obscured
-  * @lzxtype booleanLiteral
+  * @lzxtype boolean
   * @type Boolean
   * @modifiers read-only
   */
@@ -154,6 +154,15 @@ function inputtextevent (eventname:String, value:* = null) :void {
         if (lz.Focus.getFocus() !== this) {
             var tabdown:Boolean = lz.Keys.isKeyDown('tab');
             lz.Focus.setFocus(this, tabdown);
+            if (lz.Focus.getFocus() !== this && this._focused) {
+                // setFocus() doesn't ensure we're actually gaining the focus,
+                // e.g. consider shouldYieldFocus() or side-effects when firing
+                // the onblur-event. In these cases we don't receive an
+                // onblur-event and by that _focused is still true. So we need
+                // to call _gotBlurEvent() manually to ensure the native focus
+                // is removed from the inputtext control [LPP-9170]
+                this._gotBlurEvent();
+            }
         }
     } else if (eventname == 'onchange') {
         // Must use instead of local property so sprite can normalize newlines
@@ -190,7 +199,7 @@ override function updateData () {
 
 
 /** If true, the inputtext will be enabled
-  * @lzxtype booleanLiteral
+  * @lzxtype boolean
   * @type Boolean
   */
     public var enabled = true;

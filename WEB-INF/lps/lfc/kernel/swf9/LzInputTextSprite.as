@@ -132,6 +132,20 @@ public class LzInputTextSprite extends LzTextSprite {
     function __gotFocus (event:FocusEvent) :void {
         // scroll text fields horizontally back to start
         if (owner) owner.inputtextevent('onfocus');
+        if (LFCApplication.stage.focus !== this.textfield) {
+            // stage-focus was changed within focus-in handler,
+            // need to defer reassigning focus to next frame
+            // https://bugs.adobe.com/jira/browse/FP-5021
+            LzTimeKernel.setTimeout(this.updateStageFocus, 1);
+        }
+    }
+
+    /**
+     * This looks like a NOP, but it isn't, see __gotFocus()
+     * @access private
+     */
+    private function updateStageFocus () :void {
+        LFCApplication.stage.focus = LFCApplication.stage.focus;
     }
 
     /**

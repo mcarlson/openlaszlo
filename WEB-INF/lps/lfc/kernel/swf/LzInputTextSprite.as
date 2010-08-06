@@ -196,6 +196,20 @@ LzInputTextSprite.prototype.deselect = function () {
 TextField.prototype.__gotFocus = function (oldfocus) {
     // scroll text fields horizontally back to start
     if (this.__lzview) this.__lzview.inputtextevent('onfocus');
+    if (Selection.getFocus() !== targetPath(this.__LZtextclip)) {
+        // stage-focus was changed within focus-in handler,
+        // need to defer reassigning focus to next frame
+        // https://bugs.adobe.com/jira/browse/FP-5021
+        LzTimeKernel.setTimeout(this.updateStageFocus, 1);
+    }
+}
+
+/**
+ * This looks like a NOP, but it isn't, see __gotFocus()
+ * @access private
+ */
+TextField.prototype.updateStageFocus = function () {
+    Selection.setFocus(Selection.getFocus());
 }
 
 /**
