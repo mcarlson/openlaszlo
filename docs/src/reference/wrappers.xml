@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -442,7 +442,17 @@ string which can be used within a view.  For example:</p>
 &lt;/canvas&gt;
 </example>
 
-<p>The src attribute refers to the filename of any valid resource type, including an optional directory path relative to the directory of the declaration.   Valid resource types for images and animations include: .SWF, .PNG, .JPG, and .GIF; valid audio types include: .MP3.</p>
+<p>The <literal>src</literal> attribute refers to the filename of any valid resource type, including an optional directory path relative to the directory of the declaration.   Valid resource types for images and animations include: .SWF, .PNG, .JPG, and .GIF; valid audio types include: .MP3.</p>
+  
+  <p>The <literal>offsetx</literal> and <literal>offsety</literal> attributes (SWF10 only) allow you to specify an offset of a bitmap resource used for a custom cursor,
+    so that the mouse will align with the proper 'hotspot' in the cursor image. </p>
+    
+    <p>Example: set a custom crosshair cursor from a bitmap resource, with an offset of (-8,-8)</p>
+    
+<programlisting>
+  &lt;resource name=&quot;crosshair&quot; src=&quot;cursor_crosshair.png&quot; offsetx=&quot;-8&quot; offsety=&quot;-8&quot; /&gt;
+  &lt;view height=&quot;40&quot; bgcolor=&quot;#cccccc&quot; width=&quot;100&quot; cursor=&quot;crosshair&quot; /&gt;
+</programlisting>
 
 <p>Audio resources must be MP3 files at one of the following 
 sample rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no 
@@ -472,6 +482,18 @@ For details on multi-frame resources, see <a href="tag-frame.html">frame</a>.
             this name will be set to this object.  If this element is
             within another object, that object's property with this
             name will be set to this object.</text>
+          </doc>
+        </property>
+        <property name="offsetx" type="" modifiers="final">
+          <doc>
+            <tag name="lzxtype"><text>Number</text></tag>
+            <text>The x offset of a bitmap resource used for a custom cursor.</text>
+          </doc>
+        </property>
+        <property name="offsety" type="" modifiers="final">
+          <doc>
+            <tag name="lzxtype"><text>Number</text></tag>
+            <text>The y offset of a bitmap resource used for a custom cursor.</text>
           </doc>
         </property>
         <property name="src" type="" modifiers="final">
