@@ -781,7 +781,9 @@ lz.embed = {
                 versionSearch: "WebKit"
             },
             {
-                string: navigator.userAgent,
+                // string: navigator.userAgent,
+                // subString: "Opera",
+                prop: window.opera,
                 identity: "Opera",
                 versionSearch: "Version"
             },
