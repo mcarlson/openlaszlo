@@ -1,9 +1,9 @@
 /* *****************************************************************************
- * PropertyUtils.java
+ * PropertyReference.java
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -13,7 +13,6 @@ import java.util.*;
 import java.util.logging.*;
 import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.js2doc.JS2DocUtils.InternalError;
-import org.w3c.dom.*;
 
 public class PropertyReference {
 
@@ -105,6 +104,35 @@ public class PropertyReference {
         this.setPropertyMetadata(comment);
 
         return this.cachedProperty;
+    }
+    
+    /**
+     * Updates the property reference's meta-data with additional data.
+     * 
+     * @param moddef
+     *            ASTModifiedDefinition with additional meta-data
+     * @see #setPropertyMetadata(String)
+     */
+    public void updatePropertyMetadata (ASTModifiedDefinition moddef) {
+        if (this.cachedProperty == null) {
+            throw new InternalError("Can't update property meta-data - no property", (SimpleNode) null);
+        }
+        if (moddef.isFinal()) {
+            org.w3c.dom.Element doc = (org.w3c.dom.Element) JS2DocUtils.firstChildNodeWithName(this.cachedProperty, "doc");
+            if (doc == null) {
+                doc = this.cachedProperty.getOwnerDocument().createElement("doc");
+                this.cachedProperty.appendChild(doc);
+            }
+            
+            String keywords = doc.getAttribute("keywords");
+            if (keywords == null) {
+                keywords = "final";
+            } else if (! keywords.contains("final")) {
+                // keywords are space separated, see Comment#appendAsXML(..)
+                keywords += " final";
+            }
+            doc.setAttribute("keywords", keywords);
+        }
     }
     
     public boolean hasValue() {

@@ -31,12 +31,12 @@
 * <example title="Changing the cursor with lz.Cursor">
  * &lt;canvas height="30"&gt;
  *   &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
- *   &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
- *     &lt;method name="setCursor"&gt;
+ *   &lt;button text="Click me to change the cursor for 1/2 second"&gt;
+ *     &lt;handler name="onclick"&gt;
  *       lz.Cursor.setCursorGlobal('waitcursor');
  *       var del = new LzDelegate(lz.Cursor, 'unlock');
  *       lz.Timer.addTimer(del, 500);
- *     &lt;/method&gt;
+ *     &lt;/handler&gt;
  *   &lt;/button&gt;
  * &lt;/canvas&gt;
  * </example>

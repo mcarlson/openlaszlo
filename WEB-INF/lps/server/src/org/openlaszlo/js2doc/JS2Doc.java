@@ -12,9 +12,7 @@ package org.openlaszlo.js2doc;
 import java.io.*;
 import java.util.*;
 import java.util.logging.*;
-import java.util.regex.*;
 import org.openlaszlo.js2doc.JS2DocUtils.InternalError;
-import org.openlaszlo.sc.Compiler;
 import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.utils.FileUtils;
 import org.w3c.dom.*;
@@ -512,9 +510,10 @@ public class JS2Doc {
                     
                 propRef.redefineProperty(nearComment);
                 
-                if (propRef.hasProperty())
+                if (propRef.hasProperty()) {
+                    propRef.updatePropertyMetadata(moddef);
                     propRef.redefineValue(parseNode);
-                else
+                } else
                     logger.warning("couldn't resolve method name");
             }
         }
