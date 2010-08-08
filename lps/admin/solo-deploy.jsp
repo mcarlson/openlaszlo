@@ -16,7 +16,7 @@
 
 <html>
     <head>
-    <title>SOLO Application Deployment Wizard</title>
+    <title>OpenLaszlo Widget Application Deployment Wizard</title>
     </head>
     <body>
 
@@ -69,6 +69,11 @@ URL lzhistUrl = null;
 String appwidth = request.getParameter("appwidth");
 String appheight = request.getParameter("appheight");
 
+// The "widgettype" arg controls which flavor of config.xml file we generate.
+// We will look for a config file named config.WIDGET_TYPE.xslt,
+// fallback to Opera format config file
+String widgetType = request.getParameter("widgettype");
+
 // Get app width/height from its canvas wrapper
 
 // download text content of URL
@@ -119,7 +124,7 @@ if (appUrl != null && appUrl.length() > 0) {
 You entered <tt><i><%= appUrl %></i></tt>, which names a file in the server document root directory. Please
 place the file in a subdirectory of the server root directory and try
 again with the new path.<p>
-              Explanation: The SOLO deployment tool creates an
+              Explanation: The widget deployment tool creates an
 archive of all files, recursively, starting in the directory that
 contains the application source file.  If the application source file
 is in the servlet root container, this tool will create a zip that
@@ -228,18 +233,18 @@ try {
     // if no form vars, we are at page #0
     if (whatpage.equals("configure")) { 
 %>
-<font face="helvetica,arial"> <b> <i> Setup SOLO Application Deployment</i> </b> </font>
+<font face="helvetica,arial"> <b> <i> Setup Widget Application Deployment</i> </b> </font>
 <hr align="left" width="420" height="2"/>
 
 
 <br>
      
 <table><tr><td width=600>
-     This wizard will generate a zip file containing all the resources you need to deploy a serverless (SOLO) application. For deployments which do not require browser the Javscript browser integration support files, it  will also generate some simple HTML wrappers which can be cut and pasted into HTML pages.
+     This wizard will generate a zip file containing all the resources you need to deploy a serverless SOLO widget application. For deployments which do not require browser the Javscript browser integration support files, it  will also generate some simple HTML wrappers which can be cut and pasted into HTML pages.
 </td></tr><table>
 
 <form  method="POST" action="<%= sUrl %>">
-<input type="hidden" name="runtime" value="<%= appRuntime %>">     
+<input type="hidden" name="runtime" value="<%= appRuntime %>">
 <input type="hidden" name="whatpage" value="preview">
 <table border=0 width=800>
   <tr>
@@ -249,6 +254,14 @@ try {
   </tr>
   <tr>
     <td align="right">Title for web page:</td><td><input name="apptitle" size="40" type="text" value="Laszlo Application"/></td>
+  </tr>
+  <tr>
+     <td align="right">Widget Type (config.xml file):</td><td>
+<select name="widgettype">
+<option value="opera" selected>Opera</option>
+<option value="jil">Android</option>
+</select>
+</td>
   </tr>
   <tr><td/><td/></tr>
                                         
@@ -266,7 +279,7 @@ try {
     
 
 %>
-<font face="helvetica,arial"> <b> <i> Preview SOLO Application in Browser</i> </b> </font>
+<font face="helvetica,arial"> <b> <i> Preview Widget Application in Browser</i> </b> </font>
 <hr align="left" width="420" height="2"/>
 <p>
 
@@ -291,6 +304,7 @@ String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?l
 <input type="hidden" name="appurl" value="<%= appUrl %>">
 <input type="hidden" name="apptitle" value="<%= title %>">
 <input type="hidden" name="runtime" value="<%= appRuntime %>">     
+<input type="hidden" name="widgettype" value="<%= widgetType %>">     
 
 <p>
 <input type=submit value="Continue...">
@@ -341,16 +355,39 @@ String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?l
          // Create the ZIP file
          SimpleDateFormat format = 
              new SimpleDateFormat("MMM_dd_yyyy_HH_mm_ss");
-         String outFilename = "solo_deploy_" + format.format(new Date()) + ".zip";
+         String outFilename = "solo_deploy_" + format.format(new Date()) + ".wgt";
          zipfilename = outFilename;
          ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tmpdir+"/"+outFilename));
 
          // create a byte array from lzhistory wrapper text
-         htmlfile = new File(appUrl).getName()+".html";
-
+         //htmlfile = new File(appUrl).getName()+".html";
+         htmlfile = "index.html";
          byte lbytes[] = lzhistwrapper.getBytes();
-
          copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
+
+         ////////////////
+         // Write the widget config.xml file 
+
+         // This is the default, if no template matches widgetType
+         if (widgetType == null) {
+             widgetType = "opera";
+         }
+         File template = new File(basedir + "/" + "lps/admin/widget-templates/" + "config."+widgetType+".xml");
+
+         String configXML = readFile(template);
+         
+         // We substitute for these vars
+
+         configXML = configXML.replaceAll("%APPURL%", appUrl);
+         configXML = configXML.replaceAll("%APPTITLE%", title);
+         configXML = configXML.replaceAll("%APPHEIGHT%", appheight);
+         configXML = configXML.replaceAll("%APPWIDTH%", appwidth);
+
+         copyByteArrayToZipFile(zout, configXML.getBytes(), "config.xml", zippedfiles);
+         ////////////////
+
+         // Copy widget icon file
+         copyFileToZipFile(zout, basedir + "/" + "lps/admin/widget-icon.png", "widget-icon.png", zippedfiles);
 
          // Compress the include files
          for (int i=0; i<filenames.size(); i++) {
@@ -378,7 +415,7 @@ String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?l
 
                  warned = true;
                  %> 
-                <h3><font color="red">The zip file has had more than <%= warnZipFileSize / 1000000 %>MB of content added to it, perhaps this is what you intended, but remember that the SOLO deployment tool creates an
+                <h3><font color="red">The zip file has had more than <%= warnZipFileSize / 1000000 %>MB of content added to it, perhaps this is what you intended, but remember that the Widget deployment tool creates an
 archive of all files, recursively, from the directory that
 contains your specified application source file.  If your application source file
 is in a directory with other apps, this tool will create a zip that
@@ -407,14 +444,14 @@ is in a directory with other apps, this tool will create a zip that
 Click here to download zip-archived file <a href="<%=zipfilename%>"><tt><%=zipfilename%></tt></a>.
 <p>
 In the zip file, a wrapper HTML file named <tt><%= htmlfile %></tt> has been created
-to launch your SOLO application.
+to launch your SOLO widget application.
 <p>
 
 
 Note: the file may take a moment to generate and save to disk, please be patient.
 
   <p>
-<font face="helvetica,arial"> <b> <i> SOLO Application Deployment: Wrapper HTML</i> </b> </font>
+<font face="helvetica,arial"> <b> <i> Widget Application Deployment: Wrapper HTML</i> </b> </font>
 <hr align="left" width="420" height="2"/>
 <p>
 Paste this wrapper into a browser to deploy your app:
@@ -558,6 +595,17 @@ public void copyFileToZipFile (ZipOutputStream zout,
     zout.closeEntry();
     in.close();
     zipped.add(dstfixed);
+}
+
+
+public String readFile(File file)
+  throws IOException
+{
+    java.io.InputStream istr = new java.io.FileInputStream(file);
+    byte bytes[] = new byte[istr.available()];
+    istr.read(bytes);
+    istr.close();
+    return new String(bytes, "UTF-8");
 }
 
 

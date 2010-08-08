@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.openlaszlo.compiler.Canvas;
 import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.compiler.CompilerMediaCache;
+import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.server.LPS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -71,10 +72,11 @@ public class DeploySOLOSWF {
                               String sourcepath,
                               FileOutputStream outstream,
                               File tmpdir,
-                             String title)
+                             String title,
+                             String widgetType)
       throws IOException
     {
-        return deploy(runtime, wrapperonly, canvas, lpspath, url, sourcepath, outstream, tmpdir, title, null, null);
+        return deploy(runtime, wrapperonly, canvas, lpspath, url, sourcepath, outstream, tmpdir, title, widgetType, null, null);
     }
         
     public static int deploy(String runtime,
@@ -86,6 +88,7 @@ public class DeploySOLOSWF {
                               FileOutputStream outstream,
                               File tmpdir,
                              String title,
+                             String widgetType,
                              Properties props,
                              HashMap skipfiles)
       throws IOException
@@ -172,6 +175,14 @@ public class DeploySOLOSWF {
         /* Create a DOM for the Canvas XML descriptor  */
         Element canvasElt = parse(canvasXML);
 
+        String appwidth = canvasElt.getAttribute("width");
+        String appheight = canvasElt.getAttribute("height");
+
+        if (appwidth.equals("")) { appwidth = "400"; }
+        if (appheight.equals("")) { appheight = "400"; }
+
+
+
         // We need to adjust the  wrapper, to make the path to lps/includes/dhtml-embed.js
         // be relative rather than absolute.
         
@@ -250,12 +261,37 @@ public class DeploySOLOSWF {
             ZipOutputStream zout = new ZipOutputStream(outstream);
 
             // create a byte array from lzhistory wrapper text
-            htmlfile = new File(appname).getName()+".html";
+            //htmlfile = new File(appname).getName()+".html";
+            htmlfile = "index.html";
 
             byte lbytes[] = wrapper.getBytes();
             //Write out a copy of the lzhistory wrapper as appname.lzx.html
             //System.out.println("<br>copyFileToZipFile dstfixed="+htmlfile+" lookup "+zippedfiles.contains(htmlfile));
             copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
+
+            ////////////////
+            // Write the widget config.xml file 
+
+         // This is the default, if no template matches widgetType
+         if (widgetType == null) {
+             widgetType = "opera";
+         }
+         File template = new File(basedir + "/" + "lps/admin/widget-templates/" + "config."+widgetType+".xml");
+
+         String configXML = FileUtils.readFileString(template);
+         
+         // We substitute for these vars
+
+         configXML = configXML.replaceAll("%APPURL%", sourcepath);
+         configXML = configXML.replaceAll("%APPTITLE%", title);
+         configXML = configXML.replaceAll("%APPHEIGHT%", appheight);
+         configXML = configXML.replaceAll("%APPWIDTH%", appwidth);
+
+         copyByteArrayToZipFile(zout, configXML.getBytes(), "config.xml", zippedfiles);
+            ////////////////
+            
+            // Copy widget icon file
+            copyFileToZipFile(zout, basedir + "/" + "lps/admin/widget-icon.png", "widget-icon.png", zippedfiles);
 
             // Compress the include files
             for (int i=0; i<filenames.size(); i++) {
@@ -284,6 +320,7 @@ public class DeploySOLOSWF {
             // Complete the ZIP file
             zout.close();
         } catch (IOException e) {
+            System.err.println("got error "+e.getMessage());
             // Unix error return code
             return 1;
         }

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004, 2008, 2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2008, 2009, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -40,6 +40,8 @@ public class DeployMain {
         "  The name of the output file to write.",
         "--title titlestring",
         "  The title of the application to use in the wrapper.",
+        "--widgettype target",
+        "  The widget config.xml template to use, defaults to 'opera'",
         "-v",
         "  Write progress information to standard output.",
         "--help",
@@ -64,6 +66,7 @@ public class DeployMain {
         String sourcepath = null;
         String title = null;;
         String runtime = "dhtml";
+        String widgetType = null;
 
         Properties compilationProperties =  new Properties();
         for (int i = 0; i < args.length; i++) {
@@ -84,6 +87,8 @@ public class DeployMain {
                     title = args[++i];
                 } else if (arg == "-v") {
                     verbose = true;
+                } else if (arg == "--widgettype") {
+                    widgetType = args[++i];
                 } else if (arg == "--wrapperonly") {
                     wrapperonly = true;
                 } else if (arg.startsWith("-D")) {
@@ -119,7 +124,7 @@ public class DeployMain {
         }
 
         if (outfile == null) {
-            outfile = new File(sourcepath).getName() + ".zip";
+            outfile = new File(sourcepath).getName() + ".wgt";
         }
 
         if (sourcepath == null) {
@@ -156,6 +161,7 @@ public class DeployMain {
                                                    new FileOutputStream(outfile),
                                                    tmpdir,
                                                    title,
+                                                   widgetType,
                                                    compilationProperties,
                                                    skipfiles));
             } else if ("swf10".equals(runtime) || "swf8".equals(runtime) || "swf9".equals(runtime)) {
@@ -168,6 +174,7 @@ public class DeployMain {
                                                    new FileOutputStream(outfile),
                                                    tmpdir,
                                                    title,
+                                                   widgetType,
                                                    compilationProperties,
                                                    skipfiles));
             } else {

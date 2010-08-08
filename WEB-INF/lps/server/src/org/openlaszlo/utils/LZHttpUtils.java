@@ -24,9 +24,16 @@ import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.security.*;
 
 import org.apache.log4j.*;
@@ -520,6 +527,90 @@ throw new UnsupportedEncodingException (
             }
         }
         return (needToChange? sb.toString() : s);
+    }
+
+    /**
+       Parse out options value from lzoptions, of the form
+           ?lzoptions=runtime(dhtml),wrapper(html),debug(false),proxy(true)
+           For boolean options, we default that if they are present they are true, if not they are false so:
+           ?lzoptions=runtime(dhtml),wrapper(html),proxy
+           would be the same as the above.
+
+           multiple comma separated values can be passed in args list, e.g.,
+
+           ?lzoptions=runtime(swf10),package(widget,android)
+
+           @return hashmap of key=>List
+     */
+    private static final int KEY = 1;
+    private static final int ARGS = 2;
+
+    public static HashMap getLzRequestOptions(String query) {
+        HashMap options = new HashMap();
+        int mystate = KEY;
+        List vals = new ArrayList();
+        String lastkey = null;
+        int nvals = 0;
+
+        StringTokenizer st = new StringTokenizer(query, ",()", true);
+        while (st.hasMoreTokens()) {
+            String token = st.nextToken();
+            switch(mystate) {
+              case KEY:
+                if (token.equals(",")) {
+                    // we only saw key name, but no value, so give it an implicit true value.
+                    if (lastkey != null && nvals == 0) {
+                        options.put(lastkey, Arrays.asList(new String[]{"true"}));
+                    }
+                } else if (token.equals("(")) {
+                    mystate = ARGS;
+                    vals = new ArrayList();
+                    options.put(lastkey, vals);
+                } else {
+                    lastkey = token;
+                }
+                break;
+              case ARGS:
+                if (token.equals(")")) {
+                    lastkey = null;
+                    mystate = KEY;
+                    nvals = 0;
+                } else if (token.equals(",")) {
+                    
+                } else {
+                    vals.add(token);
+                    nvals++;
+                }
+                break;
+            }
+        }
+        if (lastkey != null && nvals == 0) {
+            options.put(lastkey, Arrays.asList(new String[]{"true"}));
+        }
+        
+        return options;
+    }
+
+    public static String getLzOption(String key, HashMap options) {
+        List vals = (List) (options.get(key));
+        if (vals == null) {
+            return null;
+        } else {
+            return (String) vals.get(0);
+        }
+    }
+
+
+    // Look for new style lzoptions, then fall back to old style discrete query args
+    public static String getLzOption(String key, HttpServletRequest req) {
+        String lzoptions = req.getParameter("lzoptions");
+        if (lzoptions == null) {
+            // revert to old behavior
+            return req.getParameter(key);
+        } else {
+            HashMap optionsmap = LZHttpUtils.getLzRequestOptions(lzoptions);
+            return LZHttpUtils.getLzOption(key, optionsmap);
+        }
     }
 
 }
