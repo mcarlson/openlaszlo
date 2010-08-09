@@ -225,7 +225,7 @@ class CanvasCompiler extends ToplevelCompiler {
     }
     
     protected boolean isPercentageDimension(String str) {
-        return str.matches("\\s*(?:\\d+[.\\d*]|.\\d+)%\\s*");
+        return str.matches("\\s*(?:\\d+(?:\\.\\d*)?|\\.\\d+)%\\s*");
     }
     
     /** 

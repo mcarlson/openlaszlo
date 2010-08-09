@@ -48,6 +48,11 @@ public class NodeModel implements Cloneable {
 
     private static final String SOURCE_LOCATION_ATTRIBUTE_NAME = "__LZsourceLocation";
 
+    // pattern for identifier enclosed in quotes, i.e. 'value' or "value"
+    private static final Pattern quotedIdentifierPat = Pattern.compile("\\s*(?:'\\S*'|\"\\S*\")\\s*");
+    // pattern for empty or white-space only string
+    private static final Pattern emptyStringPat = Pattern.compile("\\s*");
+
     final ViewSchema schema;
     final Element element;
     String tagName;
@@ -288,7 +293,7 @@ public class NodeModel implements Cloneable {
       // identifier (optional leading -, followed by an alphabetic
       // character, followed by any number of alphanumeric or -.  See
       // http://www.w3.org/TR/CSS2/syndata.html#syntax.
-      this.constantValue = (value != null && value.matches("\\s*['\"]\\S*['\"]\\s*"));
+      this.constantValue = (value != null && quotedIdentifierPat.matcher(value).matches());
       this.when = when;
       this.source = source;
       this.env = env;
@@ -304,7 +309,7 @@ public class NodeModel implements Cloneable {
       }
 
       // If this attribute type is not allowed to take an empty string, complain
-      if (ViewSchema.sNonEmptyValueTypes.contains(type) && value != null && value.matches("\\s*")) {
+      if (ViewSchema.sNonEmptyValueTypes.contains(type) && value != null && emptyStringPat.matcher(value).matches()) {
         throw new CompilationError("The attribute '" + name +"' has type "+type +
                                    ", which cannot have an empty value."
                                    , source);
@@ -950,7 +955,7 @@ public class NodeModel implements Cloneable {
             }
 
             if (name.toLowerCase().equals("defaultplacement")) {
-                if (value != null && value.matches("\\s*['\"]\\S*['\"]\\s*")) {
+                if (value != null && quotedIdentifierPat.matcher(value).matches()) {
                     String oldValue = value;
                     // strip off start and ending quotes;
                     value = value.trim();
@@ -1519,7 +1524,7 @@ solution =
         String parent_name =
             element.getParentElement().getAttributeValue("id");
         String reference = element.getAttributeValue("reference");
-        if (reference != null && reference.matches("\\s*")) {
+        if (reference != null && emptyStringPat.matcher(reference).matches()) {
           throw new CompilationError("The 'reference' attribute value cannot be an empty string"
                                      , element);
         }
@@ -1797,13 +1802,7 @@ solution =
             }
 
             Matcher m = constraintPat.matcher(value);
-            // value.matches("\\s*['\"]\\S*['\"]\\s*")
-            if (value.matches("\\s*\\$\\s*\\(")) {
-                env.warn(
-                    "The syntax '$(...)' is not valid, "
-                    + "you probably meant to use curly-braces instead '${...}'",
-                    source);
-            } else if (m.matches()) {
+            if (m.matches()) {
                 // extract out $when{value}
                 when = m.group(1);
                 value = m.group(2);

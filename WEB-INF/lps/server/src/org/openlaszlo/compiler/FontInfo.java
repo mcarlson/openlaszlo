@@ -3,15 +3,14 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.compiler;
 
-import org.openlaszlo.utils.ChainedException;
-import java.io.Serializable;
-import java.util.*;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 
 /** 
@@ -20,6 +19,8 @@ import java.util.*;
  * @author <a href="mailto:bloch@laszlosystems.com">Eric Bloch</a>
  */
 public class FontInfo implements java.io.Serializable {
+    // Pattern matcher for '$once{...}' style constraints
+    private static final Pattern constraintPat = Pattern.compile("^\\s*\\$(\\w*)\\s*\\{(.*)\\}\\s*");
 
     public static final String NULL_FONT = null;
     public static final int NULL_SIZE = -1;
@@ -327,7 +328,7 @@ public class FontInfo implements java.io.Serializable {
      * @return a <code>String</code> value
      */
     public static String normalizeStyleString(String style, boolean whitespace) {
-        if (style.matches("^\\s*\\$(\\w*)\\{(.*)}\\s*")) {
+        if (constraintPat.matcher(style).matches()) {
             return style;
         } else {
             return styleBitsToString(styleBitsFromString(style), whitespace);
