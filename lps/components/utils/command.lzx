@@ -28,7 +28,7 @@
                 <li> <a href="${demos}weather/weather.lzx">Weather</a></li>
             
             </ul>
-            Also, see <xref linkend="LzKeys"/>.
+            Also, see <link linkend="LzKeysService.LzKeys">lz.KeysService.LzKeys</link>.
         </text>
     </doc>
 
@@ -41,20 +41,28 @@
 
 <!--- array of keys (strings) that, when pressed together,
     cause the onselect event of the command to be sent. For example:
-    setAttribute('key', ['a', 'shift']) or setKeys(['j', 'control'])
+    setAttribute('key', ['a', 'shift'])
     @type [String]
   -->
-<attribute name="key" value="null"/>
+<attribute name="keys" value="null"/>
+
+<!---
+  WTF?  See LPP-4982, LPP-7814
+  Necessary to add "key" to the schema
+  @access private
+-->
+<attribute name="key"/>
+
 <!--- @access private -->
 <setter name="key" args="k">
-    var oldKeys = this['keys'];
+    var oldKeys = this.keys;
     if (oldKeys) {
       lz.Keys.removeKeyComboCall(this, oldKeys);
     }
+    // WTF?  See LPP-4982, LPP-7814
+    this.keys = k;
     if (k) {
-        // WTF?  See LPP-4982, LPP-7814
-        this.keys = k;
-        lz.Keys.callOnKeyCombo( this , k );
+      lz.Keys.callOnKeyCombo( this , k );
     }
 </setter>
 
@@ -110,22 +118,17 @@
     command to be invoked.
   -->
 <method name="keysToString"><![CDATA[
-  var s= "";
-  var keys = this.keys;
-  if (keys) {
-    var dk = lz.command.DisplayKeys;
-    var k = "";
-    var l= keys.length - 1;
-    for (var i = 0; i < l; i++) {
-        k = keys[i];
-        if (k in dk) k = dk[k];
-        s = s + k + "+"
+  function map (a, f) {
+    var len = a.length;
+    var ret = new Array(len);
+    for (var i = 0; i < len; ++i) {
+      ret[i] = f(a[i]);
     }
-    k = keys[i];
-    if (k in dk) k = dk[k];
-    s = s + k;
+    return ret;
   }
-  return s;
+
+  var dk = lz.command.DisplayKeys;
+  return map(this.keys || [], function (k) { return (dk[k] || k) }).join("+");
 ]]></method>
 </class>
 </library>
