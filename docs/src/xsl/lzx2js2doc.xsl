@@ -106,7 +106,17 @@
               <xsl:value-of select="@with"/>
             </xsl:attribute>
           </xsl:if>
-          <xsl:variable name="methods" select="method"/>
+          <!-- class allocated methods -->
+          <xsl:variable name="class-methods" select="method[@allocation='class']"/>
+          <xsl:variable name="class-attrs" select="attribute[@allocation='class']"/>
+          <xsl:apply-templates select="$class-methods">
+            <xsl:with-param name="parent-id" select="$id"/>
+          </xsl:apply-templates>
+          <xsl:apply-templates select="$class-attrs">
+            <xsl:with-param name="parent-id" select="$id"/>
+          </xsl:apply-templates>
+          <!-- instance allocated methods -->
+          <xsl:variable name="methods" select="method[not(@allocation) or @allocation='instance']"/>
           <xsl:variable name="events" select="event"/>
           <xsl:variable name="switches" select="switch"/>
           <xsl:if test="$methods | $events | $switches">
@@ -125,7 +135,7 @@
               </object>
             </property>
           </xsl:if>
-          <xsl:variable name="attrs" select="attribute"/>
+          <xsl:variable name="attrs" select="attribute[not(@allocation) or @allocation='instance']"/>
           <xsl:if test="$attrs | $switches">
             <xsl:variable name="attrs-id" select="concat($id, '.__ivars__')"/>
             <property name="__ivars__">
