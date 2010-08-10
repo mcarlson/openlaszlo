@@ -208,7 +208,7 @@ public class CompilationEnvironment {
         } else {
           // Use a local symbol generator so that we recycle method
           // names for each new view, to keep the constant pool small.
-          this.methodNameGenerator = new SymbolGenerator("$");
+          this.methodNameGenerator = new SymbolGenerator("$m");
         }
         this.mSchema = new ViewSchema(this);
         // lzc depends on the properties being shared, because it sets
