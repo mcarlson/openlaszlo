@@ -75,13 +75,21 @@
        nodes that precede this one. <note>
         <para>A <literal>$once</literal> constraint is an optimization: by using it you are telling
          the compiler <emphasis>not</emphasis> to track changes in the values the constraint depends
-         on. If the value depends on another constraint (including CSS constraints), which <emphasis>does</emphasis> have
-         dependencies in both applicability and value, the <literal>$once</literal> optimization is
-         invalid.</para>
+         on. If the value depends on another constraint (including CSS constraints), which
+          <emphasis>does</emphasis> have dependencies in both applicability and value, the
+          <literal>$once</literal> optimization is invalid.</para>
        </note></listitem>
       <listitem><literal>always</literal>: will track changes in the values referred to.
          <literal>$always{<replaceable>expression</replaceable>}</literal> can be abbreviated to
-         <literal>${<replaceable>expression</replaceable>}</literal></listitem>
+         <literal>${<replaceable>expression</replaceable>}</literal>. <note>
+        <para>An <literal>always</literal> constraint will only work on an object that is a subclass
+         of <literal>lz.Eventable</literal>; that is, an object that knows how to send an event. You
+         cannot use an <literal>always</literal> event on an object that is not a subclass of
+          <literal>lz.Eventalble</literal>. For example, you cannot use an <literal>always</literal>
+         event on <literal>lz.Browser.getInitArg()</literal>; you must use a <literal>once</literal>
+         constraint. For example, see <xref linkend="queryparameters"/> in the <emphasis>Browser
+          Integration</emphasis> chapter.</para>
+       </note></listitem>
      </itemizedlist>
     </listitem>
     <listitem>

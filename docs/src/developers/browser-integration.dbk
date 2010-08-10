@@ -674,7 +674,7 @@
 &lt;/script&gt;</programlisting>
         </example>
   
-        <section>
+        <section id="queryparameters">
             <title>Query Parameters</title>
             <para>Once the data has been passed in you can simply access
       it by calling getInitArg() from within the OpenLaszlo

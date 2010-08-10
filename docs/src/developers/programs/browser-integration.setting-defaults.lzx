@@ -1,11 +1,13 @@
-<canvas debug="true" width="100%" height="200"> 
-  <handler name="oninit"> 
-    var innerVar = lz.Browser.getInitArg('myData'); 
-    if (innerVar == null) innerVar = 'bar'; // default to 'bar' 
-    Debug.debug("%w", innerVar); 
-  </handler> 
-</canvas> 
+<canvas debug="true" width="100%" height="200">
+  <attribute name="onceData" value="$once{lz.Browser.getInitArg('myData')}" />
+  <handler name="oninit">
+    var innerVar = lz.Browser.getInitArg('myData');
+    if (innerVar == null) innerVar = 'bar'; // default to 'bar'
+    Debug.debug("%w", canvas.onceData);
+    Debug.debug("%w", innerVar);
+  </handler>
+</canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.        *
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
