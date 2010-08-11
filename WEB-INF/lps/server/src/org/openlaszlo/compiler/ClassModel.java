@@ -449,7 +449,12 @@ public class ClassModel implements Comparable {
     // TODO: [2010-08-03 ptw] Figure out some way to obfuscate at
     // least the bodies of the mixin's methods
     if ("mixin".equals(kind)) {
-      XMLOutputter out = new XMLOutputter(Format.getCompactFormat());
+      Format format = Format.getCompactFormat();
+      // NOTE: [2010-08-10 ptw] (LPP-9288) Method bodies need to
+      // preserve whitespace because they may contain single-line
+      // comments
+      format.setTextMode(Format.TextMode.TRIM_FULL_WHITE);
+      XMLOutputter out = new XMLOutputter(format);
       return out.outputString(this.definition);
     }
     String lzx = indent + "<interface name='" + tagName + "'" +

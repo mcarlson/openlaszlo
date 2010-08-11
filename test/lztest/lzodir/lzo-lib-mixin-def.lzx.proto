@@ -3,6 +3,7 @@
   <!-- a mixin that will be lzo-compiled and then used in another file -->
   <mixin name="lzomixin" >
     <method name="lzomixinmethod">
+      // Make sure single line comments work!  See LPP-9288
       return this.flavor;
     </method>
     <attribute name="flavor" type="string" value="LZO Mixin Method" />
