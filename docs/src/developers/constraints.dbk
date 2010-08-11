@@ -86,7 +86,7 @@
          of <literal>lz.Eventable</literal>; that is, an object that knows how to send an event. You
          cannot use an <literal>always</literal> event on an object that is not a subclass of
           <literal>lz.Eventalble</literal>. For example, you cannot use an <literal>always</literal>
-         event on <literal>lz.Browser.getInitArg()</literal>; you must use a <literal>once</literal>
+         constraint on <literal>lz.Browser.getInitArg()</literal>; you must use a <literal>once</literal>
          constraint. For example, see <xref linkend="queryparameters"/> in the <emphasis>Browser
           Integration</emphasis> chapter.</para>
        </note></listitem>
