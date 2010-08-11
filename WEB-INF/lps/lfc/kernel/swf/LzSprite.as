@@ -773,23 +773,15 @@ LzSprite.prototype.updateResourceSize = function (skipsend){
         this.resourcewidth = rt.width;
         this.resourceheight = rt.height;
     } else {
-        // Get the true size by unscaling. Note: clip scale is in percent
-        if (mc._xscale == 0) {
-            // special case if _xscale is zero, need to make it 100% to make measurement of resource width
-            mc._xscale = 100;
-            this.resourcewidth = Math.round(mc._width);
-            mc._xscale = 0;
-        } else {
-            this.resourcewidth = Math.round(mc._width/(mc._xscale/100));
-        }
-        if (mc._yscale == 0) {
-            // special case if _yscale is zero, need to make it 100% to make measurement of resource height
-            mc._yscale = 100;
-            this.resourceheight = Math.round(mc._height);
-            mc._yscale = 0;
-        } else {
-            this.resourceheight = Math.round(mc._height/(mc._yscale/100));
-        }
+        var oldscale = mc._xscale;
+        mc._xscale = 100;
+        this.resourcewidth = Math.round(mc._width);
+        mc._xscale = oldscale;
+        
+        oldscale = mc._yscale;
+        mc._yscale = 100;
+        this.resourceheight = Math.round(mc._height);
+        mc._yscale = oldscale; 
     }
 
     if (! skipsend && ! this.__LZhaser) {
