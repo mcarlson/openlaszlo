@@ -18,22 +18,22 @@
 
 case `uname` in
 		CYGWIN*)
-			OS="Windows"
+			_OS="Windows"
 		;;
 		*)
-			OS=Unix
+			_OS=Unix
 esac
 
 D32=''
 
-if [ $OS = "Windows" ]; then
+if [ $_OS = "Windows" ]; then
 	# set FLEX_HOME relative to fcsh if not set
 	test "$FLEX_HOME" = "" && {
 		FLEX_HOME=`dirname $0`/..
 		FLEX_HOME=`cygpath -m $FLEX_HOME`
 	}
 
-elif [ $OS = "Unix" ]; then
+elif [ $_OS = "Unix" ]; then
 
 	# set FLEX_HOME relative to fcsh if not set
 	test "$FLEX_HOME" = "" && {
@@ -55,6 +55,7 @@ VMARGS="-Xmx1024m -Dsun.io.useCanonCaches=false "
 
 if [ "${OS}" == Windows_NT ];  then
   export LPS_HOME=`cygpath -w $LPS_HOME`
+  export FLEX_HOME=`cygpath -w $FLEX_HOME`
     . ${LPS_HOME}\\WEB-INF\\lps\\server\\bin\\lzenv
 else
   export LPS_HOME
