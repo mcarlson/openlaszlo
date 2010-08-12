@@ -23,6 +23,8 @@ import org.openlaszlo.sc.Translator;
 import org.openlaszlo.sc.Compiler.Ops;
 import org.openlaszlo.sc.Compiler.PassThroughNode;
 
+import org.openlaszlo.compiler.ClassModel;
+
 // Values
 import org.openlaszlo.sc.Values;
 
@@ -254,7 +256,19 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
 
     return prependMods(children[0], mods);
   }
-  
+
+  // We have to translate types in the `lz` "namespace" to their
+  // actual type
+  public String lzTypeToPlatformType(String type) {
+    if (type == null) {
+      return "";
+    } else if (type.startsWith("lz.")) {
+      return ClassModel.LZXTag2JSClass(type.substring(3));
+    } else {
+      return type;
+    }
+  }
+
   public String visitClassDefinition(SimpleNode node, String[] children) {
     String classnm = unannotate(children[1]);
     StringBuffer sb = new StringBuffer();

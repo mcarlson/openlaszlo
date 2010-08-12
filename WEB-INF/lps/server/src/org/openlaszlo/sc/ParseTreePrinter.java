@@ -932,6 +932,11 @@ public class ParseTreePrinter {
     return txt + forceBlankLnum();
   }
 
+  // Hook for platform-specific back-ends
+  public String lzTypeToPlatformType(String type) {
+    return type;
+  }
+
   // return type is attached to the formal parameter list (which is really
   // a signature)
   public String functionReturnType(SimpleNode node) {
@@ -942,7 +947,7 @@ public class ParseTreePrinter {
     if (returnType == null)
       return "";
     else
-      return ":" + returnType.toString();
+      return ":" + lzTypeToPlatformType(returnType.toString());
   }
 
   public String visitClassDefinition(SimpleNode node, String[] children) {
@@ -977,7 +982,7 @@ public class ParseTreePrinter {
     if (id.isConstructor()) {
       name = currentClassName;
     }
-    String type = id.getType() == null ? "" : (":" + id.getType());
+    String type = id.getType() == null ? "" : (":" + lzTypeToPlatformType(id.getType().toString()));
     String ellipsis = id.getEllipsis() ? "..." : "";
 
     return ellipsis + name + type;
