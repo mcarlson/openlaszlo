@@ -12,6 +12,7 @@ package org.openlaszlo.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.PrintWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -202,8 +203,6 @@ public class DeploySOLOSWF {
         wrapper = wrapper.replaceFirst("ServerRoot:\\s*'_.*?'", "ServerRoot: 'lps/resources'");
 
 
-
-        
         // replace title
         // wrapper = wrapper.replaceFirst("<title>.*</title>", "<title>"+title+"</title>\n");
         // extract width and height with regexp
@@ -233,101 +232,16 @@ public class DeploySOLOSWF {
         if (appdir ==null) { appdir = new File("."); }
         appdir = appdir.getCanonicalFile();
 
-        // Keep track of which files we have output to the zip archive, so we don't
-        // write any duplicate entries.
-        HashSet zippedfiles = new HashSet();
+        // Create the ZIP file
+        SimpleDateFormat format = 
+            new SimpleDateFormat("EEE_MMM_dd_yyyy_HH_mm_ss");
+        ZipOutputStream zout = new ZipOutputStream(outstream);
 
-        // These are the files to include in the ZIP file
-        ArrayList filenames = new ArrayList();
-        // LPS includes, (originally copied from /lps/includes/*)
-        filenames.add("lps/includes/embed-compressed.js");
-        filenames.add("lps/includes/flash.js");
-        filenames.add("lps/includes/iframemanager.js");
-        filenames.add("lps/includes/rtemanager.js");
-        filenames.add("lps/includes/spinner.gif");
-
-        ArrayList appfiles = new ArrayList();
-        //System.out.println("calling listFiles " + appdir);
-        listFiles(appfiles, appdir);
-
-        // Create a buffer for reading the files
-        byte[] buf = new byte[1024];
-        char[] cbuf = new char[1024];
-    
-        try {
-            // Create the ZIP file
-            SimpleDateFormat format = 
-                new SimpleDateFormat("EEE_MMM_dd_yyyy_HH_mm_ss");
-            ZipOutputStream zout = new ZipOutputStream(outstream);
-
-            // create a byte array from lzhistory wrapper text
-            //htmlfile = new File(appname).getName()+".html";
-            htmlfile = "index.html";
-
-            byte lbytes[] = wrapper.getBytes();
-            //Write out a copy of the lzhistory wrapper as appname.lzx.html
-            //System.out.println("<br>copyFileToZipFile dstfixed="+htmlfile+" lookup "+zippedfiles.contains(htmlfile));
-            copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
-
-            ////////////////
-            // Write the widget config.xml file 
-
-         // This is the default, if no template matches widgetType
-         if (widgetType == null) {
-             widgetType = "opera";
-         }
-         File template = new File(basedir + "/" + "lps/admin/widget-templates/" + "config."+widgetType+".xml");
-
-         String configXML = FileUtils.readFileString(template);
-         
-         // We substitute for these vars
-
-         configXML = configXML.replaceAll("%APPURL%", sourcepath);
-         configXML = configXML.replaceAll("%APPTITLE%", title);
-         configXML = configXML.replaceAll("%APPHEIGHT%", appheight);
-         configXML = configXML.replaceAll("%APPWIDTH%", appwidth);
-
-         copyByteArrayToZipFile(zout, configXML.getBytes(), "config.xml", zippedfiles);
-            ////////////////
-            
-            // Copy widget icon file
-            copyFileToZipFile(zout, basedir + "/" + "lps/admin/widget-icon.png", "widget-icon.png", zippedfiles);
-
-            // Compress the include files
-            for (int i=0; i<filenames.size(); i++) {
-                String srcfile = basedir + "/" + (String) filenames.get(i);
-                // Add ZIP entry to output stream.
-                String dstfile = (String) filenames.get(i);
-                copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
-            }
-
-            // track how big the file is, check that we don't write more than some limit
-            int contentSize = 0;
-
-            // Compress the app files
-            for (int i=0; i<appfiles.size(); i++) {
-                String srcname = (String) appfiles.get(i);
-                String dstname = srcname.substring(appdir.getPath().length()+1);
-                if (skipfiles != null && !skipfiles.containsKey(srcname)) {
-                    // Add ZIP entry to output stream.
-                    copyFileToZipFile(zout, srcname, dstname, zippedfiles);
-                    if (contentSize > maxZipFileSize) {
-                        throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
-                    }
-                }
-            }
-
-            // Complete the ZIP file
-            zout.close();
-        } catch (IOException e) {
-            System.err.println("got error "+e.getMessage());
-            // Unix error return code
-            return 1;
-        }
+        DeployUtils.buildZipFile(runtime, zout, basedir, appdir, new PrintWriter(System.err), null, wrapper,
+                                 widgetType, sourcepath,  title,  appheight,  appwidth);
 
         // OK
         return 0;
-
     }
 
     static void listFiles(ArrayList fnames, File dir) {

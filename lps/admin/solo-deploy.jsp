@@ -6,6 +6,8 @@
 <%@ page import="java.io.*" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="org.openlaszlo.utils.FileUtils.*" %>
+<%@ page import="org.openlaszlo.server.LPS" %>
+<%@ page import="org.openlaszlo.utils.DeployUtils" %>
     
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
@@ -38,6 +40,10 @@
 int maxZipFileSize = 64000000; // 64MB max
 int warnZipFileSize = 10000000; // warn at 10MB
 boolean warned = false;
+// Directory on server where generated widget files are stored
+String WGT_WORKING_DIR = "tmpwgt";
+
+
 
 String zipfilename = "";
 
@@ -311,151 +317,62 @@ String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?l
 
 <%
 
-} else if  (whatpage.equals("download")){
-%>
-<%
-     String htmlfile = "";
+} else if (whatpage.equals("emulator") || whatpage.equals("download")) {
 
-     // add in all the files in the app directory
-     ServletContext ctx = getServletContext();
+    org.openlaszlo.server.LPS.initialize();
 
-     // destination to output the zip file, will be the current jsp directory
-     File tmpdir = new File(ctx.getRealPath(request.getServletPath().toString())).getParentFile();
+    //whatpage=download&appurl=examples%2Fcontactlist%2Fcontactlist.lzx&widgettype=jil&apptitle=Laszlo+Application
+    // Create widget working directory, and clear any previously existing files
+    File workdir = new File(LPS.HOME()+ File.separator + WGT_WORKING_DIR);
+    workdir.mkdirs();
+    DeployUtils.deleteDirectoryFiles(workdir);
 
-     // The absolute path to the base directory of the server web root 
-     File basedir = new File(ctx.getRealPath(request.getContextPath().toString())).getParentFile();
+    // destination to output the zip file
+    String outdir = workdir.getCanonicalPath();
+    File tmpdir = new File(outdir);
 
-     // The absolute path to the application directory we are packaging
-     // e.g., demos/amazon
-     File appdir = new File(ctx.getRealPath(appUrl)).getParentFile();
+    // Create the ZIP file
+    SimpleDateFormat format = 
+        new SimpleDateFormat("MMM_dd_yyyy_HH_mm_ss");
+    String datestamp = format.format(new Date());
+    String outFilename = "solo_deploy_" + datestamp + ".wgt";
+    zipfilename = outFilename;
+    ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tmpdir+"/"+outFilename));
 
+    // add in all the files in the app directory
+    ServletContext ctx = getServletContext();
+    // The absolute path to the base directory of the server web root 
+    File basedir = new File(ctx.getRealPath(request.getContextPath().toString())).getParentFile();
+    basedir = basedir.getCanonicalFile();
 
-     // Keep track of which files we have output to the zip archive, so we don't
-     // write any duplicate entries.
-     HashSet zippedfiles = new HashSet();
-
-
-     // These are the files to include in the ZIP file
-     ArrayList filenames = new ArrayList();
-     // LPS includes, (originally copied from /lps/includes/*)
-     filenames.add("lps/includes/embed-compressed.js");
-     filenames.add("lps/includes/flash.js");
-     filenames.add("lps/includes/iframemanager.js");
-     filenames.add("lps/includes/rtemanager.js");
-     filenames.add("lps/includes/spinner.gif");
-
-     ArrayList appfiles = new ArrayList();
-     listFiles(appfiles, appdir);
-
-    // Create a buffer for reading the files
-     byte[] buf = new byte[1024];
-     char[] cbuf = new char[1024];
-    
-     try {
-         // Create the ZIP file
-         SimpleDateFormat format = 
-             new SimpleDateFormat("MMM_dd_yyyy_HH_mm_ss");
-         String outFilename = "solo_deploy_" + format.format(new Date()) + ".wgt";
-         zipfilename = outFilename;
-         ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(tmpdir+"/"+outFilename));
-
-         // create a byte array from lzhistory wrapper text
-         //htmlfile = new File(appUrl).getName()+".html";
-         htmlfile = "index.html";
-         byte lbytes[] = lzhistwrapper.getBytes();
-         copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
-
-         ////////////////
-         // Write the widget config.xml file 
-
-         // This is the default, if no template matches widgetType
-         if (widgetType == null) {
-             widgetType = "opera";
-         }
-         File template = new File(basedir + "/" + "lps/admin/widget-templates/" + "config."+widgetType+".xml");
-
-         String configXML = readFile(template);
-         
-         // We substitute for these vars
-
-         configXML = configXML.replaceAll("%APPURL%", appUrl);
-         configXML = configXML.replaceAll("%APPTITLE%", title);
-         configXML = configXML.replaceAll("%APPHEIGHT%", appheight);
-         configXML = configXML.replaceAll("%APPWIDTH%", appwidth);
-
-         copyByteArrayToZipFile(zout, configXML.getBytes(), "config.xml", zippedfiles);
-         ////////////////
-
-         // Copy widget icon file
-         copyFileToZipFile(zout, basedir + "/" + "lps/admin/widget-icon.png", "widget-icon.png", zippedfiles);
-
-         // Compress the include files
-         for (int i=0; i<filenames.size(); i++) {
-             String srcfile = basedir + "/" + (String) filenames.get(i);
-             // Add ZIP entry to output stream.
-             String dstfile = (String) filenames.get(i);
-             copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
-         }
-
-     // track how big the file is, check that we don't write more than some limit
-     int contentSize = 0;
-
-         // Compress the app files
-         for (int i=0; i<appfiles.size(); i++) {
-             String srcname = (String) appfiles.get(i);
-             String dstname = srcname.substring(appdir.getPath().length()+1);
-             // Add ZIP entry to output stream.
-             copyFileToZipFile(zout, srcname, dstname, zippedfiles);
-
-             if (contentSize > maxZipFileSize) {
-                 throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
-             }
-
-             if (contentSize > warnZipFileSize && !warned) {
-
-                 warned = true;
-                 %> 
-                <h3><font color="red">The zip file has had more than <%= warnZipFileSize / 1000000 %>MB of content added to it, perhaps this is what you intended, but remember that the Widget deployment tool creates an
-archive of all files, recursively, from the directory that
-contains your specified application source file.  If your application source file
-is in a directory with other apps, this tool will create a zip that
-                     contains all those apps and their assets (and subdirectories) as well. 
-</h3>
+    // The absolute path to the application directory we are packaging
+    // e.g., demos/amazon
+    File appdir = new File(ctx.getRealPath(appUrl)).getParentFile();
+    appdir = appdir.getCanonicalFile();
 
 
-             <% }
+    DeployUtils.buildZipFile(appRuntime, zout, basedir, appdir, new PrintWriter(out), null, lzhistwrapper,  widgetType, appUrl,  title,  appheight,  appwidth);
+    if (whatpage.equals("emulator")) {
+        // unpack to working dir
+        // redirect to config.xml in working dir
+        //out.println("<br>zipfilename: "+zipfilename);
+        DeployUtils.unpackZipfile(workdir + File.separator + zipfilename, workdir.getCanonicalPath(), new PrintWriter(out));
+        String redirectURL = (request.getContextPath()+ "/" + WGT_WORKING_DIR);
+        response.sendRedirect(redirectURL);
+    } else {
 
-         }
-
-         // Complete the ZIP file
-         zout.close();
-     } catch (IOException e) {
-  %>         
-  <h3><font color="red">Error generating zip file: <%= e.toString() %></h3>
-  <%
-   }
   %>
      <font face="helvetica,arial"> <b> <i> Zip file containing application deployment files</i> </b> </font>
 <hr align="left" width="420" height="2"/>
 <p>
-
-
-
 Click here to download zip-archived file <a href="<%=zipfilename%>"><tt><%=zipfilename%></tt></a>.
 <p>
-In the zip file, a wrapper HTML file named <tt><%= htmlfile %></tt> has been created
-to launch your SOLO widget application.
-<p>
-
-
 Note: the file may take a moment to generate and save to disk, please be patient.
-
   <p>
 <font face="helvetica,arial"> <b> <i> Widget Application Deployment: Wrapper HTML</i> </b> </font>
 <hr align="left" width="420" height="2"/>
 <p>
 Paste this wrapper into a browser to deploy your app:
-
 <p>
 <textarea rows="20" cols="80">
 <!DOCTYPE html
@@ -536,6 +453,7 @@ swin.document.write('</html>');
 <%
 
 }
+    }
 
 
 %>

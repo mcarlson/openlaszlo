@@ -10,6 +10,8 @@
 package org.openlaszlo.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -33,6 +35,7 @@ import org.openlaszlo.compiler.Canvas;
 import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.compiler.CompilerMediaCache;
 import org.openlaszlo.utils.FileUtils;
+import org.openlaszlo.utils.DeployUtils;
 import org.openlaszlo.server.LPS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -187,7 +190,7 @@ public class DeploySOLODHTML {
         }
 
         /* Create a DOM for the Canvas XML descriptor  */
-        Element canvasElt = parse(canvasXML);
+        Element canvasElt = DeployUtils.parse(canvasXML);
 
         String appwidth = canvasElt.getAttribute("width");
         String appheight = canvasElt.getAttribute("height");
@@ -196,20 +199,7 @@ public class DeploySOLODHTML {
         if (appheight.equals("")) { appheight = "400"; }
 
 
-        // We need to adjust the  wrapper, to make the path to lps/includes/dhtml-embed.js
-        // be relative rather than absolute.
-        
-        // remove the servlet prefix and leading slash
-        //  src="/legals/lps/includes/embed-dhtml.js"
-        wrapper = wrapper.replaceAll(lpspath + "/", "");
-        
-        // Replace serverroot and lfcurl:
-        // lz.embed.dhtml({url: 'html.lzx?lzt=object&lzr=dhtml', lfcurl: '/trunk2/lps/includes/lfc/LFCdhtml.js', serverroot: '/trunk2/', bgcolor: '#ffffff', width: '100%', height: '100%', id: 'lzapp', accessible: 'false', cancelmousewheel: false, cancelkeyboardcontrol: false, skipchromeinstall: false, usemastersprite: false, approot: ''});
-        wrapper = wrapper.replaceFirst("lfcurl:(.*?),",
-                                       "lfcurl: 'lps/includes/lfc/LFCdhtml.js',");
-        wrapper = wrapper.replaceFirst("serverroot:(.*?),",
-                                       "serverroot: 'lps/resources/',");
-
+        wrapper = DeployUtils.adjustDHTMLWrapper(wrapper, lpspath);
 
         // replace title
         // wrapper = wrapper.replaceFirst("<title>.*</title>", "<title>"+title+"</title>\n");
@@ -217,17 +207,8 @@ public class DeploySOLODHTML {
 
         String htmlfile = "";
 
-        /*
-          System.out.println("wrapper");
-          System.out.println(wrapper);
-          System.out.println("canvasXML");
-          System.out.println(canvasXML);
-        */
-
         // add in all the files in the app directory
-
         // destination to output the zip file, will be the current jsp directory
-
         // The absolute path to the base directory of the server web root
         //canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
 
@@ -240,207 +221,18 @@ public class DeploySOLODHTML {
         if (appdir ==null) { appdir = new File("."); }
         appdir = appdir.getCanonicalFile();
 
-        // Keep track of which files we have output to the zip archive, so we don't
-        // write any duplicate entries.
-        HashSet zippedfiles = new HashSet();
 
-        // These are the files to include in the ZIP file
-        ArrayList filenames = new ArrayList();
-        // LPS includes, (originally copied from /lps/includes/*)
-        filenames.add("lps/includes/embed-compressed.js");
-        filenames.add("lps/includes/blank.gif");
-        filenames.add("lps/includes/spinner.gif");
-        filenames.add("lps/includes/excanvas.js");
-        filenames.add("lps/includes/iframemanager.js");
-        filenames.add("lps/includes/rtemanager.js");
-        filenames.add("lps/includes/laszlo-debugger.css");
-        filenames.add("lps/includes/laszlo-debugger.html");
+        // Create the ZIP file
+        SimpleDateFormat format = 
+            new SimpleDateFormat("EEE_MMM_dd_yyyy_HH_mm_ss");
+        ZipOutputStream zout = new ZipOutputStream(outstream);
 
-
-        ArrayList appfiles = new ArrayList();
-        //System.out.println("calling listFiles " + appdir);
-        listFiles(appfiles, appdir);
-
-        // Create a buffer for reading the files
-        byte[] buf = new byte[1024];
-        char[] cbuf = new char[1024];
-    
-        try {
-            // Create the ZIP file
-            SimpleDateFormat format = 
-                new SimpleDateFormat("EEE_MMM_dd_yyyy_HH_mm_ss");
-            ZipOutputStream zout = new ZipOutputStream(outstream);
-
-            // create a byte array from lzhistory wrapper text
-            // htmlfile = new File(appname).getName()+".html";
-            htmlfile = "index.html";
-
-
-            byte lbytes[] = wrapper.getBytes();
-            //Write out a copy of the lzhistory wrapper as appname.lzx.html
-            //System.out.println("<br>copyFileToZipFile dstfixed="+htmlfile+" lookup "+zippedfiles.contains(htmlfile));
-            copyByteArrayToZipFile(zout, lbytes, htmlfile, zippedfiles);
-
-         ////////////////
-         // Write the widget config.xml file 
-
-         // This is the default, if no template matches widgetType
-         if (widgetType == null) {
-             widgetType = "opera";
-         }
-         File template = new File(basedir + "/" + "lps/admin/widget-templates/" + "config."+widgetType+".xml");
-
-         String configXML = FileUtils.readFileString(template);
-         
-         // We substitute for these vars
-
-         configXML = configXML.replaceAll("%APPURL%", sourcepath);
-         configXML = configXML.replaceAll("%APPTITLE%", title);
-         configXML = configXML.replaceAll("%APPHEIGHT%", appheight);
-         configXML = configXML.replaceAll("%APPWIDTH%", appwidth);
-
-         copyByteArrayToZipFile(zout, configXML.getBytes(), "config.xml", zippedfiles);
-         ////////////////
-
-         // Copy widget icon file
-         copyFileToZipFile(zout, basedir + "/" + "lps/admin/widget-icon.png", "widget-icon.png", zippedfiles);
-
-
-            // Compress the include files
-            for (int i=0; i<filenames.size(); i++) {
-                String srcfile = basedir + "/" + (String) filenames.get(i);
-                // Add ZIP entry to output stream.
-                String dstfile = (String) filenames.get(i);
-                copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
-            }
-
-
-            // special case for IE7, need to copy lps/includes/blank.gif to lps/resources/lps/includes/blank.gif
-            String srcfile = basedir + "/" + "lps/includes/blank.gif";
-            String dstfile = "lps/resources/lps/includes/blank.gif";
-            copyFileToZipFile(zout, srcfile, dstfile, zippedfiles);
-
-            // Copy the DHTML LFC to lps/includes/LFC-dhtml.js
-            ArrayList lfcfiles = new ArrayList();
-            listFiles(lfcfiles, new File(basedir + "/lps/includes/lfc"));
-            for (int i=0; i<lfcfiles.size(); i++) {
-                String fname = (String) lfcfiles.get(i);
-                if (!fname.matches(".*LFCdhtml.*.js")) { continue; }
-                String stripped = fname.substring(basedir.getCanonicalPath().length()+1);
-                copyFileToZipFile(zout, fname, stripped, zippedfiles);
-            }
-
-            // track how big the file is, check that we don't write more than some limit
-            int contentSize = 0;
-
-            // Compress the app files
-            for (int i=0; i<appfiles.size(); i++) {
-                String srcname = (String) appfiles.get(i);
-                String dstname = srcname.substring(appdir.getPath().length()+1);
-                if (skipfiles != null && !skipfiles.containsKey(srcname)) {
-                    // Add ZIP entry to output stream.
-                    copyFileToZipFile(zout, srcname, dstname, zippedfiles);
-                    if (contentSize > maxZipFileSize) {
-                        throw new IOException("file length exceeds max of "+ (maxZipFileSize/1000000) +"MB");
-                    }
-                }
-            }
-
-            // Complete the ZIP file
-            zout.close();
-        } catch (IOException e) {
-            System.err.println("got error "+e.getMessage());
-            // Unix error return code
-            return 1;
-        }
+        DeployUtils.buildZipFile("dhtml", zout, basedir, appdir, new PrintWriter(System.err), skipfiles,
+                     wrapper, widgetType, sourcepath, title, appheight, appwidth);
 
         // OK
         return 0;
 
     }
 
-    static void listFiles(ArrayList fnames, File dir) {
-        if (dir.isDirectory()) {   
-            if (!(dir.getName().startsWith(".svn"))) {
-                String[] children = dir.list();
-                for (int i=0; i<children.length; i++) {
-                    listFiles(fnames, new File(dir, children[i]));
-                }
-            }
-        } else {
-            fnames.add(dir.getPath());
-            //System.out.println("adding "+dir.getPath());
-        }
-    }
-
-    static void copyByteArrayToZipFile (ZipOutputStream zout,
-                                        byte lbytes[],
-                                        String dstfile,
-                                        Set zipped)
-      throws IOException
-    {
-        zout.putNextEntry(new ZipEntry(fixSlashes(dstfile)));
-        zout.write(lbytes, 0, lbytes.length);
-        zout.closeEntry();
-        zipped.add(fixSlashes(dstfile));
-    }
-
-
-    static void copyFileToZipFile (ZipOutputStream zout,
-                                   String srcfile,
-                                   String dstfile,
-                                   Set zipped)
-      throws IOException, FileNotFoundException {
-        String dstfixed = fixSlashes(dstfile);
-        if (zipped.contains(dstfixed)) {
-            return;
-        }
-        FileInputStream in = new FileInputStream(srcfile);
-        // Add ZIP entry to output stream.
-        zout.putNextEntry(new ZipEntry(dstfixed));
-        // Transfer bytes from the file to the ZIP file
-        int len;
-        byte[] buf = new byte[1024];
-        while ((len = in.read(buf)) > 0) {
-            zout.write(buf, 0, len);
-        }
-        // Complete the entry
-        zout.closeEntry();
-        in.close();
-        zipped.add(dstfixed);
-    }
-
-
-    static String fixSlashes (String path) {
-        return(path.replace('\\', '/'));
-    }
-
-    static Element getChild(Element elt, String name) {
-        NodeList elts = elt.getChildNodes();
-        for (int i=0; i < elts.getLength(); i++) {
-            Node child = elts.item(i);
-            if (child instanceof Element && ((Element)child).getTagName().equals(name)) {
-                return (Element) child;
-            }
-        }
-        return null;
-    }
-
-    static Element parse(String content) throws IOException {
-        try {
-            // Create a DOM builder and parse the fragment
-            DocumentBuilderFactory factory =
-                DocumentBuilderFactory.newInstance();
-            factory.setValidating(false);
-            Document d = factory.newDocumentBuilder().parse( new
-                                                             org.xml.sax.InputSource(new StringReader(content)) );
-
-            return d.getDocumentElement();
-
-        } catch (java.io.IOException e) {
-        } catch (javax.xml.parsers.ParserConfigurationException e) {
-        } catch (org.xml.sax.SAXException e) {
-        }
-        return null;
-    }
 }

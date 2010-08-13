@@ -138,6 +138,21 @@
      ]]>
   </method>
 
+  <!-- generates an exploded widget file to tmp working dir, and redirects to it's config.xml -->
+  <method name="runWidget">
+    <![CDATA[
+     var path = escape(app_fullpath.substring(app_lps_root.length));
+     if (app_runtime == 'dhtml') {
+        var url = app_lps_root + "/lps/admin/solo-dhtml-deploy.jsp?appurl="+path+"&whatpage=emulator";
+     } else {
+        var url = app_lps_root + "/lps/admin/solo-deploy.jsp?appurl="+path+"&runtime="+app_runtime+"&whatpage=emulator";
+     }
+
+     this.loadURL(url, '_blank');
+     ]]>
+  </method>
+
+
 
    <method name="debugApp">
      cb_debug.setValue(true); 
@@ -228,6 +243,7 @@
           <text fontsize="11" x="8" y="4"><b>Deploy:</b></text>
           <button x="65" onclick="canvas.viewWrapper()">Server</button>
           <button x="134" onclick="canvas.deploySOLO()">SOLO</button>
+          <button x="200" onclick="canvas.runWidget()">Widget Emulator</button>
 
           <view fgcolor="0x15159b" y="3" options="ignorelayout" align="right" layout="axis: x; spacing: 3">
             <text onclick="canvas.viewDocs()"><u>Documentation</u></text>
