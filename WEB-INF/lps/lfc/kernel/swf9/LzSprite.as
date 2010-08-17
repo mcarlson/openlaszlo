@@ -43,6 +43,7 @@ public class LzSprite extends Sprite {
   import flash.media.ID3Info;
   import flash.net.URLRequest;
   import flash.system.LoaderContext;
+  import flash.system.Capabilities;
   import flash.text.TextField;
   import flash.ui.ContextMenu;
   import flash.filters.DropShadowFilter;
@@ -151,6 +152,7 @@ public class LzSprite extends Sprite {
     ,clickregion: true
     ,directional_layout: true
     ,scaling: true
+    ,customcontextmenu: true
     };
     var capabilities = LzSprite.capabilities;
 
@@ -168,6 +170,7 @@ public class LzSprite extends Sprite {
             LzSprite.rootSprite = this;
             this.mouseEnabled = true;// @devnote: see LPP-6980
             id = LFCApplication.stage.loaderInfo.parameters['id'];
+            LzSprite.__updateCapabilities();
         } else {
             this.mouseEnabled = true;
             this.mouseChildren = false;
@@ -2029,6 +2032,15 @@ public class LzSprite extends Sprite {
         }
         if ($swf10) {
             LzSprite.quirks.loaderinfoavailable = true;
+        }
+    }
+
+    /** Update capabilities
+    * @access private
+    */
+    static function __updateCapabilities(){
+        if (Capabilities.playerType != "Desktop") { 
+            LzSprite.capabilities.customcontextmenu = false;
         }
     }
 

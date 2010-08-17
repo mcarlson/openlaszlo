@@ -81,6 +81,7 @@ LzSprite.prototype.capabilities = {
     ,backgroundrepeat: true
     ,directional_layout: false
     ,scaling: true
+    ,customcontextmenu: true
 }
 
 /**

@@ -662,6 +662,7 @@ LzSprite.prototype.capabilities = {
     ,touchevents: false
     ,directional_layout: false
     ,scaling: false
+    ,customcontextmenu: true
 }
 
 /**

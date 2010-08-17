@@ -866,6 +866,8 @@ function setDefaultContextMenu ( cmenu ){
   * @access private
   */
 function buildDefaultMenu () {
+    if (! this.capabilities.customcontextmenu) return;
+
     this.__LZDefaultCanvasMenu = new LzContextMenu();
     this.__LZDefaultCanvasMenu.hideBuiltInItems();
     

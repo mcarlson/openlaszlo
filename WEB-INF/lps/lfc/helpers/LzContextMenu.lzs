@@ -109,8 +109,12 @@ public dynamic class LzContextMenu extends LzNode {
       * @access public
       */
     function addItem (item:LzContextMenuItem) :void {
-        this.items.push(item);
-        this.kernel.addItem(item);
+        if (canvas.capabilities.customcontextmenu) { 
+            this.items.push(item);
+            this.kernel.addItem(item);
+        } else if ($debug) {
+            LzView.__warnCapability('LzContextMenu.addItem', 'customcontextmenu'); 
+        }
     }
 
     /**
@@ -134,8 +138,12 @@ public dynamic class LzContextMenu extends LzNode {
       * @access public
       */
     function clearItems () :void {
-        this.items = [];
-        this.kernel.clearItems();
+        if (canvas.capabilities.customcontextmenu) { 
+            this.items = [];
+            this.kernel.clearItems();
+        } else if ($debug) {
+            LzView.__warnCapability('LzContextMenu.clearItems', 'customcontextmenu'); 
+        }
     }
 
     /**
