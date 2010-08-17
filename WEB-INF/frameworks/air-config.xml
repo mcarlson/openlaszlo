@@ -13,7 +13,7 @@
 
 <flex-config>
     <!-- Specifies the minimum player version that will run the compiled SWF. -->
-     <target-player>10</target-player>
+     <target-player>10.1.0</target-player>
 
    <compiler>
 
@@ -67,6 +67,7 @@
       <!-- List of SWC files or directories that contain SWC files. -->
       <library-path>
          <path-element>libs</path-element>
+         <path-element>libs/mx</path-element>
          <path-element>libs/air</path-element>
          <path-element>locale/{locale}</path-element>
       </library-path>
@@ -329,45 +330,42 @@
 	<!-- TextLayout SWC -->
     <runtime-shared-library-path>
 		<path-element>libs/textLayout.swc</path-element>
-		<rsl-url>http://fpdownload.adobe.com/pub/swz/tlf/1.0.0.595/textLayout_1.0.0.595.swz</rsl-url>
-		<policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
-		<rsl-url>textLayout_1.0.0.595.swz</rsl-url>
+		<rsl-url>textLayout_1.1.0.604.swf</rsl-url>
 		<policy-file-url></policy-file-url>
 	</runtime-shared-library-path>
       
     <!-- OSMF SWC -->
     <runtime-shared-library-path>
 		<path-element>libs/osmf.swc</path-element>
-		<rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/osmf_flex.4.0.0.13495.swz</rsl-url>
-		<policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
-		<rsl-url>osmf_flex.4.0.0.13495.swz</rsl-url>
+		<rsl-url>osmf_flex.4.0.0.13495.swf</rsl-url>
 		<policy-file-url></policy-file-url>
 	</runtime-shared-library-path>
 	
     <!-- Framework SWC -->
 	<runtime-shared-library-path>
 		<path-element>libs/framework.swc</path-element>
-		<rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/framework_4.0.0.14159.swz</rsl-url>
-		<policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
-		<rsl-url>framework_4.0.0.14159.swz</rsl-url>
+		<rsl-url>framework_4.0.0.0.swf</rsl-url>
+		<policy-file-url></policy-file-url>
+	</runtime-shared-library-path>
+   
+    <!-- MX SWC -->
+	<runtime-shared-library-path>
+		<path-element>libs/mx/mx.swc</path-element>
+		<rsl-url>mx_4.5.0.0.swf</rsl-url>
 		<policy-file-url></policy-file-url>
 	</runtime-shared-library-path>
    
    <!-- Spark SWC-->
    	<runtime-shared-library-path>
 		<path-element>libs/spark.swc</path-element>
-		<rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/spark_4.0.0.14159.swz</rsl-url>
-		<policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
-		<rsl-url>spark_4.0.0.14159.swz</rsl-url>
+		<rsl-url>spark_4.0.0.0.swf</rsl-url>
 		<policy-file-url></policy-file-url>
 	</runtime-shared-library-path>
 	 
 	<!-- RPC SWC -->
 	<runtime-shared-library-path>
 		<path-element>libs/rpc.swc</path-element>
-		<rsl-url>http://fpdownload.adobe.com/pub/swz/flex/4.0.0.14159/rpc_4.0.0.14159.swz</rsl-url>
-		<policy-file-url>http://fpdownload.adobe.com/pub/swz/crossdomain.xml</policy-file-url>
-		<rsl-url>rpc_4.0.0.14159.swz</rsl-url>
+		<rsl-url>rpc_4.0.0.0.swf</rsl-url>
 		<policy-file-url></policy-file-url>
 	</runtime-shared-library-path>
 	

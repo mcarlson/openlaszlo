@@ -3,7 +3,7 @@
 ################################################################################
 ##
 ##  ADOBE SYSTEMS INCORPORATED
-##  Copyright 2007, 2010 Adobe Systems Incorporated
+##  Copyright 2007 Adobe Systems Incorporated
 ##  All Rights Reserved.
 ##
 ##  NOTICE: Adobe permits you to use, modify, and distribute this file
@@ -18,22 +18,22 @@
 
 case `uname` in
 		CYGWIN*)
-			_OS="Windows"
+			OS="Windows"
 		;;
 		*)
-			_OS=Unix
+			OS=Unix
 esac
 
 D32=''
 
-if [ $_OS = "Windows" ]; then
+if [ $OS = "Windows" ]; then
 	# set FLEX_HOME relative to fcsh if not set
 	test "$FLEX_HOME" = "" && {
 		FLEX_HOME=`dirname $0`/..
 		FLEX_HOME=`cygpath -m $FLEX_HOME`
 	}
 
-elif [ $_OS = "Unix" ]; then
+elif [ $OS = "Unix" ]; then
 
 	# set FLEX_HOME relative to fcsh if not set
 	test "$FLEX_HOME" = "" && {
@@ -51,16 +51,6 @@ fi
 
 # don't use $FLEX_HOME in this variable because it may contain spaces,
 # instead put it on the java args directly, with double-quotes around it
-VMARGS="-Xmx1024m -Dsun.io.useCanonCaches=false "
+VMARGS="-Xmx384m -Dsun.io.useCanonCaches=false "
 
-if [ "${OS}" == Windows_NT ];  then
-  export LPS_HOME=`cygpath -w $LPS_HOME`
-  export FLEX_HOME=`cygpath -w $FLEX_HOME`
-    . ${LPS_HOME}\\WEB-INF\\lps\\server\\bin\\lzenv
-else
-  export LPS_HOME
-  . "${LPS_HOME}/WEB-INF/lps/server/bin/lzenv"
-fi
-
-
-java $VMARGS $D32 $SETUP_SH_VMARGS "-Dapplication.home=$FLEX_HOME" -DLPS_HOME="${LPS_HOME}" -cp "${LZCP}" flex2.tools.Fcsh 
+java $VMARGS $D32 $SETUP_SH_VMARGS "-Dapplication.home=$FLEX_HOME" -jar "$FLEX_HOME/lib/fcsh.jar"

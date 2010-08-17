@@ -1,9 +1,13 @@
 # These are instructions to build flex from source and then copy needed files
 # to the LPS tree.
 #
+# flex version history	
 # Wed Jun  2 08:30:41 2010
 # I am installing flex_sdk_4.0.0.14159 Mar 2010 milestone build
 #
+# Mon Aug 16 17:33:09 2010
+# Installed Flex 4.1 Update 	 4.1.0.16076 	 Thu June 30, 2010 
+
 # http://opensource.adobe.com/svn/opensource/flex/sdk/trunk
 #
 # If a pre-built release from adobe is being used, skip the step where 
@@ -60,30 +64,17 @@ fdb.jar \
 flex-compiler-oem.jar \
 flex-fontkit.jar \
 flex-messaging-common.jar \
+flexTasks.jar \
 fxgutils.jar \
 license.jar \
 mxmlc.jar \
-mxmlc_da.jar \
-mxmlc_de.jar \
-mxmlc_es.jar \
-mxmlc_fi.jar \
-mxmlc_fr.jar \
-mxmlc_it.jar \
 mxmlc_ja.jar \
-mxmlc_ko.jar \
-mxmlc_nb.jar \
-mxmlc_nl.jar \
-mxmlc_pt.jar \
-mxmlc_ru.jar \
-mxmlc_sv.jar \
-mxmlc_zh_CN.jar \
-mxmlc_zh_TW.jar \
 optimizer.jar \
 rideau.jar \
 swcdepends.jar \
 swfdump.jar \
 swfutils.jar \
-velocity-dep-1.4-flex.jar 
+velocity-dep-1.4-flex.jar
 do  
   cp /tmp/flex/lib/$i $LPS_HOME/WEB-INF/lib 
 done;
