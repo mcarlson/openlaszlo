@@ -260,9 +260,7 @@ public class SWF9ParseTreePrinter extends ParseTreePrinter {
   // We have to translate types in the `lz` "namespace" to their
   // actual type
   public String lzTypeToPlatformType(String type) {
-    if (type == null) {
-      return "";
-    } else if (type.startsWith("lz.")) {
+    if ((type != null) && type.startsWith("lz.")) {
       return ClassModel.LZXTag2JSClass(type.substring(3));
     } else {
       return type;
