@@ -1020,10 +1020,8 @@ lz.embed = {
                 }
             }
         }
-        var handler = function() {
-            var a = window.event ? [window.event] : [].slice.call(arguments, 0);;
-            if (closure) a.push(closure);
-            callbackscope[callbackname].apply(callbackscope, a);
+        var handler = function(event) {
+            callbackscope[callbackname].apply(callbackscope, [event || window.event,closure]);
         }
         handler.$e = eventscope;
         handler.$c = callbackscope;

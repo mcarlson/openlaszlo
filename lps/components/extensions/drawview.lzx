@@ -502,7 +502,6 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             // Next two are part of the required LFC tag class protocol
             static var tagname = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
-            static var __colorcache = {};
 
             // cache values, used to avoid resetting context values
             private var __globalAlpha = null;
@@ -710,11 +709,13 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function beginPath() {
                 this.__path = [[1,0,0]];
                 this.__pathisopen = true;
+                this.__pathdrawn = false;
             }
 
             function closePath() {
                 if (this.__pathisopen) {
                     this.__path.push([0]);
+                    this.__pathdrawn = false;
                 }
                 this.__pathisopen = false;
             }
@@ -722,24 +723,28 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function moveTo(x,y) {
                 if (this.__pathisopen) {
                     this.__path.push([1, x,y]);
+                    this.__pathdrawn = false;
                 }
             }
 
             function lineTo(x,y) {
                 if (this.__pathisopen) {
                     this.__path.push([2, x,y]);
+                    this.__pathdrawn = false;
                 }
             }
 
             function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
                     this.__path.push([3, cpx, cpy, x, y]);
+                    this.__pathdrawn = false;
                 }
             }
 
             function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
                 if (this.__pathisopen) {
                     this.__path.push([4, cp1x, cp1y, cp2x, cp2y, x, y]);
+                    this.__pathdrawn = false;
                 }
             }
 
@@ -752,10 +757,15 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     //If the context has any subpaths, then the method must add a straight line from the last point in the subpath to the start point of the arc.
                     this.__path.push([1, sx, sy]);
                     this.__path.push([5, x, y, radius, startAngle, endAngle, anticlockwise]);
+                    this.__pathdrawn = false;
                 }
             }
             function fill() {
-                this.__playPath();
+                if (! this.__pathdrawn) {
+                    this.__playPath();
+                } else {
+                    this.__updateFillStyle();
+                }
                 this.context.fill();
             }
 
@@ -767,61 +777,52 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     if (this.fillStyle instanceof LzCanvasGradient) {
                         this.fillStyle.__applyFillTo(this.context);
                     } else {
-                        var ccache = lz.drawview.__colorcache;
-                        var fillStyleColor = ccache[this.fillStyle];
-                        if (fillStyleColor == null) {
-                            fillStyleColor = LzColorUtils.torgb(this.fillStyle);
-                            ccache[this.fillStyle] = fillStyleColor;
-                        }
-                        this.context.fillStyle = fillStyleColor;
+                        this.context.fillStyle = LzColorUtils.torgb(this.fillStyle)
                     }
                     this.__fillStyle = this.fillStyle;
                 }
             }
 
             function __updateLineStyle() {
-                var styleNames = { lineWidth : '__lineWidth',
-                                   lineCap : '__lineCap',
-                                   lineJoin : '__lineJoin',
-                                   miterLimit : '__miterLimit'};
-                for (var name in styleNames) {
-                    var intern = styleNames[name];
-                    var style = this[name];
-                    if (this[intern] != style) {
-                        this.context[name] = style;
-                        this[intern] = style;
-                    }
+                if (this.__lineWidth != this.lineWidth) {
+                    this.__lineWidth = this.context.lineWidth = this.lineWidth;
                 }
-
+                if (this.__lineCap != this.lineCap) {
+                    this.__lineCap = this.context.lineCap = this.lineCap;
+                }
+                if (this.__lineJoin != this.lineJoin) {
+                    this.__lineJoin = this.context.lineJoin = this.lineJoin;
+                }
+                if (this.__miterLimit != this.miterLimit) {
+                    this.__miterLimit = this.context.miterLimit = this.miterLimit;
+                }
                 if (this.__strokeStyle != this.strokeStyle) {
                     if (this.strokeStyle instanceof LzCanvasGradient) {
                         this.strokeStyle.__applyStrokeTo(this.context);
                     } else {
-                        var ccache = lz.drawview.__colorcache;
-                        var strokeStyleColor = ccache[this.strokeStyle];
-                        if (strokeStyleColor == null) {
-                            strokeStyleColor = LzColorUtils.torgb(this.strokeStyle);
-                            ccache[this.strokeStyle] = strokeStyleColor;
-                        }
-                        this.context.strokeStyle = strokeStyleColor;
+                        this.context.strokeStyle =  LzColorUtils.torgb(this.strokeStyle);
                     }
                     this.__strokeStyle = this.strokeStyle;
                 }
             }
 
             function __playPath() {
-                if (this.__path.length == 0) return;
-                this.__dirty = true;
+                var path = this.__path;
+                var l = path.length;
+                if (l == 0) return;
                 if ($debug) this.__checkContext();
                 this.__updateLineStyle();
                 this.__updateFillStyle();
+                if (this.__pathdrawn) return;
+
+                this.__dirty = true;
 
                 this.context.beginPath();
                 
                 // Offset by .5 if lineWidth is an odd number - see LPP-8780
                 var offset = (this.aliaslines && this.lineWidth % 2) ? .5 : 0;
-                for (var i = 0; i < this.__path.length; i += 1) {
-                    var a = this.__path[i];
+                for (var i = 0; i < l; i += 1) {
+                    var a = path[i];
                     switch (a[0]) {
                         case 0:
                             this.context.closePath();
@@ -843,6 +844,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                             break;
                     }
                 }
+                this.__pathdrawn = true;
             }
 
             function clipPath() {
@@ -857,12 +859,17 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function stroke() {
-                this.__playPath();
+                if (! this.__pathdrawn) {
+                    this.__playPath();
+                } else {
+                    this.__updateLineStyle();
+                }
                 this.context.stroke();
             }
 
             function clear() {
                 if (this['__dirty'] == false) return;
+                this.__pathdrawn = false;
                 this.__dirty = false;
                 if ($debug) this.__checkContext();
                 this.context.clearRect(0, 0, this.width, this.height);
@@ -947,10 +954,11 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             function LzCanvasGradient(c, args, isradial) {
                 this.__context = c;
+                var context = c.context;
                 if (isradial) {
-                    this.__g = c.context.createRadialGradient.apply(c.context, args);
+                    this.__g = context.createRadialGradient.apply(context, args);
                 } else {
-                    this.__g = c.context.createLinearGradient.apply(c.context, args)
+                    this.__g = context.createLinearGradient.apply(context, args)
                 }
             }
 
@@ -960,12 +968,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
               * @param Number c: The color to be used at this color.  A hexadecimal value, e.g. 0xffffff
               */
             function addColorStop(o, c) {
-                var ccache = lz.drawview.__colorcache;
-                var cstopColor = ccache[c];
-                if (cstopColor == null) {
-                    cstopColor = LzColorUtils.torgb(c);
-                    ccache[c] = cstopColor;
-                }
+                var cstopColor = LzColorUtils.torgb(c);
                 var gAlpha = this.__context.globalAlpha;
                 if (gAlpha != null && gAlpha != 1) {
                     // add globalAlpha (if there is no explicit alpha value)
@@ -1086,22 +1089,22 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function closePath() {
                 if (this.__pathisopen && this.__path.length > 1) {
                     this.__pathisopen = false;
-                    var p = this.__path[0];
-                    var op = p[0];
+                    var path:Array = this.__path[0];
+                    var op = path[0];
                     if (op == 1 || op == 2) {
                         //(op == this.__MOVETO_OP || op == this.__LINETO_OP)
                         //inlined:
-                        //var x:Number = p[1];
-                        //var y:Number = p[2];
+                        //var x:Number = path[1];
+                        //var y:Number = path[2];
                         //this.lineTo(x, y);
-                        this.__path.push([2, p[1], p[2]]);
+                        this.__path.push([2, path[1], path[2]]);
                     } else if (op == 3) {
                         //(op == this.__QCURVE_OP)
                         //inlined:
-                        //var x:Number = p[3];
-                        //var y:Number = p[4];
+                        //var x:Number = path[3];
+                        //var y:Number = path[4];
                         //this.lineTo(x, y);
-                        this.__path.push([2, p[3], p[4]]);
+                        this.__path.push([2, path[3], path[4]]);
                     }
                     //Debug.write('closePath', x, y);
                 }
@@ -1267,10 +1270,10 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function __playPath(context:*) :void {
                 this.__dirty = true;
                 if ($as2) { context._visible = false; }
-                var p:Array = this.__path;
-                //Debug.write(p, context);
-                for (var i:int = 0; i < p.length; i++) {
-                    var op:Array = p[i];
+                var path:Array = this.__path;
+                //Debug.write(path, context);
+                for (var i:int = 0; i < path.length; i++) {
+                    var op:Array = path[i];
                     switch (op[0]) {
                         case 1:
                             //__MOVETO_OP
@@ -1315,6 +1318,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function clear() {
                 if (this['__dirty'] == false) return;
                 this.__dirty = false;
+                this.__pathdrawn = false;
                 this.context.clear();
                 if (this['__bitmapdata']) {
                     this.clearRect(0,0,this.width,this.height);

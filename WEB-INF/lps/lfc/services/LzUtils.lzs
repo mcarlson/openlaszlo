@@ -163,6 +163,11 @@ class LzColorUtils {
      * See http://en.wikipedia.org/wiki/HSL_color_space
      */
     static function fromhsv(h, s, v) {
+      var cache = LzColorUtils.__cache;
+      var key = 'fromhsv' + h + s + v;
+      if (cache[key]) return cache[key];
+      if (++cache.counter > 1000) { cache = {counter: 0}; }
+
       var t = h / 60;
       var ti = Math.floor(t);
       var hi = ti % 6;
@@ -185,7 +190,7 @@ class LzColorUtils {
         case 5:
           r = v; g = p; b = q; break;
       }
-      return LzColorUtils.rgbatoint(r * 0xff, g * 0xff, b * 0xff);
+      return (cache[key] = LzColorUtils.rgbatoint(r * 0xff, g * 0xff, b * 0xff));
     }
 
     /** @access private

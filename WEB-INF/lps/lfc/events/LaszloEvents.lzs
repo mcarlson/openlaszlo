@@ -270,8 +270,12 @@ public function execute (eventValue:*) :* {
       (anEvent cast LzEvent).addDelegate( this );
     }
 
-    if (this.__events == null) this.__events = [];
-    this.__events.push(anEvent);
+    var events:Array = this.__events;
+    if (events == null) {
+        this.__events = [anEvent];
+    } else {
+        events.push(anEvent);
+    }
     this.hasevents = true;
   }
 
@@ -286,10 +290,11 @@ public function unregisterAll () :void {
 //            Debug.warn('This delegate has already been destroyed, so there is no need for a call to unregisterAll() in this case.  LzDelegates are automatically destroyed by the event system when their context is destroyed.');
 //        }
 //    }
-    for (var i:int = 0, l:int = this.__events.length; i < l; i++) {
-        this.__events[ i ].removeDelegate( this );
+    var events:Array = this.__events;
+    for (var i:int = 0, l:int = events.length; i < l; i++) {
+        events[ i ].removeDelegate( this );
     }
-    this.__events.length = 0;
+    events.length = 0;
     this.hasevents = false;
 }
 
@@ -300,14 +305,15 @@ public function unregisterAll () :void {
   */
 public function unregisterFrom (event:LzDeclaredEventClass) :void {
     if (this.hasevents == false) return;
-    for (var i:int = 0, l:int = this.__events.length; i < l; i++) {
-        var ev:LzEvent = this.__events[ i ];
+    var events:Array = this.__events;
+    for (var i:int = 0, l:int = events.length; i < l; i++) {
+        var ev:LzEvent = events[ i ];
         if (ev === event) {
             ev.removeDelegate( this );
-            this.__events.splice(i, 1);
+            events.splice(i, 1);
         }
     }
-    this.hasevents = this.__events.length > 0;
+    this.hasevents = events.length > 0;
 }
 
 /**
@@ -598,7 +604,8 @@ public override function sendEvent (eventValue:* = null) :void {
     var dlist:Array = this.delegateList;
     var calledDelegates:Array = new Array;
     var d:LzDelegate;
-    for (var i:int = dlist.length - 1; i >= 0; i--) {
+    var i:int = dlist.length;
+    while (--i >= 0) {
         d = dlist[ i ];
         //pointer may be bad due to deletions
         if (d && d.enabled && (! d.event_called)) {
@@ -610,8 +617,11 @@ public override function sendEvent (eventValue:* = null) :void {
             if (c && (! c.__LZdeleted)) {
                 if (c.__LZdeferDelegates) {
                   var evq:Array = c.__LZdelegatesQueue;
-                  if (!evq) { evq = c.__LZdelegatesQueue = []; }
-                  evq.push(this, d, eventValue);
+                  if (!evq) { 
+                    c.__LZdelegatesQueue = [this, d, eventValue]; 
+                  } else {
+                    evq.push(this, d, eventValue);
+                  }
                 } else if (d.m) {
                   // d.execute( eventValue ); inlined
                   d.m.call(c, eventValue);
@@ -646,8 +656,7 @@ public override function sendEvent (eventValue:* = null) :void {
   */
 public override function removeDelegate (d:LzDelegate = null) :void {
     var dlist:Array = this.delegateList;
-    var dll:int = dlist.length;
-    for (var i:int = 0; i < dll; i++) {
+    for (var i:int = 0, l:int = dlist.length; i < l; i++) {
         if (dlist[i] === d) {
             dlist.splice(i, 1);
             break;
