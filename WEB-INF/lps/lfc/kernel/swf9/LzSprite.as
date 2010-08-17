@@ -150,7 +150,7 @@ public class LzSprite extends Sprite {
     ,backgroundrepeat: true
     ,clickregion: true
     ,directional_layout: true
-
+    ,scaling: true
     };
     var capabilities = LzSprite.capabilities;
 
@@ -2030,6 +2030,14 @@ public class LzSprite extends Sprite {
         if ($swf10) {
             LzSprite.quirks.loaderinfoavailable = true;
         }
+    }
+
+    function setXScale(xscale:Number) {
+        this.scaleX = xscale;
+    }
+
+    function setYScale(yscale:Number) {
+        this.scaleY = yscale;
     }
 
   }#

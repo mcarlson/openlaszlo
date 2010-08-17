@@ -1284,7 +1284,7 @@ function $lzc$set_rotation(v) {
         LzView.__warnCapability('view.rotation', 'rotation'); 
     }
     this.rotation = v;
-    this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.xscale != 1 || this.yscale != 1;
     var rrad = Math.PI /180 * this.rotation;
     this.__LZrsin = Math.sin( rrad )
     this.__LZrcos = Math.cos( rrad )
@@ -1361,7 +1361,9 @@ function $lzc$set_width(v) {
             // will be updated by reevaluateSize
             this.unstretchedwidth = null;
             // defaults
-            this._xscale = 1;
+            if (this.capabilities.scaling) {
+                this.$lzc$set_xscale(1);
+            }
         }
         // NOTE: [2009-01-06 ptw] This will end up setting `width` to
         // the width of the contents, will call `sprite.setWidth`
@@ -1372,8 +1374,9 @@ function $lzc$set_width(v) {
 
     if ( this.pixellock ) { v = Math.floor( v ); }
     if ( this._setrescwidth ){
-        var xscale = this.unstretchedwidth == 0 ? 100 : v/this.unstretchedwidth;
-        this._xscale = xscale;
+        if (this.capabilities.scaling) {
+            this.$lzc$set_xscale(this.unstretchedwidth == 0 ? 1 : v/this.unstretchedwidth);
+        }
     } else {
         this.__LZcheckwidth = false;
     }
@@ -1443,7 +1446,9 @@ function $lzc$set_height(v) {
             // will be updated by reevaluateSize
             this.unstretchedheight = null;
             // defaults
-            this._yscale = 1;
+            if (this.capabilities.scaling) {
+                this.$lzc$set_yscale(1);
+            }
         }
         // NOTE: [2009-01-06 ptw] This will end up setting `height` to
         // the height of the contents, will call `sprite.setHeight`
@@ -1454,7 +1459,9 @@ function $lzc$set_height(v) {
 
     if ( this.pixellock ) { v = Math.floor( v ); }
     if ( this._setrescheight ){
-        this._yscale = this.unstretchedheight == 0 ? 100 : v/this.unstretchedheight;
+        if (this.capabilities.scaling) {
+            this.$lzc$set_yscale(this.unstretchedheight == 0 ? 1 : v/this.unstretchedheight);
+        }
     } else {
         this.__LZcheckheight = false;
     }
@@ -1506,7 +1513,7 @@ var xoffset =   0;
 function $lzc$set_xoffset(o) {
     this.xoffset = o;
     this.__LZhasoffset = this.xoffset != 0 || this.yoffset != 0 || this.__widthoffset != 0 || this.__heightoffset != 0;
-    this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.xscale != 1 || this.yscale != 1;
     // Clear the memo cache to force a recompute
     this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
@@ -1533,7 +1540,7 @@ var yoffset =   0;
 function $lzc$set_yoffset(o) {
     this.yoffset = o;
     this.__LZhasoffset = this.xoffset != 0 || this.yoffset != 0 || this.__widthoffset != 0 || this.__heightoffset != 0;
-    this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
+    this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.xscale != 1 || this.yscale != 1;
     // Clear the memo cache to force a recompute
     this.__set_x_memo = void 0;
     this.$lzc$set_x(this.x);
@@ -1547,11 +1554,6 @@ function $lzc$set_yoffset(o) {
 var __LZrsin = 0;
 /** @access private */
 var __LZrcos = 1;
-
-/** @access private */
-var _xscale =   1;
-/** @access private */
-var _yscale =   1;
 
 /** The total number of frames for this view's resource.
   * @type Number
@@ -2135,8 +2137,8 @@ static var __LZlastmtrix = [ 0,0,0,0,0,0,0,0,0,0,0 ];
   */
 function getBounds (  ){
     // account for size offset - may be set by boxmodel mixin
-    var width = this.width + this.__widthoffset;
-    var height = this.height + this.__heightoffset;
+    var width = (this.width + this.__widthoffset) * this.xscale;
+    var height = (this.height + this.__heightoffset) * this.yscale;
     var mtrix = [ -this.xoffset, -this.yoffset,
                    width-this.xoffset , -this.yoffset ,
                   -this.xoffset, height - this.yoffset ,
@@ -2496,8 +2498,9 @@ function updateWidth ( newsize ){
         this.unstretchedwidth = newsize;
 
         if ( this.hassetwidth ){
-            var scale = this.width / newsize;
-            this._xscale = scale;
+            if (this.capabilities.scaling) {
+                this.$lzc$set_xscale(this.width / newsize);
+            }
         }
 
         if (this.onunstretchedwidth.ready) this.onunstretchedwidth.sendEvent( newsize );
@@ -2521,8 +2524,9 @@ function updateHeight ( newsize ){
         this.unstretchedheight = newsize;
 
         if ( this.hassetheight ){
-            var scale = this.height / newsize;
-            this._yscale = scale;
+            if (this.capabilities.scaling) {
+                this.$lzc$set_yscale(this.height / newsize);
+            }
         }
 
         if (this.onunstretchedheight) 
@@ -3849,7 +3853,7 @@ function setCSS(stylename:String, value) {
 
     if (styleinfo.affectsoffset) {
         this.__LZhasoffset = this.xoffset != 0 || this.yoffset != 0 || this.__widthoffset != 0 || this.__heightoffset != 0;
-        this.usegetbounds = this.__LZhasoffset || this.rotation != 0;
+        this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.xscale != 1 || this.yscale != 1;
 
         var vip:LzView = (this.immediateparent cast LzView);
         if (vip.__LZcheckwidth)
@@ -3878,6 +3882,56 @@ function __LZresolveOtherReferences(rdict:Object) {
   * @lzxdefault false
   */
 var usegetbounds = false;
+
+/**
+  * Specifies this horizontal scale for this and all child views.
+  * @type Number
+  * @lzxtype numberExpression
+  * @lzxdefault "1"
+  */
+var xscale = 1;
+
+/** @access private 
+  * @lzxtype event 
+  */
+var onxscale = LzDeclaredEvent;
+
+/** @access private */
+function $lzc$set_xscale (xscale) {
+    if (this.capabilities.scaling) {
+        this.xscale = xscale;
+        this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.xscale != 1 || this.yscale != 1;
+        this.sprite.setXScale(xscale)
+    } else {
+        LzView.__warnCapability("view.xscale", "scaling")
+    };
+    if (this.onxscale.ready) this.onxscale.sendEvent(xscale)
+}
+
+/**
+  * Specifies this vertical scale for this and all child views.
+  * @type Number
+  * @lzxtype numberExpression
+  * @lzxdefault "1"
+  */
+var yscale = 1;
+
+/** @access private 
+  * @lzxtype event 
+  */
+var onyscale = LzDeclaredEvent;
+
+/** @access private */
+function $lzc$set_yscale (yscale) {
+    if (this.capabilities.scaling) {
+        this.yscale = yscale;
+        this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.yscale != 1 || this.yscale != 1;
+        this.sprite.setYScale(yscale)
+    } else {
+        LzView.__warnCapability("view.yscale", "scaling")
+    };
+    if (this.onyscale.ready) this.onyscale.sendEvent(yscale)
+}
 
 } // End of LzView
 

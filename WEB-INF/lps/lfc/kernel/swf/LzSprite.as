@@ -80,7 +80,7 @@ LzSprite.prototype.capabilities = {
     ,medialoading: true
     ,backgroundrepeat: true
     ,directional_layout: false
-
+    ,scaling: true
 }
 
 /**
@@ -1917,6 +1917,20 @@ LzSprite.quirks = {
   */
 LzSprite.__updateQuirks = function (browser) {
     LzSprite.quirks.ignorespuriousff36events = browser.isFirefox && browser.OS == 'Mac' && browser.version == 3.6 && browser.subversion < 2;
+}
+
+LzSprite.prototype.setXScale = function(xscale) {
+    if (! this.__LZmovieClipRef) this.makeContainerResource();
+    this.__LZbgRef._xscale = this.__LZbuttonRef._xscale = this.__LZmovieClipRef._xscale = xscale * 100;
+    this._xscale = xscale;
+    //Debug.info('setXScale', xscale * 100, this, this.__LZmovieClipRef, this.__LZbgRef);
+}
+
+LzSprite.prototype.setYScale = function(yscale) {
+    if (! this.__LZmovieClipRef) this.makeContainerResource();
+    this.__LZbgRef._yscale = this.__LZbuttonRef._yscale = this.__LZmovieClipRef._yscale = yscale * 100;
+    this._yscale = yscale;
+    //Debug.info('setYScale', yscale * 100, this, this.__LZmovieClipRef, this.__LZbgRef);
 }
 
 // end pragma

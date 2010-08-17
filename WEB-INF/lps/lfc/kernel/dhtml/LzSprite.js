@@ -661,7 +661,7 @@ LzSprite.prototype.capabilities = {
     ,backgroundrepeat: true
     ,touchevents: false
     ,directional_layout: false
-
+    ,scaling: false
 }
 
 /**
@@ -812,6 +812,7 @@ LzSprite.__updateQuirks = function () {
             // Safari 3.0.4 supports these
             if (browser.version > 523.10) {
                 capabilities['rotation'] = true;
+                capabilities['scaling'] = true;
                 capabilities['dropshadows'] = true;
                 capabilities['cornerradius'] = true;
                 quirks['explicitly_set_border_radius'] = true;
@@ -923,6 +924,7 @@ LzSprite.__updateQuirks = function () {
             quirks['autoscroll_textarea'] = true;
             if (browser.version >= 3.5) {
                 capabilities['rotation'] = true;
+                capabilities['scaling'] = true;
             }
             
             if (browser.version >= 3.1) {
@@ -2967,7 +2969,8 @@ LzSprite.prototype.__copystyles = function(from, to) {
     to.style.display = from.style.display;
     to.style.clip = from.style.clip;
     to.style.zIndex = from.style.zIndex;
-    if (this.rotation != 0) {
+    if (this._transform) {
+        // copy transforms
         var stylename = LzSprite.__styleNames.transform;
         to.style[stylename] = from.style[stylename];
     }
@@ -2985,7 +2988,16 @@ LzSprite.prototype.rotation = 0;
 LzSprite.prototype.setRotation = function(r) {    
     if (this.rotation == r) return;
     this.rotation = r;
-    var css = 'rotate(' + r + 'deg)'
+    this._rotation = 'rotate(' + r + 'deg) ';
+    this.__updateTransform();
+}
+
+LzSprite.prototype._transform = '';
+LzSprite.prototype.__updateTransform = function(r) {    
+    var css = (this._xscale || '') + (this._yscale || '') +  (this._rotation || '');
+    if (css === this._transform) return;
+    this._transform = css;
+
     var stylename = LzSprite.__styleNames.transform;
     this.__LZdiv.style[stylename] = css;
     if (this.quirks.fix_clickable) {
@@ -3465,6 +3477,22 @@ LzSprite.setMediaLoadTimeout = function(ms){
 
 LzSprite.setMediaErrorTimeout = function(ms){
     // not needed since we reliably get load errors for images
+}
+
+LzSprite.prototype.xscale = 1;
+LzSprite.prototype.setXScale = function(xscale) {
+    if (this.xscale == xscale) return;
+    this.xscale = xscale;
+    this._xscale = 'scaleX(' + xscale + ') ';
+    this.__updateTransform();
+}
+
+LzSprite.prototype.yscale = 1;
+LzSprite.prototype.setYScale = function(yscale) {
+    if (this.yscale == yscale) return;
+    this.yscale = yscale;
+    this._yscale = 'scaleY(' + yscale + ') ';
+    this.__updateTransform();
 }
 
 // End pragma
