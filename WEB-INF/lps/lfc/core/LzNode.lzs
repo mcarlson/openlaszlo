@@ -718,14 +718,20 @@ public dynamic class LzNode extends LzEventable {
     // Force rebuild of rules and property cache
     this.__LZRuleCache = null;
     this.__LZPropertyCache = null;
-    this.__LZPropertyCache = LzCSSStyle.getPropertyCache(this);
 
-    // Verify the CSS bindings
-    for (var cssname:String in this.__LZPropertyCache) {
+    // Verify the CSS bindings (will recompute the rules and
+    // properties)
+    //
+    // NOTE: [2010-08-17 ptw] (LPP-9035) We only iterate over the
+    // attributes that have CSS styles and not over the applicable CSS
+    // properties (because there can be applicable properties that no
+    // attribute is bound to).
+    for (var cssname:String in this.__LZCSSPropToAttr) {
       var attrname:String = this.__LZCSSPropToAttr[cssname];
       var csstype:String = this.__LZCSSType[cssname];
       this.__LZstyleBindAttribute(attrname, cssname, csstype);
     }
+    // Ensure the constraints are up to date
     this.__applyCSSConstraints();
   }
 
