@@ -6,6 +6,26 @@
 <library>
 
 <class name="rte" extends="html" scrollbars="false">
+    <doc>
+      <tag name="shortdesc"><text>Adds the capability to edit rich-text pages.</text></tag>
+      <text>
+        <p><tagname>rte</tagname> is a <sgmltag class="element"
+role="html">&lt;html&gt;</sgmltag> that allows editing of rich-text pages.
+The rte component uses the dijit.Editor from the dojo toolkit.</p>
+        
+        <p>For best results in Flash (like the html component), set the wmode attribute to 'transparent' when embedding the application.  See examples/extensions/html-swf.jsp for an example.  See examples/extensions/rte.lzx for an example of embedding <tagname>rte</tagname> in a window.</p>
+        
+        <example><programlisting class="code"> &lt;canvas&gt;
+    &lt;include href="extensions/rte.lzx"/&gt;
+
+    &lt;rte width="600" height="400"&gt;Initial contents that you can edit.&lt;/rte&gt; &lt;/canvas&gt;
+        </programlisting></example>
+                
+        <p><classname>rte</classname> extends <sgmltag class="element"
+role="html">&lt;html&gt;</sgmltag>.</p>
+      </text>
+    </doc>
+
  
     <!--- The ontext event is generated whenever the rte text content changes. -->
     <event name="ontext"/>
@@ -13,19 +33,17 @@
     <!--- The oneditor event is generated whenever the rte editor is completely loaded. -->
     <event name="oneditorready"/>
 
-    <!--- dijit.Editor toolbar order. An empty string (default) will use the
-          default order. The complete list of toolbar icons is shown. A '|' inserts a separator between
-          blocks of toolbars. A '||' will force a linebreak in the toolbar.
-          TBD
+    <!--- dijit.Editor toolbar order. The list of items to show in the editor
+          toolbar. The default is to show all toolbar features.
+          A '|' inserts a separator between blocks of toolbars. 
+          A '||' will force a linebreak in the toolbar.
           @initarg String
           @access public
     -->
     <attribute name="toolbar_order" type="string" value="undo,redo,|,cut,copy,paste,|,bold,italic,underline,strikethrough,|,insertOrderedList,insertUnorderedList,indent,outdent,|,justifyLeft,justifyRight,justifyCenter,justifyFull,|,foreColor,hiliteColor,|,createLink,unlink,insertImage,|,print,smiley,||,fontName,fontSize"/>
 
-    <!--- Additional dijit.Editor plugins to load. An empty string (default)
-          will load only the plugins used by default. Comma separated list
-          of plugin names.
-          TBD
+    <!--- Comma-separated list of additional dijit.Editor plugins to load.
+          An empty string (default) will load only the plugins used by default.
           @initarg String
           @access public
     -->
@@ -33,15 +51,16 @@
 
 
     <!--- root url where Dojo library is loaded. An empty string (default)
-          will load the library from Google. This path must end with a '/'
-          TBD
+          will load the library from Google. This path must end with a '/'.
+          For example, if you have a local version located at /trunk, 
+          you would specify something like '/trunk/dojo-release-1.5.0/'.
           @initarg String
           @access public
     -->
     <attribute name="dojo_root" type="string" value=""/>
 
     <!--- dojo theme to use. Default value is 'tundra'
-          TBD
+          Other values in dojo 1.5 are soria, nihilo, claro
           @initarg String
           @access public
     -->
@@ -49,7 +68,8 @@
 
     <!--- Dojo library to load (relative to dojo_root). This value is
           ignored if dojo_root is empty. Default value is 'dojo/dojo.js'.
-          If you want to load an uncompressed version of dojo, specify dojo/dojo.js.uncompressed.js
+          If you want to load an uncompressed version of dojo, specify
+          'dojo/dojo.js.uncompressed.js'
           @initarg String
           @access public
     -->
@@ -61,6 +81,15 @@
           @access public
     -->
     <attribute name="dojo_css" type="string" value="dijit/themes/"/>
+
+    <!--- Location of the html wrapper file used by the editor.
+          An empty string (default) loads the system wrapper file.
+          If a custom wrapper file is used, the path is relative to where
+          the application runs from.
+          @initarg String
+          @access public
+    -->
+    <attribute name="wrapperfile" type="string" value=""/>
 
 
     <!--- The initial value of the text to edit. The text is updated while
@@ -81,7 +110,7 @@
 
 
     <!---
-        Set the edit text. If the rte editor is running, the html in the
+        Set the edit text (html). If the rte editor is running, the html in the
         editor is changed.
         @param String html: Replaces the edit text with the specified html.
     -->
@@ -90,11 +119,11 @@
     </method>
 
     <!--- 
-        Returns the string displayed in this component.
+        Returns the html string displayed in this component.
         @return String: the string displayed.
      -->
     <method name="getText">
-        return super.callJavascript("lzrte.rtemanager.getText", null, this.iframeid);
+        return super.callJavascript("lzrte.rtemanager.getText");
     </method>
    
     <!--- If true, the rte editor is ready to receive commands
@@ -110,6 +139,17 @@
     -->
     <method name="insertHtml" args="html">
         super.callJavascript('lzrte.rtemanager.insertHtml', null, html);
+    </method>
+
+    <!---
+        Execute an editor command. The argument is ignored for commands that
+        do not take an argument. This allows lzx code to emulate an editor
+        plugin.
+        @param String cmd: Command to execute (Example: 'bold')
+        @param String arg: Argument required for certain commands.
+    -->
+    <method name="execCommand" args="cmd, arg=''">
+        super.callJavascript('lzrte.rtemanager.execCommand', null, cmd, arg);
     </method>
 
 
@@ -141,6 +181,23 @@
             }
         }
 
+        // Add tooltips if they weren't specified in the attributes.
+        // Depending on browser, the tooltip is 'alt' or 'title'. If both are
+        // missing, use the value of the element
+        var value = null;
+        if ('value' in attributes)
+            value = attributes['value'];
+        if ('alt' in attributes)       
+            value = attributes['alt'];
+        if ('title' in attributes)       
+            value = attributes['title'];
+        if (value) {
+            if (!('alt' in attributes))
+                attributes['alt'] = value;
+            if (!('title' in attributes))
+                attributes['title'] = value;
+        }
+
         var id = super.callJavascript ('lzrte.rtemanager.addButton', null, attributes);
         this.button_mapping[id] = delegate;
         return id;
@@ -156,25 +213,27 @@
     </handler>
 
     <!--- @access private -->
-    <handler name="onload">
+    <handler name="onload"><![CDATA[
         // Change where dojo is found (if necessary)
         if (this.dojo_root.length > 0) {
             callJavascript('lzrte.rtemanager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
         }
 
-        // The theme is always set
-        callJavascript('lzrte.rtemanager.setDojoTheme', null, this.dojo_theme);
+        // Set the theme
+        if (this.dojo_theme.length > 0)
+            callJavascript('lzrte.rtemanager.setDojoTheme', null, this.dojo_theme);
 
         // Set the plugin list
         if (this.toolbar_order.length > 0)
             callJavascript('lzrte.rtemanager.setPlugins', null, this.toolbar_order);
 
-        // Create a js object
+        // Create and start the editor
         callJavascript('lzrte.rtemanager.create', null, 'rte', this.iframeid);
-
-        // Start the editor
         callJavascript('lzrte.rtemanager.rte_start', null, this.text);
-    </handler>
+    ]]></handler>
+
+    <!--- @access private -->
+    <event name="on_rte_loaded"/>
 
     <!--- @access private -->
     <event name="on_editorready"/>
@@ -204,7 +263,12 @@
 
     <!--- @access private -->
     <method name="loadsrc" args="root">
-        this.setAttribute('src', root + 'rtewrapper.html');
+        var wrapper = root + 'rtewrapper.html';
+        if (this.wrapperfile.length > 0) {
+            wrapper = this.wrapperfile;
+        }
+
+        this.setAttribute('src', wrapper);
         this.setAttribute('visible', true);
     </method>
 
@@ -219,19 +283,14 @@
         
 
     <!--- @keywords private -->
-    <setter name="visible" args="v">
-        if (!v)
-            callJavascript('lzrte.rtemanager.rte_stop', null, this.iframeid);
-        super.setAttribute ('visible', v);
-    </setter>
-
-    <!--- @keywords private -->
     <method name="destroy" ><![CDATA[
         var txt = this.getText ();
         if (txt != this.text)
             this.ontext.sendEvent(txt);
 
-        callJavascript('lzrte.rtemanager.destroy', null, this.iframeid);
+        if (this['iframeid']) {
+            callJavascript('lzrte.rtemanager.destroy', null, this.iframeid);
+        }
 
         super.destroy();
     ]]></method> 

@@ -26,7 +26,6 @@
    
       // I created LPP-9197 so I don't have to do this manually
       <method name="close" args="...ignore"> 
-//          myrte.setAttribute('visible', false);
           myrte.destroy(); 
           super.close(); 
       </method> 

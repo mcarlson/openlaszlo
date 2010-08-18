@@ -104,6 +104,7 @@ lzrte.rteloader = {
         }
     }
 
+
     // Called when dojo/dijit.Editor is loaded. This runs once per browser, not once per iframe
     ,editor_loaded: function() {
         dojo.parser.parse (); // Manually parse the DOM
@@ -130,7 +131,7 @@ lzrte.rtemanager = {
     ,__editing:   false    // true if the editor is running
     ,__editor:    null     // dijit.Editor object
     ,button_counter: 0     // unique id of button
-    ,__theme:     'tundra' // editor theme (tundra,soria,nihilo)
+    ,__theme:     'tundra' // editor theme (tundra,soria,nihilo,claro)
 
     // Order that plugins are displayed in the editor
     ,__plugins:   ['undo','redo','|','cut','copy','paste','|','bold','italic','underline','strikethrough','|','insertOrderedList','insertUnorderedList','indent','outdent','|','justifyLeft','justifyRight','justifyCenter','justifyFull','|', 'foreColor', 'hiliteColor', '|', 'createLink', 'unlink', 'insertImage', '|', 'print', 'smiley', '||' , 'fontName', 'fontSize']
@@ -149,6 +150,8 @@ lzrte.rtemanager = {
             lzrte.rtemanager.__editor.destroyRecursive ();
             lzrte.rtemanager.__editor = null;
             lzrte.rtemanager.__editing = false;
+
+            lzrte.rtemanager.removeAllButtons ();
         }
     }
 
@@ -209,10 +212,18 @@ lzrte.rtemanager = {
         return contents;
     }
 
-    // Set the editor contents
+    // Set the editor contents. Use replaceValue() so undo history is kept
+    // (on Mozilla at least). There's a 'feature' in dojo that an empty
+    // string will not erase all the text. Set to a single space instead.
+    // If the string has never been set it must be set directly.
     ,setText: function(s) {
+        var empty = (lzrte.rtemanager.__editor.attr('value').length == 0);
         if (lzrte.rtemanager.__editor) {
-          lzrte.rtemanager.__editor.attr('value', s);
+            if (s.length == 0) s = ' ';
+            if (empty)
+                lzrte.rtemanager.__editor.attr('value', s);
+            else
+                lzrte.rtemanager.__editor.replaceValue(s);
         }
     }
 
@@ -220,6 +231,17 @@ lzrte.rtemanager = {
     ,insertHtml: function(html) {
         if (lzrte.rtemanager.__editor) {
           lzrte.rtemanager.__editor.execCommand("inserthtml", html);
+        }
+    }
+
+    // Execute any editor command. Most commands are called only by editor
+    // plugins, but this allows lzx code to emulate a plugin.
+    // Nothing happens if the command is not supported.
+    // Examples include 'bold', 'undo', 'inserttable'
+    ,execCommand: function(cmd, arg) {
+        if (lzrte.rtemanager.__editor) {
+            if (lzrte.rtemanager.__editor.queryCommandAvailable(cmd))
+                lzrte.rtemanager.__editor.execCommand(cmd, arg);
         }
     }
  
@@ -249,6 +271,14 @@ lzrte.rtemanager = {
         //console.debug("lzrte.rtemanager.generate_event", lzrte.rtemanager.__frameid, name, value);
         if (lzrte.rtemanager.__frameid)
             lz.embed.iframemanager.asyncCallback (lzrte.rtemanager.__frameid, name, value);
+    }
+
+    // Called when the rte javascript is completely loaded. You can't use the
+    // iframe onload event because that can occur before the javascript is
+    // loaded
+    ,rte_loaded: function() {
+        //console.log("rte_loaded", lz.embed.iframemanager, lzrte.rtemanager);
+        lzrte.rtemanager.generate_event ('_rte_loaded');
     }
 
     // Callback method when dijit is loaded
@@ -310,7 +340,7 @@ lzrte.rtemanager = {
     }
 
     // You can change the dojo theme. Current values are tundra, soria, nihilo
-    , setDojoTheme: function(theme) {
+    ,setDojoTheme: function(theme) {
         lzrte.rtemanager.__theme = theme;
     }
 

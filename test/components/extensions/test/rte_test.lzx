@@ -1,0 +1,137 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas width="100%" height="100%">
+    <include href="extensions/rte.lzx"/>
+
+    <!-- flasher is a text field that will flash when trigger() is called -->
+    <class name="flasher" extends="text" opacity="${this.val*this.val}">
+      <attribute name="val" value="-10"/>
+      <animator name="anim" attribute="val" from="-1" to="1" duration="100"/>
+      <method name="trigger">
+        anim.doStart();
+      </method>
+    </class>
+
+    <simplelayout axis="y" spacing="10"/>
+
+    <view name="topview">
+      <simplelayout axis="x" spacing="3"/>
+
+      <attribute name="editor" value="null"/>
+
+      <handler name="oninit">
+        this.update ();
+      </handler>
+
+      <!-- Turn the edit text bold -->
+      <method name="rte_bold" args="ignore"> <![CDATA[
+        this.editor.setAttribute ('text', '<b>' + this.editor.getText() + '</b>');
+        ]]>
+      </method>
+
+      <!-- Insert text -->
+      <method name="rte_insert_text" args="ignore"> <![CDATA[
+        this.editor.insertHtml('<i>OpenLaszlo</i>');
+        ]]>
+      </method>
+
+      <!-- Insert an image -->
+      <method name="rte_insert_image" args="ignore"> <![CDATA[
+        this.editor.insertHtml('<img src="../../examples/extensions/logo_small.png">');
+        ]]>
+      </method>
+
+      <!-- Toggle visible state of rte -->
+      <method name="rte_visible" args="v">
+        if (this.editor) this.editor.setAttribute ('visible', v);
+      </method>
+
+      <!-- Called when rte is completely loaded -->
+      <handler name="editorready">
+        rte_events.oneditorready.trigger ();
+        this.editor.addButton ({value:'All Bold'}, new LzDelegate(this, 'rte_bold'));
+        this.editor.addButton ({value:'Insert Text'}, new LzDelegate(this, 'rte_insert_text'));
+        this.editor.addButton ({value:'Insert Image'}, new LzDelegate(this, 'rte_insert_image'));
+      </handler>
+
+      <!-- Called when rte text changes -->
+      <handler name="ontext">
+        rte_events.ontext.trigger ();
+      </handler>
+
+      <!-- Create/recreate the rte editor with current settings -->
+      <method name="update">
+        var toolbar = [];
+        if (tbcb.cb1.value) toolbar.push ('undo,redo');
+        if (tbcb.cb2.value) toolbar.push ('cut,copy,paste');
+        if (tbcb.cb3.value) toolbar.push ('bold,italic,underline,strikethrough');
+        if (tbcb.cb4.value) toolbar.push ('insertOrderedList,insertUnorderedList,indent,outdent');
+        if (tbcb.cb5.value) toolbar.push ('justifyLeft,justifyRight,justifyCenter,justifyFull');
+        if (tbcb.cb6.value) toolbar.push ('foreColor,hiliteColor');
+        if (tbcb.cb7.value) toolbar.push ('createLink,unlink,insertImage');
+        if (tbcb.cb8.value) toolbar.push ('print');
+        if (tbcb.cb9.value) toolbar.push ('smiley');
+        if (tbcb.cb10.value) toolbar.push ('fontName,fontSize');
+        var tb = toolbar.join (',|,');
+
+        if (this.editor != null) {
+          this.editor.destroy();
+          this.editor = null;
+        }
+        var theme = 'tundra';
+        if (rte_options.theme.value)
+          theme = rte_options.theme.value.substr (7);
+        
+        this.editor = new lz.rte (canvas, {title:'Editor', width:600, height:400, toolbar_order:tb, dojo_theme: theme, text: rte_options.initialtext.text, oneditorready: this.editorready, ontext: this.ontext}); // , dojo_root: '/trunk/dojo-release-1.5.0/', dojo_js: 'dojo/dojo.js.uncompressed.js'});
+
+      </method>
+
+      <view name="tbcb">
+        <simplelayout axis="y" spacing="0"/>
+        <button onclick="parent.parent.update();">Recreate RTE</button>
+        <checkbox name="cb1"  text="Undo, Redo"/>
+        <checkbox name="cb2"  text="Cut, Copy, Paste"/>
+        <checkbox name="cb3"  text="Bold, Italic, Underline, Strikethrough"/>
+        <checkbox name="cb4"  text="Ordered, Unordered List"/>
+        <checkbox name="cb5"  text="Justify"/>
+        <checkbox name="cb6"  text="Foreground Color"/>
+        <checkbox name="cb7"  text="Create Link, Insert Image"/>
+        <checkbox name="cb8"  text="Print"/>
+        <checkbox name="cb9"  text="Smiley"/>
+        <checkbox name="cb10" text="Font"/>
+      </view>
+
+      <view name="rte_options">
+        <simplelayout axis="y" spacing="0"/>      
+        <combobox name="theme" width="120" editable="false">
+          <textlistitem text="Theme: tundra" />
+          <textlistitem text="Theme: soria" />
+          <textlistitem text="Theme: nihilo" />
+          <textlistitem text="Theme: claro" />
+        </combobox>
+        <edittext name="initialtext" width="300">Initial Text</edittext>
+        <checkbox name="vis" value="true" text="Visible" onclick="parent.parent.rte_visible(this.value)"/>
+      </view>
+
+      <view name="getset">
+        <simplelayout axis="y" spacing="2"/>
+        <view>
+          <simplelayout axis="x" spacing="0"/>
+          <button onclick="parent.parent.currenttext.setAttribute('text', canvas.topview.editor.text)">Get Text</button>
+          <button onclick="canvas.topview.editor.setAttribute('text', parent.parent.currenttext.text)">Set Text</button>
+        </view>
+        <edittext name="currenttext" multiline="true" width="300" height="100"/>
+      </view>
+
+      <view name="rte_events">
+        <simplelayout axis="y" spacing="2"/>
+        <text fontstyle="bold">Events</text>
+        <flasher name="oneditorready" text="oneditorready"/>
+        <flasher name="ontext" text="ontext"/>
+      </view>
+
+    </view>
+
+</canvas>

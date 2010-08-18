@@ -396,6 +396,7 @@ lz.embed.iframemanager.setHTML = function(id, html) {
         if (this['iframeid']) {
             lz.embed.iframemanager.__destroy(this.iframeid);
             delete this.iframeid;
+            this.iframeid = null;
         }
         super.destroy();
     </method>
