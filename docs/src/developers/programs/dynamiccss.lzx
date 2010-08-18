@@ -1,15 +1,16 @@
-<canvas width="100%" height="400" debug="true"> 
-  <debug x="250" y="30" width="400" height="350"/>
+<canvas width="100%" height="500" debug="true"> 
+  <debug x="30%" width="65%" y="5%" height="90%" />
   <stylesheet>
     /* default, should only be seen if things are broken */
     colorswatch { background-color: orange }
 
     /* Static for buttons */
     colorbutton[color=red] {background-color: red }
+    /* `lime` is the HTML name for rgb(0,255,0) */
     colorbutton[color=green] {background-color: lime }
     colorbutton[color=blue] {background-color: blue }
 
-    /* dynamic single selectors, should be overridden by compound */
+    /* dynamic single selectors that apply to individual swatches */
     [red=off] colorswatch { background-color: cyan; opacity: 0.2 }
     [red=on] colorswatch { background-color: red; opacity: 0.95 }
     [green=off] colorswatch { background-color: magenta; opacity: 0.2 }
@@ -17,7 +18,7 @@
     [blue=off] colorswatch { background-color: yellow; opacity: 0.2 }
     [blue=on] colorswatch { background-color: blue; opacity: 0.95 }
 
-    /* dynamic compound should apply to mixer colorswatch */
+    /* dynamic compound selectors that apply to mixer colorswatch */
     [red=off] [green=off] [blue=off] [name=mixer] colorswatch { background-color: black; opacity: 1 }
     [red=off] [green=off] [blue=on] [name=mixer] colorswatch { background-color: blue; opacity: 1 }
     [red=off] [green=on] [blue=off] [name=mixer] colorswatch { background-color: lime; opacity: 1 }
@@ -39,7 +40,8 @@
     </handler>
   </class>
 
-  <class name="colorswatch" height="60" width="60" bgcolor="gray">
+  <!-- color swatch that is styled by background-color and opacity -->
+  <class name="colorswatch" height="60" width="60" bgcolor="gray" align="center">
     <attribute name="swatchcolor" style="background-color" type='color' />
     <attribute name="swatchopacity" style="opacity" value="1" />
     <handler name="onclick">
@@ -52,20 +54,26 @@
     </view>
   </class>
 
-  <!-- test harness that should notice changing compound dynamic constraint -->
-  <view id="dynamicTest" x="10%" y="10%" width="80%" height="80%" layout="axis: y; spacing: 5">
-    <view layout="axis: y; spacing: 5">    <attribute name="red" value="${this.toggle.on}" type="string" />
-    <colorbutton id="redbutton" name="toggle" color="red" />
-    <colorswatch id="redswatch" /></view>
-    <view layout="axis: y; spacing: 5">
+  <!-- nested views with red, green, blue attributes that dynamically change
+       to demonstrate the applicability of compound dynamic selectors  -->
+  <view x="5%" y="5%" width="20%" height="80%" layout="axis: y; spacing: 5">
+    <text width="100%" multiline="true">
+      Toggle the red, green, and blue buttons on and off to
+      dynamically update the applicable CSS selectors.  Click on a color
+      swatch to explain the applicability of the CSS selectors.
+    </text>
+    <attribute name="red" value="${this.toggle.on}" type="string" />
+    <colorbutton name="toggle" color="red" />
+    <colorswatch />
+    <view width="100%" layout="axis: y; spacing: 5">
       <attribute name="green" value="${this.toggle.on}" type="string" />
-      <colorbutton id="greenbutton" name="toggle" color="green" />
-      <colorswatch id="greenswatch" />
-      <view layout="axis: y; spacing: 5">
+      <colorbutton name="toggle" color="green" />
+      <colorswatch />
+      <view width="100%" layout="axis: y; spacing: 5">
         <attribute name="blue" value="${this.toggle.on}" type="string" />
-        <colorbutton id="bluebutton" name="toggle" color="blue" />
-        <colorswatch id="blueswatch" />
-        <view name="mixer" layout="axis: y; spacing: 5">
+        <colorbutton name="toggle" color="blue" />
+        <colorswatch />
+        <view width="100%" name="mixer" layout="axis: y; spacing: 5">
           <text align="center">Mixer</text>
           <colorswatch id="mixer"/>
         </view>
