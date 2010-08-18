@@ -10,16 +10,10 @@
   */
 
 
-
-
-
-
-
-
 #file contextmenu.lzx
 #line 8
 dynamic class $lzc$class_lzcontextmenuseparator extends LzView {
-static var tagname = "lzcontextmenuseparator";static var attributes = new LzInheritedHash(LzView.attributes);function $vw3r0s1 ($a) {
+static var tagname = "lzcontextmenuseparator";static var attributes = new LzInheritedHash(LzView.attributes);function $bf5pjd1 ($a) {
 #file
 
 #pragma "userFunctionName=handle oninit"
@@ -29,7 +23,7 @@ static var tagname = "lzcontextmenuseparator";static var attributes = new LzInhe
 this.parent.registerRedraw(this)
 }
 #file
-function $vw3r0s2 ($a) {
+function $bf5pjd2 ($a) {
 #file
 
 #pragma "userFunctionName=handle ondestroy"
@@ -49,13 +43,13 @@ context_$a.stroke()
 function $lzc$class_lzcontextmenuseparator (parent_$a:LzNode? = null, attrs_$b:Object? = null, children_$c:Array? = null, async_$d:Boolean = false) {
 super(parent_$a, attrs_$b, children_$c, async_$d)
 }
-LzNode.mergeAttributes({$delegates: ["oninit", "$vw3r0s1", null, "ondestroy", "$vw3r0s2", null], height: 10}, $lzc$class_lzcontextmenuseparator.attributes);
+LzNode.mergeAttributes({$delegates: ["oninit", "$bf5pjd1", null, "ondestroy", "$bf5pjd2", null], height: 10}, $lzc$class_lzcontextmenuseparator.attributes);
 }
 
 #file contextmenu.lzx
 #line 23
 dynamic class $lzc$class_lzcontextmenutext extends LzText {
-static var tagname = "lzcontextmenutext";static var attributes = new LzInheritedHash(LzText.attributes);function $vw3r0s3 ($a) {
+static var tagname = "lzcontextmenutext";static var attributes = new LzInheritedHash(LzText.attributes);function $bf5pjd3 ($a) {
 #file
 
 #pragma "userFunctionName=handle onmouseover"
@@ -66,7 +60,7 @@ this.parent.__overnow = this.data;
 this.parent.registerRedraw(this)
 }
 #file
-function $vw3r0s4 ($a) {
+function $bf5pjd4 ($a) {
 #file
 
 #pragma "userFunctionName=handle onmouseout"
@@ -77,7 +71,7 @@ this.parent.__overnow = null;
 this.parent.unregisterRedraw(this)
 }
 #file
-function $vw3r0s5 ($a) {
+function $bf5pjd5 ($a) {
 #file
 
 #pragma "userFunctionName=handle onmousedown"
@@ -98,7 +92,7 @@ context_$a.fill()
 function $lzc$class_lzcontextmenutext (parent_$a:LzNode? = null, attrs_$b:Object? = null, children_$c:Array? = null, async_$d:Boolean = false) {
 super(parent_$a, attrs_$b, children_$c, async_$d)
 }
-LzNode.mergeAttributes({$delegates: ["onmouseover", "$vw3r0s3", null, "onmouseout", "$vw3r0s4", null, "onmousedown", "$vw3r0s5", null], clickable: true, fgcolor: LzColorUtils.convertColor("0x0"), fontsize: 11, fontstyle: "plain"}, $lzc$class_lzcontextmenutext.attributes);
+LzNode.mergeAttributes({$delegates: ["onmouseover", "$bf5pjd3", null, "onmouseout", "$bf5pjd4", null, "onmousedown", "$bf5pjd5", null], clickable: true, fgcolor: LzColorUtils.convertColor("0x0"), fontsize: 11, fontstyle: "plain"}, $lzc$class_lzcontextmenutext.attributes);
 }
 
 #file contextmenu.lzx
@@ -115,8 +109,8 @@ LzNode.mergeAttributes({fgcolor: LzColorUtils.convertColor("0xcccccc"), fontsize
 
 #file contextmenu.lzx
 #line 134
-dynamic class $lzc$class_vw3r0s12 extends LzView {
-static var displayName = "<anonymous extends='view'>";static var attributes = new LzInheritedHash(LzView.attributes);function $vw3r0s7 ($a) {
+dynamic class $lzc$class_bf5pjdc extends LzView {
+static var displayName = "<anonymous extends='view'>";static var attributes = new LzInheritedHash(LzView.attributes);function $bf5pjd7 ($a) {
 #file
 
 #pragma "userFunctionName=width='${...}'"
@@ -130,7 +124,7 @@ this.setAttribute("width", $b)
 }}
 #file contextmenu.lzx
 #line 134
-function $vw3r0s8 () {
+function $bf5pjd8 () {
 #file
 
 #pragma "userFunctionName=width dependencies"
@@ -149,7 +143,7 @@ return $lzc$validateReferenceDependencies([this.parent.container, "width"], ["th
 return [this.parent.container, "width"]
 }}
 #line 134
-function $vw3r0s9 ($a) {
+function $bf5pjd9 ($a) {
 #file
 
 #pragma "userFunctionName=height='${...}'"
@@ -163,7 +157,7 @@ this.setAttribute("height", $b)
 }}
 #file contextmenu.lzx
 #line 134
-function $vw3r0s10 () {
+function $bf5pjda () {
 #file
 
 #pragma "userFunctionName=height dependencies"
@@ -182,7 +176,7 @@ return $lzc$validateReferenceDependencies([this.parent.container, "height"], ["t
 return [this.parent.container, "height"]
 }}
 #line 135
-function $vw3r0s11 ($a) {
+function $bf5pjdb ($a) {
 #file
 
 #pragma "userFunctionName=handle oninit"
@@ -230,7 +224,7 @@ context_$a.beginPath();
 this.parent.__drawnitems[uid_$b].redraw(context_$a)
 }}
 #file
-var $classrootdepth;function $lzc$class_vw3r0s12 (parent_$a:LzNode? = null, attrs_$b:Object? = null, children_$c:Array? = null, async_$d:Boolean = false) {
+var $classrootdepth;function $lzc$class_bf5pjdc (parent_$a:LzNode? = null, attrs_$b:Object? = null, children_$c:Array? = null, async_$d:Boolean = false) {
 super(parent_$a, attrs_$b, children_$c, async_$d)
 }
 
@@ -239,7 +233,7 @@ super(parent_$a, attrs_$b, children_$c, async_$d)
 #file contextmenu.lzx
 #line 46
 dynamic class $lzc$class_lzcontextmenu extends LzView {
-static var tagname = "lzcontextmenu";static var children = [{attrs: {$classrootdepth: 1, $delegates: ["oninit", "$vw3r0s11", null, "onwidth", "__doredraw", null, "onheight", "__doredraw", null, "oncontext", "__doredraw", null, "onvisible", "__doredraw", null], height: new LzAlwaysExpr("height", "size", "$vw3r0s9", "$vw3r0s10", $debug ? "height='${...}'" : null), name: "background", width: new LzAlwaysExpr("width", "size", "$vw3r0s7", "$vw3r0s8", $debug ? "width='${...}'" : null)}, "class": $lzc$class_vw3r0s12}, {attrs: {$classrootdepth: 1, name: "container", x: 3, y: 3}, "class": LzView}, {attrs: "container", "class": $lzc$class_userClassPlacement}];static var attributes = new LzInheritedHash(LzView.attributes);var inset;var __drawnitems;var __overnow;function $vw3r0s6 ($a) {
+static var tagname = "lzcontextmenu";static var children = [{attrs: {$classrootdepth: 1, $delegates: ["oninit", "$bf5pjdb", null, "onwidth", "__doredraw", null, "onheight", "__doredraw", null, "oncontext", "__doredraw", null, "onvisible", "__doredraw", null], height: new LzAlwaysExpr("height", "size", "$bf5pjd9", "$bf5pjda", $debug ? "height='${...}'" : null), name: "background", width: new LzAlwaysExpr("width", "size", "$bf5pjd7", "$bf5pjd8", $debug ? "width='${...}'" : null)}, "class": $lzc$class_bf5pjdc}, {attrs: {$classrootdepth: 1, name: "container", x: 3, y: 3}, "class": LzView}, {attrs: "container", "class": $lzc$class_userClassPlacement}];static var attributes = new LzInheritedHash(LzView.attributes);var inset;var __drawnitems;var __overnow;function $bf5pjd6 ($a) {
 #file
 
 #pragma "userFunctionName=handle oninit"
@@ -336,13 +330,11 @@ this.hide()
 var background;var container;function $lzc$class_lzcontextmenu (parent_$a:LzNode? = null, attrs_$b:Object? = null, children_$c:Array? = null, async_$d:Boolean = false) {
 super(parent_$a, attrs_$b, children_$c, async_$d)
 }
-LzNode.mergeAttributes({$delegates: ["oninit", "$vw3r0s6", null], __drawnitems: {}, __overnow: null, inset: 5, options: {ignorelayout: true}, visible: false}, $lzc$class_lzcontextmenu.attributes);
+LzNode.mergeAttributes({$delegates: ["oninit", "$bf5pjd6", null], __drawnitems: {}, __overnow: null, inset: 5, options: {ignorelayout: true}, visible: false}, $lzc$class_lzcontextmenu.attributes);
 }
 
 lz["lzcontextmenuseparator"] = $lzc$class_lzcontextmenuseparator;
 lz["lzcontextmenutext"] = $lzc$class_lzcontextmenutext;
 lz["lzcontextmenudisabled"] = $lzc$class_lzcontextmenudisabled;
 lz["lzcontextmenu"] = $lzc$class_lzcontextmenu;
-
-
 
