@@ -1,6 +1,6 @@
 /**
   *
-  * @copyright Copyright 2001-2008 Laszlo Systems, Inc.  All Rights Reserved.
+  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
   *            Use is subject to license terms.
   *
   * @access public
@@ -35,8 +35,8 @@
   */
 class LzViewLinkage {
 
-    var scale:* = 1;
-    var offset:* = 0;
+    var scale:Object = null;
+    var offset:Object = null;
     var uplinkArray:Array = null;
     var downlinkArray:Array = null;
 
@@ -47,36 +47,38 @@ class LzViewLinkage {
   function LzViewLinkage ( fromView, toView ) {
     //@field scale: An <b><i>LzPoint</b></i> representing the scale
     //transformation of this linkage. 1 is no transformation.
-    this.scale = new Object ();
+    this.scale = {};
     //@field offset: An <b><i>LzPoint</b></i> representing the offset
     //to be added by this linkage.
-    this.offset = new Object ();
-    if (fromView == toView){ return; }
+    this.offset = {};
+    if (fromView === toView){ return; }
 
     this.uplinkArray = [ ];
+    var uplinkArray = this.uplinkArray;
     var pview = fromView;
     do {
       pview = pview.immediateparent;
-      this.uplinkArray.push ( pview );
-    } while( pview != toView && pview != canvas);
+      uplinkArray.push ( pview );
+    } while( pview !== toView && pview !== canvas);
 
     this.downlinkArray = [ ];
-    if (pview == toView) return;
+    var downlinkArray = this.downlinkArray;
+    if (pview === toView) return;
 
     var pview = toView;
     do {
       pview = pview.immediateparent;
-      this.downlinkArray.push ( pview );
-    } while( pview != canvas);
+      downlinkArray.push ( pview );
+    } while( pview !== canvas);
 
-    while (this.uplinkArray.length > 1 &&
-           this.downlinkArray[this.downlinkArray.length -1 ] ==
-           this.uplinkArray[this.uplinkArray.length - 1 ] &&
-           this.downlinkArray[this.downlinkArray.length -2 ]  ==
-           this.uplinkArray[this.uplinkArray.length - 2 ] ){
+    while (uplinkArray.length > 1 &&
+           downlinkArray[downlinkArray.length -1 ] ===
+           uplinkArray[uplinkArray.length - 1 ] &&
+           downlinkArray[downlinkArray.length -2 ]  ===
+           uplinkArray[uplinkArray.length - 2 ] ){
       //remove top level duplicates
-      this.downlinkArray.pop();
-      this.uplinkArray.pop();
+      downlinkArray.pop();
+      uplinkArray.pop();
     }
   }
 
@@ -87,20 +89,21 @@ class LzViewLinkage {
   function update (xory) {
     var tscale= 1;
     var toffset= 0;
-    var scale = "_" + xory + "scale";
+    var scale = xory + "scale";
+    var uplinkArray = this.uplinkArray;
+    var downlinkArray = this.downlinkArray;
 
-    if (this.uplinkArray) {
-        var ual = this.uplinkArray.length;
-        for (var i = 0 ; i < ual ; i++ ){
-            var a = this.uplinkArray[i];
+    if (uplinkArray) {
+        for (var i = 0, ual = uplinkArray.length ; i < ual ; i++ ){
+            var a = uplinkArray[i];
             tscale *= a[scale];
             toffset += a[xory] / tscale;
         }
     }
 
-    if (this.downlinkArray) {
-        for (var i = this.downlinkArray.length -1 ; i >= 0 ; i -- ){
-            var a = this.downlinkArray[i];
+    if (downlinkArray) {
+        for (var i = downlinkArray.length -1 ; i >= 0 ; i -- ){
+            var a = downlinkArray[i];
             toffset -= a[xory] / tscale;
             tscale /= a[scale];
         }

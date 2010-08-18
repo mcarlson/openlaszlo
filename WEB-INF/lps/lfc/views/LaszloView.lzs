@@ -884,7 +884,9 @@ var onbackgroundrepeat = LzDeclaredEvent;
 /** @access private */
 function $lzc$set_backgroundrepeat( backgroundrepeat ){
     if (! this.capabilities.backgroundrepeat) {
-        LzView.__warnCapability('view.backgroundrepeat', 'backgroundrepeat'); 
+        if ($debug) {
+            LzView.__warnCapability('view.backgroundrepeat', 'backgroundrepeat'); 
+        }
         return;
     } else if (backgroundrepeat != 'repeat' && backgroundrepeat != 'repeat-x' && backgroundrepeat != 'repeat-y' && backgroundrepeat != 'norepeat') {
         if ($debug) {
@@ -3873,7 +3875,7 @@ function $lzc$set_xscale (xscale) {
         this.xscale = xscale;
         this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.xscale != 1 || this.yscale != 1;
         this.sprite.setXScale(xscale)
-    } else {
+    } else if ($debug) {
         LzView.__warnCapability("view.xscale", "scaling")
     };
     if (this.onxscale.ready) this.onxscale.sendEvent(xscale)
@@ -3898,7 +3900,7 @@ function $lzc$set_yscale (yscale) {
         this.yscale = yscale;
         this.usegetbounds = this.__LZhasoffset || this.rotation != 0 || this.yscale != 1 || this.yscale != 1;
         this.sprite.setYScale(yscale)
-    } else {
+    } else if ($debug) {
         LzView.__warnCapability("view.yscale", "scaling")
     };
     if (this.onyscale.ready) this.onyscale.sendEvent(yscale)
