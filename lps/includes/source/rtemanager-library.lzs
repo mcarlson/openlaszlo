@@ -2,7 +2,3 @@
 #include "rtemanager.js"
 // Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is
 // subject to license terms.
-#include "iframestub.js"
-#include "rtemanager.js"
-// Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is
-// subject to license terms.
