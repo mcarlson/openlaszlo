@@ -324,7 +324,7 @@ lz.embed = {
                 properties[i] = v;
             }
         }
-        var url = queryvals.url + '?lzt=object&' + queryvals.query;
+        var url = queryvals.url + '?' + queryvals.query;
 
         var appenddiv = embed._getAppendDiv(properties.id, properties.appenddivid);
         if (! properties.skipchromeinstall && embed.browser.isIE && embed.browser.version < 7) {

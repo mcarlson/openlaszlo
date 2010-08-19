@@ -44,16 +44,20 @@ If you edit this file, please validate your work using http://validator.w3.org/
                     // called with a percentage (0-100) indicating load progress
                     var el = document.getElementById('lzsplashtext');
                     if (el) {
-                        el.innerHTML = p + '% loaded'
+                        if (p == 100) {
+                            var splash = document.getElementById('lzsplash');
+                            if (splash) {
+                                splash.parentNode.removeChild(splash);
+                            }
+                        } else {
+                            el.innerHTML = p + '% loaded'
+                        }
                     }
                   }
 
                   lz.embed.applications.<xsl:value-of select="/canvas/@id"/>.onload = function loaded() {
-                    // called when this application is done loading
-                    var el = document.getElementById('lzsplash');
-                    if (el) {
-                        el.parentNode.removeChild(el);
-                    }
+                    // called when this application is done loading and the 
+                    // canvas has initted
                   }
                 </script>
               </xsl:otherwise>
@@ -67,6 +71,6 @@ If you edit this file, please validate your work using http://validator.w3.org/
 
 </xsl:stylesheet>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-     * Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
-     * Use is subject to license terms.                                            *
-     * X_LZ_COPYRIGHT_END ****************************************************** -->
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
