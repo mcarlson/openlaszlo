@@ -141,6 +141,17 @@ lz.embed.iframemanager = {
             owner.setiframeid(id);
         }
     }
+    ,getIDFromWindow: function(scope) { 
+        var iframemanager = lz.embed.iframemanager;
+        var frames = iframemanager.__frames
+        for (var id in frames) {
+            if (scope === iframemanager.getFrameWindow(id)) {
+                //console.log('found id for scope', id, scope);
+                return id;
+            }
+        }
+        //console.log('no id found for scope', scope);
+    }
     ,appendTo: function(iframe, div) { 
         //console.log('appendTo', iframe, div, iframe.__appended);
         if (div.__appended == div) return;

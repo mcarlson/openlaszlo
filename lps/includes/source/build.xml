@@ -37,7 +37,7 @@
 
     <!-- Whether the compressed rtemanager is up to date -->
     <uptodate property="rtemanager.uptodate" >
-      <srcfiles dir="." includes="rtemanager.js" />
+      <srcfiles dir="." includes="rtemanager.js,iframestub.js,rtemanager-library.lzs" />
       <compositemapper>
         <mergemapper to="../rtemanager.js" />
       </compositemapper>
@@ -58,6 +58,14 @@
         <mergemapper to="../iframemanager.js" />
       </compositemapper>
     </uptodate>
+
+    <!-- Whether the compressed iframestub is up to date -->
+    <uptodate property="iframestub.uptodate" >
+      <srcfiles dir="." includes="iframestub.js" />
+      <compositemapper>
+        <mergemapper to="../iframestub.js" />
+      </compositemapper>
+    </uptodate>
   </target>
 
   <target name="clean" depends="init">
@@ -67,6 +75,7 @@
       <fileset dir=".." includes="rtemanager.js" />
       <fileset dir=".." includes="iframemanager.js" />
       <fileset dir=".." includes="flash.js" />
+      <fileset dir=".." includes="iframestub.js" />
     </delete>
   </target>
 
@@ -107,7 +116,7 @@
           unless="rtemanager.uptodate">
     <ant target="compress">
       <property name="output" value="../rtemanager.js" />
-      <property name="source" value="rtemanager.js" />
+      <property name="source" value="rtemanager-library.lzs" />
     </ant>
   </target>
 
@@ -125,7 +134,16 @@
           unless="iframemanager.uptodate">
     <ant target="compress">
       <property name="output" value="../iframemanager.js" />
-      <property name="source" value="iframemanager.js" />
+      <property name="source" value="iframemanager-library.lzs" />
+    </ant>
+  </target>
+
+  <target name="iframestub"
+          depends="init"
+          unless="iframestub.uptodate">
+    <ant target="compress">
+      <property name="output" value="../iframestub.js" />
+      <property name="source" value="iframestub.js" />
     </ant>
   </target>
 
@@ -133,7 +151,7 @@
   </target>
 
   <target name="build" description="Build all the includes, unless they're already up to date"
-          depends="init,embed,excanvas,rtemanager,flash,iframemanager">
+          depends="init,embed,excanvas,rtemanager,flash,iframemanager,iframestub">
   </target>
 
   <target name="all"

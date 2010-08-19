@@ -36,14 +36,14 @@ var djConfig = {
     ,require: ['dojo.parser', 'dijit.Editor', 'dijit.layout.ContentPane', 'dijit.layout.BorderContainer', 'dijit.form.Form', 'dijit._editor.range', 'dijit._editor.plugins.AlwaysShowToolbar', 'dijit._editor.plugins.LinkDialog', 'dijit._editor.plugins.Print', 'dijit._editor.plugins.TextColor', 'dijit._editor.plugins.FontChoice','dojox.editor.plugins.Smiley','dojox.editor.plugins.ToolbarLineBreak']
     ,debugAtAllCosts: false   // Setting this to true fixes local loading of dojo
     ,addOnLoad: function() {
-        lzrte.rteloader.editor_loaded();
+        lz.rte.loader.editor_loaded();
     }
 };
 
 
-lzrte = {}
+lz.rte = {}
 
-lzrte.util = {
+lz.rte.util = {
     loadJavascript: function(doc, url, onload) {
         var s = doc.createElement('script');
         s.src  = url;
@@ -66,7 +66,7 @@ lzrte.util = {
 }
 
 
-lzrte.rteloader = {
+lz.rte.loader = {
     __loading: false    // true if the loading process is running
     ,__loaded: false    // true if dijit Editor is loaded
     ,__callbacks: []    // object names requesting notification when editor has loaded
@@ -77,30 +77,30 @@ lzrte.rteloader = {
     ,__jspath: 'dojo/dojo.xd.js'
 
     ,loadDojoCSS: function(doc, theme) {
-        lzrte.util.loadCSS (doc, lzrte.rteloader.__dojoroot + lzrte.rteloader.__csspath + theme + '/' + theme + '.css');
+        lz.rte.util.loadCSS (doc, lz.rte.loader.__dojoroot + lz.rte.loader.__csspath + theme + '/' + theme + '.css');
 
         document.body.className += document.body.className ? ' ' + theme : theme;
     }
 
     // Load dojo/dijit.Editor into the specified document. Call obj.editor_loaded when complete. 
     ,loadDojo: function(doc, callback, require) {
-        if (lzrte.rteloader.__loading) {
+        if (lz.rte.loader.__loading) {
             // Already loading. Add to callback
-            lzrte.rteloader.__callbacks.push (callback);
+            lz.rte.loader.__callbacks.push (callback);
             return;
         }
-        else if (lzrte.rteloader.__loaded) {
+        else if (lz.rte.loader.__loaded) {
             callback.call ();
             return;
         }
         else {
-            lzrte.rteloader.__loading = true;
+            lz.rte.loader.__loading = true;
 
             if (require)
                 djConfig.require = require;
 
-            lzrte.rteloader.__callbacks.push (callback);
-            lzrte.util.loadJavascript (doc, lzrte.rteloader.__dojoroot + lzrte.rteloader.__jspath);
+            lz.rte.loader.__callbacks.push (callback);
+            lz.rte.util.loadJavascript (doc, lz.rte.loader.__dojoroot + lz.rte.loader.__jspath);
         }
     }
 
@@ -109,21 +109,20 @@ lzrte.rteloader = {
     ,editor_loaded: function() {
         dojo.parser.parse (); // Manually parse the DOM
 
-        lzrte.rteloader.__loaded = true;
-        lzrte.rteloader.__loading = false;
+        lz.rte.loader.__loaded = true;
+        lz.rte.loader.__loading = false;
 
         // Inform anyone waiting that dojo/dijit.Editor is loaded
-        while (lzrte.rteloader.__callbacks.length > 0) {
-            var callback = lzrte.rteloader.__callbacks.shift ();
+        while (lz.rte.loader.__callbacks.length > 0) {
+            var callback = lz.rte.loader.__callbacks.shift ();
             callback.call ();
         }
     }
 }
 
 
-lzrte.rtemanager = {
+lz.rte.manager = {
     __id:         null     // DOM id of <div> element containing text
-    ,__frameid:   null     // id of iframe of html component
     ,__loading:   false    // true if the loading process is running
     ,__loaded:    false    // true if dijit Editor is loaded
     ,__text:      ''       // Text to display when the editor first loads. Also the current text
@@ -137,75 +136,74 @@ lzrte.rtemanager = {
     ,__plugins:   ['undo','redo','|','cut','copy','paste','|','bold','italic','underline','strikethrough','|','insertOrderedList','insertUnorderedList','indent','outdent','|','justifyLeft','justifyRight','justifyCenter','justifyFull','|', 'foreColor', 'hiliteColor', '|', 'createLink', 'unlink', 'insertImage', '|', 'print', 'smiley', '||' , 'fontName', 'fontSize']
 
     // Create the rte, but do not display it
-    ,create: function(id_name, frameid) {
-        lzrte.rtemanager.__id = id_name;
-        lzrte.rtemanager.__frameid = frameid;
+    ,create: function(id_name) {
+        lz.rte.manager.__id = id_name;
     }
 
     // Cleanup
-    ,destroy: function (frameid) {
-        lzrte.rtemanager.rte_stop ();
+    ,destroy: function () {
+        lz.rte.manager.rte_stop ();
         
-        if (lzrte.rtemanager.__editor) {
-            lzrte.rtemanager.__editor.destroyRecursive ();
-            lzrte.rtemanager.__editor = null;
-            lzrte.rtemanager.__editing = false;
+        if (lz.rte.manager.__editor) {
+            lz.rte.manager.__editor.destroyRecursive ();
+            lz.rte.manager.__editor = null;
+            lz.rte.manager.__editing = false;
 
-            lzrte.rtemanager.removeAllButtons ();
+            lz.rte.manager.removeAllButtons ();
         }
     }
 
     // Run the RTE for the specified id
     ,__rte_start: function(initial_text) {
-        lzrte.rtemanager.initialize(); // nop if already initialized
-        lzrte.rtemanager.__editing = true;
+        lz.rte.manager.initialize(); // nop if already initialized
+        lz.rte.manager.__editing = true;
 
-        var id = dojo.byId(lzrte.rtemanager.__id);
+        var id = dojo.byId(lz.rte.manager.__id);
 
         if (initial_text && id)
           id.innerHTML = initial_text;
 
-        if (lzrte.rtemanager.__editor)
-          lzrte.rtemanager.__editor.open ();
+        if (lz.rte.manager.__editor)
+          lz.rte.manager.__editor.open ();
         else {
-            var plugins = lzrte.rtemanager.__plugins;
+            var plugins = lz.rte.manager.__plugins;
             // TODO. This has issues in IE when rte is in a window that gets removed
             //            plugins.push ('dijit._editor.plugins.EnterKeyHandling');
             var extraplugins = ['dijit._editor.plugins.AlwaysShowToolbar'];
-            lzrte.rtemanager.__editor = new dijit.Editor({height: '100%', plugins: plugins, extraPlugins: extraplugins}, id);
+            lz.rte.manager.__editor = new dijit.Editor({height: '100%', plugins: plugins, extraPlugins: extraplugins}, id);
             dijit.byId('rte_div').resize();
         }
-        //console.debug("Created editor", lzrte.rtemanager.__editor);
+        //console.debug("Created editor", lz.rte.manager.__editor);
 
         // Capturing mouse clicks and key presses is enough to find out when
         // the text changes. The onChange event in dijit.Editor doesn't fire
         // until the editor loses focus. It is still useful to capture this
         // event.
-        dojo.connect(lzrte.rtemanager.__editor, 'onChange', lzrte.rtemanager.onchange);
-        dojo.connect(lzrte.rtemanager.__editor, 'onClick', lzrte.rtemanager.onchange);
-        dojo.connect(lzrte.rtemanager.__editor, 'onKeyUp', lzrte.rtemanager.onchange);
+        dojo.connect(lz.rte.manager.__editor, 'onChange', lz.rte.manager.onchange);
+        dojo.connect(lz.rte.manager.__editor, 'onClick', lz.rte.manager.onchange);
+        dojo.connect(lz.rte.manager.__editor, 'onKeyUp', lz.rte.manager.onchange);
     }
 
     ,rte_start: function(initial_text) {
-        if (lzrte.rtemanager.isEditing() || lzrte.rtemanager.__loading)
+        if (lz.rte.manager.isEditing() || lz.rte.manager.__loading)
             return;
-        if (lzrte.rtemanager.isLoaded()) {
-            lzrte.rtemanager.__rte_start(initial_text);
+        if (lz.rte.manager.isLoaded()) {
+            lz.rte.manager.__rte_start(initial_text);
         }
         else {
             // Load the editor and then show editor
-            lzrte.rtemanager.__text = initial_text;
-            lzrte.rtemanager.initialize();
+            lz.rte.manager.__text = initial_text;
+            lz.rte.manager.initialize();
         }
     }
 
     // Stop RTE and return the content
     ,rte_stop: function() {
         var contents;
-        if (lzrte.rtemanager.__editor) {
-            contents = lzrte.rtemanager.getText();
-            if (lzrte.rtemanager.isEditing())
-                lzrte.rtemanager.__editor.close ();
+        if (lz.rte.manager.__editor) {
+            contents = lz.rte.manager.getText();
+            if (lz.rte.manager.isEditing())
+                lz.rte.manager.__editor.close ();
             //console.debug("rte_stop", contents);
         }
 
@@ -217,20 +215,20 @@ lzrte.rtemanager = {
     // string will not erase all the text. Set to a single space instead.
     // If the string has never been set it must be set directly.
     ,setText: function(s) {
-        var empty = (lzrte.rtemanager.__editor.attr('value').length == 0);
-        if (lzrte.rtemanager.__editor) {
+        var empty = (lz.rte.manager.__editor.attr('value').length == 0);
+        if (lz.rte.manager.__editor) {
             if (s.length == 0) s = ' ';
             if (empty)
-                lzrte.rtemanager.__editor.attr('value', s);
+                lz.rte.manager.__editor.attr('value', s);
             else
-                lzrte.rtemanager.__editor.replaceValue(s);
+                lz.rte.manager.__editor.replaceValue(s);
         }
     }
 
     // Insert html
     ,insertHtml: function(html) {
-        if (lzrte.rtemanager.__editor) {
-          lzrte.rtemanager.__editor.execCommand("inserthtml", html);
+        if (lz.rte.manager.__editor) {
+          lz.rte.manager.__editor.execCommand("inserthtml", html);
         }
     }
 
@@ -239,17 +237,17 @@ lzrte.rtemanager = {
     // Nothing happens if the command is not supported.
     // Examples include 'bold', 'undo', 'inserttable'
     ,execCommand: function(cmd, arg) {
-        if (lzrte.rtemanager.__editor) {
-            if (lzrte.rtemanager.__editor.queryCommandAvailable(cmd))
-                lzrte.rtemanager.__editor.execCommand(cmd, arg);
+        if (lz.rte.manager.__editor) {
+            if (lz.rte.manager.__editor.queryCommandAvailable(cmd))
+                lz.rte.manager.__editor.execCommand(cmd, arg);
         }
     }
  
     // Retrieve the editor contents
     ,getText: function() {
         var contents;
-        if (lzrte.rtemanager.__editor) {
-          contents = lzrte.rtemanager.__editor.attr('value');
+        if (lz.rte.manager.__editor) {
+          contents = lz.rte.manager.__editor.attr('value');
         }
         return contents;
     }
@@ -257,71 +255,64 @@ lzrte.rtemanager = {
     // Callback method when the editor content changes. Nothing is generated if the text doesn't change
     // Sends ontext event to lzx
     ,onchange: function(e) {
-        var txt = lzrte.rtemanager.getText();
-        if (txt != lzrte.rtemanager.__text) {
+        var txt = lz.rte.manager.getText();
+        if (txt != lz.rte.manager.__text) {
             //console.debug("onchange:", txt);
-            lzrte.rtemanager.__text = txt;
-            lzrte.rtemanager.generate_event ('_text', txt);
+            lz.rte.manager.__text = txt;
+            lz.sendEvent('_text', txt);
         }
     }
 
-
-    // Generate an event in lzx
-    ,generate_event: function(name,value) {
-        //console.debug("lzrte.rtemanager.generate_event", lzrte.rtemanager.__frameid, name, value);
-        if (lzrte.rtemanager.__frameid)
-            lz.embed.iframemanager.asyncCallback (lzrte.rtemanager.__frameid, name, value);
-    }
 
     // Called when the rte javascript is completely loaded. You can't use the
     // iframe onload event because that can occur before the javascript is
     // loaded
     ,rte_loaded: function() {
-        //console.log("rte_loaded", lz.embed.iframemanager, lzrte.rtemanager);
-        lzrte.rtemanager.generate_event ('_rte_loaded');
+        //console.log("rte_loaded", lz.frameid, lz.rte.manager);
+        lz.sendEvent ('_rte_loaded');
     }
 
     // Callback method when dijit is loaded
     ,editor_loaded: function() {
         // Prevent this from firing more than once
-        if (lzrte.rtemanager.isLoaded())
+        if (lz.rte.manager.isLoaded())
             return;
 
-        lzrte.rtemanager.__loaded = true;
-        lzrte.rtemanager.__loading = false;
+        lz.rte.manager.__loaded = true;
+        lz.rte.manager.__loading = false;
 
         //__text is the initial text to show
-        lzrte.rtemanager.__rte_start (lzrte.rtemanager.__text);
+        lz.rte.manager.__rte_start (lz.rte.manager.__text);
   
         // Generate an on_editorready event. The rte component will send the oneditorready event
-        lzrte.rtemanager.generate_event ('_editorready');
+        lz.sendEvent ('_editorready');
     }
 
     // Return true if editor is loaded
     ,isLoaded: function() {
-        return lzrte.rtemanager.__loaded;
+        return lz.rte.manager.__loaded;
     }
 
       // Return true if the editor is enabled and running
     ,isEditing: function() {
-        return lzrte.rtemanager.__editing;
+        return lz.rte.manager.__editing;
     }
 
     // Install a delegate used whenever a button is clicked. The argument
     // to the delegate is the button_id.
     ,set_onclick: function(callback) {
-        lzrte.rtemanager.__onclick = callback;
+        lz.rte.manager.__onclick = callback;
     }
 
     // Call to initialize() package.
     ,initialize: function() {
         //console.debug("initialize");
-        if (lzrte.rtemanager.isLoaded())
+        if (lz.rte.manager.isLoaded())
             return;
         // Install the css and theme
-        lzrte.rteloader.loadDojoCSS (document, lzrte.rtemanager.__theme);
+        lz.rte.loader.loadDojoCSS (document, lz.rte.manager.__theme);
         // Load dojo
-        lzrte.rteloader.loadDojo (document, lzrte.rtemanager.editor_loaded);
+        lz.rte.loader.loadDojo (document, lz.rte.manager.editor_loaded);
     }
 
     // Manage plugins
@@ -330,9 +321,9 @@ lzrte.rtemanager = {
     // specified. The css path probably will not change, but the js path will specify either
     // a compressed or uncompressed version
     ,setDojoPath: function(root, js, css) {
-        lzrte.rteloader.__dojoroot = root;
-        lzrte.rteloader.__jspath   = js;
-        lzrte.rteloader.__csspath  = css;
+        lz.rte.loader.__dojoroot = root;
+        lz.rte.loader.__jspath   = js;
+        lz.rte.loader.__csspath  = css;
 
         // Set debugAtAllCosts to true becaue I found deferred loading of dojo of a local version
         // of dojo will generate errors on Firefox
@@ -341,13 +332,13 @@ lzrte.rtemanager = {
 
     // You can change the dojo theme. Current values are tundra, soria, nihilo
     ,setDojoTheme: function(theme) {
-        lzrte.rtemanager.__theme = theme;
+        lz.rte.manager.__theme = theme;
     }
 
     // Set the list and order of toolbar icons to show in the editor.
     ,setPlugins: function(list) {
         var plugins = list.split (',');
-        lzrte.rtemanager.__plugins = plugins;
+        lz.rte.manager.__plugins = plugins;
     }
 
     // Add a button (or image button) and put at the end of the buttons
@@ -360,13 +351,13 @@ lzrte.rtemanager = {
 
     // Attributes are passed as a json object
     ,addButton: function(attributes) {
-        var id = lzrte.rtemanager.__frameid + '_rte_button_' + lzrte.rtemanager.button_counter++;
+        var id = lz.frameid + '_rte_button_' + lz.rte.manager.button_counter++;
 
         if (dojo.byId(id))
           dojo.destroy(id);  // We already have a button of this name. Delete it
 
         // Default attributes
-        var attr = {id: id, type: 'button', onclick: function(){ lzrte.rtemanager.generate_event('buttonclick', id);}};
+        var attr = {id: id, type: 'button', onclick: function(){ lz.sendEvent('buttonclick', id);}};
         for (var a in attributes) {
           attr[a] = attributes[a];
         }
