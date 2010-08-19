@@ -104,7 +104,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         this.text = t;
         // This can fire before the object is ready
         if (this.editorready) {
-          callJavascript('lzrte.rtemanager.setText', null, t);
+          this.callJavascript('lz.rte.manager.setText', null, t);
         }
     </setter>
 
@@ -123,7 +123,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         @return String: the string displayed.
      -->
     <method name="getText">
-        return super.callJavascript("lzrte.rtemanager.getText");
+        return super.callJavascript("lz.rte.manager.getText");
     </method>
    
     <!--- If true, the rte editor is ready to receive commands
@@ -138,7 +138,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         @param String html: html to insert at the insertion point.
     -->
     <method name="insertHtml" args="html">
-        super.callJavascript('lzrte.rtemanager.insertHtml', null, html);
+        super.callJavascript('lz.rte.manager.insertHtml', null, html);
     </method>
 
     <!---
@@ -149,7 +149,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         @param String arg: Argument required for certain commands.
     -->
     <method name="execCommand" args="cmd, arg=''">
-        super.callJavascript('lzrte.rtemanager.execCommand', null, cmd, arg);
+        super.callJavascript('lz.rte.manager.execCommand', null, cmd, arg);
     </method>
 
 
@@ -198,7 +198,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
                 attributes['title'] = value;
         }
 
-        var id = super.callJavascript ('lzrte.rtemanager.addButton', null, attributes);
+        var id = super.callJavascript ('lz.rte.manager.addButton', null, attributes);
         this.button_mapping[id] = delegate;
         return id;
         ]]>
@@ -216,20 +216,20 @@ role="html">&lt;html&gt;</sgmltag>.</p>
     <handler name="onload"><![CDATA[
         // Change where dojo is found (if necessary)
         if (this.dojo_root.length > 0) {
-            callJavascript('lzrte.rtemanager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
+            this.callJavascript('lz.rte.manager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
         }
 
         // Set the theme
         if (this.dojo_theme.length > 0)
-            callJavascript('lzrte.rtemanager.setDojoTheme', null, this.dojo_theme);
+            this.callJavascript('lz.rte.manager.setDojoTheme', null, this.dojo_theme);
 
         // Set the plugin list
         if (this.toolbar_order.length > 0)
-            callJavascript('lzrte.rtemanager.setPlugins', null, this.toolbar_order);
+            this.callJavascript('lz.rte.manager.setPlugins', null, this.toolbar_order);
 
         // Create and start the editor
-        callJavascript('lzrte.rtemanager.create', null, 'rte', this.iframeid);
-        callJavascript('lzrte.rtemanager.rte_start', null, this.text);
+        this.callJavascript('lz.rte.manager.create', null, 'rte', this.iframeid);
+        this.callJavascript('lz.rte.manager.rte_start', null, this.text);
     ]]></handler>
 
     <!--- @access private -->
@@ -289,7 +289,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
             this.ontext.sendEvent(txt);
 
         if (this['iframeid']) {
-            callJavascript('lzrte.rtemanager.destroy', null, this.iframeid);
+            this.callJavascript('lz.rte.manager.destroy', null, this.iframeid);
         }
 
         super.destroy();
