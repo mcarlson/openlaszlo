@@ -23,24 +23,3 @@ lz.sendEvent = function(name, value) {
 }
 
 //console.log('found id', lz._iframeid);
-try {
-    if (lz) {}
-} catch (e) {
-    lz = {};
-}    
-
-// retrieve our frame id from the lz.embed namespace in the loaded page
-lz.frameid = parent.lz.embed.iframemanager.getIDFromWindow(this);
-
-// send an event to the html component controlling this frame
-lz.sendEvent = function(name, value) {
-    var args = [].slice.call(arguments);
-    // prepend our iframe id
-    args.unshift(lz.frameid);
-    //console.log('calling iframemanager.asyncCallback with args',args);
-    var iframemanager = parent.lz.embed.iframemanager;
-    // Send an asynchronous callback/event
-    iframemanager.asyncCallback.apply(iframemanager, args);
-}
-
-//console.log('found id', lz._iframeid);
