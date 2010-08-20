@@ -190,7 +190,7 @@ var onframesloadratio = LzDeclaredEvent;
 var onloadratio = LzDeclaredEvent;
 
 /** Sent when there is an error loading the view's resource.
-  * The argument sent with the event is the error string sent by the server.
+  * The argument sent with the event is an error string.
   * @access public
   * @lzxtype event
   */
