@@ -374,6 +374,25 @@ Function#2| foo
 
     </section>
   </section>
+  <section id="explaincss">
+    <title>
+      Explaining CSS with <literal>Debug.explainStyleBindings(node)</literal>
+    </title>
+    <para>Explain the style bindings of properties on a node For each attribute of the node that has
+      a <literal>$style</literal> binding, the CSS rules that apply to the node that could affect
+      that binding are displayed. The rules are displayed (with their source) from the most-specific
+      to the least specific, and the style names and values of the rule that apply to this node are
+      displayed. Values that are superseded by more specific rules are displayed in italics.</para>
+    <para>The following example demonstrates the use of
+      <literal>Debug.explainStyleBindings()</literal>. Click on the color buttons to toggle the
+      colors; click on the color swatches to see the CSS description.</para>
+    <example role="live-example">
+      <title>Dynamic CSS</title>
+      <programlisting language="lzx">
+        <textobject><textdata fileref="programs/dynamiccss.lzx"/></textobject> 
+      </programlisting>
+    </example>
+  </section>
   <section id="debugging.inspecting">
     <title>Inspecting Objects</title>
     <!-- clarified explanation of abbreviated inspectable representation per LPP-4211, IORIO 18 oct 2007  -->
