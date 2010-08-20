@@ -345,18 +345,20 @@ class LzCSSStyleClass {
             // comparison needs to be able to test for the existence
             // of an attribute efficiently
 //             try {
+              // `name` is not a dynamic attribute, but if the node
+              // otherwise has the attribute...  NOTE: [2010-08-19
+              // ptw] node's _must_ be dynamic, so we can make this
+              // test for the existence of an attribute in a node
+              if ((rpa != 'name') && (rpa in node)) {
+                // ...note the applicability dependency on this node
+                // and attribute
+                deps.gather(node, rpa);
+              }
               // Only add the rule to the cache if it is _currently_ applicable
               // TODO: [2010-04-26 ptw] (LPP-8940) CSS dynamic attribute
               // comparison needs to use presentAttribute
               if ((node[rpa] + '') == rp.attrvalue) {
                 rules.push(r);
-              }
-              // name is not a dynamic attribute, but if the node
-              // otherwise has the attribute...
-              if ((rpa != 'name') && (node[rpa] !== (void 0))) {
-                // ...note the applicability dependency on this node
-                // and attribute
-                deps.gather(node, rpa);
               }
 //             } catch (e) {
 //               // ignore error accessing non-existent attribute
@@ -392,7 +394,7 @@ class LzCSSStyleClass {
     if (deps.count > 0) {
         node.__LZCSSDependencies = deps.deps;
     }
-    //Debug.info('found rules %w for %w, binders %w', rules, node, deps);
+    // Debug.info('found rules %w for %w, binders %w', rules, node, deps);
     return rules;
   };
 
@@ -546,6 +548,14 @@ class LzCSSStyleClass {
             // comparison needs to be able to test for the existence
             // of an attribute efficiently
 //             try {
+              // `name` is not a dynamic attribute, but if the node
+              // otherwise has the attribute...  NOTE: [2010-08-19
+              // ptw] node's _must_ be dynamic, so we can make this
+              // test for the existence of an attribute in a node
+              if ((rpa != 'name') && (rpa in node)) {
+                // Note the applicability dependency on this node and attribute
+                deps.gather(node, rpa);
+              }
               // Check if the rule is currently applicable
               // TODO: [2010-04-26 ptw] (LPP-8940) CSS dynamic attribute
               // comparison needs to use presentAttribute
@@ -559,12 +569,6 @@ class LzCSSStyleClass {
                   // for loop)
                   break;
                 }
-              }
-              // name is not a dynamic attribute, but if the node
-              // otherwise has the attribute...
-              if ((rpa != 'name') && (node[rpa] !== (void 0))) {
-                // Note the applicability dependency on this node and attribute
-                deps.gather(node, rpa);
               }
 //             } catch (e) {
 //               // ignore error accessing non-existent attribute

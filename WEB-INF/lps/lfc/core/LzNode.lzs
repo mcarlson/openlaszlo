@@ -409,13 +409,21 @@ public dynamic class LzNode extends LzEventable {
   var __LZsourceLocation = null;
   /** @access private */
   var __LZUID:String;
-  /** @access private */
+  /** A cache of the CSS property values that apply to this node
+   * @access private */
   var __LZPropertyCache = null;
-  /** @access private */
-  var __LZCSSPropToAttr = null;
-  /** @access private */
+  /** A mapping of attributes to CSS properties
+   * @access private */
+  var __LZCSSProp = null;
+  /** A mapping of attributes to CSS types
+   * @access private */
   var __LZCSSType = null;
-  /** @access private */
+  /** A mapping of attributes to fallback values (when there is no
+   * applicable CSS)
+   * @access private */
+  var __LZCSSFallback = null;
+  /** A cache of the CSS rules that apply to this node
+   * @access private */
   var __LZRuleCache = null;
   /** Tracks delegates and data bindings for states so they can be 
     * applied/removed
@@ -713,23 +721,27 @@ public dynamic class LzNode extends LzEventable {
    * Clear the property cache and reapply updated styles
    *
    * @access private
+   *
+   * @devnote NOTE: [2010-08-17 ptw] (LPP-9035) We have to find each
+   * property that can have a CSS style and recompute it.  There are
+   * three cases: 1) a style may no longer be applicable, 2) a style
+   * may newly be applicable, or 3) both.
    */
   function __reapplyCSS(ignore=null) {
+    var oldpropmap = LzCSSStyle.getPropertyCache(this);
     // Force rebuild of rules and property cache
     this.__LZRuleCache = null;
     this.__LZPropertyCache = null;
+    var newpropmap = LzCSSStyle.getPropertyCache(this);
 
-    // Verify the CSS bindings (will recompute the rules and
-    // properties)
-    //
-    // NOTE: [2010-08-17 ptw] (LPP-9035) We only iterate over the
-    // attributes that have CSS styles and not over the applicable CSS
-    // properties (because there can be applicable properties that no
-    // attribute is bound to).
-    for (var cssname:String in this.__LZCSSPropToAttr) {
-      var attrname:String = this.__LZCSSPropToAttr[cssname];
-      var csstype:String = this.__LZCSSType[cssname];
-      this.__LZstyleBindAttribute(attrname, cssname, csstype);
+    var attrmap = this.__LZCSSProp;
+    var typemap = this.__LZCSSType;
+    var fallbackmap = this.__LZCSSFallback;
+    for (var attr:String in attrmap) {
+      var prop:String = attrmap[attr];
+      if (oldpropmap[prop] != newpropmap[prop]) {
+        this.__LZstyleBindAttribute(attr, prop, typemap[attr], fallbackmap[attr]);
+      }
     }
     // Ensure the constraints are up to date
     this.__applyCSSConstraints();
@@ -754,7 +766,7 @@ public dynamic class LzNode extends LzEventable {
     if ($debug) {
       // Fix for LPP-3024: if we're in debug mode, warn when CSS
       // lookup fails
-      if ((! (prop in pc)) && (warn != false)) {
+      if ((! (prop in pc)) && (fallback === (void 0)) && (warn != false)) {
         Debug.warn("%w.%s: No applicable value for CSS property %w and there is no default.", this, attr, prop);
         // Cache negative values lazily to avoid excessive warnings
         pc[prop] = (void 0);
@@ -762,10 +774,12 @@ public dynamic class LzNode extends LzEventable {
     }
 
     // store mappings
-    if (! this.__LZCSSPropToAttr) { this.__LZCSSPropToAttr = {}; }
-    this.__LZCSSPropToAttr[prop] = attr;
+    if (! this.__LZCSSProp) { this.__LZCSSProp = {}; }
+    this.__LZCSSProp[attr] = prop;
     if (! this.__LZCSSType) { this.__LZCSSType = {}; }
-    this.__LZCSSType[prop] = type;
+    this.__LZCSSType[attr] = type;
+    if (! this.__LZCSSFallback) { this.__LZCSSFallback = {}; }
+    this.__LZCSSFallback[attr] = fallback;
 
     var styleValue = pc[prop];
 

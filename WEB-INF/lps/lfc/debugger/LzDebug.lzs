@@ -611,15 +611,15 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
 
 
   /**
-   * Explain the style bindings of properties on a node
+   * Explain the style bindings of the attributes of a node
    *
    * For each attribute of the node that has a
-   * <literal>$style</literal> binding, the CSS rules that apply to
-   * the node that could affect that binding are displayed.  The rules
-   * are displayed (with their source) from the most-specific to the
-   * least specific, and the style names and values of the rule that
-   * apply to this node are displayed.  Values that are superceded by
-   * more specific rules are displayed in <i style="text-decoration:
+   * <literal>style</literal>, the CSS rules that apply to the node
+   * that could affect that binding are displayed.  The rules are
+   * displayed (with their source) from the most-specific to the least
+   * specific, and the style names and values of the rule that apply
+   * to this node are displayed.  Values that are superceded by more
+   * specific rules are displayed in <i style="text-decoration:
    * line-through">italics</i>.
    *
    * @param LzNode node: the node of interest
@@ -631,9 +631,10 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     var ppc = style.getPropertyCache(node.immediateparent);
     var rc = style.getRulesCache(node);
     var ps = [];
-    var sp = node.__LZCSSPropToAttr;
+    var sp = node.__LZCSSProp;
     if (sp) {
-      for (var p in sp) {
+      for (var a in sp) {
+        var p = sp[a];
         if (showInherited || (pc[p] !== ppc[p])) {
           ps.push(p);
         }
