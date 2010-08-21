@@ -222,7 +222,7 @@ public dynamic class LzNode extends LzEventable {
       for (var key in iargs) {
         var expr = iargs[key];
         // Get the initial value
-        if (expr is LzAttributeDescriptor) {
+        if (expr && (expr is LzAttributeDescriptor)) {
           // Descriptors store the intial value
           var val = (expr cast LzAttributeDescriptor).value;
         } else {
@@ -230,10 +230,10 @@ public dynamic class LzNode extends LzEventable {
           // unadorned.
           var val = expr;
         }
-        if (! (expr is LzInitExpr)) {
+        if (! (expr && (expr is LzInitExpr))) {
           // If there is no setter for this attr the value
           // should just be installed as a declaration
-          var setr = '$lzc$set_' + key;
+          var setr:String = '$lzc$set_' + key;
           if (! this[setr]) {
             if (val is Function) {
               this.addProperty(key, val);
@@ -1140,12 +1140,12 @@ public dynamic class LzNode extends LzEventable {
    * Applies a dictionary of args
    * @access private
    */
-  function __LZapplyArgs ( args , constcall = null ) {
+  function __LZapplyArgs ( args:Object , constcall) {
     var ignore = LzNode._ignoreAttribute;
-    var oset = {};
-    var hasset = null;
-    var inits = null;
-    var constraints = null;
+    var oset:Object = {};
+    var hasset:Array = null;
+    var inits:Array = null;
+    var constraints:Array = null;
 
     // `name` needs to be set ASAP
     if ('name' in args) {
@@ -1157,7 +1157,7 @@ public dynamic class LzNode extends LzEventable {
     for ( var key in args ) {
       var expr = args[key];
       // Get the initial value
-      if (expr is LzAttributeDescriptor) {
+      if (expr && (expr is LzAttributeDescriptor)) {
         // Descriptors store the intial value
         var val = (expr cast LzAttributeDescriptor).value;
       } else {
@@ -1169,12 +1169,12 @@ public dynamic class LzNode extends LzEventable {
       //handle flash bug where objects slots are enumerated multiple times
       oset[ key ] = true;
       // To see if it has key setter.  Cf., setAttribute
-      var setr = '$lzc$set_' + key;
+      var setr:String = '$lzc$set_' + key;
 
       // Pull out constraints for later, install values without
       // setters, defer setters until 'pseudo-attributes' have been
       // handled
-      if (expr is LzInitExpr) {
+      if (expr && (expr is LzInitExpr)) {
         // Ordering is important, constraint is a subclass of once
         if (expr instanceof LzConstraintExpr) {
           // A style or always constraint
@@ -1209,9 +1209,10 @@ public dynamic class LzNode extends LzEventable {
         if (! constcall) {
           //then we need to notify the rest of the system that this
           //value changed.
-          var evt = ("on" + key);
-          if (this[evt] is LzEvent) {
-            if (this[evt].ready) { this[ evt ].sendEvent( args[ key ] ); }
+          var thisevent = this["on" + key];
+          // play a little fast and loose - if we have a .ready slot, assume we're an event.
+          if (thisevent) {
+            if (thisevent.ready) { thisevent.sendEvent( args[ key ] ); }
           }
         }
       } else if (this[setr] != -1) {

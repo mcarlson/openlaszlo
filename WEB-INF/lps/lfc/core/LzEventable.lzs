@@ -120,7 +120,7 @@ class LzEventable {
    */
   var __LZdeferDelegates:Boolean = false;
   /** @access private */
-  var __LZdelegatesQueue = null;
+  var __LZdelegatesQueue:Array = null;
 
   /** @access private */
   function childOf ( node, ignore=null ) { return false;}

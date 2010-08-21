@@ -416,7 +416,7 @@ function __LZsetCloneAttrs () :void {}
 /**
   * @access private
   */
-override function __LZapplyArgs ( args , constcall = null ){
+override function __LZapplyArgs ( args:Object , constcall){
     super.__LZapplyArgs(args, constcall);
     // If a replicator was made, we're deleted, if pooling is off.
     if (this.__LZdeleted) { return; }

@@ -268,7 +268,7 @@ dynamic class LzState extends LzNode {
     var od = parent.__LZconstraintdelegates;
     parent.__LZconstraintdelegates = null;
 
-    parent.__LZapplyArgs( this.heldArgs );
+    parent.__LZapplyArgs( this.heldArgs , null);
 
     if (this.subh) var shl = this.subh.length;
     parent.__LZsetPreventInit();
@@ -397,7 +397,7 @@ dynamic class LzState extends LzNode {
    * @devnote NOTE: [2006-12-09 ptw] Currently the only args that apply to the
    * state are args that have setters
    */
-  override function __LZapplyArgs ( args , constcall = null){
+  override function __LZapplyArgs ( args:Object , constcall){
     var stateArgs = {};
     var held = this.heldArgs;
     var $delegates:Array = null;
