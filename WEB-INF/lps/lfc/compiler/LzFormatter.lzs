@@ -251,9 +251,11 @@ mixin LzFormatter {
    * @return String: the abbreviated string
    */
   function abbreviate(s:String, l=Infinity):String {
+    if (s) {
     var ellipsis = '\u2026';
-    if (s.length > (l - ellipsis.length)) {
-      s = s.substring(0, l - ellipsis.length) + ellipsis;
+      if (s.length > (l - ellipsis.length)) {
+        s = s.substring(0, l - ellipsis.length) + ellipsis;
+      }
     }
     return s;
   };

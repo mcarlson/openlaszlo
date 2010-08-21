@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -230,7 +230,11 @@ class StyleSheetCompiler extends LibraryCompiler {
     }
 
     String buildElementSelectorJS(String localName) {
+      if (localName != null) {
         return "\"" + localName + "\"";
+      } else {
+        return "\"*\"";
+      }
     }
 
     String buildConditionalSelectorJS(Condition cond, SimpleSelector simpleSelector) {

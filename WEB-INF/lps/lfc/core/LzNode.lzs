@@ -250,7 +250,10 @@ public dynamic class LzNode extends LzEventable {
         // delayed initial values.
         if (this[key] === void 0) {
           // NOTE: [2009-05-11 ptw] (LPP-8088) We use `null` rather than
-          // `void 0` so we don't inject `NaN`s into numeric attributes
+          // `void 0` so we don't inject `NaN`s into numeric
+          // attributes  NOTE: [2010-08-19 ptw] and we need to be able
+          // to detect the existence of attributes in LZCSSStyle in
+          // as3, where we cannot use `in` for class members
           this[key] = null;
         }
       }
@@ -828,7 +831,8 @@ public dynamic class LzNode extends LzEventable {
       // we set the value to.  applyArgs will have set the value
       // initially to `null`, because it has a constraint, but
       // LPP-4182 wants an attribute with no fallback and no style to
-      // be undefined.
+      // be undefined, but this is _really_ not recommended.  You
+      // should have a fallback that is a member of the type.
       if (this[attr] !== fallback) {
         this.setAttribute(attr, fallback);
       }
@@ -2074,7 +2078,9 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /**
-   * Search up parent views finding the first parent node(s) with a non-null ttribute value for each for the key in the object properties.
+   * Search up parent views finding the first parent node(s) with a
+   * non-null ttribute value for each for the key in the object
+   * properties.
    *
    * @param Array proplist: An array of property names, e.g. ['width', 'floogle'].
    * @return Object:  An object of references to the first parent with a 

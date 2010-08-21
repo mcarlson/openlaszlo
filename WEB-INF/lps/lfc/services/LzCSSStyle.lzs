@@ -259,8 +259,11 @@ class LzCSSStyleClass {
     // Gather the attribute rules that could apply
     var ar = this._attrRules;
     for (var k in ar) {
-      // Does this node have that attribute?
-      if (node[k] != (void 0)) {
+      // Does this node have that attribute? NOTE: [2010-08-19 ptw]
+      // We'd like to ask `k in node` but this does not work for as3,
+      // so we approximate.  This is why attributes have to at least
+      // be initialized to `null` in applyArgs
+      if (node[k] !== (void 0)) {
         // Get the rules for that attribute for all possible values
         // (since value is dynamically matched)
         var attrrules = ar[k];
@@ -287,7 +290,7 @@ class LzCSSStyleClass {
       }
     }
 
-    // Are there any of these any more?
+    // * rules end up here
     var rr = this._rules;
     for (var i = rr.length - 1; i >= 0; i--) {
       tryRules.push(rr[i]);
@@ -347,9 +350,11 @@ class LzCSSStyleClass {
 //             try {
               // `name` is not a dynamic attribute, but if the node
               // otherwise has the attribute...  NOTE: [2010-08-19
-              // ptw] node's _must_ be dynamic, so we can make this
-              // test for the existence of an attribute in a node
-              if ((rpa != 'name') && (rpa in node)) {
+              // ptw] We'd like to ask `k in node` but this does not
+              // work for as3, so we approximate.  This is why
+              // attributes have to at least be initialized to `null`
+              // in applyArgs
+              if ((rpa != 'name') && (node[rpa] !== (void 0))) {
                 // ...note the applicability dependency on this node
                 // and attribute
                 deps.gather(node, rpa);
@@ -550,9 +555,11 @@ class LzCSSStyleClass {
 //             try {
               // `name` is not a dynamic attribute, but if the node
               // otherwise has the attribute...  NOTE: [2010-08-19
-              // ptw] node's _must_ be dynamic, so we can make this
-              // test for the existence of an attribute in a node
-              if ((rpa != 'name') && (rpa in node)) {
+              // ptw] We'd like to ask `k in node` but this does not
+              // work for as3, so we approximate.  This is why
+              // attributes have to at least be initialized to `null`
+              // in applyArgs
+              if ((rpa != 'name') && (node[rpa] !== (void 0))) {
                 // Note the applicability dependency on this node and attribute
                 deps.gather(node, rpa);
               }
@@ -709,9 +716,7 @@ class LzCSSStyleClass {
       if ( !this._tagRules[ tag ] ) { this._tagRules[ tag ] = []; }
       this._tagRules[ tag ].push( r );
     } else {
-      if ($debug) {
-        Debug.error("Unknown cohort for rule: %w", r);
-      }
+      // * rules end up here
       this._rules.push( r );
     }
   };

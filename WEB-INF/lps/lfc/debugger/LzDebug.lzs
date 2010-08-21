@@ -1250,7 +1250,7 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     // If it is readable, or you don't need readable, and you have a
     // description that will not be abbreviated, you are done.
     if ((isreadable || (! readable)) &&
-        (s != "") && (s.length < limit)) {
+        s && (s.length < limit)) {
       return s;
     }
     // Build an "unreadable" representation
@@ -1259,12 +1259,12 @@ dynamic class LzDebugService extends LzBootstrapDebugService with LzFormatter {
     var room = limit - r.length - 4; // '| ' + '...' + '>>'
     // If you couldn't satisfy readably (or won't because of
     // abbreviating), force the object to have an ID
-    if (readable && ((! isreadable) || (s.length >= room)) && (id === null)) {
+    if (readable && ((! isreadable) || (s && (s.length >= room))) && (id === null)) {
       id = this.IDForObject(thing, true);
     }
     if (readable && (id !== null)) {r += ('#' + id);}
     // Only abbreviate the description, don't lose the type or ID
-    if (s != '') {
+    if (s) {
       if (room > 0) {
         r += '| ';
         r += this.abbreviate(s, room);
