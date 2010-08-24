@@ -294,19 +294,19 @@ var onplay = LzDeclaredEvent;
   */ 
 var onremovesubview = LzDeclaredEvent;
 
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onresource = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onresourceheight = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onresourcewidth = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onrotation = LzDeclaredEvent;
@@ -318,15 +318,15 @@ var onrotation = LzDeclaredEvent;
   * @lzxtype event 
   */
 var onstop = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var ontotalframes = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onunstretchedheight = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onunstretchedwidth = LzDeclaredEvent;
@@ -337,7 +337,7 @@ var onunstretchedwidth = LzDeclaredEvent;
   */
 var onvisible = LzDeclaredEvent;
 
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onvisibility = LzDeclaredEvent;
@@ -353,7 +353,7 @@ var onwidth = LzDeclaredEvent;
   * @access public
  */
 var onx = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onxoffset = LzDeclaredEvent;
@@ -363,22 +363,22 @@ var onxoffset = LzDeclaredEvent;
   * @access public
   */
 var ony = LzDeclaredEvent;
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onyoffset = LzDeclaredEvent;
 
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onfont = LzDeclaredEvent;
 
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onfontsize = LzDeclaredEvent;
 
-/** @access public 
+/** @access private 
   * @lzxtype event 
   */
 var onfontstyle = LzDeclaredEvent;
