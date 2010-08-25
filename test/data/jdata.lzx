@@ -45,8 +45,8 @@
           datapath="@hex"/>
   </view>
 
-
+  <text text="$once{'proxied: '+canvas.proxied}"/>
 
 
 </canvas>
-<!-- Copyright 2008 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->
+<!-- Copyright 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved. Use is subject to license terms. -->

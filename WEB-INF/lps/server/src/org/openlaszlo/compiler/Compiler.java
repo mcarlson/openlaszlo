@@ -46,6 +46,9 @@ public class Compiler {
     public static List AS3_RUNTIMES =
         Arrays.asList(new String[] {"swf9", "swf10"});
 
+    public static List KNOWN_FLEX_VERSIONS =
+        Arrays.asList(new String[] {"10.0", "10.1"});
+
     public static List GLOBAL_RUNTIME_VARS =
         Arrays.asList(new String[] {
                 "$debug", "$profile", "$backtrace", "$runtime",
@@ -428,6 +431,7 @@ public class Compiler {
             // at compile time, but they won't be emitted into the object code for user apps. Only
             // the compiled LFC emits code which defines these constants. We need to have some
             // better way to ensure that the LFC's constants values match the app code's.
+
             nprops.put("compileTimeConstants", env.getCompileTimeConstants());
 
             ObjectWriter writer = createObjectWriter(nprops, ostr, env, root);

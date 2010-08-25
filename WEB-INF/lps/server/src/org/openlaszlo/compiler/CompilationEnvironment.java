@@ -34,10 +34,11 @@ public class CompilationEnvironment {
     
     public static final String RUNTIME_PROPERTY            = "runtime";
     public static final String RUNTIMES_PROPERTY           = "runtimes";
-    public static final String PROXIED_PROPERTY            = "lzproxied";
+    public static final String PROXIED_PROPERTY            = "proxied";
     public static final String DEBUG_PROPERTY              = "debug";
     public static final String DEBUG_EVAL_PROPERTY         = "debugEval";
     public static final String SOURCE_ANNOTATIONS_PROPERTY = "lzsourceannotations";
+    public static final String FLEX_VERSION                = org.openlaszlo.sc.Compiler.FLEX_VERSION;
 
     // For DHTML runtime, make application-local copies of all compile
     // time resource files.

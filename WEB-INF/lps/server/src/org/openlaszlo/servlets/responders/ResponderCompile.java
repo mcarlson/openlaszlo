@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -409,16 +409,19 @@ public abstract class ResponderCompile extends Responder
      * <ul>
      * <li> "debug"
      * <li> "logdebug"
-     * <li> "lzbacktrace"
+     * <li> "backtrace"
      * <li> "profile"
      * <li> "sourcelocators"
      * <li> "lzsourceannotations"
      * <li> "lzr" (swf version := swf5 | swf6)
-     * <li> "lzproxied" true|false
+     * <li> "proxied" true|false
      * <li> "lzscript" true|false   -- emit javascript, not object file
      * <li> "lzconsoledebug" use remote debug protocol
      * <li> "cssfile"
      * <li> "lzcopyresources" -- dhtml compilation should make local copy of external resources
+     * <li> "flexversion" -- flash player minor version, one of [10.0, 10.1]
+     * <li> "lzoptions" -- new style of passing compiler options
+
      * <ul>
      * also grabs the request URL.
      */
@@ -427,25 +430,32 @@ public abstract class ResponderCompile extends Responder
         Properties props = new Properties();
 
         // Look for "runtime=..." flag
-        String runtime = req.getParameter("lzr");
+        String runtime = LZHttpUtils.getLzOption("runtime", req);
         if (runtime == null) {
             runtime = LPS.getProperty("compiler.runtime.default", "swf8");
         }
         props.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtime);
+
+        props.setProperty(CompilationEnvironment.FLEX_VERSION, LPS.getFlexVersionDefault());
+        String flexVersion = LZHttpUtils.getLzOption(CompilationEnvironment.FLEX_VERSION, req);
+        if (flexVersion != null) {
+            mLogger.info("flexVersion = "+flexVersion);
+            props.setProperty(CompilationEnvironment.FLEX_VERSION, flexVersion);
+        }
 
         // TODO: [2003-04-11 pkang] the right way to do this is to have a
         // separate property to see if this allows debug.
         if (mAllowRequestSOURCE) {
             // Look for "logdebug=true" flag
             props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, "false");
-            String logdebug = req.getParameter(CompilationEnvironment.LOGDEBUG_PROPERTY);
+            String logdebug = LZHttpUtils.getLzOption(CompilationEnvironment.LOGDEBUG_PROPERTY, req);
             if (logdebug != null) {
                 props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
             }
 
             // Look for "lzconsoledebug=true" flag
             props.setProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY, "false");
-            String lzconsoledebug = req.getParameter(CompilationEnvironment.CONSOLEDEBUG_PROPERTY);
+            String lzconsoledebug = LZHttpUtils.getLzOption(CompilationEnvironment.CONSOLEDEBUG_PROPERTY, req);
             if (lzconsoledebug != null) {
                 props.setProperty(CompilationEnvironment.CONSOLEDEBUG_PROPERTY, lzconsoledebug);
             }
@@ -453,42 +463,42 @@ public abstract class ResponderCompile extends Responder
 
             // Look for "debug=true" flag
             props.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "false");
-            String debug = req.getParameter(CompilationEnvironment.DEBUG_PROPERTY);
+            String debug = LZHttpUtils.getLzOption(CompilationEnvironment.DEBUG_PROPERTY, req);
             if (debug != null) {
                 props.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
             }
 
             // Look for "sourcelocators=true" flag
             props.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, "false");
-            String sl = req.getParameter(CompilationEnvironment.SOURCELOCATOR_PROPERTY);
+            String sl = LZHttpUtils.getLzOption(CompilationEnvironment.SOURCELOCATOR_PROPERTY, req);
             if (sl != null) {
                 props.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, sl);
             }
 
             // Look for "profile=true" flag
             props.setProperty(CompilationEnvironment.PROFILE_PROPERTY, "false");
-            String profile = req.getParameter(CompilationEnvironment.PROFILE_PROPERTY);
+            String profile = LZHttpUtils.getLzOption(CompilationEnvironment.PROFILE_PROPERTY, req);
             if (profile != null) {
                 props.setProperty(CompilationEnvironment.PROFILE_PROPERTY, profile);
             }
 
-            // Look for "lzbacktrace=true" flag
+            // Look for "backtrace=true" flag
             props.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, "false");
-            String backtrace = req.getParameter("lzbacktrace");
+            String backtrace = LZHttpUtils.getLzOption("backtrace", req);
             if (backtrace != null) {
                 props.setProperty(CompilationEnvironment.BACKTRACE_PROPERTY, backtrace);
             }
             
             // Look for "lzsourceannotations=true" flag
             props.setProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, "false");
-            String srcann = req.getParameter(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY);
+            String srcann = LZHttpUtils.getLzOption(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, req);
             if (srcann != null) {
                 props.setProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY, srcann);
             }
 
             // Look for "lzcopyresources=true" flag
             props.setProperty(CompilationEnvironment.COPY_RESOURCES_LOCAL, "false");
-            String lzcopyresources = req.getParameter(CompilationEnvironment.COPY_RESOURCES_LOCAL);
+            String lzcopyresources = LZHttpUtils.getLzOption(CompilationEnvironment.COPY_RESOURCES_LOCAL, req);
             if (lzcopyresources != null) {
                 mLogger.info("lzcopyresources = "+lzcopyresources);
                 props.setProperty(CompilationEnvironment.COPY_RESOURCES_LOCAL, lzcopyresources);
@@ -496,22 +506,22 @@ public abstract class ResponderCompile extends Responder
 
         }
 
-        // Set the 'lzproxied' default = false
-        String proxied = req.getParameter(CompilationEnvironment.PROXIED_PROPERTY);
+        // Set the 'proxied' default = false
+        String proxied = LZHttpUtils.getLzOption(CompilationEnvironment.PROXIED_PROPERTY, req);
         if (proxied != null) {
             props.setProperty(CompilationEnvironment.PROXIED_PROPERTY, proxied);
         }
 
-        String lzs = req.getParameter("lzscript");
+        String lzs = LZHttpUtils.getLzOption("lzscript", req);
         if (lzs != null) {
             props.setProperty("lzscript", lzs);
         }
 
         if (mAllowRecompile) {
-            String recompile = req.getParameter(CompilationManager.RECOMPILE);
+            String recompile = LZHttpUtils.getLzOption(CompilationManager.RECOMPILE, req);
             if (recompile != null) {
                 // Check for passwd if required.
-                String pwd = req.getParameter("pwd");
+                String pwd = LZHttpUtils.getLzOption("pwd", req);
                 if ( mAdminPassword == null || 
                         (pwd != null && pwd.equals(mAdminPassword)) ) {
                     props.setProperty(CompilationManager.RECOMPILE, "true");

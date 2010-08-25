@@ -182,6 +182,7 @@ static function getLoadURL () :String {
 
 
 static var __initargs:Object = null;
+static var __options:Object = null;
 
 /**
  * This function returns values from the the request string that
@@ -197,7 +198,6 @@ static var __initargs:Object = null;
 static function getInitArg (name:String=null) :* {
   if (! LzBrowserKernel.__initargs && LzBrowserKernel.__jslocked == false) {
     var newargs = LzBrowserKernel.callJSInternal('eval', null, 'lz.embed.applications["' + LzBrowserKernel.getAppID() + '"].initargs');
-
     if (newargs) {
       // cache callJS results
       LzBrowserKernel.__initargs = newargs;
@@ -205,6 +205,28 @@ static function getInitArg (name:String=null) :* {
   }
 
   var args = LzBrowserKernel.__initargs || LFCApplication.stage.loaderInfo.parameters;
+
+
+  if (args == null) {
+    return;
+  } else if (name == null) {
+    return args;
+  }
+  return args[name];
+}
+
+
+static function getLzOption (name:String=null) :* {
+  if (! LzBrowserKernel.__options && LzBrowserKernel.__jslocked == false) {
+    var newargs = LzBrowserKernel.callJSInternal('eval', null, 'lz.embed.applications["' + LzBrowserKernel.getAppID() + '"].options');
+    if (newargs) {
+      // cache callJS results
+      LzBrowserKernel.__options = newargs;
+    }
+  }
+
+  var args = LzBrowserKernel.__options || LFCApplication.stage.loaderInfo.parameters;
+
   if (args == null) {
     return;
   } else if (name == null) {

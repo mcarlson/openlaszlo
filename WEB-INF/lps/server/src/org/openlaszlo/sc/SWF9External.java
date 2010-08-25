@@ -1140,8 +1140,14 @@ public class SWF9External {
         }
       }
     
+      String flex_version = ((String)options.get(Compiler.FLEX_VERSION));
+
       if ("swf10".equals((String)options.get(Compiler.RUNTIME))) {
-        cmd.add("-target-player=10.0.0");
+        if ("10.1".equals(flex_version)) {
+          cmd.add("-target-player=10.1");
+        } else {
+          cmd.add("-target-player=10.0.0");
+        }
       } else  if ("swf9".equals((String)options.get(Compiler.RUNTIME))) {
         cmd.add("-target-player=9.0.0");
       }

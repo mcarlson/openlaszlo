@@ -365,7 +365,7 @@ String soloURL = (request.getContextPath()+"/" + appUrl + "."+appRuntime+".swf?l
      <font face="helvetica,arial"> <b> <i> Zip file containing application deployment files</i> </b> </font>
 <hr align="left" width="420" height="2"/>
 <p>
-Click here to download zip-archived file <a href="<%=zipfilename%>"><tt><%=zipfilename%></tt></a>.
+Click here to download zip-archived file <a href="<%= request.getContextPath() + File.separator + WGT_WORKING_DIR + File.separator + zipfilename%>"><tt><%=zipfilename%></tt></a>.
 <p>
 Note: the file may take a moment to generate and save to disk, please be patient.
   <p>

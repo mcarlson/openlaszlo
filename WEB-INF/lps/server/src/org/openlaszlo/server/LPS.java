@@ -22,6 +22,7 @@ import javax.servlet.http.*;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.MathUtils;
 import org.openlaszlo.utils.LZUtils;
+import org.openlaszlo.utils.LZHttpUtils;
 
 import org.apache.log4j.*;
 
@@ -49,6 +50,8 @@ public class LPS {
     public static String VERSION_FILE = "/org/openlaszlo/server/lps.xml";
 
     public static String mDefaultRuntime = "swf8";
+
+    public static String mDefaultFlexVersion = "10.0";
 
     private static String mBuildID;
     private static String mBuildDate;
@@ -356,6 +359,11 @@ RuntimeException(
         return LPS.getProperty("compiler.runtime.default", mDefaultRuntime);
     }
 
+    
+    public static String getFlexVersionDefault() {
+        return LPS.getProperty("compiler.flex_version.default", mDefaultFlexVersion);
+    }
+
     /**
      * @return swf version number
      */
@@ -376,7 +384,8 @@ RuntimeException(
      * @return swf version number
      */
     public static int getSWFVersionNum(HttpServletRequest req) {
-        return getSWFVersionNum(req.getParameter("lzr"));
+        String runtime = LZHttpUtils.getLzOption("runtime", req);
+        return getSWFVersionNum(runtime);
     }
 
     /**

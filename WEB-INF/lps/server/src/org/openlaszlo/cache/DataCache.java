@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2004, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -23,6 +23,7 @@ import org.openlaszlo.data.XMLConverter;
 import org.openlaszlo.data.DataSource;
 import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.server.LPS;
+import org.openlaszlo.utils.LZHttpUtils;
 
 /**
  * A media cache
@@ -63,7 +64,7 @@ public class DataCache extends RequestCache {
         key.append(DataSource.getURL(req));
         key.append(hds);
 
-        String swfversion = req.getParameter("lzr");
+        String swfversion = LZHttpUtils.getLzOption("runtime", req);
         if (swfversion == null) {
             swfversion = LPS.getProperty("compiler.runtime.default", "swf6");
         }

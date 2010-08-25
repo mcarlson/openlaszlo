@@ -154,6 +154,40 @@ public final class LzBrowserService {
         return LzBrowserKernel.getInitArg(name);
     }
 
+
+    static var sOptionNameMap = {    runtime:    "lzr",
+                              backtrace:  "lzbacktrace",
+                              proxied:    "lzproxied"
+    }
+
+    function oldOptionName (key:String) {
+        return LzBrowserService.sOptionNameMap[key];
+    }
+
+    /**
+     * This function returns values from the the lzoptions arg. If the
+     * arg name is not found in the lzoptions string, it falls back to
+     * look for the name in the regular query args. The arg name is
+     * mapped to the old "lz"-style name if needed.
+     *
+     * @param String name: The name of the key whose value to return.  If null, 
+     * returns an Object containing all initialization arguments.
+     *
+     * @return: The value for a key that appears in the lzoptions string
+     */
+    function getLzOption (name:String=null) :* {
+        var val = LzBrowserKernel.getLzOption(name);
+        if (val == null) {
+            // Maybe map new lzoption name to old "lz" query arg name
+            var lzname = LzBrowserService.sOptionNameMap[name];
+            if (lzname != null) {
+                name = lzname;
+            }
+            return LzBrowserKernel.getInitArg(name);
+        }
+    }
+
+
     /**
      * This function returns the id the app was started with
      *

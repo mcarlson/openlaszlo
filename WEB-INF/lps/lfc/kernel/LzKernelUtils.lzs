@@ -81,4 +81,76 @@ class LzKernelUtils {
             context[curvemethod](x,y,x,y+topleftradius);
         }
     }
+
+/**
+  * Parse out args from lzoptions string, returns a hash table of pairs: key => [val1, val2, ...]
+  * @keywords flashspecific
+  * @access private
+  * NOTE: please keep this in sync with the version in embednew.js
+  */
+
+static function parselzoptions (lzopts:String) {
+        var tokens = lzopts.split(new RegExp("([,()])"));
+        /**
+           Parse out options value from lzoptions, of the form
+           ?lzoptions=runtime(dhtml),wrapper(html),debug(false),proxy(true)
+           For boolean options, we default that if they are present they are true, if not they are false so:
+           ?lzoptions=runtime(dhtml),wrapper(html),proxy
+           would be the same as the above.
+
+           multiple comma separated values can be passed in args list, e.g.,
+
+           ?lzoptions=runtime(swf10),package(widget,android)
+
+           @return hashmap of key=>List
+        */
+        var KEY = 1;
+        var ARGS = 2;
+
+        var options = {};
+        var mystate = KEY;
+        var vals = [];
+        var lastkey = null;
+        var nvals = 0;
+
+        while (tokens.length > 0) {
+            var token = tokens[0];
+            var tokens = tokens.slice(1);
+            if (token == "") continue;
+            switch(mystate) {
+              case KEY:
+                if (token == ",") {
+                    // we only saw key name, but no value, so give it an implicit true value.
+                    if (lastkey != null && nvals == 0) {
+                        options[lastkey] = [true];
+                    }
+                } else if (token == "(") {
+                    mystate = ARGS;
+                    vals = [];
+                    options[lastkey] =  vals;
+                } else {
+                    lastkey = token;
+                }
+                break;
+              case ARGS:
+                if (token == ")") {
+                    lastkey = null;
+                    mystate = KEY;
+                    nvals = 0;
+                } else if (token == ",") {
+                    
+                } else {
+                    vals.push(token);
+                    nvals++;
+                }
+                break;
+            }
+        }
+        if (lastkey != null && nvals == 0) {
+            options[lastkey] =  [true];
+        }
+        return options;
+    }
+
+
 }

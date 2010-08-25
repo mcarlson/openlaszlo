@@ -498,6 +498,7 @@ public class Compiler {
   public static String LINK = "link";
   public static String LINK_WITH_LFC = "linkwithlfc";
   public static String RUNTIME = "runtime";
+  public static String FLEX_VERSION = "flexversion";
   public static String METHOD_NAME = "methodName";
   public static String NAME_FUNCTIONS = "nameFunctions";
   public static String OBFUSCATE = "obfuscate";

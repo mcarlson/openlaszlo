@@ -47,6 +47,8 @@ public class Main {
         "Output options:",
         "--runtime=[swf7|swf8|swf9|swf10|dhtml|j2me|svg|null]",
         "  Compile to swf7, swf8, swf9, swf10, dhtml, j2me, svg, null",
+        "--flex-version=10.0|10.1",
+        "  Flash 10 Player minor version: 10.0 or 10.1",
         "--dir outputdir",
         "  Output directory.",
         "-c | --compile",
@@ -210,6 +212,15 @@ public class Main {
                     // First runtime is the 'primary' one, others are just used for secondary lzo compilations
                     compiler.setProperty(CompilationEnvironment.RUNTIME_PROPERTY, runtimes[0].trim());
                     compiler.setProperty(CompilationEnvironment.RUNTIMES_PROPERTY, value);
+                } else if (arg.startsWith("--flex-version")) {
+                    String value = arg.substring("--flex-version=".length());
+                    compiler.setProperty(CompilationEnvironment.FLEX_VERSION, value);
+                    HashSet known = new HashSet(Compiler.KNOWN_FLEX_VERSIONS);
+                    if (!known.contains(value)) {
+                            System.err.println("Invalid value for --flex-version, "+value+", must be one of "+Compiler.KNOWN_FLEX_VERSIONS);
+                            System.err.println(MORE_HELP);
+                            return 1;
+                    }
                 } else if (arg == "-S" || arg == "--script") {
                     compiler.setProperty(CompilationEnvironment.INTERMEDIATE_PROPERTY, "true");
                 } else if (arg == "-SS" || arg == "--scripts") {

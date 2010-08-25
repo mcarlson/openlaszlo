@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006, 2008 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006, 2008, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -76,7 +76,7 @@ original :   String pathname =  org.openlaszlo.server.LPS.getTemplateDirectory()
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 TemplateResponder.class.getName(),"051018-69", new Object[] {fileName})
 );
-        if ("svg".equals(req.getParameter("lzr")) &&
+        if ("svg".equals(LZHttpUtils.getLzOption("runtime", req)) &&
             "svg".equals(req.getParameter("lzt"))) {
             res.setContentType ("image/svg+xml");
         } else {

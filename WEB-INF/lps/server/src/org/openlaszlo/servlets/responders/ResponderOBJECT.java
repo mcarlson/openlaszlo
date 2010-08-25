@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007, 2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -67,7 +67,7 @@ public final class ResponderOBJECT extends ResponderCompile
             Properties props = initCMgrProperties(req);
             String encoding = props.getProperty(LZHttpUtils.CONTENT_ENCODING);
 
-            String runtime = req.getParameter("lzr");
+            String runtime = LZHttpUtils.getLzOption("runtime", req);
             if (runtime == null) {
                 runtime = LPS.getRuntimeDefault();
             }
@@ -136,7 +136,7 @@ public final class ResponderOBJECT extends ResponderCompile
 
     public int getMimeType(HttpServletRequest req)
     {
-        String runtime = req.getParameter("lzr");
+        String runtime = LZHttpUtils.getLzOption("runtime", req);
         if (runtime != null && runtime.startsWith("swf")) {
             return MIME_TYPE_SWF;
         } else {
@@ -155,7 +155,7 @@ public final class ResponderOBJECT extends ResponderCompile
                                           HttpServletResponse res)
         throws IOException
     {
-        String runtime = req.getParameter("lzr");
+        String runtime = LZHttpUtils.getLzOption("runtime", req);
         if (runtime != null && runtime.startsWith("swf")) {
             respondWithMessageSWF(res, e.getMessage());
         } else {

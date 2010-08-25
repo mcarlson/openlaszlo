@@ -422,6 +422,11 @@ class SWF9Writer extends ObjectWriter {
         Properties props = (Properties)mProperties.clone();
         mScriptCompilerProps = props;
         props.put(org.openlaszlo.sc.Compiler.COMPILE_TYPE, compileType);
+
+        String flexVersion = mEnv.getProperty(org.openlaszlo.sc.Compiler.FLEX_VERSION, LPS.getFlexVersionDefault());
+
+        props.put(org.openlaszlo.sc.Compiler.FLEX_VERSION, flexVersion);
+
         if (compileType == SWF9ParseTreePrinter.Config.SNIPPET) {
             props.setProperty(org.openlaszlo.sc.Compiler.SWF9_APPLICATION_PREAMBLE, makeLibraryPreamble());
             props.put(org.openlaszlo.sc.Compiler.SWF9_APP_CLASSNAME, LIBRARY_CLASSNAME);
@@ -473,6 +478,7 @@ class SWF9Writer extends ObjectWriter {
         boolean debug = mProperties.getProperty("debug", "false").equals("true");
 
         if (isMainApp) {
+
             // Bring up a debug window if needed.
             if (debug) {
                 boolean userSpecifiedDebugger = mEnv.getBooleanProperty(mEnv.USER_DEBUG_WINDOW);
@@ -486,6 +492,7 @@ class SWF9Writer extends ObjectWriter {
                     addScript("Debug.makeDebugWindow()");
                 }
             }
+
 
             // Put the canvas sprite on the 'stage'.
             addScript("addChild(canvas.sprite)");
@@ -521,6 +528,8 @@ class SWF9Writer extends ObjectWriter {
 
             // Tell the canvas we're done loading.
             addScript("canvas.initDone()");
+
+
         }
         // We need to take the list of lzo/swf10 files that we found while compiling, and
         // copy their swc files to the tmp workdir.

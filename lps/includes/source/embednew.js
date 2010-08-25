@@ -16,6 +16,7 @@
 // this seems to be required at least as of trunk/r15165
 #pragma "passThrough=true"
 
+
 /**
  *
  * <para>In the <code>&lt;html&gt;&lt;head&gt;</code> of an HTML document that embeds a Flash Laszlo application,
@@ -52,6 +53,11 @@ lz.embed = {
                 approot: '', // for DHTML, the root url to load app resources from 
                 usemastersprite: false // if true, dhtml use a single 'master sprite' where possible
              }
+
+    ,__getlzoptions: function () {
+        var options = lz.embed.__getqueryurl(document.location.search).options; 
+        return options;
+    }
 
     /**
      * Writes the necessary HTML to embed a swf file in the document where the 
@@ -143,6 +149,7 @@ lz.embed = {
             ,_sendPercLoad: embed._sendPercLoad
             ,setGlobalFocusTrap: embed.__setGlobalFocusTrapSWF
             ,initargs: queryvals.initargs
+            ,options: queryvals.options
         }
 
         // Add entry for this application 
@@ -381,6 +388,7 @@ lz.embed = {
             ,callMethod: embed._callMethodDHTML
             ,_sendAllKeysUp: embed._sendAllKeysUpDHTML
             ,initargs: queryvals.initargs
+            ,options: queryvals.options
         }
         // listen for history unless properties.history == false
         if (properties.history == false) {
@@ -484,12 +492,79 @@ lz.embed = {
         lz.embed.__serverroot = baseurl;
         return baseurl;
     }
+    ,/** @access private
+      * Note: please keep this method in sync with the version in LFC WEB-INF/lps/lfc/kernel/LzKernelUtils.lzs
+      */
+    __parselzoptions: function (lzopts) {
+        var tokens = lzopts.split(new RegExp("([,()])"));
+        /**
+           Parse out options value from lzoptions, of the form
+           ?lzoptions=runtime(dhtml),wrapper(html),debug(false),proxy(true)
+           For boolean options, we default that if they are present they are true, if not they are false so:
+           ?lzoptions=runtime(dhtml),wrapper(html),proxy
+           would be the same as the above.
+
+           multiple comma separated values can be passed in args list, e.g.,
+
+           ?lzoptions=runtime(swf10),package(widget,android)
+
+           @return hashmap of key=>List
+        */
+        var KEY = 1;
+        var ARGS = 2;
+
+        var options = {};
+        var mystate = KEY;
+        var vals = [];
+        var lastkey = null;
+        var nvals = 0;
+
+        while (tokens.length > 0) {
+            var token = tokens[0];
+            var tokens = tokens.slice(1);
+            if (token == "") continue;
+            switch(mystate) {
+              case KEY:
+                if (token == ",") {
+                    // we only saw key name, but no value, so give it an implicit true value.
+                    if (lastkey != null && nvals == 0) {
+                        options[lastkey] = [true];
+                    }
+                } else if (token == "(") {
+                    mystate = ARGS;
+                    vals = [];
+                    options[lastkey] =  vals;
+                } else {
+                    lastkey = token;
+                }
+                break;
+              case ARGS:
+                if (token == ")") {
+                    lastkey = null;
+                    mystate = KEY;
+                    nvals = 0;
+                } else if (token == ",") {
+                    
+                } else {
+                    vals.push(token);
+                    nvals++;
+                }
+                break;
+            }
+        }
+        if (lastkey != null && nvals == 0) {
+            options[lastkey] =  [true];
+        }
+        return options;
+    }
     ,/** @access private */
     __getqueryurl: function (url) {
         // strip query string to only args required by the compiler
         // return 'flashvars' property args not required by LPS
 
-        // TODO Henry: We need to ask the canvas info what the value of the debug flag really is. Don't just trust the query arg, since it can be overriden by the canvas attributes.
+        // TODO Henry: We need to ask the canvas info what the value
+        // of the debug flag really is. Don't just trust the query
+        // arg, since it can be overriden by the canvas attributes.
 
         var sp = url.split('?');
         url = sp[0];
@@ -511,7 +586,7 @@ lz.embed = {
             if (i == 'lzr' || i == 'lzt'
                 || i == 'debug' || i == 'profile' || i == 'lzbacktrace' || i =='lzconsoledebug'
                 || i == 'lzdebug' || i == 'lzkrank' || i == 'lzprofile' || i == 'lzcopyresources'
-                || i == 'fb' || i == 'sourcelocators' || i == '_canvas_debug'
+                || i == 'fb' || i == 'sourcelocators' || i == '_canvas_debug' || i == 'flexversion' || i == 'lzoptions'
                 || i == 'lzsourceannotations') {
                 query += i + '=' + v + '&';
             }
@@ -536,6 +611,22 @@ lz.embed = {
         query = query.substr(0, query.length - 1);
         flashvars = flashvars.substr(0, flashvars.length - 1);
 
+        // If there is an lzoptions query arg, parse it and use the values there to override 
+        // the any previously seen query values
+        var lzopts = queryvals['lzoptions'];
+        if (lzopts != null) {
+            lzopts = unescape(lzopts.replace(re, ' '));
+        }
+        if (lzopts != null) {
+            var  opts = lz.embed.__parselzoptions(lzopts);
+            for (var lzopt in opts) {
+                var val = opts[lzopt];
+                // The lzoptions parser returns a list of vals for each key.
+                // For back compatibility, if there is a single value, use it
+                options[lzopt] = val.length == 1 ? val[0] : val;
+            }
+        }
+
         return {url: url, flashvars: flashvars, query: query, options: options, initargs: initargs};
     }
 
@@ -557,10 +648,9 @@ lz.embed = {
 
     ,/** @access private */
     __setAttr: function(s, n, v) {
-#pragma "passThrough=true"
+        #pragma "passThrough=true"
         s.setAttribute(n, v);
     }
-
     ,/**
      * Sets an attribute on the canvas of an embedded SWF application 
      *
@@ -597,13 +687,14 @@ lz.embed = {
             if (hist) {
                 lz.embed.history._store(name, value);
             } else if (canvas) {
-#pragma "passThrough=true"
+                #pragma "passThrough=true"
                 canvas.setAttribute(name, value);
             }
         } else {
             this._setCanvasAttributeQ.push([name, value, hist]);
         }
     }
+
     ,/** @access private */
     // called by flash/js 
     _loaded: function (id) {

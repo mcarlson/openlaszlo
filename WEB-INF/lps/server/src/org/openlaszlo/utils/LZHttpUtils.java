@@ -601,16 +601,45 @@ throw new UnsupportedEncodingException (
     }
 
 
-    // Look for new style lzoptions, then fall back to old style discrete query args
+    /* mapping of new lzoption names to old query arg names.
+       Keep this in sync with the map in WEB-INF/lps/lfc/services/LzBrowser.lzs #getLzOption
+    */
+    static final HashMap optionNameMap = new HashMap();
+    static {
+        optionNameMap.put("runtime", "lzr");
+        optionNameMap.put("backtrace", "lzbacktrace");
+        optionNameMap.put("proxied", "lzproxied");
+    }
+
+    // Look for new style lzoptions, then fall back to old style
+    // discrete query args.
+    //
+    // Since we moved to the 'lzoptions' string, some options have
+    // changed name.  We make these substitutions if we're falling
+    // back to look at query args instead of lzoptions string:
+    //
+    // runtime => lzr
+    // backtrace => lzbacktrace
+    //
     public static String getLzOption(String key, HttpServletRequest req) {
         String lzoptions = req.getParameter("lzoptions");
-        if (lzoptions == null) {
-            // revert to old behavior
-            return req.getParameter(key);
-        } else {
+        String val = null;
+        if (lzoptions != null) {
             HashMap optionsmap = LZHttpUtils.getLzRequestOptions(lzoptions);
-            return LZHttpUtils.getLzOption(key, optionsmap);
+            val =  LZHttpUtils.getLzOption(key, optionsmap);
+            if (val != null) {
+                return val;
+            }
         }
+     
+        // Fallback to looking up key in regular query args
+        // "lzr" is the old way of specifying 'runtime' as a query arg
+        String mkey = (String) optionNameMap.get(key);
+        if (mkey != null) {
+            key = mkey;
+        }
+
+        return req.getParameter(key);
     }
 
 }

@@ -310,9 +310,9 @@ public class CompilationManager extends Cache {
         Item item = getItem(pathname, props);
         String enc = props.getProperty(LZHttpUtils.CONTENT_ENCODING);
 
-        boolean isDebug = "true".equals(props.getProperty("debug"));
-        boolean isProfile = "true".equals(props.getProperty("profile"));
-        boolean isBacktrace = "true".equals(props.getProperty("lzbacktrace"));
+        boolean isDebug = "true".equals(props.getProperty(CompilationEnvironment.DEBUG_PROPERTY));
+        boolean isProfile = "true".equals(props.getProperty(CompilationEnvironment.PROFILE_PROPERTY));
+        boolean isBacktrace = "true".equals(props.getProperty(CompilationEnvironment.BACKTRACE_PROPERTY));
         boolean isSourceAnnotations = "true".equals(props.getProperty(CompilationEnvironment.SOURCE_ANNOTATIONS_PROPERTY));
         String runtime = props.getProperty(CompilationEnvironment.RUNTIME_PROPERTY);
 

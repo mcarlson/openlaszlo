@@ -172,6 +172,17 @@ static function getInitArg (name) {
     return initargs[name];
 }
 
+static function getLzOption (name) {
+    var options = global;
+    var id = LzSprite.__rootSprite._id
+    if (id) {
+        options = lz.embed.applications[id].options;
+    }
+    if (name == null) return options;
+    return options[name];
+}
+
+
 /**
   * This function returns the id the app was started with
   * 

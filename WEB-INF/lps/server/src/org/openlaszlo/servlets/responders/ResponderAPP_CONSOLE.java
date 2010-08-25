@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.openlaszlo.compiler.Canvas;
+import org.openlaszlo.compiler.CompilationEnvironment;
 import org.openlaszlo.compiler.CompilationError;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.*;
@@ -79,8 +80,9 @@ original :  private static String sStyleSheetPathname =
         String agent = req.getHeader("user-agent");
         // MS-specific header
         String os   = req.getHeader("ua-os");
-        String debugconsole = req.getParameter("lzconsoledebug");
-        String popupdebugconsole = req.getParameter("lzconsolewindow");
+        String debugconsole = new Boolean("true".equals(req.getParameter(CompilationEnvironment.CONSOLEDEBUG_PROPERTY))).toString();
+        mLogger.info("debugconsole == "+debugconsole +", getParameter(lzconsoledebug)="+req.getParameter(CompilationEnvironment.CONSOLEDEBUG_PROPERTY));
+        String popupdebugconsole = new Boolean("true".equals(LZHttpUtils.getLzOption("lzconsolewindow", req))).toString();
         String query_args = getQueryArgs(req);
         String url  = req.getRequestURI();
         int i = url.lastIndexOf("/");
@@ -118,12 +120,32 @@ original :  private static String sStyleSheetPathname =
         buffer.append(
             ">\n");
 
+        // this lists all the query args
         for (Enumeration e = req.getParameterNames(); e.hasMoreElements(); ) {
             String name = (String)e.nextElement();
             String value = req.getParameter(name);
             buffer.append("<param name=\"" + XMLUtils.escapeXml(name) + "\" ");
             buffer.append("value=\"" + XMLUtils.escapeXml(value) + "\"/>\n");
         }
+
+        // And this unpacks the lzoptions, so the dev-console can see
+        // them as if they were query args
+        String lzoptions = req.getParameter("lzoptions");
+        if (lzoptions != null) {
+            HashMap optionsmap = LZHttpUtils.getLzRequestOptions(lzoptions);
+            Iterator it = optionsmap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry)it.next();
+                String key = (String) pairs.getKey();
+                List vals = (List) pairs.getValue();
+                String firstval = (String) vals.get(0);
+                buffer.append("<param name=\"" + XMLUtils.escapeXml(key) + "\" ");
+                buffer.append("value=\"" + XMLUtils.escapeXml(firstval) + "\"/>\n");                
+            }
+        }
+
+
+
         buffer.append("</request>");
 
         String infoXML = "";
