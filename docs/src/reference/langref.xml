@@ -5,414 +5,492 @@
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <js2doc>
 
-<property id="tag.switch" topic="LZX" subtopic="Basics" access="public">
-<doc>
-    <tag name="shortdesc"><text>Special syntax used to control compilation</text></tag>
-    <tag name="lzxname"><text>switch</text></tag>
-    <tag name="usage"><text>
-      <p>
-      Each 'when' block which evaluates to true will include that block of code
-      in the compilation. This provides a mechanism to conditionally include 
-      alternate blocks of code, depending on the value of compile-time constants.
-      </p>
-      <p>
-      The 'property' attribute will evaluate a compile-time constant, which can  be one of these booleans
-{$debug, $profile, $backtrace, $swf7, $swf8, $as2, $swf9, $swf10, $as3, $dhtml, $j2me, $svg, $js1}. There is also
-    a property named  '$runtime', which has a string value that can be compared to a constant using the syntax below.
-      
-      </p>
-      <p>If the compile time property has a string value rather than a boolean, it can be compared to a string, using the syntax
-        &lt;when property="<replaceable>constant</replaceable> value="<replaceable>value</replaceable>"&gt;. For backwards compatibility, the "runtime" attribute is supported, e.g.,  &lt;when runtime="<replaceable>dhtml</replaceable>&gt; is supported, but the recommended way to do this is
-&lt;when property="<replaceable>$runtime</replaceable> value="<replaceable>dhtml</replaceable>"&gt;
-
-      </p>
-      <code>
-      &lt;switch&gt;
-        &lt;when runtime="dhtml"&gt;
-          <replaceable>lzx code</replaceable>
-        &lt;/when&gt;
-        <replaceable>...</replaceable>
-        &lt;when property="$as3"&gt;
-          <replaceable>lzx code</replaceable>
-        &lt;/when&gt;
-        &lt;otherwise&gt;
-          <replaceable>lzx code</replaceable>
-        &lt;/otherwise&gt;
-      &lt;/switch&gt;
-      </code>
-    </text></tag>
-</doc>
-<class>
-</class>
-</property>
-
-<property id="tag.attribute" topic="LZX" subtopic="Basics" access="public">
-<doc>
-    <tag name="shortdesc"><text>Sets an attribute of the object that contains it.</text></tag>
-    <tag name="lzxname"><text>attribute</text></tag>
-    <text>
-<p>The <tagname>attribute</tagname> tag has two uses:</p>
-
-<ol>
-
-<li>
-<p>In a class definiiton, the <tagname>attribute</tagname> tag
-defines an attribute that can be set in instances of the class.</p>
-
-<example>
-&lt;canvas height="30"&gt;
-  &lt;class name="mybutton" extends="button"&gt;
-   <em> &lt;attribute name="myattr" type="string" value="after"/&gt;</em>
-  &lt;/class&gt;
-  &lt;mybutton text="before" myattr="after"
-            onclick="setAttribute('text', this.myattr)"/&gt;
-&lt;/canvas&gt;
-</example>
-</li>
-
-<li>
-<p>In an instance, the <tagname>attribute</tagname> tag attaches an attribute to the instance.  The attribute can be accessed from script.</p>
-
-<example>
-&lt;canvas height="30"&gt;
-
-  &lt;class name="mybutton" extends="button"&gt;
-      &lt;attribute name="myattr" type="string" value="after"/&gt;
-  &lt;/class&gt;
-  &lt;mybutton text="before"
-            onclick="setAttribute('text', this.myattr)"&gt;
-    <em>&lt;attribute name="myattr" value="perhaps later"/&gt;</em>
-  &lt;/mybutton&gt;
-&lt;/canvas&gt;
-</example>
-
-</li>
-</ol>
-
-<p>See the <link linkend="methods-events-attributes.attribute-tag">Developer's Guide</link> for
-a complete discussion.
-</p>
-
-<p>
-    Also see the documentation for <sgmltag class="element" role="tag.class">&lt;class&gt;</sgmltag>. The <a
-    href="${tutorials}classes-tutorial.html">Classes</a> tutorial describes how
-    to use attributes to define a class.
-</p>
-    </text>
-  </doc>
-  <class>
-    <property name="__ivars__" access="public">
-      <object>
-        <property name="name" id="attribute.__ivars__.name" modifiers="final" type="String">
-          <doc><text>The name of the attribute.</text></doc>
-        </property>
-        <property name="value" id="attribute.__ivars__.value" type="Object">
-          <doc><text>The initial value of the attribute.  The type of this value
-            is specified by the value of the type attribute; if that
-            attribute is not present, it's the type of this attribute
-            in this element's tag.  The attribute is given this value
-            when the element is created.
-          </text></doc>
-        </property>
-        <property name="when" modifiers="final" id="attribute.__ivars__.when">
-          <doc>
-            <tag name="since"><text>1.1</text></tag>
-            <tag name="lzxdefault"><text>"immediately"</text></tag>
-            <tag name="lzxtype"><text>"immediately" | "once" | "always"</text></tag>
-            <text> When the initial value expression is to be
-              evaluated.  One of:
-              <dl>
-                <dt><literal>immediately</literal></dt>
-                <dd>evaluate when the enclosing element is defined
-                  (must be a constant)</dd>
-                <dt><literal>once</literal></dt>
-                <dd>evaluate when the enclosing element is
-                  initialized</dd>
-                <dt><literal>always</literal></dt>
-                <dd>update whenever the value of the expression
-                  changes</dd>
-              </dl>
-              The default is <literal>when="immediately"</literal>.
-
-              The setting for <literal>when</literal> can be overridden
-              when assigning a value to an attribute by using the
-              syntax <code><var>attribute
-                name</var>=$<var>when
-                  value</var>{<var>expression</var>}</code>.  The
-              default for
-              <var>when value</var> is <literal>always</literal>, for
-              example: <code>&lt;view
-                title="$once{computeTitle()}" /&gt;</code> sets the
-              title of the view to a computed value and
-              <code>&lt;view title="${parent.subtitle}" \&gt;</code>
-              will cause the title of the view to
-              track <literal>parent.subtitle</literal>.
-            </text>
-          </doc>
-        </property>
-        <property name="allocation" modifiers="final" id="attribute.__ivars__.allocation">
-          <doc>
-            <tag name="lzxdefault"><text>"instance"</text></tag>
-            <tag name="lzxtype"><text>"instance" | "class"</text></tag>
-            <text>One of:
-              <dl>
-                <dt><literal>class</literal></dt>
-                <dd>The attribute will be an attribute of the class; to refer to it, you say <literal>lz.classname.attributename</literal>.</dd>
-                <dt><literal>instance</literal></dt>
-                <dd>Each instance will have an attribute with the specified properties (<literal>name</literal>, <literal>type</literal>, <literal>value</literal>, etc.).</dd>
-              </dl>
-              <p>You can set <literal>allocation</literal> to <literal>class</literal> to get static attributes. 
-              Static properties are attached to the class itself, for example <literal>lz.classname</literal>.</p> 
-              <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
-            </text>
-          </doc>
-        </property>
-        <property name="type" type="String" modifiers="final" id="attribute.__ivars__.type">
-          <doc>
-            <tag name="lzxdefault"><text>"expression"</text></tag>
-            <tag name="lzxtype"><text>"boolean" | "color" | "expression" | "number" | "size" | "string" | "text" | "html"</text></tag>
-            <text>The type of the attribute.  This determines how the value is
-              parsed.  Attributes of type string are automatically quoted
-              if when="immediate", for any other value of when, a literal
-              string would have to be quoted to be used as a value.
-            </text>
-          </doc>
-        </property>
-        <property name="required" type="Boolean" modifiers="final" id="attribute.__ivars__.required">
-          <doc>
-            <tag name="lzxdefault"><text>"false"</text></tag>
-            <text>True if this is a required attribute.</text>
-          </doc>
-        </property>
-        <property name="setter" type="Object" access="protected" id="attribute.__ivars__.setter">
-          <doc>
-            <tag name="lzxtype"><text>script</text></tag>
-            <tag name="since"><text>1.1</text></tag>
-            <text>Code that is executed when setAttribute is used to set the value
-              of this attribute.  This code is executed within a context in
-              which the variable with this attribute's name is
-              bound to the value passed to setAttribute.
-            </text>
-          </doc>
-        </property>
-      </object>
-    </property>
-  </class>
-</property>
-
-<property id="tag.import" topic="LZX" subtopic="Basics" access="public">
+  <property id="tag.switch" topic="LZX" subtopic="Basics" access="public">
     <doc>
-      <tag name="shortdesc"><text>Imports code at runtime from other files.</text></tag>
-      <tag name="lzxname"><text>import</text></tag>
+      <tag name="shortdesc">
+        <text>Special syntax used to control compilation</text>
+      </tag>
+      <tag name="lzxname">
+        <text>switch</text>
+      </tag>
+      <tag name="usage">
+        <text>
+          <p> Each 'when' block which evaluates to true will include that block of code in the
+            compilation. This provides a mechanism to conditionally include alternate blocks of
+            code, depending on the value of compile-time constants. </p>
+          <p> The 'property' attribute will evaluate a compile-time constant, which can be one of
+            these booleans {$debug, $profile, $backtrace, $swf7, $swf8, $as2, $swf9, $swf10, $as3,
+            $dhtml, $j2me, $svg, $js1}. There is also a property named '$runtime', which has a
+            string value that can be compared to a constant using the syntax below. </p>
+          <p>If the compile time property has a string value rather than a boolean, it can be
+            compared to a string, using the syntax &lt;when
+            property="<replaceable>constant</replaceable>
+            value="<replaceable>value</replaceable>"&gt;. For backwards compatibility, the
+            "runtime" attribute is supported, e.g., &lt;when
+            runtime="<replaceable>dhtml</replaceable>&gt; is supported, but the recommended way
+            to do this is &lt;when property="<replaceable>$runtime</replaceable>
+              value="<replaceable>dhtml</replaceable>"&gt; </p>
+          <code> &lt;switch&gt; &lt;when runtime="dhtml"&gt; <replaceable>lzx
+            code</replaceable> &lt;/when&gt; <replaceable>...</replaceable> &lt;when
+            property="$as3"&gt; <replaceable>lzx code</replaceable> &lt;/when&gt;
+            &lt;otherwise&gt; <replaceable>lzx code</replaceable> &lt;/otherwise&gt;
+            &lt;/switch&gt; </code>
+        </text>
+      </tag>
+    </doc>
+    <class> </class>
+  </property>
+
+  <property id="tag.attribute" topic="LZX" subtopic="Basics" access="public">
+    <doc>
+      <tag name="shortdesc">
+        <text>Sets an attribute of the object that contains it.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>attribute</text>
+      </tag>
       <text>
-        <p>The <tagname>import</tagname> tag is used to import, at run time, source code
-          contained in another (library) file.  See the <a
-            href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
-          discussion.  Also see the <sgmltag class="element" role="tag.library">&lt;library&gt;</sgmltag>
-          tag.</p>
+        <p>The <tagname>attribute</tagname> tag has two uses:</p>
+
+        <ol>
+
+          <li>
+            <p>In a class definiiton, the <tagname>attribute</tagname> tag defines an attribute that
+              can be set in instances of the class.</p>
+
+            <example> &lt;canvas height="30"&gt; &lt;class name="mybutton"
+              extends="button"&gt; <em> &lt;attribute name="myattr" type="string"
+                value="after"/&gt;</em> &lt;/class&gt; &lt;mybutton text="before"
+              myattr="after" onclick="setAttribute('text', this.myattr)"/&gt;
+              &lt;/canvas&gt; </example>
+          </li>
+
+          <li>
+            <p>In an instance, the <tagname>attribute</tagname> tag attaches an attribute to the
+              instance. The attribute can be accessed from script.</p>
+
+            <example> &lt;canvas height="30"&gt; &lt;class name="mybutton"
+              extends="button"&gt; &lt;attribute name="myattr" type="string"
+              value="after"/&gt; &lt;/class&gt; &lt;mybutton text="before"
+              onclick="setAttribute('text', this.myattr)"&gt; <em>&lt;attribute
+                name="myattr" value="perhaps later"/&gt;</em> &lt;/mybutton&gt;
+              &lt;/canvas&gt; </example>
+
+          </li>
+        </ol>
+
+        <p>See the <link linkend="methods-events-attributes.attribute-tag">Developer's Guide</link>
+          for a complete discussion. </p>
+
+        <p> Also see the documentation for <sgmltag class="element" role="tag.class"
+            >&lt;class&gt;</sgmltag>. The <a href="${tutorials}classes-tutorial.html"
+            >Classes</a> tutorial describes how to use attributes to define a class. </p>
       </text>
     </doc>
-  <class extends="LzNode">
-    <property name="__ivars__" access="public">
-      <object>
-        <property name="href" type="String">
-          <doc>
-            <tag name="lzxtype"><text>xsd:anyURI</text></tag>
-            <text>A reference to a target file whose content is treated as a loadable module</text>
-          </doc>
-        </property>
-        <property name="onload">
-          <doc>
-            <tag name="lzxtype"><text>event</text></tag>
-          </doc>
-        </property>
-        <property name="onerror">
-          <doc>
-            <tag name="lzxtype"><text>event</text></tag>
-          </doc>
-        </property>
-        <property name="ontimeout">
-          <doc>
-            <tag name="lzxtype"><text>event</text></tag>
-          </doc>
-        </property>
-        <property name="proxied">
-          <doc>
-            <tag name="lzxtype"><text>boolean | "inherit"</text></tag>
-            <tag name="lzxdefault"><text>"inherit"</text></tag>
-          </doc>
-        </property>
-        <property name="stage">
-          <doc>
-            <tag name="lzxtype"><text>"late" | "defer"</text></tag>
-          </doc>
-        </property>
-      </object>
-    </property>
-  </class>
-</property>
+    <class>
+      <property name="__ivars__" access="public">
+        <object>
+          <property name="name" id="attribute.__ivars__.name" modifiers="final" type="String">
+            <doc>
+              <text>The name of the attribute.</text>
+            </doc>
+          </property>
+          <property name="style" id="attribute.__ivars__.style" modifiers="final" type="String">
+            <doc>
+              <text>The CSS property name that can be used to set the value of this attribute under
+                the control of a <literal>&lt;stylesheet&gt;</literal> (See <a
+                  href="${dguide}css.html">Chapter 19. Cascading Style Sheets</a>).
+                  <literal>style</literal> can be any valid CSS property name, and need not be the
+                same as the attribute name; for example you could use the standard CSS property name
+                  <literal>background-color</literal> as the style of the <literal>bgcolor</literal>
+                attribute. When an attribute has a <literal>style</literal> property, the
+                  <literal>value</literal> property acts as the default value for the attribute: in
+                the absence of any applicable CSS rule specifying the corresponding property, the
+                attribute will be given the default value. In the case of dynamic CSS, the attribute
+                will revert to the default value if CSS was applied and is removed. (See <a
+                  href="${dguide}css.html#dynamiccss">Dynamic CSS</a>.)</text>
+            </doc>
+          </property>
+          <property name="value" id="attribute.__ivars__.value" type="Object">
+            <doc>
+              <text>The initial value of the attribute. The type of this value is specified by the
+                value of the type attribute; if that attribute is not present, it's the type of this
+                attribute in this element's tag. The attribute is given this value when the element
+                is created. </text>
+            </doc>
+          </property>
+          <!--<property name="when" modifiers="final" id="attribute.__ivars__.when" access="private">
+            <doc>
+              <tag name="since">
+                <text>1.1</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"immediately"</text>
+              </tag>
+              <tag name="lzxtype">
+                <text>"immediately" | "once" | "always"</text>
+              </tag>
+              <text> When the initial value expression is to be evaluated. One of: <dl>
+                  <dt>
+                    <literal>immediately</literal>
+                  </dt>
+                  <dd>evaluate when the enclosing element is defined (must be a constant)</dd>
+                  <dt>
+                    <literal>once</literal>
+                  </dt>
+                  <dd>evaluate when the enclosing element is initialized</dd>
+                  <dt>
+                    <literal>always</literal>
+                  </dt>
+                  <dd>update whenever the value of the expression changes</dd>
+                </dl> The default is <literal>when="immediately"</literal>. The setting for
+                  <literal>when</literal> can be overridden when assigning a value to an attribute
+                by using the syntax <code><var>attribute name</var>=$<var>when
+                    value</var>{<var>expression</var>}</code>. The default for <var>when value</var>
+                is <literal>always</literal>, for example: <code>&lt;view
+                  title="$once{computeTitle()}" /&gt;</code> sets the title of the view to a
+                computed value and <code>&lt;view title="${parent.subtitle}" \&gt;</code>
+                will cause the title of the view to track <literal>parent.subtitle</literal>.
+              </text>
+            </doc>
+          </property>-->
+          <property name="allocation" modifiers="final" id="attribute.__ivars__.allocation">
+            <doc>
+              <tag name="lzxdefault">
+                <text>"instance"</text>
+              </tag>
+              <tag name="lzxtype">
+                <text>"instance" | "class"</text>
+              </tag>
+              <text>One of: <dl>
+                  <dt>
+                    <literal>class</literal>
+                  </dt>
+                  <dd>The attribute will be an attribute of the class; to refer to it, you say
+                      <literal>lz.classname.attributename</literal>.</dd>
+                  <dt>
+                    <literal>instance</literal>
+                  </dt>
+                  <dd>Each instance will have an attribute with the specified properties
+                      (<literal>name</literal>, <literal>type</literal>, <literal>value</literal>,
+                    etc.).</dd>
+                </dl>
+                <p>You can set <literal>allocation</literal> to <literal>class</literal> to get
+                  static attributes. Static properties are attached to the class itself, for example
+                    <literal>lz.classname</literal>.</p>
+                <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
+              </text>
+            </doc>
+          </property>
+          <property name="type" type="String" modifiers="final" id="attribute.__ivars__.type">
+            <doc>
+              <tag name="lzxdefault">
+                <text>"expression"</text>
+              </tag>
+              <tag name="lzxtype">
+                <text>"boolean" | "color" | "expression" | "number" | "size" | "string" | "text" |
+                  "html"</text>
+              </tag>
+              <text>The type of the attribute. This determines how the value is parsed. Attributes
+                of type string are automatically quoted if when="immediate", for any other value of
+                when, a literal string would have to be quoted to be used as a value. </text>
+            </doc>
+          </property>
+          <property name="required" type="Boolean" modifiers="final"
+            id="attribute.__ivars__.required">
+            <doc>
+              <tag name="lzxdefault">
+                <text>"false"</text>
+              </tag>
+              <text>True if this is a required attribute.</text>
+            </doc>
+          </property>
+          <property name="setter" type="Object" access="protected" id="attribute.__ivars__.setter">
+            <doc>
+              <tag name="lzxtype">
+                <text>script</text>
+              </tag>
+              <tag name="since">
+                <text>1.1</text>
+              </tag>
+              <text>Code that is executed when setAttribute is used to set the value of this
+                attribute. This code is executed within a context in which the variable with this
+                attribute's name is bound to the value passed to setAttribute. </text>
+            </doc>
+          </property>
+        </object>
+      </property>
+    </class>
+  </property>
 
-<property id="tag.include" topic="LZX" subtopic="Basics" access="public">
-  <doc>
-    <tag name="shortdesc"><text>Includes code from other files.</text></tag>
-    <tag name="lzxname"><text>include</text></tag>
-    <text>
-      <p>The <tagname>include</tagname> tag is used to include source code
-        contained in another file.  See the <a
-          href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a complete
-        discussion.  Also see the <sgmltag class="element" role="tag.library">&lt;library&gt;</sgmltag>
-        tag.</p>
-    </text>
-  </doc>
-  <class>
-    <property name="__ivars__" access="public">
-      <object>
-        <property name="href" type="String">
-          <doc>
-            <tag name="lzxtype"><text>xsd:anyURI</text></tag>
-            <text>A reference to a target file whose content is included in the
-              application that contains this include element.
-            </text>
-          </doc>
-        </property>
-        <property name="type" type="String">
-          <doc>
-            <tag name="lzxtype"><text>"text" | "xml"</text></tag>
-            <tag name="lzxdefault"><text>"xml"</text></tag>
-            <text>If this attribute has the value <literal>text</literal>, the content of the
-              target file is included as text.  Otherwise, it is read as XML.
-            </text>
-          </doc>
-        </property>
-      </object>
-    </property>
-  </class>
-</property>
+  <property id="tag.import" topic="LZX" subtopic="Basics" access="public">
+    <doc>
+      <tag name="shortdesc">
+        <text>Imports code at runtime from other files.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>import</text>
+      </tag>
+      <text>
+        <p>The <tagname>import</tagname> tag is used to import, at run time, source code contained
+          in another (library) file. See the <a
+            href="${dguide}program-structure.html#program-structure.include-tag">Guide</a> for a
+          complete discussion. Also see the <sgmltag class="element" role="tag.library"
+            >&lt;library&gt;</sgmltag> tag.</p>
+      </text>
+    </doc>
+    <class extends="LzNode">
+      <property name="__ivars__" access="public">
+        <object>
+          <property name="href" type="String">
+            <doc>
+              <tag name="lzxtype">
+                <text>xsd:anyURI</text>
+              </tag>
+              <text>A reference to a target file whose content is treated as a loadable
+              module</text>
+            </doc>
+          </property>
+          <property name="onload">
+            <doc>
+              <tag name="lzxtype">
+                <text>event</text>
+              </tag>
+            </doc>
+          </property>
+          <property name="onerror">
+            <doc>
+              <tag name="lzxtype">
+                <text>event</text>
+              </tag>
+            </doc>
+          </property>
+          <property name="ontimeout">
+            <doc>
+              <tag name="lzxtype">
+                <text>event</text>
+              </tag>
+            </doc>
+          </property>
+          <property name="proxied">
+            <doc>
+              <tag name="lzxtype">
+                <text>boolean | "inherit"</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"inherit"</text>
+              </tag>
+            </doc>
+          </property>
+          <property name="stage">
+            <doc>
+              <tag name="lzxtype">
+                <text>"late" | "defer"</text>
+              </tag>
+            </doc>
+          </property>
+        </object>
+      </property>
+    </class>
+  </property>
 
-<property id="tag.library" topic="LZX" subtopic="Basics" access="public">
-  <doc>
-    <tag name="shortdesc"><text>This tag marks the root element of a library file.</text></tag>
-    <tag name="lzxname"><text>library</text></tag>
-    <text>
-<p>The <tagname>library</tagname> tag defines the root element of a
-library file.  An application can use the <sgmltag class="element" role="tag.include">&lt;include&gt;</sgmltag>
-tag to include the code in a library file.</p>
+  <property id="tag.include" topic="LZX" subtopic="Basics" access="public">
+    <doc>
+      <tag name="shortdesc">
+        <text>Includes code from other files.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>include</text>
+      </tag>
+      <text>
+        <p>The <tagname>include</tagname> tag is used to include source code contained in another
+          file. See the <a href="${dguide}program-structure.html#program-structure.include-tag"
+            >Guide</a> for a complete discussion. Also see the <sgmltag class="element"
+            role="tag.library">&lt;library&gt;</sgmltag> tag.</p>
+      </text>
+    </doc>
+    <class>
+      <property name="__ivars__" access="public">
+        <object>
+          <property name="href" type="String">
+            <doc>
+              <tag name="lzxtype">
+                <text>xsd:anyURI</text>
+              </tag>
+              <text>A reference to a target file whose content is included in the application that
+                contains this include element. </text>
+            </doc>
+          </property>
+          <property name="type" type="String">
+            <doc>
+              <tag name="lzxtype">
+                <text>"text" | "xml"</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"xml"</text>
+              </tag>
+              <text>If this attribute has the value <literal>text</literal>, the content of the
+                target file is included as text. Otherwise, it is read as XML. </text>
+            </doc>
+          </property>
+        </object>
+      </property>
+    </class>
+  </property>
 
-<p>See the <a href="${dguide}program-structure.html#program-structure.library-tag">Guide</a> for
-a complete discussion.  Also see the <sgmltag class="element" role="tag.include">&lt;include&gt;</sgmltag> tag.</p>
-    </text>
-  </doc>
-  <class>
-    <property name="__ivars__" access="public">
-      <object>
-        <property name="href" id="library.__ivars__.href" type="String" access="private">
-          <doc>
-            <tag name="lzxtype"><text>xsd:anyURI</text></tag>
-            <text>This attribute is used internally by the compiler.  It shouldn't
-              be used in user programs.
-            </text>
-          </doc>
-        </property>
-        <property name="proxied" id="library.__ivars__.proxied" access="public">
-          <doc>
-            <tag name="lzxtype"><text>boolean | "inherit"</text></tag>
-            <tag name="lzxdefault"><text>"inherit"</text></tag>
-          </doc>
-        </property>
-        <property name="validate" id="library.__ivars__.validate" access="public">
-          <doc>
-            <tag name="lzxtype"><text>boolean</text></tag>
-            <tag name="lzxdefault"><text>"true"</text></tag>
-            <text>If false, disables validation against the schema during compilation.</text>
-          </doc>
-        </property>
-      </object>
-    </property>
-  </class>
-</property>
+  <property id="tag.library" topic="LZX" subtopic="Basics" access="public">
+    <doc>
+      <tag name="shortdesc">
+        <text>This tag marks the root element of a library file.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>library</text>
+      </tag>
+      <text>
+        <p>The <tagname>library</tagname> tag defines the root element of a library file. An
+          application can use the <sgmltag class="element" role="tag.include"
+            >&lt;include&gt;</sgmltag> tag to include the code in a library file.</p>
 
-<property id="tag.method" topic="LZX" subtopic="Basics" access="public">
-  <doc>
-    <tag name="shortdesc"><text>Attaches a function or event handler to an object or class.</text></tag>
-    <tag name="lzxname"><text>method</text></tag>
-    <text>
-<p>Attaches a method to the object that contains this element.  The
-method must have a <attribute>name</attribute>.</p>
+        <p>See the <a href="${dguide}program-structure.html#program-structure.library-tag">Guide</a>
+          for a complete discussion. Also see the <sgmltag class="element" role="tag.include"
+            >&lt;include&gt;</sgmltag> tag.</p>
+      </text>
+    </doc>
+    <class>
+      <property name="__ivars__" access="public">
+        <object>
+          <property name="href" id="library.__ivars__.href" type="String" access="private">
+            <doc>
+              <tag name="lzxtype">
+                <text>xsd:anyURI</text>
+              </tag>
+              <text>This attribute is used internally by the compiler. It shouldn't be used in user
+                programs. </text>
+            </doc>
+          </property>
+          <property name="proxied" id="library.__ivars__.proxied" access="public">
+            <doc>
+              <tag name="lzxtype">
+                <text>boolean | "inherit"</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"inherit"</text>
+              </tag>
+            </doc>
+          </property>
+          <property name="validate" id="library.__ivars__.validate" access="public">
+            <doc>
+              <tag name="lzxtype">
+                <text>boolean</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"true"</text>
+              </tag>
+              <text>If false, disables validation against the schema during compilation.</text>
+            </doc>
+          </property>
+        </object>
+      </property>
+    </class>
+  </property>
 
-<p>The <attribute>name</attribute> attribute
-allows the method to be invoked from JavaScript with this name.
-For example, if a method is defined via:</p>
+  <property id="tag.method" topic="LZX" subtopic="Basics" access="public">
+    <doc>
+      <tag name="shortdesc">
+        <text>Attaches a function or event handler to an object or class.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>method</text>
+      </tag>
+      <text>
+        <p>Attaches a method to the object that contains this element. The method must have a
+            <attribute>name</attribute>.</p>
 
-<!--<example extract="false">--><programlisting class="code">
+        <p>The <attribute>name</attribute> attribute allows the method to be invoked from JavaScript
+          with this name. For example, if a method is defined via:</p>
+
+        <!--<example extract="false">-->
+        <programlisting class="code">
 &lt;view id="obj"&gt;
   &lt;method name="f" args="a, b"&gt;
     return a+b;
   &lt;/method&gt;
 &lt;/view&gt;
 </programlisting>
-<!--</example>-->
+        <!--</example>-->
 
-<p>then script code can invoke <code>obj.f(1, 2)</code> to add two
-numbers.</p>
-    </text>
-  </doc>
-  <class>
-    <property name="__ivars__" access="public">
-      <object>
-        <property name="allocation" modifiers="final" id="method.__ivars__.allocation">
-          <doc>
-            <tag name="lzxdefault"><text>"instance"</text></tag>
-            <tag name="lzxtype"><text>"instance" | "class"</text></tag>
-            <text>One of:
-              <dl>
-                <dt><literal>class</literal></dt>
-                <dd>The attribute will be an attribute of the class; to refer to it, you say <literal>lz.classname.attributename</literal>.</dd>
-                <dt><literal>instance</literal></dt>
-                <dd>Each instance will have a method with the specified properties (<literal>name</literal>, or <literal>args</literal>).</dd>
-              </dl>
-              <p>You can set <literal>allocation</literal> to <literal>class</literal> to get static attributes. 
-                Static properties are attached to the class itself, for example <literal>lz.classname</literal>.</p> 
-              <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
-              
-            </text>
-          </doc>
-        </property>
-        <property name="name" type="" modifiers="final">
-          <doc>
-            <tag name="lzxtype"><text>token</text></tag>
-            <text>The name of a variable that will be set to this
-            object when the application is started.  If this element
-            is directly within a
-            <a href="../reference/canvas.html">canvas</a>
-            or
-            <a herf="../reference/library.html">library</a>
-            element, the global variable and the canvas property with
-            this name will be set to this object.  If this element is
-            within another object, that object's property with this
-            name will be set to this object.</text>
-          </doc>
-        </property>
-        <property name="args" type="" modifiers="final">
-          <doc>
-            <tag name="lzxtype"><text>string</text></tag>
-            <text>The parameter names of this method.  The value of this attribute
-              is a comma-separated list of JavaScript identifiers.</text>
-          </doc>
-        </property>
-      </object>
-    </property>
-  </class>
-</property>
+        <p>then script code can invoke <code>obj.f(1, 2)</code> to add two numbers.</p>
+      </text>
+    </doc>
+    <class>
+      <property name="__ivars__" access="public">
+        <object>
+          <property name="allocation" modifiers="final" id="method.__ivars__.allocation">
+            <doc>
+              <tag name="lzxdefault">
+                <text>"instance"</text>
+              </tag>
+              <tag name="lzxtype">
+                <text>"instance" | "class"</text>
+              </tag>
+              <text>One of: <dl>
+                  <dt>
+                    <literal>class</literal>
+                  </dt>
+                  <dd>The attribute will be an attribute of the class; to refer to it, you say
+                      <literal>lz.classname.attributename</literal>.</dd>
+                  <dt>
+                    <literal>instance</literal>
+                  </dt>
+                  <dd>Each instance will have a method with the specified properties
+                    (<literal>name</literal>, or <literal>args</literal>).</dd>
+                </dl>
+                <p>You can set <literal>allocation</literal> to <literal>class</literal> to get
+                  static attributes. Static properties are attached to the class itself, for example
+                    <literal>lz.classname</literal>.</p>
+                <programlisting>&lt;attribute name="allowed" value="false" type="boolean" allocation="class" /&gt;</programlisting>
+              </text>
+            </doc>
+          </property>
+          <property name="name" type="" modifiers="final">
+            <doc>
+              <tag name="lzxtype">
+                <text>token</text>
+              </tag>
+              <text>The name of a variable that will be set to this object when the application is
+                started. If this element is directly within a <a href="../reference/canvas.html"
+                  >canvas</a> or <a herf="../reference/library.html">library</a> element, the global
+                variable and the canvas property with this name will be set to this object. If this
+                element is within another object, that object's property with this name will be set
+                to this object.</text>
+            </doc>
+          </property>
+          <property name="args" type="" modifiers="final">
+            <doc>
+              <tag name="lzxtype">
+                <text>string</text>
+              </tag>
+              <text>The parameter names of this method. The value of this attribute is a
+                comma-separated list of JavaScript identifiers.</text>
+            </doc>
+          </property>
+        </object>
+      </property>
+    </class>
+  </property>
 
-<property id="tag.splash+as2" topic="LZX" subtopic="Basics" access="public" runtimes="swf8">
-  <doc>
-    <tag name="shortdesc"><text>Controls the presentation while the application is loading.</text></tag>
-    <tag name="lzxname"><text>splash</text></tag>
-    <text>
-      <note>The <tagname>splash</tagname> tag does not work across
-        all platforms.  Consider instead the following technique:
-        <!-- Note: does not work as a live example -->
-        <programlisting><![CDATA[
+  <property id="tag.splash+as2" topic="LZX" subtopic="Basics" access="public" runtimes="swf8">
+    <doc>
+      <tag name="shortdesc">
+        <text>Controls the presentation while the application is loading.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>splash</text>
+      </tag>
+      <text>
+        <note>The <tagname>splash</tagname> tag does not work across all platforms. Consider instead
+          the following technique: <!-- Note: does not work as a live example -->
+          <programlisting><![CDATA[
 <div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: 100%; height: 100%; position: fixed; display: table">
   <p style="display: table-cell; vertical-align: middle;">
     <img src="/trunk/lps/includes/spinner.gif" style="display: block; margin: 20% auto"/>
@@ -425,170 +503,189 @@ numbers.</p>
     if (s) LzSprite.prototype.__discardElement(s);
   }
 </script>]]></programlisting>
-      </note>
-<p>The <tagname>splash</tagname> tag controls the presentation while
-the application is loading.</p>
+        </note>
+        <p>The <tagname>splash</tagname> tag controls the presentation while the application is
+          loading.</p>
 
-<p>If the <tagname>splash</tagname> element is present but is empty, a
-progress bar is displayed while the application is loading. For
-example:</p>
+        <p>If the <tagname>splash</tagname> element is present but is empty, a progress bar is
+          displayed while the application is loading. For example:</p>
 
-<!--<example extract="false">--><programlisting class="code">
+        <!--<example extract="false">-->
+        <programlisting class="code">
 &lt;canvas&gt;
   &lt;splash/&gt;
 &lt;canvas&gt;
 </programlisting>
-<!--</example>-->
+        <!--</example>-->
 
-<p>The <tagname link="true">splash</tagname> element may contain
-<a href="tag.splash-view.html">"splash view"</a> elements to define the position and
-behavior of resources that are displayed during the load process. However,
-these <a href="tag.splash-view.html">"splash view"</a> elements, although they are declared with a "view" tag, have a limited feature set. That is to say, when you place a <a href="tag.splash-view.html">view</a> tag inside a <tagname link="true">splash</tagname> element, you are not getting the same object that you do when you place a <sgmltag class="element" role="LzView">&lt;view&gt;</sgmltag> tag elsewhere on the canvas.
-</p>
-<p>
-For example, the following program positions an image on the canvas during the "splash" loading portion of the program's execution and removes it once the application has loaded. The example below executes too quickly to be demonsrate the splash view; try it in a larger application to see how it works.</p>
+        <p>The <tagname link="true">splash</tagname> element may contain <a
+            href="tag.splash-view.html">"splash view"</a> elements to define the position and
+          behavior of resources that are displayed during the load process. However, these <a
+            href="tag.splash-view.html">"splash view"</a> elements, although they are declared with
+          a "view" tag, have a limited feature set. That is to say, when you place a <a
+            href="tag.splash-view.html">view</a> tag inside a <tagname link="true">splash</tagname>
+          element, you are not getting the same object that you do when you place a <sgmltag
+            class="element" role="LzView">&lt;view&gt;</sgmltag> tag elsewhere on the
+          canvas. </p>
+        <p> For example, the following program positions an image on the canvas during the "splash"
+          loading portion of the program's execution and removes it once the application has loaded.
+          The example below executes too quickly to be demonsrate the splash view; try it in a
+          larger application to see how it works.</p>
 
-<!--<example extract="false" title="using 'splash view' tag">--><programlisting class="code">
+        <!--<example extract="false" title="using 'splash view' tag">-->
+        <programlisting class="code">
 &lt;canvas height="120"&gt;
   &lt;splash&gt;
     &lt;view resource="../images/logo.png"/&gt;
   &lt;/splash&gt;
 &lt;/canvas&gt;
 </programlisting>
-<!--</example>-->
-<p>
-You can position more than one image by specifying its coordinates. The <attribute>persistent</attribute> attribute  on <tagname>splash</tagname> tag causes the "splash" views contained within the splash element to remain on the canvas once the
-load process is complete.</p>
-<example title="persisting splash views">
-&lt;canvas height="120"&gt;
-  &lt;splash persistent="true"&gt;
-    &lt;view x="5" resource="../images/logo.png" /&gt;
-    &lt;view x="50" resource="../images/logo.png" /&gt;
-    &lt;view x="150" resource="../images/logo.png" /&gt;
-  &lt;/splash&gt;
-&lt;/canvas&gt;
-</example>
+        <!--</example>-->
+        <p> You can position more than one image by specifying its coordinates. The
+            <attribute>persistent</attribute> attribute on <tagname>splash</tagname> tag causes the
+          "splash" views contained within the splash element to remain on the canvas once the load
+          process is complete.</p>
+        <example title="persisting splash views"> &lt;canvas height="120"&gt; &lt;splash
+          persistent="true"&gt; &lt;view x="5" resource="../images/logo.png" /&gt;
+          &lt;view x="50" resource="../images/logo.png" /&gt; &lt;view x="150"
+          resource="../images/logo.png" /&gt; &lt;/splash&gt; &lt;/canvas&gt; </example>
 
-    </text>
-  </doc>
-  <class>
-    <property name="__ivars__" access="public">
-      <object>
-        <property name="hideafterinit" type="Boolean" access="private">
-          <doc>
-            <tag name="lzxtype"><text>boolean</text></tag>
-          </doc>
-        </property>
-        <property name="persistent">
-          <doc>
-            <tag name="lzxtype"><text>boolean</text></tag>
-            <tag name="lzxdefault"><text>"false"</text></tag>
-            <text>If true, the splash views remain on the canvas after the
-              preload is complete.
-            </text>
-          </doc>
-        </property>
-      </object></property>
-  </class>
-</property>
+      </text>
+    </doc>
+    <class>
+      <property name="__ivars__" access="public">
+        <object>
+          <property name="hideafterinit" type="Boolean" access="private">
+            <doc>
+              <tag name="lzxtype">
+                <text>boolean</text>
+              </tag>
+            </doc>
+          </property>
+          <property name="persistent">
+            <doc>
+              <tag name="lzxtype">
+                <text>boolean</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"false"</text>
+              </tag>
+              <text>If true, the splash views remain on the canvas after the preload is complete.
+              </text>
+            </doc>
+          </property>
+        </object>
+      </property>
+    </class>
+  </property>
 
-<property id="tag.splash-view" topic="LZX" subtopic="Basics" access="public" runtimes="swf8">
-  <doc>
-    <tag name="shortdesc"><text>A view element within the splash element positions a resource on the canvas while the application is loading.</text></tag>
-    <tag name="lzxname"><text>splash view</text></tag>
-    <text><p>A <tagname>view</tagname> tag within a <tagname>splash</tagname>
-element defines a view that is used to present a resource while the
-application is loading.</p>
+  <property id="tag.splash-view" topic="LZX" subtopic="Basics" access="public" runtimes="swf8">
+    <doc>
+      <tag name="shortdesc">
+        <text>A view element within the splash element positions a resource on the canvas while the
+          application is loading.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>splash view</text>
+      </tag>
+      <text>
+        <p>A <tagname>view</tagname> tag within a <tagname>splash</tagname> element defines a view
+          that is used to present a resource while the application is loading.</p>
 
-<p>Only a few attributes of the standard <tagname>view</tagname>
-element can be used on this view, because it is displayed before most
-of the system is present.</p>
+        <p>Only a few attributes of the standard <tagname>view</tagname> element can be used on this
+          view, because it is displayed before most of the system is present.</p>
 
-<p>See the <tagname>splash</tagname> documentation for examples.</p>
+        <p>See the <tagname>splash</tagname> documentation for examples.</p>
 
-    </text>
-  </doc>
-  <class>
-    <property name="__ivars__" access="public">
-      <object>
-        <property name="name" type="String" modifiers="final">
-          <doc>
-            <text>This defines both a resource with this name, and a view.</text>
-          </doc>
-        </property>
-        <property name="resource" type="String" modifiers="final">
-          <doc>
-            <text>This must be a pathname.  If the target contains text, the
-                  text should be converted to outlines.</text>
-          </doc>
-        </property>
-        <property name="ratio" type="Number" modifiers="read-only">
-          <doc>
-            <tag name="lzxtype"><text>number</text></tag>
-            <text>If this attribute is present, the resource is synchronized
-                  to loading progress.  Its value should be either a number
-                  between 0.0 and 1.0, or a percentage between 0% and 100%
-                  (inclusive).  If the resource is a multiframe resource, the
-                  value is the proportion of the frames to play during the
-                  preload phase of application load; the remainder is played
-                  during the initialization phase.
-            </text>
-          </doc>
-        </property>
-        <property name="x" type="Number">
-          <doc>
-            <tag name="lzxtype"><text>number</text></tag>
-            <tag name="lzxdefault"><text>"0"</text></tag>
-            <text>x position of this view relative to the canvas</text>
-          </doc>
-        </property>
-        <property name="y" type="Number">
-          <doc>
-            <tag name="lzxtype"><text>number</text></tag>
-            <tag name="lzxdefault"><text>"0"</text></tag>
-            <text>y position of this view relative to the canvas</text>
-          </doc>
-        </property>
-        <property name="center" type="Boolean">
-          <doc>
-            <tag name="lzxtype"><text>boolean</text></tag>
-            <tag name="lzxdefault"><text>"false"</text></tag>
-            <text>If true, this view is centered within the canvas.  This
-                  overrides the x and y attributes.
-            </text>
-          </doc>
-        </property>
-      </object>
-    </property>
-  </class>
-</property>
+      </text>
+    </doc>
+    <class>
+      <property name="__ivars__" access="public">
+        <object>
+          <property name="name" type="String" modifiers="final">
+            <doc>
+              <text>This defines both a resource with this name, and a view.</text>
+            </doc>
+          </property>
+          <property name="resource" type="String" modifiers="final">
+            <doc>
+              <text>This must be a pathname. If the target contains text, the text should be
+                converted to outlines.</text>
+            </doc>
+          </property>
+          <property name="ratio" type="Number" modifiers="read-only">
+            <doc>
+              <tag name="lzxtype">
+                <text>number</text>
+              </tag>
+              <text>If this attribute is present, the resource is synchronized to loading progress.
+                Its value should be either a number between 0.0 and 1.0, or a percentage between 0%
+                and 100% (inclusive). If the resource is a multiframe resource, the value is the
+                proportion of the frames to play during the preload phase of application load; the
+                remainder is played during the initialization phase. </text>
+            </doc>
+          </property>
+          <property name="x" type="Number">
+            <doc>
+              <tag name="lzxtype">
+                <text>number</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"0"</text>
+              </tag>
+              <text>x position of this view relative to the canvas</text>
+            </doc>
+          </property>
+          <property name="y" type="Number">
+            <doc>
+              <tag name="lzxtype">
+                <text>number</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"0"</text>
+              </tag>
+              <text>y position of this view relative to the canvas</text>
+            </doc>
+          </property>
+          <property name="center" type="Boolean">
+            <doc>
+              <tag name="lzxtype">
+                <text>boolean</text>
+              </tag>
+              <tag name="lzxdefault">
+                <text>"false"</text>
+              </tag>
+              <text>If true, this view is centered within the canvas. This overrides the x and y
+                attributes. </text>
+            </doc>
+          </property>
+        </object>
+      </property>
+    </class>
+  </property>
 
-<property id="tag.security" topic="LZX" subtopic="Basics" access="public">
-  <doc>
-    <tag name="shortdesc"><text>Canvas element used to control RPC security</text></tag>
-    <tag name="lzxname"><text>security</text></tag>
-    <tag name="usage"><text>
-      <code>
-      &lt;security&gt;
-        &lt;allow&gt;
-          <replaceable>pattern</replaceable>
-        &lt;/allow&gt;
-        <replaceable>...</replaceable>
-        &lt;deny&gt;
-          <replaceable>pattern</replaceable>
-        &lt;/deny&gt;
-        <replaceable>...</replaceable>
-      &lt;/security&gt;
-      </code>
-    </text></tag>
-    <text>
-      <p>
-        Java classes used in JavaRPC application must be declared in a security
-        element. Classes not defined in a security element are not allowed to be
-        accessed or instantiated. The format of the security element looks like:
-      </p>
-      <!--<example extract="false">-->
-      <programlisting class="code">
+  <property id="tag.security" topic="LZX" subtopic="Basics" access="public">
+    <doc>
+      <tag name="shortdesc">
+        <text>Canvas element used to control RPC security</text>
+      </tag>
+      <tag name="lzxname">
+        <text>security</text>
+      </tag>
+      <tag name="usage">
+        <text>
+          <code> &lt;security&gt; &lt;allow&gt; <replaceable>pattern</replaceable>
+            &lt;/allow&gt; <replaceable>...</replaceable> &lt;deny&gt;
+              <replaceable>pattern</replaceable> &lt;/deny&gt;
+            <replaceable>...</replaceable> &lt;/security&gt; </code>
+        </text>
+      </tag>
+      <text>
+        <p> Java classes used in JavaRPC application must be declared in a security element. Classes
+          not defined in a security element are not allowed to be accessed or instantiated. The
+          format of the security element looks like: </p>
+        <!--<example extract="false">-->
+        <programlisting class="code">
         &lt;security&gt;
         &lt;allow&gt;
         &lt;pattern&gt;CLASS1&lt;/pattern&gt;
@@ -598,25 +695,25 @@ of the system is present.</p>
         &lt;/allow&gt;
         &lt;/security&gt;
       </programlisting>
-      <!--</example>-->
+        <!--</example>-->
 
-      <p>Each &lt;pattern&gt; is a regular expression.</p>
+        <p>Each &lt;pattern&gt; is a regular expression.</p>
 
-      <!--<example extract="false"
+        <!--<example extract="false"
                title="Allow classes that start with org.openlaszlo">-->
-      <programlisting class="code">
+        <programlisting class="code">
         &lt;security&gt;
         &lt;allow&gt;
         &lt;pattern&gt;^org\.openlaszlo&lt;/pattern&gt;
         &lt;/allow&gt;
         &lt;/security&gt;
       </programlisting>
-      <!--</example>-->
+        <!--</example>-->
 
-      <p>A javarpc object who's class is not declared in a security tag will result in
-        a load error.</p>
+        <p>A javarpc object who's class is not declared in a security tag will result in a load
+          error.</p>
 
-      <example><![CDATA[<canvas debug="true" height="300">
+        <example><![CDATA[<canvas debug="true" height="300">
 
     <debug x="10" y="40" height="240" />
 
@@ -661,18 +758,29 @@ of the system is present.</p>
 </canvas>
 ]]></example>
 
-      <p><b>See Also:</b></p>
-      <ul>
-        <li><sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag></li>
-        <li><sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag></li>
-        <li><a href="${dguide}/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC chapter</a></li>
-        <li><a href="${dguide}/rpc-javarpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: JavaRPC chapter</a></li>
-      </ul>
+        <p>
+          <b>See Also:</b>
+        </p>
+        <ul>
+          <li>
+            <sgmltag class="element" role="lz.rpc">&lt;rpc&gt;</sgmltag>
+          </li>
+          <li>
+            <sgmltag class="element" role="lz.javarpc">&lt;javarpc&gt;</sgmltag>
+          </li>
+          <li>
+            <a href="${dguide}/rpc.html" target="laszlo-dguide" shape="rect">Developer's Guide: RPC
+              chapter</a>
+          </li>
+          <li>
+            <a href="${dguide}/rpc-javarpc.html" target="laszlo-dguide" shape="rect">Developer's
+              Guide: JavaRPC chapter</a>
+          </li>
+        </ul>
 
-    </text>
-  </doc>
-  <class>
-  </class>
-</property>
+      </text>
+    </doc>
+    <class> </class>
+  </property>
 
 </js2doc>

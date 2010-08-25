@@ -264,7 +264,7 @@ fee fi foo fum {
 
       <para/>
    </section>
-   <section>
+   <section id="dynamiccss">
       <title>Dynamic CSS</title>
       <para>CSS attribute selectors automatically update when the value of an attribute specified by
          the selector changes. For example: <literal>button[mouse=down]</literal> will listen for
