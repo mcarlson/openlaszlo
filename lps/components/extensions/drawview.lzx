@@ -290,12 +290,12 @@
         function DrawviewShared (parent:LzNode? = null, attrs:Object? = null, children:Array? = null, instcall:Boolean = false) {
             super(parent, attrs, children, instcall);
         }
-        function lineTo(x,y) { }
-        function moveTo(x,y) { }
-        function quadraticCurveTo(cx, cy, px, py) {}
+        function lineTo(x:Number,y:Number) { }
+        function moveTo(x:Number,y:Number) { }
+        function quadraticCurveTo(cx:Number, cy:Number, px:Number, py:Number) {}
 
         // factor used to convert radians to degrees
-        var __radtodegfactor = 180 / Math.PI;
+        var __radtodegfactor:Number = 180 / Math.PI;
 
 /* From http://www.w3.org/TR/html5/the-canvas-element.html#dom-context-2d-arc :
 The arc(x, y, radius, startAngle, endAngle, anticlockwise) method draws an arc. If the context has any subpaths, then the method must add a straight line from the last point in the subpath to the start point of the arc. In any case, it must draw the arc between the start point of the arc and the end point of the arc, and add the start and end points of the arc to the subpath. The arc and its start and end points are defined as follows:
@@ -511,6 +511,13 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             private var __miterLimit = null;
             private var __strokeStyle = null;
             private var __fillStyle = null;
+            // Track whether the path needs to be drawn again by comparing with
+            // the __path length
+            private var __pathdrawn = -1;
+            // Prevent unneeded calls to clear()
+            private var __dirty = false;
+            // Track whether this path is currently open or not.
+            private var __pathisopen = false;
 
             // contains context states, used for save/restore()
             var __contextstates = null;
@@ -709,13 +716,12 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function beginPath() {
                 this.__path = [[1,0,0]];
                 this.__pathisopen = true;
-                this.__pathdrawn = false;
+                this.__pathdrawn = -1;
             }
 
             function closePath() {
                 if (this.__pathisopen) {
                     this.__path.push([0]);
-                    this.__pathdrawn = false;
                 }
                 this.__pathisopen = false;
             }
@@ -723,28 +729,24 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function moveTo(x,y) {
                 if (this.__pathisopen) {
                     this.__path.push([1, x,y]);
-                    this.__pathdrawn = false;
                 }
             }
 
             function lineTo(x,y) {
                 if (this.__pathisopen) {
                     this.__path.push([2, x,y]);
-                    this.__pathdrawn = false;
                 }
             }
 
             function quadraticCurveTo(cpx, cpy, x, y) {
                 if (this.__pathisopen) {
                     this.__path.push([3, cpx, cpy, x, y]);
-                    this.__pathdrawn = false;
                 }
             }
 
             function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
                 if (this.__pathisopen) {
                     this.__path.push([4, cp1x, cp1y, cp2x, cp2y, x, y]);
-                    this.__pathdrawn = false;
                 }
             }
 
@@ -757,11 +759,10 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     //If the context has any subpaths, then the method must add a straight line from the last point in the subpath to the start point of the arc.
                     this.__path.push([1, sx, sy]);
                     this.__path.push([5, x, y, radius, startAngle, endAngle, anticlockwise]);
-                    this.__pathdrawn = false;
                 }
             }
             function fill() {
-                if (! this.__pathdrawn) {
+                if (this.__pathdrawn !== this.__path.length) {
                     this.__playPath();
                 } else {
                     this.__updateFillStyle();
@@ -813,7 +814,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 if ($debug) this.__checkContext();
                 this.__updateLineStyle();
                 this.__updateFillStyle();
-                if (this.__pathdrawn) return;
+                if (this.__pathdrawn === l) return;
 
                 this.__dirty = true;
 
@@ -844,7 +845,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                             break;
                     }
                 }
-                this.__pathdrawn = true;
+                this.__pathdrawn = l;
             }
 
             function clipPath() {
@@ -859,7 +860,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             }
 
             function stroke() {
-                if (! this.__pathdrawn) {
+                if (this.__pathdrawn !== this.__path.length) {
                     this.__playPath();
                 } else {
                     this.__updateLineStyle();
@@ -869,7 +870,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             function clear() {
                 if (this['__dirty'] == false) return;
-                this.__pathdrawn = false;
+                this.__pathdrawn = -1;
                 this.__dirty = false;
                 if ($debug) this.__checkContext();
                 this.context.clearRect(0, 0, this.width, this.height);
@@ -956,9 +957,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 this.__context = c;
                 var context = c.context;
                 if (isradial) {
-                    this.__g = context.createRadialGradient.apply(context, args);
+                    this.__g = context.createRadialGradient(args[0], args[1], args[2], args[3], args[4], args[5]);
                 } else {
-                    this.__g = context.createLinearGradient.apply(context, args)
+                    this.__g = context.createLinearGradient(args[0], args[1], args[2], args[3]);
                 }
             }
 
@@ -974,12 +975,14 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     // add globalAlpha (if there is no explicit alpha value)
                     cstopColor = this.torgba(cstopColor, gAlpha);
                 }
-                try {
-                    this.__g.addColorStop(o, cstopColor);
-                } catch (e) {
-                    if ($debug) {
-                        Debug.warn('drawview gradient addColorStop() called with an invalid offset or color value: %w, %w.  Converted color to %w and received the error %w.', o, c, cstopColor, e);
+                if ($debug) {
+                    try {
+                        this.__g.addColorStop(o, cstopColor);
+                    } catch (e) {
+                            Debug.warn('drawview gradient addColorStop() called with an invalid offset or color value: %w, %w.  Converted color to %w and received the error %w.', o, c, cstopColor, e);
                     }
+                } else {
+                    this.__g.addColorStop(o, cstopColor);
                 }
             }
 
@@ -1031,12 +1034,15 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }#
             }
             // Next two are part of the required LFC tag class protocol
-            static var tagname = 'drawview';
+            static var tagname:String = 'drawview';
             static var attributes = new LzInheritedHash(LzView.attributes);
-            static var __colorcache :Object = {};
+            static var __colorcache:Object = {};
+            // Prevent unneeded calls to clear()
+            private var __dirty:Boolean = false;
 
-            var __path :Array = [];
-            var __pathisopen :Boolean = false;
+            private var __path :Array = [];
+            // Track whether this path is currently open or not.
+            private var __pathisopen :Boolean = false;
             // whether to measure the width/height dimensions after redrawing
             var measuresize :Boolean = true;
             //const __MOVETO_OP :int = 1;
@@ -1044,11 +1050,11 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             //const __QCURVE_OP :int = 3;
 
             // The container for the bitmap and all contexts
-            var __drawcontainer = null;
+            var __drawcontainer:Sprite = null;
             // The container for the current context
-            var __drawcontext = null;
+            var __drawcontext:Sprite = null;
             // The container for __bitmapdata
-            var __bitmapcontainer = null;
+            var __bitmapcontainer:Bitmap = null;
             // A background bitmap that contains all restored/transformed drawing state
             var __bitmapdata:BitmapData = null;
             var __norebuild:Boolean = false;
@@ -1110,30 +1116,30 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
             }
 
-            override function moveTo(x, y) {
+            override function moveTo(x:Number, y:Number) {
                 if (this.__pathisopen) {
                     // __MOVETO_OP
                     this.__path.push([1, x, y]);
                 }
             }
 
-            override function lineTo (x, y) {
+            override function lineTo (x:Number, y:Number) {
                 if (this.__pathisopen) {
                     // __LINETO_OP
                     this.__path.push([2, x, y]);
                 }
             }
 
-            override function quadraticCurveTo(cpx, cpy, x, y) {
+            override function quadraticCurveTo(cpx:Number, cpy:Number, x:Number, y:Number) {
                 if (this.__pathisopen) {
                     // __QCURVE_OP
                     this.__path.push([3, cpx, cpy, x, y]);
                 }
             }
 
-            const bezierCurveTo_error :Number = 10;
+            const bezierCurveTo_error:Number = 10;
 
-            function bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y) {
+            function bezierCurveTo(cp1x:Number, cp1y:Number, cp2x:Number, cp2y:Number, x:Number, y:Number) {
                 var error:Number = this.bezierCurveTo_error;
 
                 // Start from the cursor position, or (0, 0)
@@ -1170,7 +1176,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 while (points) {
                     // Posit a quadratic.  For C1 continuity, control point has to
                     // be at the intersection of the tangents.
-                    var q1:* = this.intersection.apply(null, points);
+                    var q1:* = this.intersection(points[0], points[1], points[2], points[3]);
                     var q0:Object = points[0];
                     var q2:Object = points[3];
 
@@ -1318,14 +1324,13 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             function clear() {
                 if (this['__dirty'] == false) return;
                 this.__dirty = false;
-                this.__pathdrawn = false;
                 this.context.clear();
                 if (this['__bitmapdata']) {
                     this.clearRect(0,0,this.width,this.height);
                 }
             }
 
-            function createLinearGradient(x0, y0, x1, y1) {
+            function createLinearGradient(x0:Number, y0:Number, x1:Number, y1:Number) {
                 var dx:Number = x1-x0;
                 var dy:Number = y1-y0;
                 var r:Number = Math.atan2(dy, dx);
@@ -1339,7 +1344,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 return g;
             }
 
-            function createRadialGradient(x0, y0, r0, x1, y1, r1) {
+            function createRadialGradient(x0:Number, y0:Number, r0, x1:Number, y1:Number, r1:Number) {
                 var w:Number = x1-x0;
                 var h:Number = y1-y0;
                 // Rotation doesn't seem to work
@@ -1351,7 +1356,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
             var __tr:Number = 0;
             // accumulate rotation, radians is expected to be clockwise
-            function rotate(radians) {
+            function rotate(radians:Number) {
                 this.__saveToBitmap();
 
                 this.__tr += radians * this.__radtodegfactor;
@@ -1419,7 +1424,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             // accumulate translation
             var __tx:Number = 0;
             var __ty:Number = 0;
-            function translate(x, y) {
+            function translate(x:Number, y:Number) {
                 this.__saveToBitmap();
 
                 // scaling affects translation in swf
@@ -1437,7 +1442,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             // accumulate scale in the horizontal and vertical directions
             var __sx:Number = 1;
             var __sy:Number = 1;
-            function scale(x, y) {
+            function scale(x:Number, y:Number) {
                 this.__saveToBitmap();
 
                 this.__sx *= x;
@@ -1570,18 +1575,18 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
             }
 
-            function fillText(text, x, y, maxWidth = null) {
+            function fillText(text:String, x:Number, y:Number, maxWidth = null) {
                 if ($debug) {
                     Debug.warn('lz.drawview.fillText() is not currently supported in %w.', $runtime);
                 }
             }
 
-            function strokeText(text, x, y, maxWidth = null) {
+            function strokeText(text:String, x:Number, y:Number, maxWidth = null) {
                 if ($debug) {
                     Debug.warn('lz.drawview.strokeText() is not currently supported in %w.', $runtime);
                 }
             }
-            function measureText(text) {
+            function measureText(text:String) {
                 if ($debug) {
                     Debug.warn('lz.drawview.measureText() is not currently supported in %w.', $runtime);
                 }
@@ -1637,9 +1642,9 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
 
 
                 if ($swf9) {
-                    private var __sizelimit = 2880 * 2880;
+                    private var __sizelimit:Number = 2880 * 2880;
                 } else { 
-                    private var __sizelimit = 4095 * 4095;
+                    private var __sizelimit:Number = 4095 * 4095;
                 }
 
                 // Rebuild bitmap drawing layer
@@ -1657,7 +1662,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     }
                     if (this.__bitmapdata && width == this.__bitmapdata.width && height == this.__bitmapdata.height) return;
 
-                    var bitmapdata = new flash.display.BitmapData(width, height, true, 0x000000ff);
+                    var bitmapdata:BitmapData = new flash.display.BitmapData(width, height, true, 0x000000ff);
                     if (bitmapdata) {
                         // copy any existing bitmap data
                         if (this.__bitmapdata) {
@@ -1684,7 +1689,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     }
                 }
 
-                function getImage(name):BitmapData {
+                function getImage(name:String):BitmapData {
                     var cache = lz.drawview.images;
                     if (! cache[name]) {
                         var resinfo:Object = LzResourceLibrary[name];
@@ -1885,7 +1890,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                     }
                 }
 
-                function getImage(name):BitmapData {
+                function getImage(name:String):BitmapData {
                     var cache = lz.drawview.images;
                     if (! cache[name]) {
                         var container:MovieClip = createEmptyMovieClip("loader", getNextHighestDepth());
@@ -1972,7 +1977,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 }
             } // End of as2/as3 conditionals
 
-            function fillRect(x, y, w, h) {
+            function fillRect(x:Number, y:Number, w:Number, h:Number) {
                 if (! w && ! h) return;
                 this.__dirty = true;
                 if (this.fillStyle instanceof LzCanvasGradient) {
@@ -2010,7 +2015,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             // the two is zero, then the method will draw a line instead (the 
             // path for the outline is just a straight line along the non-zero 
             // dimension).
-            function __strokeRect(x, y, w, h) {
+            function __strokeRect(x:Number, y:Number, w:Number, h:Number) {
                 if (w == 0 && h == 0) return;
                 this.context.moveTo(x,y);
                 if (w != 0) {
@@ -2036,7 +2041,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
                 if (this.measuresize) this.__updateSize();
             }
 
-            function clearRect(x, y, w, h) {
+            function clearRect(x:Number, y:Number, w:Number, h:Number) {
                 if (! w && ! h) return;
                 if (w < 1 || h < 1) return;
                 this.__saveToBitmap();
@@ -2047,7 +2052,7 @@ Negative values for radius must cause the implementation to raise an INDEX_SIZE_
             // The strokeRect(x, y, w, h) method must stroke the specified 
             // rectangle's path using the strokeStyle, lineWidth, lineJoin, 
             // and (if appropriate) miterLimit attributes. 
-            function strokeRect(x, y, w, h) {
+            function strokeRect(x:Number, y:Number, w:Number, h:Number) {
                 if (! w && ! h) return;
                 this.__dirty = true;
                 this.__updateLineStyle();
