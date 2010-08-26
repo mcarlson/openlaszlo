@@ -194,6 +194,8 @@ lz.embed = {
             // ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && embed.browser.OS == 'Windows' && (embed.browser.isOpera || embed.browser.isFirefox)))) {
             if (embed['mousewheel']) {
                 embed.mousewheel.setCallback(app, '_sendMouseWheel');
+                // explicitly say whether we want the mousewheel enabled
+                embed.mousewheel.setEnabled(! properties.cancelmousewheel);
             }
         }
         if ((swfargs.wmode == 'transparent' || swfargs.wmode == 'opaque') && embed.browser.OS == 'Windows' && (embed.browser.isOpera || embed.browser.isFirefox)) {
