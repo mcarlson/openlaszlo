@@ -7,29 +7,29 @@
 
   <stylesheet>
     /* Static for buttons */
-    colorbutton[color=red] {background-color: red }
+    dynamicbutton[color=red] {background-color: red }
     /* `lime` is the HTML name for rgb(0,255,0) */
-    colorbutton[color=green] {background-color: lime }
-    colorbutton[color=blue] {background-color: blue }
+    dynamicbutton[color=green] {background-color: lime }
+    dynamicbutton[color=blue] {background-color: blue }
 
     /* dynamic single selectors that apply to individual swatches */
-    [red=off] colorswatch[color=red] { background-color: cyan; opacity: 0.2 }
-    [green=off] colorswatch[color=lime] { background-color: magenta; opacity: 0.2 }
-    [blue=off] colorswatch[color=blue] { background-color: yellow; opacity: 0.2 }
+    [red=off] dynamicswatch[color=red] { background-color: cyan; opacity: 0.2 }
+    [green=off] dynamicswatch[color=lime] { background-color: magenta; opacity: 0.2 }
+    [blue=off] dynamicswatch[color=blue] { background-color: yellow; opacity: 0.2 }
 
-    /* dynamic compound selectors that apply to mixer colorswatch */
-    [red=off] [green=off] [blue=off] [name=mixer] colorswatch { background-color: black; opacity: 1 }
-    [red=off] [green=off] [blue=on] [name=mixer] colorswatch { background-color: blue; opacity: 1 }
-    [red=off] [green=on] [blue=off] [name=mixer] colorswatch { background-color: lime; opacity: 1 }
-    [red=off] [green=on] [blue=on] [name=mixer] colorswatch { background-color: cyan; opacity: 1 }
-    [red=on] [green=off] [blue=off] [name=mixer] colorswatch { background-color: red; opacity: 1 }
-    [red=on] [green=off] [blue=on] [name=mixer] colorswatch { background-color: magenta; opacity: 1 }
-    [red=on] [green=on] [blue=off] [name=mixer] colorswatch { background-color: yellow; opacity: 1 }
-    [red=on] [green=on] [blue=on] [name=mixer] colorswatch { background-color: white; opacity: 1 }
+    /* dynamic compound selectors that apply to dynamicmixer dynamicswatch */
+    [red=off] [green=off] [blue=off] [name=dynamicmixer] dynamicswatch { background-color: black; opacity: 1 }
+    [red=off] [green=off] [blue=on] [name=dynamicmixer] dynamicswatch { background-color: blue; opacity: 1 }
+    [red=off] [green=on] [blue=off] [name=dynamicmixer] dynamicswatch { background-color: lime; opacity: 1 }
+    [red=off] [green=on] [blue=on] [name=dynamicmixer] dynamicswatch { background-color: cyan; opacity: 1 }
+    [red=on] [green=off] [blue=off] [name=dynamicmixer] dynamicswatch { background-color: red; opacity: 1 }
+    [red=on] [green=off] [blue=on] [name=dynamicmixer] dynamicswatch { background-color: magenta; opacity: 1 }
+    [red=on] [green=on] [blue=off] [name=dynamicmixer] dynamicswatch { background-color: yellow; opacity: 1 }
+    [red=on] [green=on] [blue=on] [name=dynamicmixer] dynamicswatch { background-color: white; opacity: 1 }
   </stylesheet>
 
   <!-- button to toggle an attribute which should trigger style change -->
-  <class name="colorbutton" width="40" height="20" align="center">
+  <class name="dynamicbutton" width="40" height="20" align="center">
     <attribute name="bgcolor" style="background-color" />
     <attribute name="color" type="string" />
     <text fgcolor="white" text="${this.parent.on}" align="center" />
@@ -40,7 +40,7 @@
   </class>
 
   <!-- color swatch that is styled by background-color and opacity -->
-  <class name="colorswatch" height="60" width="60" bgcolor="gray" align="center">
+  <class name="dynamicswatch" height="60" width="60" bgcolor="gray" align="center">
     <attribute name="color" type="string" />
     <attribute name="swatchcolor" style="background-color" type='color' value="$once{this.color}"/>
     <attribute name="swatchopacity" style="opacity" value="1" />
@@ -56,26 +56,26 @@
 
   <!-- nested views with red, green, blue attributes that dynamically change
        to demonstrate the applicability of compound dynamic selectors  -->
-  <view id="redview" x="5%" y="5%" width="20%" height="80%" layout="axis: y; spacing: 5">
+  <view x="5%" y="5%" width="20%" height="80%" layout="axis: y; spacing: 5">
     <text width="100%" multiline="true">
       Toggle the red, green, and blue buttons on and off to
       dynamically update the applicable CSS selectors.  Click on a color
       swatch to explain the applicability of the CSS selectors.
     </text>
     <attribute name="red" value="${this.toggle.on}" type="string" />
-    <colorbutton id="redbutton" name="toggle" color="red" />
-    <colorswatch id="redswatch" color="red" />
+    <dynamicbutton id="reddynamicbutton" name="toggle" color="red" />
+    <dynamicswatch id="reddynamicswatch" color="red" />
     <view width="100%" layout="axis: y; spacing: 5">
       <attribute name="green" value="${this.toggle.on}" type="string" />
-      <colorbutton id="greenbutton" name="toggle" color="green" />
-      <colorswatch id="greenswatch" color="lime"/>
+      <dynamicbutton id="greendynamicbutton" name="toggle" color="green" />
+      <dynamicswatch id="greendynamicswatch" color="lime"/>
       <view width="100%" layout="axis: y; spacing: 5">
         <attribute name="blue" value="${this.toggle.on}" type="string" />
-        <colorbutton id="bluebutton" name="toggle" color="blue" />
-        <colorswatch id="blueswatch" color="blue"/>
-        <view width="100%" name="mixer" layout="axis: y; spacing: 5">
+        <dynamicbutton id="bluedynamicbutton" name="toggle" color="blue" />
+        <dynamicswatch id="bluedynamicswatch" color="blue"/>
+        <view width="100%" name="dynamicmixer" layout="axis: y; spacing: 5">
           <text align="center">Mixer</text>
-          <colorswatch id="mixer"/>
+          <dynamicswatch id="dynamicmixer"/>
         </view>
       </view>
     </view>
@@ -88,20 +88,20 @@
           var red = values[redon];
           for (var greenon in values) {
             var green = values[greenon];
-            for (var blueon in values) {
-              var blue = values[blueon];
-              redbutton.setAttribute('on', redon);
-              greenbutton.setAttribute('on', greenon);
-              bluebutton.setAttribute('on', blueon);
+              for (var blueon in values) {
+                  var blue = values[blueon];
+                  reddynamicbutton.setAttribute('on', redon);
+                  greendynamicbutton.setAttribute('on', greenon);
+                  bluedynamicbutton.setAttribute('on', blueon);
 
-                assertEquals((red ? 0xff0000 : 0x00ffff), redswatch.swatch.bgcolor, "Red swatch color");
-              assertEquals((green ? 0x00ff00 : 0xff00ff), greenswatch.swatch.bgcolor, "Green swatch color");
-              assertEquals((blue ? 0x0000ff : 0xffff00), blueswatch.swatch.bgcolor, "Blue swatch color");
+                  assertEquals((red ? 0xff0000 : 0x00ffff), reddynamicswatch.swatch.bgcolor, "Red swatch color");
+                  assertEquals((green ? 0x00ff00 : 0xff00ff), greendynamicswatch.swatch.bgcolor, "Green swatch color");
+                  assertEquals((blue ? 0x0000ff : 0xffff00), bluedynamicswatch.swatch.bgcolor, "Blue swatch color");
 
-              var mix = (red ? 0xff0000 : 0) + (green ? 0x00ff00 : 0) + (blue ? 0x0000ff : 0);
+                  var mix = (red ? 0xff0000 : 0) + (green ? 0x00ff00 : 0) + (blue ? 0x0000ff : 0);
 
-              assertEquals(mix, mixer.swatch.bgcolor, "Dynamic mixer color");
-            }
+                  assertEquals(mix, dynamicmixer.swatch.bgcolor, "Dynamic mixer color");
+              }
           }
         }
     ]]></method>

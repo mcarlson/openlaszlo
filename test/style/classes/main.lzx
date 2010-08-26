@@ -1,0 +1,6 @@
+<!-- Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true">
+  <include href="lzunit" />
+  <debug x="30%" width="65%" y="5%" height="90%" />
+  <include href="library.lzx" />
+</canvas>

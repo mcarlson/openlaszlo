@@ -679,6 +679,62 @@ public dynamic class LzNode extends LzEventable {
   }
 
   /**
+   * <p>A space-separated list of <i>CSS classes</i> that can be used in a
+   * stylesheet to select this node.  For example:</p>
+   *
+   * <example class="code">
+   * <![CDATA[
+   * <canvas height="20" layout="axis: x; spacing: 5">
+   *   <stylesheet>
+   *     .red { background-color: red }
+   *     .green { background-color: green }
+   *     .red.green { background-color: yellow }
+   *   </stylesheet>
+   *
+   *   <class name="swatch" height="20" width="20">
+   *     <attribute name="bgcolor" style="background-color" value="blue" />
+   *   </class>
+   *
+   *   <swatch styleclass="red" />
+   *   <swatch styleclass="green" />
+   *   <swatch styleclass="red green" />
+   *   <swatch />
+   * </canvas>
+   * ]]>
+   * </example>
+   *
+   * <p>The first selector applies to the first swatch; the second to
+   * the second; and all three selectors apply to the third swatch, with
+   * the latter taking precedence over the former.  The final swatch has
+   * no styleclass and so uses the default value.</p>
+   *
+   * @lzxtype string
+   */
+  var styleclass:String = "";
+  /** @access private */
+  var onstyleclass:LzDeclaredEventClass = LzDeclaredEvent;
+  /** @access private */
+  var __LZCSSStyleclass:String = null;
+  /**
+   * This setter pre-parses multiple classes to make the CSS lookup
+   * faster
+   *
+   * @access private
+   */
+  function $lzc$set_styleclass(classes:String) {
+    this.styleclass = classes;
+    if (classes.indexOf(' ') >= 0) {
+      // Ensures we can search for `' ' + class + ' '` to verify a
+      // match when there are multiple classes
+      this.__LZCSSStyleclass = ' ' + classes + ' ';
+    } else {
+      // Null when there is a single class, so we can avoid the search
+      this.__LZCSSStyleclass = null;
+    }
+    if (this.onstyleclass.ready) { this.onstyleclass.sendEvent(classes); }
+  }
+
+  /**
    * Dependencies computed by LzCSSStyle/getRulesCache().  Installed
    * after all initial style bindings and on each reapply
    *

@@ -1,0 +1,125 @@
+<!-- Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+
+  <stylesheet>
+    /* Base colors by class */
+    .red {background-color: red }
+    /* `lime` is the HTML name for rgb(0,255,0) */
+    .green {background-color: lime }
+    .blue {background-color: blue }
+
+    /* dynamic single selectors that apply to individual swatches */
+    [red=off].red classswatch { background-color: cyan; opacity: 0.2 }
+    [red=on].red classswatch { background-color: red; opacity: 1 }
+    [green=off].green classswatch { background-color: magenta; opacity: 0.2 }
+    [green=on].green classswatch { background-color: lime; opacity: 1 }
+    [blue=off].blue classswatch { background-color: yellow; opacity: 0.2 }
+    [blue=on].blue classswatch { background-color: blue; opacity: 1 }
+
+    /* dynamic compound selectors that apply to classmixer classswatch */
+    #classmixer { background-color: black; opacity: 1 }
+    #classmixer.red { background-color: red; opacity: 1 }
+    #classmixer.green { background-color: lime; opacity: 1 }
+    #classmixer.blue { background-color: blue; opacity: 1 }
+    #classmixer.red.green { background-color: yellow; opacity: 1 }
+    #classmixer.red.blue { background-color: magenta; opacity: 1 }
+    #classmixer.green.blue { background-color: cyan; opacity: 1 }
+    #classmixer.red.green.blue { background-color: white; opacity: 1 }
+  </stylesheet>
+
+  <!-- button to toggle an attribute which should trigger style change -->
+  <class name="classbutton" width="40" height="20" align="center">
+    <attribute name="bgcolor" style="background-color" />
+    <text fgcolor="white" text="${this.parent.on}" align="center" />
+    <attribute name="on" type="string" value="off" />
+    <handler name="onclick">
+      this.setAttribute('on', this.on == 'on' ? 'off' : 'on' );
+    </handler>
+  </class>
+
+  <!-- color swatch that is styled by background-color and opacity -->
+  <class name="classswatch" height="60" width="60" bgcolor="gray" align="center">
+    <attribute name="color" type="string" />
+    <attribute name="swatchcolor" style="background-color" type='color' value="$once{this.color}"/>
+    <attribute name="swatchopacity" style="opacity" value="1" />
+    <handler name="onclick">
+      Debug.clear();
+      Debug.explainStyleBindings(this);
+    </handler>
+    <view name="swatch" x="5" y="5" height="50" width="50">
+      <attribute name="bgcolor" value="${parent.swatchcolor}" />
+      <attribute name="opacity" value="${parent.swatchopacity}" />
+    </view>
+  </class>
+
+  <!-- nested views with red, green, blue attributes that dynamically change
+       to demonstrate the applicability of compound dynamic selectors  -->
+  <view x="5%" y="5%" width="20%" height="80%" layout="axis: y; spacing: 5">
+    <text width="100%" multiline="true">
+      Toggle the red, green, and blue buttons on and off to
+      dynamically update the applicable CSS selectors.  Click on a color
+      swatch to explain the applicability of the CSS selectors.
+    </text>
+    <view width="100%" layout="axis: y; spacing: 5" styleclass="red">
+      <attribute name="red" value="${this.toggle.on}" type="string" />
+      <classbutton id="redclassbutton" name="toggle" />
+      <classswatch id="redclassswatch" />
+      <view width="100%" layout="axis: y; spacing: 5" styleclass="green">
+        <attribute name="green" value="${this.toggle.on}" type="string" />
+        <classbutton id="greenclassbutton" name="toggle" />
+        <classswatch id="greenclassswatch" />
+        <view width="100%" layout="axis: y; spacing: 5" styleclass="blue">
+          <attribute name="blue" value="${this.toggle.on}" type="string" />
+          <classbutton id="blueclassbutton" name="toggle" />
+          <classswatch id="blueclassswatch" />
+          <view width="100%" layout="axis: y; spacing: 5">
+            <text align="center">Mixer</text>
+            <classswatch id="classmixer">
+              <handler name="onon" reference="redclassbutton" method="update" />
+              <handler name="onon" reference="greenclassbutton" method="update" />
+              <handler name="onon" reference="blueclassbutton" method="update" />
+              <method name="update" args="ignore"><![CDATA[
+                this.setAttribute('styleclass',
+                  (redclassbutton.on == 'on' ? 'red ' : '') +
+                  (greenclassbutton.on == 'on' ? 'green ' : '') +
+                  (blueclassbutton.on == 'on' ? 'blue ' : ''));
+              ]]></method>
+            </classswatch>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <class name="ClassSelectorTestCase" extends="TestCase">
+    <method name="testClass"><![CDATA[
+        var values = { on: true, off: false };
+        for (var redon in values) {
+          var red = values[redon];
+          for (var greenon in values) {
+            var green = values[greenon];
+            for (var blueon in values) {
+              var blue = values[blueon];
+              redclassbutton.setAttribute('on', redon);
+              greenclassbutton.setAttribute('on', greenon);
+              blueclassbutton.setAttribute('on', blueon);
+
+              assertEquals((red ? 0xff0000 : 0x00ffff), redclassswatch.swatch.bgcolor, "Red swatch color");
+              assertEquals((green ? 0x00ff00 : 0xff00ff), greenclassswatch.swatch.bgcolor, "Green swatch color");
+              assertEquals((blue ? 0x0000ff : 0xffff00), blueclassswatch.swatch.bgcolor, "Blue swatch color");
+
+              var mix = (red ? 0xff0000 : 0) + (green ? 0x00ff00 : 0) + (blue ? 0x0000ff : 0);
+
+              assertEquals(mix, classmixer.swatch.bgcolor, "Dynamic mixer color");
+            }
+          }
+        }
+    ]]></method>
+
+    <method name="addTests">
+      this.addTest('testClass');
+    </method>
+  </class>
+
+</library>
+

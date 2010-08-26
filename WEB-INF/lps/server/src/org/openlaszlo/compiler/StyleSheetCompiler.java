@@ -174,7 +174,7 @@ class StyleSheetCompiler extends LibraryCompiler {
         for (int i=0; i < handler.mRuleList.size(); i++) {
             Rule rule = (Rule)handler.mRuleList.get(i);
             script += "$lzc$style._addRule(new $lzc$rule(" +
-              buildSelector(rule.getSelector()) + ", " +
+                buildSelectorJavascript(rule.getSelector(), element, mEnv) + ", " +
               buildPropertiesJavascript(rule, element, mEnv);
             if (mEnv.getBooleanProperty(mEnv.DEBUG_PROPERTY)) {
               script += ", " +
@@ -200,15 +200,22 @@ class StyleSheetCompiler extends LibraryCompiler {
     }
 
 
-    String buildSelector(Selector sel) {
-        String selectorString = "\"selector_not_handled\"";
+    String buildSelectorJavascript(Selector sel, Element element, CompilationEnvironment env) {
+        try {
+            StringWriter result = new StringWriter();
+            ScriptCompiler.writeObject(buildSelector(sel), result);
+            return result.toString();
+        } catch (IOException e) {
+            throw new CompilationError(element, e);
+        }
+    }
 
+    Object buildSelector(Selector sel) {
         switch (sel.getSelectorType()) {
             case Selector.SAC_ELEMENT_NODE_SELECTOR:
                 //  This selector matches only tag type
                 ElementSelector es = (ElementSelector)sel;
-                selectorString = buildElementSelectorJS(es.getLocalName());
-                break;
+                return buildElementSelector(es.getLocalName());
             case Selector.SAC_CONDITIONAL_SELECTOR:
                 // This selector matches all the interesting things:
                 // #myId
@@ -216,75 +223,96 @@ class StyleSheetCompiler extends LibraryCompiler {
                 // simple[role="private"]
                 ConditionalSelector cs = (ConditionalSelector)sel;
                 // Take care of the simple selector part of this
-                selectorString = buildConditionalSelectorJS(cs.getCondition(),cs.getSimpleSelector());
-                break;
+                return buildConditionalSelector(cs.getCondition(), cs.getSimpleSelector());
             case Selector.SAC_DESCENDANT_SELECTOR:
                 DescendantSelector ds = (DescendantSelector)sel;
-                selectorString = buildDescendantSelector(ds);
-                break;
+                return buildDescendantSelector(ds);
             default:
-                selectorString = "unknown_selector" + Integer.toString(sel.getSelectorType());
+                throw new CompilationError("Unknown selector " + sel.getSelectorType());
         }
-
-        return selectorString;
     }
 
-    String buildElementSelectorJS(String localName) {
-      if (localName != null) {
-        return "\"" + localName + "\"";
-      } else {
-        return "\"*\"";
-      }
+    Map buildElementSelector(String localName) {
+        Map result = new HashMap();
+        result.put("s", new Integer(1));
+        if (localName != null) {
+            result.put("t", ScriptCompiler.quote(localName));
+        }
+        return result;
     }
 
-    String buildConditionalSelectorJS(Condition cond, SimpleSelector simpleSelector) {
-        if (mLogger.isDebugEnabled()) {
-        mLogger.debug("Conditional selector: " + cond.toString());
-        }
-        String condString = "no_match";
-        switch (cond.getConditionType()) {
+    Map buildConditionalSelector(Condition cond, SimpleSelector simpleSelector) {
+        int condType = cond.getConditionType();
+        int specificity = 0;
+        Map result = new HashMap();
+        switch (condType) {
             case Condition.SAC_ID_CONDITION: /* #id */
                 AttributeCondition idCond = (AttributeCondition) cond;
-                condString = "\"#" + idCond.getValue() + "\""; // should be the id specified
-                break;
+                // should be the id specified
+                result.put("i", ScriptCompiler.quote(idCond.getValue()));
+                result.put("s", new Integer(100));
+                return result;
 
              case Condition.SAC_ATTRIBUTE_CONDITION: // [attr] or [attr="val"] or elem[attr="val"]
-                 if (mLogger.isDebugEnabled()) {
-                mLogger.debug("Attribute condition");
+             case Condition.SAC_CLASS_CONDITION: // .foo
+             case Condition.SAC_ONE_OF_ATTRIBUTE_CONDITION: // [attr~="foo"]
+             case Condition.SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION: // [attr|="foo"]
+               specificity = 10;
+               AttributeCondition attrCond = (AttributeCondition)cond;
+               if (condType == Condition.SAC_CLASS_CONDITION) {
+                   result.put("a", ScriptCompiler.quote("styleclass"));
+               } else {
+                   result.put("a", ScriptCompiler.quote(attrCond.getLocalName()));
+               }
+               String value = attrCond.getValue();
+               if (value != null) {
+                   result.put("v", ScriptCompiler.quote(value));
+               }
+               if ((condType == Condition.SAC_CLASS_CONDITION) ||
+                   (condType == Condition.SAC_ONE_OF_ATTRIBUTE_CONDITION)) {
+                   result.put("m", ScriptCompiler.quote("~="));
+               } else if (condType == Condition.SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION) {
+                   result.put("m", ScriptCompiler.quote("|="));
+               }
+               // The simple selector is the element part of the selector, ie,
+               // foo in foo[bar="baz"]. If there is no element part of the selector, ie
+               // [bar="lum"] then batik gives us a non-null SimpleSelector with a
+               // localName of the null string. We don't write out the simple selector if
+               // it's not specified.
+               if (simpleSelector != null) {
+                 if (simpleSelector.getSelectorType() == Selector.SAC_ELEMENT_NODE_SELECTOR) {
+                   ElementSelector es = (ElementSelector)simpleSelector;
+                   String simpleSelectorString = es.getLocalName();
+                   // Discard the simple selector if it isn't specified
+                   if (simpleSelectorString != null) {
+                     specificity += 1;
+                     result.put("t", ScriptCompiler.quote(simpleSelectorString));
+                   }
+                 } else {
+                   throw new CompilationError("Can't handle CSS selector " + simpleSelector);
                  }
-                AttributeCondition attrCond = (AttributeCondition) cond;
-                String name  = attrCond.getLocalName();
-                String value = attrCond.getValue();
-                condString = "{ attrname: \"" + name + "\", attrvalue: \"" + value + "\"";
-                // The simple selector is the element part of the selector, ie,
-                // foo in foo[bar="baz"]. If there is no element part of the selector, ie
-                // [bar="lum"] then batik gives us a non-null SimpleSelector with a
-                // localName of the null string. We don't write out the simple selector if
-                // it's not specified.
-                if (simpleSelector != null) {
-                    if (mLogger.isDebugEnabled()) {
-                    mLogger.debug("simple selector:" + simpleSelector.toString());
-                    }
-                    if (simpleSelector.getSelectorType() == Selector.SAC_ELEMENT_NODE_SELECTOR) {
+               }
+               result.put("s", new Integer(specificity));
+               return result;
 
-                        ElementSelector es = (ElementSelector)simpleSelector;
-                        String simpleSelectorString = es.getLocalName();
-                        // Discard the simple selector if it isn't specified
-                        if (simpleSelectorString != null)
-                            condString += ", simpleselector: \"" + simpleSelectorString + "\"";
-                    } else {
-                        mLogger.error("Can't handle CSS selector " + simpleSelector.toString());
-                    }
-                }
-
-                condString += "}";
-                if (mLogger.isDebugEnabled()) {
-                mLogger.debug("Cond string: " + condString );
-                }
-                break;
-            default:
+          case Condition.SAC_AND_CONDITION: // tag[attr].foo.bar, etc.
+              Object first = buildConditionalSelector(((CombinatorCondition)cond).getFirstCondition(), simpleSelector);
+              Object second = buildConditionalSelector(((CombinatorCondition)cond).getSecondCondition(), null);
+              if ((first instanceof Map) && (second instanceof Map)) {
+                  Map f = (Map)first;
+                  Map s = (Map)second;
+                  specificity = ((Integer)f.get("s")).intValue() +
+                      ((Integer)s.get("s")).intValue();
+                  f.put("s", new Integer(specificity));
+                  // Find the end of the conditional and tack on the
+                  // new one
+                  Map l = f;
+                  while (l.containsKey("&")) { l = (Map)l.get("&"); }
+                  l.put("&", s);
+                  return f;
+              }
         }
-        return condString;
+        throw new CompilationError("Unhandled conditional selector " + condType);
     }
 
     /**
@@ -297,26 +325,23 @@ class StyleSheetCompiler extends LibraryCompiler {
            "F" ];
        The selector is specified as an array of selectors, ancestor first.
       */
-    String buildDescendantSelector(DescendantSelector ds) {
+    List buildDescendantSelector(DescendantSelector ds) {
         // We need the simple selector and the ancestor selector
         SimpleSelector ss = ds.getSimpleSelector();
         Selector ancestorsel = ds.getAncestorSelector();
-        String str = "[";
 
-        // If this is complicated, it will be [ "something", "complicated" ]
-        // Strip excessive square brackets. This lets us pretend to unroll
-        // recursive selectors into a list of selectors.
-        // This is a cheap way to get deep selectors.
-        String ancestorselstr = buildSelector(ancestorsel);
-        ancestorselstr = ancestorselstr.replace('[', ' ');
-        ancestorselstr = ancestorselstr.replace(']', ' ');
-        str += ancestorselstr;
-        str += ", ";
-        str += buildSelector(ss);
-
-        str += "]";
-        // mLogger.error("Here's the whole descendant selector:" + str);
-        return str;
+        // TODO: Compute the summary specificity here
+        Object ancestorselobj = buildSelector(ancestorsel);
+        Map ssmap = (Map)buildSelector(ss);
+        if (ancestorselobj instanceof List) {
+            List a = (List)ancestorselobj;
+            a.add(ssmap);
+            return a;
+        }
+        List result = new ArrayList();
+        result.add(ancestorselobj);
+        result.add(ssmap);
+        return result;
     }
 
 
