@@ -95,6 +95,10 @@ public abstract class ResponderCompile extends Responder
 
             if (mCompMgr == null) {
                 mCompMgr = new CompilationManager(null, cache, prop);
+                boolean clear = "true".equals(LPS.getProperty("compile.cache.clearonstartup"));
+                if (clear) {
+                    mCompMgr.clearCacheDirectory();
+                }
             }
 
             if (mScriptCache == null) {
