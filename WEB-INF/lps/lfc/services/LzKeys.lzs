@@ -159,7 +159,9 @@ public final class LzKeysService extends LzEventable {
      * @access private
      */
     function __allKeysUp ():void {
-      LzKeyboardKernel.__allKeysUp();
+        this.downKeysHash = {};
+        this.downKeysArray = [];
+        LzKeyboardKernel.__allKeysUp();
     }
 
     /**
