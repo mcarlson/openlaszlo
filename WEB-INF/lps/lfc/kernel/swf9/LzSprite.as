@@ -2039,7 +2039,7 @@ public class LzSprite extends Sprite {
     * @access private
     */
     static function __updateCapabilities(){
-        if (Capabilities.playerType != "Desktop") { 
+        if (Capabilities.playerType === "Desktop") { 
             LzSprite.capabilities.customcontextmenu = false;
         }
     }
