@@ -37,7 +37,7 @@
 
     <!-- Whether the compressed rtemanager is up to date -->
     <uptodate property="rtemanager.uptodate" >
-      <srcfiles dir="." includes="rtemanager.js,iframestub.js,rtemanager-library.lzs" />
+      <srcfiles dir="." includes="rtemanager.js,iframestub.js,rtemanager-library.lzs,pmrpc.js" />
       <compositemapper>
         <mergemapper to="../rtemanager.js" />
       </compositemapper>
@@ -53,7 +53,7 @@
 
     <!-- Whether the compressed iframemanager is up to date -->
     <uptodate property="iframemanager.uptodate" >
-      <srcfiles dir="." includes="iframemanager.js" />
+      <srcfiles dir="." includes="iframemanager.js,iframemanager-library.lzs,pmrpc.js" />
       <compositemapper>
         <mergemapper to="../iframemanager.js" />
       </compositemapper>
@@ -66,6 +66,14 @@
         <mergemapper to="../iframestub.js" />
       </compositemapper>
     </uptodate>
+
+    <!-- Whether the compressed pmrpc is up to date -->
+    <uptodate property="pmrpc.uptodate" >
+      <srcfiles dir="." includes="pmrpc.js" />
+      <compositemapper>
+        <mergemapper to="../pmrpc.js" />
+      </compositemapper>
+    </uptodate>
   </target>
 
   <target name="clean" depends="init">
@@ -76,6 +84,7 @@
       <fileset dir=".." includes="iframemanager.js" />
       <fileset dir=".." includes="flash.js" />
       <fileset dir=".." includes="iframestub.js" />
+      <fileset dir=".." includes="pmrpc.js" />
     </delete>
   </target>
 
@@ -147,11 +156,20 @@
     </ant>
   </target>
 
+  <target name="pmrpc"
+          depends="init"
+          unless="pmrpc.uptodate">
+    <ant target="compress">
+      <property name="output" value="../pmrpc.js" />
+      <property name="source" value="pmrpc.js" />
+    </ant>
+  </target>
+
   <target name="doc">
   </target>
 
   <target name="build" description="Build all the includes, unless they're already up to date"
-          depends="init,embed,excanvas,rtemanager,flash,iframemanager,iframestub">
+          depends="init,embed,excanvas,rtemanager,flash,iframemanager,iframestub,pmrpc">
   </target>
 
   <target name="all"

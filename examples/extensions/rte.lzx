@@ -70,7 +70,7 @@ This is an <b>inline</b> rte editor with custom buttons.
     this.setAttribute ('text', '');
   </method>
   <method name="rte_bold" args="ignore">  <![CDATA[
-    this.setAttribute ('text', this.text = '<b>' + this.getText() + '</b>');
+    this.setAttribute ('text', this.text = '<b>' + this.text + '</b>');
     ]]>
   </method>
   <handler name="oneditorready">

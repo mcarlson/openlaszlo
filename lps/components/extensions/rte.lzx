@@ -104,7 +104,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         this.text = t;
         // This can fire before the object is ready
         if (this.editorready) {
-          this.callJavascript('lz.rte.manager.setText', null, t);
+          this.callRPC('lz.rte.manager.setText', null, t);
         }
     </setter>
 
@@ -119,11 +119,15 @@ role="html">&lt;html&gt;</sgmltag>.</p>
     </method>
 
     <!--- 
-        Returns the html string displayed in this component.
+        Updates the text attribute for this component
         @return String: the string displayed.
+        @access private
      -->
-    <method name="getText">
-        return super.callJavascript("lz.rte.manager.getText");
+    <method name="__updateText" args="txt">
+        if (txt != this.text) {
+            this.text = txt;
+            if (this.ontext.ready) this.ontext.sendEvent(txt);
+        }
     </method>
    
     <!--- If true, the rte editor is ready to receive commands
@@ -138,7 +142,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         @param String html: html to insert at the insertion point.
     -->
     <method name="insertHtml" args="html">
-        super.callJavascript('lz.rte.manager.insertHtml', null, html);
+        this.callRPC('lz.rte.manager.insertHtml', null, html);
     </method>
 
     <!---
@@ -149,7 +153,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         @param String arg: Argument required for certain commands.
     -->
     <method name="execCommand" args="cmd, arg=''">
-        super.callJavascript('lz.rte.manager.execCommand', null, cmd, arg);
+        this.callRPC('lz.rte.manager.execCommand', null, cmd, arg);
     </method>
 
 
@@ -198,9 +202,13 @@ role="html">&lt;html&gt;</sgmltag>.</p>
                 attributes['title'] = value;
         }
 
-        var id = super.callJavascript ('lz.rte.manager.addButton', null, attributes);
-        this.button_mapping[id] = delegate;
-        return id;
+        // must use a callback to store the ID
+        var scope = this;
+        var callback = function (id) {
+            Debug.warn('__storeButtonMapping', id, scope.__buttondelegates);
+            scope.button_mapping[id] = delegate;
+        }
+        this.callRPC('lz.rte.manager.addButton', callback, attributes);
         ]]>
     </method>
 
@@ -208,28 +216,29 @@ role="html">&lt;html&gt;</sgmltag>.</p>
     <handler name="onbuttonclick" args="id">
         // One of the user buttons was clicked
         var handler = this.button_mapping[id];
+        //console.log('onbuttonclick', id, handler, this);
         if (handler)
-            handler.execute (id);
+            handler.execute(id);
     </handler>
 
     <!--- @access private -->
     <handler name="onload"><![CDATA[
         // Change where dojo is found (if necessary)
         if (this.dojo_root.length > 0) {
-            this.callJavascript('lz.rte.manager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
+            this.callRPC('lz.rte.manager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
         }
 
         // Set the theme
         if (this.dojo_theme.length > 0)
-            this.callJavascript('lz.rte.manager.setDojoTheme', null, this.dojo_theme);
+            this.callRPC('lz.rte.manager.setDojoTheme', null, this.dojo_theme);
 
         // Set the plugin list
         if (this.toolbar_order.length > 0)
-            this.callJavascript('lz.rte.manager.setPlugins', null, this.toolbar_order);
+            this.callRPC('lz.rte.manager.setPlugins', null, this.toolbar_order);
 
         // Create and start the editor
-        this.callJavascript('lz.rte.manager.create', null, 'rte', this.iframeid);
-        this.callJavascript('lz.rte.manager.rte_start', null, this.text);
+        this.callRPC('lz.rte.manager.create', null, 'rte', this.iframeid);
+        this.callRPC('lz.rte.manager.rte_start', null, this.text);
     ]]></handler>
 
     <!--- @access private -->
@@ -255,11 +264,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
     </handler>
 
     <!--- @access private -->
-    <handler name="on_text" args="txt">
-        this.text = txt;
-        if (this.ontext.ready) this.ontext.sendEvent(txt);
-    </handler>
-
+    <handler name="on_text" method="__updateText"/>
 
     <!--- @access private -->
     <method name="loadsrc" args="root">
@@ -284,16 +289,18 @@ role="html">&lt;html&gt;</sgmltag>.</p>
 
     <!--- @keywords private -->
     <method name="destroy" ><![CDATA[
-        var txt = this.getText ();
-        if (txt != this.text)
-            this.ontext.sendEvent(txt);
-
-        if (this['iframeid']) {
-            this.callJavascript('lz.rte.manager.destroy', null, this.iframeid);
-        }
-
-        super.destroy();
+        // ensure this.text is updated at least once before destroy
+        if (! this.__destroydel) this.__destroydel = new LzDelegate(this, '__finishdestroy');
+        this.callRPC("lz.rte.manager.getText", this.__destroydel);
     ]]></method> 
+    <!--- @keywords private -->
+    <method name="__finishdestroy" args="text">
+        this.__updateText(text);
+        if (this['iframeid']) {
+            this.callRPC('lz.rte.manager.__destroy', null, this.iframeid);
+        }
+        super.destroy();
+    </method>
 
 </class>
 </library>

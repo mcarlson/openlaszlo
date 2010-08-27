@@ -11,9 +11,11 @@
             <edittext name="txt" text="html-test.html" width="300"/> 
             <button>Set HTML
                 <handler name="onclick">
+                    <![CDATA[
                     if (classroot.main) {
-                        classroot.main.setAttribute('html', 'Setting HTML');
+                        classroot.main.setAttribute('html', '<html><head><script>alert("hello script injection")</script></head><body><b>Setting HTML</b></body></html>');
                     }
+                    ]]>
                 </handler>
             </button> 
             <button>Load

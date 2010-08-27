@@ -105,16 +105,19 @@ lz.embed.iframemanager = {
             i.appcontainer = lz.embed.applications[owner]._getSWFDiv();
         }
 
-        i.owner = owner;
-        lz.embed.iframemanager.__frames[id] = i;
+        var iframemanager = lz.embed.iframemanager;
+
+        i.__owner = owner;
+        iframemanager.__frames[id] = i;
         this.__namebyid[id] = name;
 
-        var iframe = lz.embed.iframemanager.getFrame(id);
-        iframe.__gotload = lz.embed.iframemanager.__gotload;
+        // set style
+        var iframe = iframemanager.getFrame(id);
+        iframe.__gotload = iframemanager.__gotload;
         iframe._defaultz = defaultz ? defaultz : 99900;
         this.setZ(id, iframe._defaultz);
 
-        lz.embed.iframemanager.__topiframe = id;
+        iframemanager.__topiframe = id;
         if (document.getElementById && !(document.all) ) {
             iframe.style.border = '0';
         } else if (document.all) {
@@ -127,11 +130,12 @@ lz.embed.iframemanager = {
             if (metadata && metadata.runtime == 'swf') { 
                 // register for onfocus event for swf movies - see LPP-5482 
                 var div = metadata._getSWFDiv();
-                div.onfocus = lz.embed.iframemanager.__refresh;
+                div.onfocus = iframemanager.__refresh;
             }
         }
         iframe.style.position = 'absolute';
 
+        // Call back to owner
         if (typeof owner == 'string') {
             // Flash-specific callback
             // Use timeout to ensure __setiframeid() is called after create() 
@@ -140,17 +144,6 @@ lz.embed.iframemanager = {
         } else {
             owner.setiframeid(id);
         }
-    }
-    ,getIDFromWindow: function(scope) { 
-        var iframemanager = lz.embed.iframemanager;
-        var frames = iframemanager.__frames
-        for (var id in frames) {
-            if (scope === iframemanager.getFrameWindow(id)) {
-                //console.log('found id for scope', id, scope);
-                return id;
-            }
-        }
-        //console.log('no id found for scope', scope);
     }
     ,appendTo: function(iframe, div) { 
         //console.log('appendTo', iframe, div, iframe.__appended);
@@ -218,8 +211,10 @@ lz.embed.iframemanager = {
         var iframe = lz.embed.iframemanager.getFrame(id);
         if (! iframe) return;
         if (iframe.appcontainer) {
+            // Flash needs the absolute position
             var pos = lz.embed.getAbsolutePosition(iframe.appcontainer);
         } else {
+            // default to the origin of the containing div for DHTML
             var pos = {x:0,y:0};
         }
         if (x != null && ! isNaN(x)) iframe.style.left = (x + pos.x) + 'px';
@@ -280,19 +275,23 @@ lz.embed.iframemanager = {
             }
         }
     }
-    ,asyncCallback: function(id, event, arg) {
+    // Sends a named event back to the component, called from an iframe
+    ,asyncCallback: function(id, event, arg, callbackid) {
         var iframe = lz.embed.iframemanager.getFrame(id);
-        if (! iframe || ! iframe.owner) return;
-        if (iframe.owner.__iframecallback) {      
+        if (! iframe || ! iframe.__owner) return;
+
+        if (iframe.__owner.__iframecallback) {      
             // dhtml
-            iframe.owner.__iframecallback(event, arg);
+            //console.log('asyncCallback', id, event, arg);
+            iframe.__owner.__iframecallback(event, arg);
         } else {
             // Flash
-            if (lz.embed[iframe.owner]) {
+            if (lz.embed[iframe.__owner]) {
                 // quote arg if present
-                arg = (arg != null) ? ", '" + arg + "'" : '';
+                arg = (arg != null) ? ",'" + arg + "'" : '';
+                arg += (callbackid != null) ? "," + callbackid + "" : '';
                 //console.log("lz.embed.iframemanager.__iframecallback('" + id + "','" + event + "'" + arg + ")")
-                lz.embed[iframe.owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "','" + event + "'" + arg + ")");
+                lz.embed[iframe.__owner].callMethod("lz.embed.iframemanager.__iframecallback('" + id + "','" + event + "'" + arg + ")");
             } else {
                 // installing a new player now...
                 return;
@@ -302,7 +301,7 @@ lz.embed.iframemanager = {
     ,__gotload: function(id) { 
         var iframe = lz.embed.iframemanager.getFrame(id);
         //console.log('__gotload', id, iframe);
-        if (! iframe || ! iframe.owner) return;
+        if (! iframe || ! iframe.__owner) return;
 
         if (this.__loading[id] == true) {
             // finish loading
@@ -373,7 +372,7 @@ lz.embed.iframemanager = {
             if (this.__sendmouseevents[id]) {
                 this.__setSendMouseEvents(id, false);
             }
-            iframe.owner = null;
+            iframe.__owner = null;
             iframe.appcontainer = null;
             if (document.all) {
                 // IE needs the iframe container destroyed also
@@ -413,8 +412,42 @@ lz.embed.iframemanager = {
                 return retVal;
             }
         } catch (e) {
+            // dump error to console if available
             window.console && console.error && console.error('callJavascript() caught error:', e);
         }
+    }
+    ,callRPC: function(id, methodName, callback, args) {
+        var iframe = lz.embed.iframemanager.getFrameWindow(id);
+        var callobj =  {
+            destination: iframe,
+            publicProcedureName: 'callRPC',
+            params: [methodName, args]
+        }
+        if (callback != null) {
+            if (typeof callback == 'number') {
+                // Flash uses a callback ID
+                //console.log('callRPC creating callback', callback);
+                // store a copy to be closed over by onSuccess
+                callobj.onSuccess = function(returnObj) {
+                    //console.log('callRPC onSuccess', callback, returnObj.returnValue);
+                    // Add the callbackID to the returnObj, so flash knows
+                    // who to call
+                    lz.embed.iframemanager.asyncCallback(id, '__lzcallback', JSON.stringify(returnObj.returnValue), callback);
+                }
+            } else {
+                callobj.onSuccess = function(returnObj) {
+                    //console.log('callRPC onSuccess', callback, returnObj.returnValue);
+                    callback.execute(returnObj.returnValue);
+                }
+            }
+        }
+        if (window.console && console.error) {
+            callobj.onError = function(statusObj) {
+                window.console && console.error && console.error('callRPC error', callobj, statusObj);
+            }
+        }
+        //console.log('pmrpc callRPC', callback, callobj);
+        pmrpc.call(callobj); 
     }
     ,__mouseEvent: function(e, id) {
         var embed = lz.embed;
@@ -426,7 +459,7 @@ lz.embed.iframemanager = {
         }
 
         var eventname = 'on' + e.type;
-        if (iframe.owner && iframe.owner.sprite && iframe.owner.sprite.__mouseEvent) {
+        if (iframe.__owner && iframe.__owner.sprite && iframe.__owner.sprite.__mouseEvent) {
             // dhtml
             if (eventname == 'oncontextmenu') {
                 if (! embed.iframemanager.__hidenativecontextmenu[id]) {
@@ -437,11 +470,11 @@ lz.embed.iframemanager = {
                     return LzMouseKernel.__showContextMenu(e);
                 }
             }
-            iframe.owner.sprite.__mouseEvent(e);
+            iframe.__owner.sprite.__mouseEvent(e);
 
             // clear __lastMouseDown to prevent mouseover/out events being sent as dragin/out events - see LzSprite.js and LzMouseKernel.js - there will be no global mouseup sent from window.document to clear this...
             if (eventname == 'onmouseup') {
-                if (LzMouseKernel.__lastMouseDown == iframe.owner.sprite) {
+                if (LzMouseKernel.__lastMouseDown == iframe.__owner.sprite) {
                     LzMouseKernel.__lastMouseDown = null;
                 }
             }
@@ -532,7 +565,7 @@ lz.embed.iframemanager = {
     }
     /* Called when the flash movie reloads.  Destroy all iframes and allow them to be recreated */
     ,__reset: function(appid) {
-        //if (! (typeof owner == 'string')) return;
+        //if (! (typeof __owner == 'string')) return;
         if (lz.embed.iframemanager.__counter) {
             var owners = lz.embed.iframemanager.__ownerbyid;
             // Find frames by app id
@@ -545,3 +578,9 @@ lz.embed.iframemanager = {
         }
     }
 }
+
+// register asyncCallback
+pmrpc.register( {
+  publicProcedureName : "asyncCallback",
+  procedure: lz.embed.iframemanager.asyncCallback
+} );

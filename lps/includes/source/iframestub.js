@@ -2,24 +2,34 @@
 * Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
+#include "pmrpc.js"
+// register callback for lz.embed.iframemanager.callRPC()
+pmrpc.register( {
+  publicProcedureName: "callRPC",
+  procedure: function(methodName, args) {
+    var method = eval(methodName);
+    //console.log('callRPC', methodName, method, args);
+    if (method) {
+        return method.apply(null, args);
+    }
+  }
+} );
+
 try {
     if (lz) {}
 } catch (e) {
     lz = {};
 }    
 
-// retrieve our frame id from the lz.embed namespace in the loaded page
-lz.frameid = parent.lz.embed.iframemanager.getIDFromWindow(this);
-
 // send an event to the html component controlling this frame
 lz.sendEvent = function(name, value) {
-    var args = [].slice.call(arguments);
-    // prepend our iframe id
-    args.unshift(lz.frameid);
-    //console.log('calling iframemanager.asyncCallback with args',args);
-    var iframemanager = parent.lz.embed.iframemanager;
-    // Send an asynchronous callback/event
-    iframemanager.asyncCallback.apply(iframemanager, args);
+    //console.log('calling iframemanager.asyncCallback with args',window.name, name, value);
+    var callobj = {
+        destination: window.parent,
+        publicProcedureName: 'asyncCallback',
+        params: [window.name, name, value]
+    }
+    //callobj.onError = function(statusObj) { console.log('sendEvent error', callobj, statusObj); }
+    pmrpc.call(callobj); 
 }
 
-//console.log('found id', lz._iframeid);

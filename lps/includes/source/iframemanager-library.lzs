@@ -1,3 +1,4 @@
+#include "pmrpc.js"
 #include "iframemanager.js"
 // Copyright 2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is
 // subject to license terms.

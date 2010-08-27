@@ -141,7 +141,7 @@ lz.rte.manager = {
     }
 
     // Cleanup
-    ,destroy: function () {
+    ,__destroy: function () {
         lz.rte.manager.rte_stop ();
         
         if (lz.rte.manager.__editor) {
@@ -268,7 +268,7 @@ lz.rte.manager = {
     // iframe onload event because that can occur before the javascript is
     // loaded
     ,rte_loaded: function() {
-        //console.log("rte_loaded", lz.frameid, lz.rte.manager);
+        //console.log("rte_loaded", window.name, lz.rte.manager);
         lz.sendEvent ('_rte_loaded');
     }
 
@@ -351,7 +351,8 @@ lz.rte.manager = {
 
     // Attributes are passed as a json object
     ,addButton: function(attributes) {
-        var id = lz.frameid + '_rte_button_' + lz.rte.manager.button_counter++;
+        var id = window.name + '_rte_button_' + lz.rte.manager.button_counter++;
+        //console.log('addButton', id);
 
         if (dojo.byId(id))
           dojo.destroy(id);  // We already have a button of this name. Delete it

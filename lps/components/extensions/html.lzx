@@ -9,6 +9,7 @@
     <when runtime="dhtml">
     </when>
     <otherwise>
+<script src="rpc/library/json.js"/>
 <script when="immediate">
 // proxy object for browser lz.embed.iframemanager
 lz.embed.iframemanager = new LzInheritedHash();
@@ -51,7 +52,21 @@ lz.embed.iframemanager.scrollBy = function(id, x, y) {
 lz.embed.iframemanager.setStyle = function(id, elementid, property, value) {
     lz.Browser.callJS('lz.embed.iframemanager.setStyle', null, id, elementid, property, value);
 }
-lz.embed.iframemanager.__iframecallback = function(id, name, value) {
+lz.embed.iframemanager.__iframecallback = function(id, name, value=null, callbackid=null) {
+    if (value != null) {
+        value = JSON.parse(value) || value;
+    }
+    //Debug.warn('__iframecallback', id, name, value, callbackid);
+    if (name === '__lzcallback') {
+        // callRPC callback
+        var callback = lz.embed.iframemanager.__callbacks[callbackid];
+        if (callback) {
+            callback(value);
+            lz.embed.iframemanager.__callbacks[callbackid] = null;
+        }
+        return;
+    }
+
     // receives calls from the iframe
     var view = lz.embed.iframemanager.owners[id];
     if (view) view.__iframecallback(name, value);
@@ -66,6 +81,18 @@ lz.embed.iframemanager.callJavascript = function(id, methodName, callbackDel, ar
                                 };
     // Return the value obtained if it is available immediately.
     return lz.Browser.callJS('lz.embed.iframemanager.callJavascript', callback, id, methodName, null, args);
+}
+
+lz.embed.iframemanager.__callbacks = [];
+lz.embed.iframemanager.callRPC = function(id, methodName, callback, args) {
+    var callbackid = null;
+    if (callback) {
+        callbackid = lz.embed.iframemanager.__callbacks.length;
+        lz.embed.iframemanager.__callbacks[callbackid] = callback;
+    }   
+    //Debug.info('callRPC', callbackid, id, methodName, null, args);
+    // Use the callback id to capture the return value
+    lz.Browser.callJS('lz.embed.iframemanager.callRPC', null, id, methodName, callbackid, args);
 }
 
 lz.embed.iframemanager.setSendMouseEvents = function(id, send) {
@@ -379,6 +406,17 @@ lz.embed.iframemanager.setHTML = function(id, html) {
     <method name="callJavascript" args="methodName, callbackDel = null, ...args">
         return lz.embed.iframemanager.callJavascript(this.iframeid, methodName, callbackDel, args);
     </method>
+    <!---
+      Calls a method in the the loaded page using PMRPC.  This can be used to clal methods across iframes loaded from different domains.
+      @param String methodName: The name of the method to call
+      @param Function callback: An optional function which will be called with the return value from the method call.
+      @param ...args: Optional arguments to pass to the method.
+      @return *: returns the value if it can immediately be returned.
+    -->
+    <method name="callRPC" args="methodName, callback = null, ...args">
+        return lz.embed.iframemanager.callRPC(this.iframeid, methodName, callback, args);
+    </method>
+
     <!---
       Restores a selection in the iframe.  Currently only works in IE 7.
     -->
