@@ -746,7 +746,9 @@ public class GenericVisitor implements ASTVisitor {
     if (id instanceof ASTEmptyExpression) {
       ;
     } else {
-      children[0] = translateIdentifier((ASTIdentifier)id, AccessMode.EVALUATE);
+      // Identifiers are a shorthand for a literal string, should
+      // not be evaluated (or remapped).  [Maybe call visitLiteral?]
+      assert id instanceof ASTIdentifier;
     }
     SimpleNode callapply = children[1];
     ASTFunctionCallParameters args = (ASTFunctionCallParameters)children[2];

@@ -383,22 +383,31 @@ public class SWF9Generator extends JavascriptGenerator {
   }
 
   /**
-   * Intercept JavascriptGenerator version.
-   * SWF9 does super calls 'normally' just by keeping the super keyword.
-   * Other runtimes transform super into a runtime calculation of the
-   * proper class to use; except for the special translation of
-   * `super.setAttribute`
+   * Intercept JavascriptGenerator version, which tries to re-write
+   * all the elements of the translated epxression.  In swf9, we ony
+   * want to rewrite the original parameters.  (See
+   * GenericVisitor/visitSuperCallExpression.)  SWF9 does super calls
+   * 'normally' just by keeping the super keyword.  Other runtimes
+   * transform super into a runtime calculation of the proper class to
+   * use; except for the special translation of `super.setAttribute`
    */
-  public SimpleNode translateSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
-    SimpleNode fname = children[0];
-    if (fname instanceof ASTIdentifier) {
-      String name = ((ASTIdentifier)fname).getName();
+  public SimpleNode visitSuperCallExpression(SimpleNode node, boolean isReferenced, SimpleNode[] children) {
+    assert children.length == 3;
+    SimpleNode id = children[0];
+    SimpleNode callapply = children[1];
+    ASTFunctionCallParameters args = (ASTFunctionCallParameters)children[2];
+    children[2] = visitFunctionCallParameters(args, isReferenced, args.getChildren());
+    if (id instanceof ASTEmptyExpression) {
+      ;
+    } else {
+      // Identifiers are a shorthand for a literal string, should
+      // not be evaluated (or remapped).  [Maybe call visitLiteral?]
+      assert id instanceof ASTIdentifier;
+      String name = ((ASTIdentifier)id).getName();
       // Transform `super.setAttribute` to a setter method call
       if ("setAttribute".equals(name)) {
-        assert children.length == 3;
-        SimpleNode callapply = children[1];
         assert callapply instanceof ASTEmptyExpression;
-        SimpleNode args = children[2];
+        args = (ASTFunctionCallParameters)children[2];
         Map map = new HashMap();
         SimpleNode sargs[] = args.getChildren();
         assert sargs.length == 2;
