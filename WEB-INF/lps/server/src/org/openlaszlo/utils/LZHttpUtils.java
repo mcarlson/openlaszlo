@@ -609,6 +609,7 @@ throw new UnsupportedEncodingException (
         optionNameMap.put("runtime", "lzr");
         optionNameMap.put("backtrace", "lzbacktrace");
         optionNameMap.put("proxied", "lzproxied");
+        optionNameMap.put("usemastersprite", "lzusemastersprite");
     }
 
     // Look for new style lzoptions, then fall back to old style

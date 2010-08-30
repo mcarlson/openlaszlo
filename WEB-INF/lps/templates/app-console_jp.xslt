@@ -18,6 +18,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
   <xsl:param name="debug"><xsl:value-of select="(/*/info/@debug = 'true') or (/canvas/@debug = 'true')"/></xsl:param>
   <xsl:param name="lzruntime" select="/*/@runtime"/>
   <xsl:param name="runtimes" select="/canvas/@runtimes"/>
+  <xsl:param name="proxied" select="/canvas/@proxied"/>
   <xsl:param name="appinfo"><xsl:value-of select="/*/console_appinfo/text()"/></xsl:param>
   <xsl:param name="assets"><xsl:value-of select="/*/request/@lps"/>/lps/assets</xsl:param>
   <xsl:param name="console-floating-window"><xsl:value-of select="/*/request/@console-floating-window"/></xsl:param>
@@ -125,7 +126,7 @@ If you edit this file, please validate your work using http://validator.w3.org/
 
     <div id="{$consolefooter}">
       <!-- an embedded SOLO console app to replace the HTML console -->
-      <iframe src="{$lps}/lps/admin/dev-console.html?lzr={$lzruntime}&amp;lzappuid={$appuid}&amp;appinfo={$appinfo}&amp;runtimes={$runtimes}"
+      <iframe src="{$lps}/lps/admin/dev-console.html?lzr={$lzruntime}&amp;lzappuid={$appuid}&amp;appinfo={$appinfo}&amp;runtimes={$runtimes}&amp;appproxied={$proxied}"
               style="width: 100%; height: {$consoleheight}px; border: 0 none;"
               width="100%" height="{$consoleheight}" frameborder="0"/>
 

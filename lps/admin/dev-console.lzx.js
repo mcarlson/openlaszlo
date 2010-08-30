@@ -1,12 +1,14 @@
-LzResourceLibrary.lzfocusbracket_rsrc={ptype:"sr",frames:['lps/components/lz/resources/focus/focus_top_lft.png','lps/components/lz/resources/focus/focus_top_rt.png','lps/components/lz/resources/focus/focus_bot_lft.png','lps/components/lz/resources/focus/focus_bot_rt.png'],width:7,height:7,sprite:'lps/components/lz/resources/focus/focus_top_lft.sprite.png',spriteoffset:0};LzResourceLibrary.lzfocusbracket_shdw={ptype:"sr",frames:['lps/components/lz/resources/focus/focus_top_lft_shdw.png','lps/components/lz/resources/focus/focus_top_rt_shdw.png','lps/components/lz/resources/focus/focus_bot_lft_shdw.png','lps/components/lz/resources/focus/focus_bot_rt_shdw.png'],width:9,height:9,sprite:'lps/components/lz/resources/focus/focus_top_lft_shdw.sprite.png',spriteoffset:7};LzResourceLibrary.lzbutton_face_rsc={ptype:"sr",frames:['lps/components/lz/resources/button/simpleface_up.png','lps/components/lz/resources/button/simpleface_mo.png','lps/components/lz/resources/button/simpleface_dn.png','lps/components/lz/resources/button/autoPng/simpleface_dsbl.png'],width:2,height:18,sprite:'lps/components/lz/resources/button/simpleface_up.sprite.png',spriteoffset:16};LzResourceLibrary.lzbutton_bezel_inner_rsc={ptype:"sr",frames:['lps/components/lz/resources/autoPng/bezel_inner_up.png','lps/components/lz/resources/autoPng/bezel_inner_up.png','lps/components/lz/resources/autoPng/bezel_inner_dn.png','lps/components/lz/resources/autoPng/outline_dsbl.png'],width:500,height:500,sprite:'lps/components/lz/resources/autoPng/bezel_inner_up.sprite.png',spriteoffset:34};LzResourceLibrary.lzbutton_bezel_outer_rsc={ptype:"sr",frames:['lps/components/lz/resources/autoPng/bezel_outer_up.png','lps/components/lz/resources/autoPng/bezel_outer_up.png','lps/components/lz/resources/autoPng/bezel_outer_dn.png','lps/components/lz/resources/autoPng/transparent.png','lps/components/lz/resources/autoPng/default_outline.png'],width:500,height:500,sprite:'lps/components/lz/resources/autoPng/bezel_outer_up.sprite.png',spriteoffset:534};LzResourceLibrary.lzcheckbox_rsrc={ptype:"sr",frames:['lps/components/lz/resources/checkbox/autoPng/checkbox_off.png','lps/components/lz/resources/checkbox/autoPng/checkbox_off_mo.png','lps/components/lz/resources/checkbox/autoPng/checkbox_on.png','lps/components/lz/resources/checkbox/autoPng/checkbox_disable_off.png','lps/components/lz/resources/checkbox/autoPng/checkbox_on.png','lps/components/lz/resources/checkbox/autoPng/checkbox_on_mo.png','lps/components/lz/resources/checkbox/autoPng/checkbox_off.png','lps/components/lz/resources/checkbox/autoPng/checkbox_disable_on.png'],width:15,height:14,sprite:'lps/components/lz/resources/checkbox/autoPng/checkbox_off.sprite.png',spriteoffset:1034};LzResourceLibrary.lzradio_rsrc={ptype:"sr",frames:['lps/components/lz/resources/radio/autoPng/radiobtn_up.png','lps/components/lz/resources/radio/autoPng/radiobtn_mo.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dsbl_up.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dsbl_dn.png'],width:14,height:14,sprite:'lps/components/lz/resources/radio/autoPng/radiobtn_up.sprite.png',spriteoffset:1048};LzResourceLibrary.footer_logo={ptype:"sr",frames:['lps/assets/logo_laszlo_footer.gif'],width:69.92950439453125,height:69.92950439453125,spriteoffset:1062};LzResourceLibrary.__allcss={path:'dev-console.sprite.png'};var appdata=null;var main=null;var rg_runtime=null;var rb8=null;var rb10=null;var rbdhtml=null;var cb_debug=null;var cb_backtrace=null;var cb_usemastersprite=null;var cb_remotedebug=null;Class.make("$lzc$class_m2",["copyright",void 0,"app_runtime",void 0,"runtime_dhtml_enabled",void 0,"runtime_swf8_enabled",void 0,"runtime_swf9_enabled",void 0,"runtime_swf10_enabled",void 0,"app_debug",void 0,"app_backtrace",void 0,"app_console_debug",void 0,"app_floating_window",void 0,"app_fullpath",void 0,"app_query",void 0,"app_opt_url",void 0,"app_unopt_url",void 0,"app_url",void 0,"app_opt_exists",void 0,"app_lps_root",void 0,"app_lzt",void 0,"app_uid",void 0,"app_lzoptions",void 0,"app_usemastersprite",void 0,"$m1",function($0){
+LzResourceLibrary.lzfocusbracket_rsrc={ptype:"sr",frames:['lps/components/lz/resources/focus/focus_top_lft.png','lps/components/lz/resources/focus/focus_top_rt.png','lps/components/lz/resources/focus/focus_bot_lft.png','lps/components/lz/resources/focus/focus_bot_rt.png'],width:7,height:7,sprite:'lps/components/lz/resources/focus/focus_top_lft.sprite.png',spriteoffset:0};LzResourceLibrary.lzfocusbracket_shdw={ptype:"sr",frames:['lps/components/lz/resources/focus/focus_top_lft_shdw.png','lps/components/lz/resources/focus/focus_top_rt_shdw.png','lps/components/lz/resources/focus/focus_bot_lft_shdw.png','lps/components/lz/resources/focus/focus_bot_rt_shdw.png'],width:9,height:9,sprite:'lps/components/lz/resources/focus/focus_top_lft_shdw.sprite.png',spriteoffset:7};LzResourceLibrary.lzbutton_face_rsc={ptype:"sr",frames:['lps/components/lz/resources/button/simpleface_up.png','lps/components/lz/resources/button/simpleface_mo.png','lps/components/lz/resources/button/simpleface_dn.png','lps/components/lz/resources/button/autoPng/simpleface_dsbl.png'],width:2,height:18,sprite:'lps/components/lz/resources/button/simpleface_up.sprite.png',spriteoffset:16};LzResourceLibrary.lzbutton_bezel_inner_rsc={ptype:"sr",frames:['lps/components/lz/resources/autoPng/bezel_inner_up.png','lps/components/lz/resources/autoPng/bezel_inner_up.png','lps/components/lz/resources/autoPng/bezel_inner_dn.png','lps/components/lz/resources/autoPng/outline_dsbl.png'],width:500,height:500,sprite:'lps/components/lz/resources/autoPng/bezel_inner_up.sprite.png',spriteoffset:34};LzResourceLibrary.lzbutton_bezel_outer_rsc={ptype:"sr",frames:['lps/components/lz/resources/autoPng/bezel_outer_up.png','lps/components/lz/resources/autoPng/bezel_outer_up.png','lps/components/lz/resources/autoPng/bezel_outer_dn.png','lps/components/lz/resources/autoPng/transparent.png','lps/components/lz/resources/autoPng/default_outline.png'],width:500,height:500,sprite:'lps/components/lz/resources/autoPng/bezel_outer_up.sprite.png',spriteoffset:534};LzResourceLibrary.lzcheckbox_rsrc={ptype:"sr",frames:['lps/components/lz/resources/checkbox/autoPng/checkbox_off.png','lps/components/lz/resources/checkbox/autoPng/checkbox_off_mo.png','lps/components/lz/resources/checkbox/autoPng/checkbox_on.png','lps/components/lz/resources/checkbox/autoPng/checkbox_disable_off.png','lps/components/lz/resources/checkbox/autoPng/checkbox_on.png','lps/components/lz/resources/checkbox/autoPng/checkbox_on_mo.png','lps/components/lz/resources/checkbox/autoPng/checkbox_off.png','lps/components/lz/resources/checkbox/autoPng/checkbox_disable_on.png'],width:15,height:14,sprite:'lps/components/lz/resources/checkbox/autoPng/checkbox_off.sprite.png',spriteoffset:1034};LzResourceLibrary.lzradio_rsrc={ptype:"sr",frames:['lps/components/lz/resources/radio/autoPng/radiobtn_up.png','lps/components/lz/resources/radio/autoPng/radiobtn_mo.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dsbl_up.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dn.png','lps/components/lz/resources/radio/autoPng/radiobtn_dsbl_dn.png'],width:14,height:14,sprite:'lps/components/lz/resources/radio/autoPng/radiobtn_up.sprite.png',spriteoffset:1048};LzResourceLibrary.footer_logo={ptype:"sr",frames:['lps/assets/logo_laszlo_footer.gif'],width:69.92950439453125,height:69.92950439453125,spriteoffset:1062};LzResourceLibrary.__allcss={path:'dev-console.sprite.png'};var appdata=null;var main=null;var rg_runtime=null;var rb8=null;var rb10=null;var rbdhtml=null;var cb_debug=null;var cb_backtrace=null;var cb_proxied=null;var cb_usemastersprite=null;var cb_remotedebug=null;Class.make("$lzc$class_m2",["copyright",void 0,"app_runtime",void 0,"runtime_dhtml_enabled",void 0,"runtime_swf8_enabled",void 0,"runtime_swf9_enabled",void 0,"runtime_swf10_enabled",void 0,"app_debug",void 0,"app_backtrace",void 0,"app_console_debug",void 0,"app_floating_window",void 0,"app_fullpath",void 0,"app_query",void 0,"app_opt_url",void 0,"app_unopt_url",void 0,"app_url",void 0,"app_opt_exists",void 0,"app_lps_root",void 0,"app_lzt",void 0,"app_uid",void 0,"app_lzoptions",void 0,"app_isproxied",void 0,"app_usemastersprite",void 0,"$m1",function($0){
 with(this){
 appdata.setAttribute("initialdata",lz.Browser.getInitArg("appinfo"));setAttribute("app_runtime",appdata.getPointer().xpathQuery("/info/@runtime"));this.setupRuntimes();if(app_runtime==null){
 setAttribute("app_runtime",appdata.getPointer().xpathQuery("/request/param[@name = 'runtime']/@value"))
-};setAttribute("app_lzoptions",appdata.getPointer().xpathQuery("/request/param[@name = 'lzoptions']/@value"));setAttribute("app_debug",appdata.getPointer().xpathQuery("/request/param[@name = 'debug']/@value"));if(app_debug=="y")app_debug="true";setAttribute("app_backtrace",appdata.getPointer().xpathQuery("/request/param[@name = 'backtrace']/@value"));setAttribute("app_console_debug",appdata.getPointer().xpathQuery("/request/@console-remote-debug")=="true");setAttribute("app_floating_window",appdata.getPointer().xpathQuery("/request/@console-floating-window")=="true");setAttribute("app_fullpath",appdata.getPointer().xpathQuery("/request/@fullpath"));setAttribute("app_query",appdata.getPointer().xpathQuery("/request/@query_args"));setAttribute("app_opt_url",appdata.getPointer().xpathQuery("/request/@opt-url"));setAttribute("app_unopt_url",appdata.getPointer().xpathQuery("/request/@unopt-url"));setAttribute("app_url",appdata.getPointer().xpathQuery("/request/@url"));setAttribute("app_opt_exists",appdata.getPointer().xpathQuery("/request/@opt-exists"));setAttribute("app_lps_root",appdata.getPointer().xpathQuery("/request/@lps"));setAttribute("app_lzt",null);setAttribute("app_uid",app_fullpath);setAttribute("lzr","dhtml");var $1=LzParam.parseQueryString(app_query);setAttribute("app_usemastersprite",$1.lzusemastersprite);canvas.width=document.body.clientWidth
+};setAttribute("app_lzoptions",appdata.getPointer().xpathQuery("/request/param[@name = 'lzoptions']/@value"));setAttribute("app_debug",appdata.getPointer().xpathQuery("/request/param[@name = 'debug']/@value"));if(app_debug=="y")app_debug="true";setAttribute("app_backtrace",appdata.getPointer().xpathQuery("/request/param[@name = 'backtrace']/@value"));setAttribute("app_console_debug",appdata.getPointer().xpathQuery("/request/@console-remote-debug")=="true");setAttribute("app_isproxied",lz.Browser.getInitArg("appproxied"));setAttribute("app_floating_window",appdata.getPointer().xpathQuery("/request/@console-floating-window")=="true");setAttribute("app_fullpath",appdata.getPointer().xpathQuery("/request/@fullpath"));setAttribute("app_query",appdata.getPointer().xpathQuery("/request/@query_args"));setAttribute("app_opt_url",appdata.getPointer().xpathQuery("/request/@opt-url"));setAttribute("app_unopt_url",appdata.getPointer().xpathQuery("/request/@unopt-url"));setAttribute("app_url",appdata.getPointer().xpathQuery("/request/@url"));setAttribute("app_opt_exists",appdata.getPointer().xpathQuery("/request/@opt-exists"));setAttribute("app_lps_root",appdata.getPointer().xpathQuery("/request/@lps"));setAttribute("app_lzt",null);setAttribute("app_uid",app_fullpath);setAttribute("lzr","dhtml");setAttribute("app_usemastersprite",appdata.getPointer().xpathQuery("/request/param[@name = 'usemastersprite']/@value")||appdata.getPointer().xpathQuery("/request/param[@name = 'lzusemastersprite']/@value"));canvas.width=document.body.clientWidth
 }},"setupRuntimes",function(){
 with(this){
-var $0=lz.Browser.getInitArg("runtimes").split(",");for(var $1 in $0){
-if($0[$1]=="dhtml")canvas.setAttribute("runtime_dhtml_enabled",true);if($0[$1]=="swf8")canvas.setAttribute("runtime_swf8_enabled",true);if($0[$1]=="swf9")canvas.setAttribute("runtime_swf9_enabled",true);if($0[$1]=="swf10")canvas.setAttribute("runtime_swf10_enabled",true)
+var $0=["dhtml","swf8","swf9","swf10"];var $1=lz.Browser.getInitArg("runtimes");if($1!=null){
+$0=$1.split(",")
+};for(var $2 in $0){
+if($0[$2]=="dhtml")canvas.setAttribute("runtime_dhtml_enabled",true);if($0[$2]=="swf8")canvas.setAttribute("runtime_swf8_enabled",true);if($0[$2]=="swf9")canvas.setAttribute("runtime_swf9_enabled",true);if($0[$2]=="swf10")canvas.setAttribute("runtime_swf10_enabled",true)
 }}},"deploySOLO",function(){
 with(this){
 var $0=escape(app_fullpath.substring(app_lps_root.length));if(app_runtime=="dhtml"){
@@ -49,38 +51,38 @@ with(this){
 var $0=app_fullpath.substring(0,app_fullpath.length-4)+".lzx";setAttribute("app_fullpath",$0);this.reloadApp()
 }},"reloadApp",function(){
 with(this){
-var $0=rg_runtime.value;var $1=cb_debug.value;var $2=cb_backtrace.value;var $3=cb_remotedebug.value;var $4=new LzParam();var $5={};var $6=LzParam.parseQueryString(app_query);var $7=$6["lzoptions"];var $8=null;if($7!=null){
-$8=LzKernelUtils.parselzoptions($7);for(var $9 in $8){
-var $a=lz.Browser.oldOptionName($9);if($a==null){
-$a=$9
-};delete $6[$a];$5[$9]=$8[$9][0]
-}};$5["debug"]=$1;$5["backtrace"]=$2;$5["runtime"]=$0;$5["lzusemastersprite"]=cb_usemastersprite.value;if($0!="dhtml"){
-delete $5["lzusemastersprite"]
+var $0=rg_runtime.value;var $1=cb_debug.value;var $2=cb_backtrace.value;var $3=cb_remotedebug.value;var $4=cb_proxied.value;var $5=new LzParam();var $6={};var $7=LzParam.parseQueryString(app_query);var $8=$7["lzoptions"];var $9=null;if($8!=null){
+$9=LzKernelUtils.parselzoptions($8);for(var $a in $9){
+var $b=lz.Browser.oldOptionName($a);if($b==null){
+$b=$a
+};delete $7[$b];$6[$a]=$9[$a][0]
+}};$6["debug"]=$1;$6["backtrace"]=$2;$6["proxied"]=$4;$6["runtime"]=$0;$6["usemastersprite"]=cb_usemastersprite.value;if($0!="dhtml"){
+delete $6["usemastersprite"]
 };if($3){
-$6["lzconsoledebug"]=true;$5["debug"]=true
+$7["lzconsoledebug"]=true;$6["debug"]=true
 }else{
-delete $6.lzconsoledebug;delete $5.remotedebug
+delete $7.lzconsoledebug;delete $6.remotedebug
 };if(app_lzt!=null){
-$6["lzt"]=app_lzt
-};if($5.debug+""=="false"){
-delete $5["debug"]
+$7["lzt"]=app_lzt
+};if($6.debug+""=="false"){
+delete $6["debug"]
 }else{
-$5.debug="true"
-};if($5.backtrace+""=="false"){
-delete $5["backtrace"]
+$6.debug="true"
+};if($6.backtrace+""=="false"){
+delete $6["backtrace"]
 }else{
-$5.backtrace="true"
-};var $b="";var $c={};var $d=0;for(var $e in $5){
-if($e=="")continue;if($e.indexOf("#38;")!=-1){
-var $f=$e.indexOf("#38;");$e=$e.substring($f+4,$e.length)
-};if($c[$e])continue;if($d++>0){
-$b+=","
-};$b+=$e+"("+$5[$e]+")";$c[$e]=true
-};$6["lzoptions"]=$b;$c={};for(var $g in $6){
-if($g=="")continue;if($g.indexOf("#38;")!=-1){
-var $f=$g.indexOf("#38;");$g=$g.substring($f+4,$g.length)
-};if($c[$g])continue;$4.setValue($g,$6[$g]);$c[$g]=true
-};var $h=app_fullpath+"?"+$4.serialize();this.loadURL($h)
+$6.backtrace="true"
+};var $c="";var $d={};var $e=0;for(var $f in $6){
+if($f=="")continue;if($f.indexOf("#38;")!=-1){
+var $g=$f.indexOf("#38;");$f=$f.substring($g+4,$f.length)
+};if($d[$f])continue;if($e++>0){
+$c+=","
+};$c+=$f+"("+$6[$f]+")";$d[$f]=true
+};$7["lzoptions"]=$c;$d={};for(var $h in $7){
+if($h=="")continue;if($h.indexOf("#38;")!=-1){
+var $g=$h.indexOf("#38;");$h=$h.substring($g+4,$h.length)
+};if($d[$h])continue;$5.setValue($h,$7[$h]);$d[$h]=true
+};var $i=app_fullpath+"?"+$5.serialize();this.loadURL($i)
 }},"displayObjectByID",function($0){
 with(this){
 receivingLC.send(appListenerName,"displayObj",$0)
@@ -111,7 +113,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzCanvas,["displayName","<anonymous extends='canvas'>","attributes",new LzInheritedHash(LzCanvas.attributes)]);canvas=new $lzc$class_m2(null,{$delegates:["oninit","$m1",null],__LZproxied:"true",appListenerName:void 0,app_backtrace:void 0,app_console_debug:void 0,app_debug:void 0,app_floating_window:void 0,app_fullpath:void 0,app_lps_root:void 0,app_lzoptions:void 0,app_lzt:void 0,app_opt_exists:void 0,app_opt_url:void 0,app_query:void 0,app_runtime:void 0,app_uid:void 0,app_unopt_url:void 0,app_url:void 0,app_usemastersprite:void 0,appbuilddate:"2010-08-25T04:53:35Z",bgcolor:8750489,consolelistenerName:void 0,copyright:"Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms.",embedfonts:true,font:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"17333 /Users/hqm/openlaszlo/trunk-clean",lpsbuilddate:"2010-08-25T04:31:20Z",lpsrelease:"Latest",lpsversion:"5.0.x",proxied:false,receivingLC:void 0,runtime:"dhtml",runtime_dhtml_enabled:false,runtime_swf10_enabled:false,runtime_swf8_enabled:false,runtime_swf9_enabled:false,width:"100%"});lz.colors.offwhite=15921906;lz.colors.gray10=1710618;lz.colors.gray20=3355443;lz.colors.gray30=5066061;lz.colors.gray40=6710886;lz.colors.gray50=8355711;lz.colors.gray60=10066329;lz.colors.gray70=11776947;lz.colors.gray80=13421772;lz.colors.gray90=15066597;lz.colors.iceblue1=3298963;lz.colors.iceblue2=5472718;lz.colors.iceblue3=12240085;lz.colors.iceblue4=14017779;lz.colors.iceblue5=15659509;lz.colors.palegreen1=4290113;lz.colors.palegreen2=11785139;lz.colors.palegreen3=12637341;lz.colors.palegreen4=13888170;lz.colors.palegreen5=15725032;lz.colors.gold1=9331721;lz.colors.gold2=13349195;lz.colors.gold3=15126388;lz.colors.gold4=16311446;lz.colors.sand1=13944481;lz.colors.sand2=14276546;lz.colors.sand3=15920859;lz.colors.sand4=15986401;lz.colors.ltpurple1=6575768;lz.colors.ltpurple2=12038353;lz.colors.ltpurple3=13353453;lz.colors.ltpurple4=15329264;lz.colors.grayblue=12501704;lz.colors.graygreen=12635328;lz.colors.graypurple=10460593;lz.colors.ltblue=14540287;lz.colors.ltgreen=14548957;{
+}],LzCanvas,["displayName","<anonymous extends='canvas'>","attributes",new LzInheritedHash(LzCanvas.attributes)]);canvas=new $lzc$class_m2(null,{$delegates:["oninit","$m1",null],__LZproxied:"true",appListenerName:void 0,app_backtrace:void 0,app_console_debug:void 0,app_debug:void 0,app_floating_window:void 0,app_fullpath:void 0,app_isproxied:void 0,app_lps_root:void 0,app_lzoptions:void 0,app_lzt:void 0,app_opt_exists:void 0,app_opt_url:void 0,app_query:void 0,app_runtime:void 0,app_uid:void 0,app_unopt_url:void 0,app_url:void 0,app_usemastersprite:void 0,appbuilddate:"2010-08-30T17:29:58Z",bgcolor:8750489,consolelistenerName:void 0,copyright:"Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.  Use is subject to license terms.",embedfonts:true,font:"Verdana,Vera,sans-serif",fontsize:11,fontstyle:"plain",height:370,lpsbuild:"17400 /Users/hqm/openlaszlo/trunk",lpsbuilddate:"2010-08-30T16:33:37Z",lpsrelease:"Latest",lpsversion:"5.0.x",proxied:false,receivingLC:void 0,runtime:"dhtml",runtime_dhtml_enabled:false,runtime_swf10_enabled:false,runtime_swf8_enabled:false,runtime_swf9_enabled:false,width:"100%"});lz.colors.offwhite=15921906;lz.colors.gray10=1710618;lz.colors.gray20=3355443;lz.colors.gray30=5066061;lz.colors.gray40=6710886;lz.colors.gray50=8355711;lz.colors.gray60=10066329;lz.colors.gray70=11776947;lz.colors.gray80=13421772;lz.colors.gray90=15066597;lz.colors.iceblue1=3298963;lz.colors.iceblue2=5472718;lz.colors.iceblue3=12240085;lz.colors.iceblue4=14017779;lz.colors.iceblue5=15659509;lz.colors.palegreen1=4290113;lz.colors.palegreen2=11785139;lz.colors.palegreen3=12637341;lz.colors.palegreen4=13888170;lz.colors.palegreen5=15725032;lz.colors.gold1=9331721;lz.colors.gold2=13349195;lz.colors.gold3=15126388;lz.colors.gold4=16311446;lz.colors.sand1=13944481;lz.colors.sand2=14276546;lz.colors.sand3=15920859;lz.colors.sand4=15986401;lz.colors.ltpurple1=6575768;lz.colors.ltpurple2=12038353;lz.colors.ltpurple3=13353453;lz.colors.ltpurple4=15329264;lz.colors.grayblue=12501704;lz.colors.graygreen=12635328;lz.colors.graypurple=10460593;lz.colors.ltblue=14540287;lz.colors.ltgreen=14548957;{
 Class.make("$lzc$class_basefocusview",["active",void 0,"$lzc$set_active",function($0){
 with(this){
 setActive($0)
@@ -2656,7 +2658,7 @@ with($0)with($0.prototype){
 {
 LzNode.mergeAttributes({clickable:true,focusable:false,initcomplete:0,text_y:new LzAlwaysExpr("text_y","number","$m3j","$m3k",null)},$lzc$class_radiobutton.attributes)
 }}})($lzc$class_radiobutton)
-};appdata=canvas.lzAddLocalData("appdata","<data />",false,false);appdata==true;Class.make("$lzc$class_m5c",["$m3w",function($0){
+};appdata=canvas.lzAddLocalData("appdata","<data />",false,false);appdata==true;Class.make("$lzc$class_m5e",["$m3w",function($0){
 with(this){
 var $1=canvas.app_console_debug?370:71;if($1!==this["height"]||!this.inited){
 this.setAttribute("height",$1)
@@ -2681,7 +2683,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzView,["displayName","<anonymous extends='view'>","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5e",["$m40",function($0){
+}],LzView,["displayName","<anonymous extends='view'>","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5g",["$m40",function($0){
 with(this){
 var $1=parent.width-2;if($1!==this["width"]||!this.inited){
 this.setAttribute("width",$1)
@@ -2706,7 +2708,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzView,["displayName","<anonymous extends='view'>","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5d",["$m3y",function($0){
+}],LzView,["displayName","<anonymous extends='view'>","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5f",["$m3y",function($0){
 with(this){
 var $1=parent.compilecontrols.width+5;if($1!==this["width"]||!this.inited){
 this.setAttribute("width",$1)
@@ -2731,7 +2733,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{bgcolor:LzColorUtils.convertColor("0x7a7a8c"),height:30,width:new LzAlwaysExpr("width","size","$m40","$m41",null),x:1,y:1},"class":$lzc$class_m5e}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5f",["$m42",function($0){
+}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{bgcolor:LzColorUtils.convertColor("0x7a7a8c"),height:30,width:new LzAlwaysExpr("width","size","$m40","$m41",null),x:1,y:1},"class":$lzc$class_m5g}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5h",["$m42",function($0){
 with(this){
 var $1=canvas.runtime_swf8_enabled;if($1!==this["enabled"]||!this.inited){
 this.setAttribute("enabled",$1)
@@ -2769,7 +2771,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_radiobutton,["displayName","<anonymous extends='radiobutton'>","children",LzNode.mergeChildren([],$lzc$class_radiobutton["children"]),"attributes",new LzInheritedHash($lzc$class_radiobutton.attributes)]);Class.make("$lzc$class_m5g",["$m46",function($0){
+}],$lzc$class_radiobutton,["displayName","<anonymous extends='radiobutton'>","children",LzNode.mergeChildren([],$lzc$class_radiobutton["children"]),"attributes",new LzInheritedHash($lzc$class_radiobutton.attributes)]);Class.make("$lzc$class_m5i",["$m46",function($0){
 with(this){
 var $1=canvas.runtime_swf10_enabled;if($1!==this["enabled"]||!this.inited){
 this.setAttribute("enabled",$1)
@@ -2807,7 +2809,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_radiobutton,["displayName","<anonymous extends='radiobutton'>","children",LzNode.mergeChildren([],$lzc$class_radiobutton["children"]),"attributes",new LzInheritedHash($lzc$class_radiobutton.attributes)]);Class.make("$lzc$class_m5h",["$m4a",function($0){
+}],$lzc$class_radiobutton,["displayName","<anonymous extends='radiobutton'>","children",LzNode.mergeChildren([],$lzc$class_radiobutton["children"]),"attributes",new LzInheritedHash($lzc$class_radiobutton.attributes)]);Class.make("$lzc$class_m5j",["$m4a",function($0){
 with(this){
 var $1=canvas.runtime_dhtml_enabled;if($1!==this["enabled"]||!this.inited){
 this.setAttribute("enabled",$1)
@@ -2845,7 +2847,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_radiobutton,["displayName","<anonymous extends='radiobutton'>","children",LzNode.mergeChildren([],$lzc$class_radiobutton["children"]),"attributes",new LzInheritedHash($lzc$class_radiobutton.attributes)]);Class.make("$lzc$class_m5j",["$m4f",function($0){
+}],$lzc$class_radiobutton,["displayName","<anonymous extends='radiobutton'>","children",LzNode.mergeChildren([],$lzc$class_radiobutton["children"]),"attributes",new LzInheritedHash($lzc$class_radiobutton.attributes)]);Class.make("$lzc$class_m5l",["$m4f",function($0){
 with(this){
 var $1=canvas.app_debug=="true";if($1!==this["value"]||!this.inited){
 this.setAttribute("value",$1)
@@ -2870,7 +2872,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5k",["$m4h",function($0){
+}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5m",["$m4h",function($0){
 with(this){
 var $1=canvas.app_backtrace=="true";if($1!==this["value"]||!this.inited){
 this.setAttribute("value",$1)
@@ -2895,11 +2897,36 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5l",["$m4j",function($0){
+}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5n",["$m4j",function($0){
+with(this){
+var $1=canvas.app_isproxied=="true";if($1!==this["value"]||!this.inited){
+this.setAttribute("value",$1)
+}}},"$m4k",function(){
+with(this){
+try{
+return [canvas,"app_isproxied"]
+}
+catch($lzsc$e){
+if(Error["$lzsc$isa"]?Error.$lzsc$isa($lzsc$e):$lzsc$e instanceof Error){
+lz.$lzsc$thrownError=$lzsc$e
+};throw $lzsc$e
+}}},"$lzsc$initialize",function($0,$1,$2,$3){
+switch(arguments.length){
+case 0:
+$0=null;
+case 1:
+$1=null;
+case 2:
+$2=null;
+case 3:
+$3=false;
+
+};(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
+}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5o",["$m4l",function($0){
 with(this){
 var $1=canvas.app_usemastersprite=="true";if($1!==this["value"]||!this.inited){
 this.setAttribute("value",$1)
-}}},"$m4k",function(){
+}}},"$m4m",function(){
 with(this){
 try{
 return [canvas,"app_usemastersprite"]
@@ -2920,14 +2947,14 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5m",["$m4l",function($0){
+}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5p",["$m4n",function($0){
 with(this){
 canvas.gotoApp()
-}},"$m4m",function($0){
+}},"$m4o",function($0){
 with(this){
-var $1=canvas.app_runtime=="dhtml"?300:168;if($1!==this["x"]||!this.inited){
+var $1=canvas.app_runtime=="dhtml"?382:248;if($1!==this["x"]||!this.inited){
 this.setAttribute("x",$1)
-}}},"$m4n",function(){
+}}},"$m4p",function(){
 with(this){
 try{
 return [canvas,"app_runtime"]
@@ -2948,20 +2975,20 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5i",["$m4e",function($0){
+}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5k",["$m4e",function($0){
 with(this){
 this.setAttribute("x",rg_runtime.x+rg_runtime.width+14)
-}},"$m4o",function(){
+}},"$m4q",function(){
 with(this){
 return cb_backtrace
-}},"$m4p",function($0){
+}},"$m4r",function($0){
 with(this){
 if(cb_backtrace.value){
 cb_debug.setAttribute("value",true)
-}}},"$m4q",function(){
+}}},"$m4s",function(){
 with(this){
 return cb_debug
-}},"$m4r",function($0){
+}},"$m4t",function($0){
 with(this){
 if(cb_debug.value==false){
 cb_backtrace.setAttribute("value",false)
@@ -2986,7 +3013,7 @@ $1=true;
 $0.id="cb_debug";cb_debug=$0
 }else if(cb_debug===$0){
 cb_debug=null;$0.id=null
-}},id:"cb_debug",text:"Debug",value:new LzAlwaysExpr("value","expression","$m4f","$m4g",null),x:16,y:8},"class":$lzc$class_m5j},{attrs:{$lzc$bind_id:function($0,$1){
+}},id:"cb_debug",text:"Debug",value:new LzAlwaysExpr("value","expression","$m4f","$m4g",null),x:16,y:8},"class":$lzc$class_m5l},{attrs:{$lzc$bind_id:function($0,$1){
 switch(arguments.length){
 case 1:
 $1=true;
@@ -2995,7 +3022,16 @@ $1=true;
 $0.id="cb_backtrace";cb_backtrace=$0
 }else if(cb_backtrace===$0){
 cb_backtrace=null;$0.id=null
-}},id:"cb_backtrace",text:"Backtrace",value:new LzAlwaysExpr("value","expression","$m4h","$m4i",null),x:82,y:8},"class":$lzc$class_m5k},{attrs:{$lzc$bind_id:function($0,$1){
+}},id:"cb_backtrace",text:"Backtrace",value:new LzAlwaysExpr("value","expression","$m4h","$m4i",null),x:82,y:8},"class":$lzc$class_m5m},{attrs:{$lzc$bind_id:function($0,$1){
+switch(arguments.length){
+case 1:
+$1=true;
+
+};if($1){
+$0.id="cb_proxied";cb_proxied=$0
+}else if(cb_proxied===$0){
+cb_proxied=null;$0.id=null
+}},id:"cb_proxied",text:"Proxied",value:new LzAlwaysExpr("value","expression","$m4j","$m4k",null),x:168,y:8},"class":$lzc$class_m5n},{attrs:{$lzc$bind_id:function($0,$1){
 switch(arguments.length){
 case 1:
 $1=true;
@@ -3004,7 +3040,7 @@ $1=true;
 $0.id="cb_usemastersprite";cb_usemastersprite=$0
 }else if(cb_usemastersprite===$0){
 cb_usemastersprite=null;$0.id=null
-}},id:"cb_usemastersprite",text:"Use master sprite",value:new LzAlwaysExpr("value","expression","$m4j","$m4k",null),x:168,y:8},"class":$lzc$class_m5l},{attrs:{$delegates:["onclick","$m4l",null],clickable:true,text:"Compile",x:new LzAlwaysExpr("x","numberExpression","$m4m","$m4n",null),y:3},"class":$lzc$class_m5m}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5o",["$m4u",function($0){
+}},id:"cb_usemastersprite",text:"Use master sprite",value:new LzAlwaysExpr("value","expression","$m4l","$m4m",null),x:240,y:8},"class":$lzc$class_m5o},{attrs:{$delegates:["onclick","$m4n",null],clickable:true,text:"Compile",x:new LzAlwaysExpr("x","numberExpression","$m4o","$m4p",null),y:3},"class":$lzc$class_m5p}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5r",["$m4w",function($0){
 with(this){
 canvas.viewSource()
 }},"$lzsc$initialize",function($0,$1,$2,$3){
@@ -3019,11 +3055,11 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5n",["$m4s",function($0){
+}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5q",["$m4u",function($0){
 with(this){
 var $1=parent.compilecontrols.width+parent.compilecontrols.x+32;if($1!==this["x"]||!this.inited){
 this.setAttribute("x",$1)
-}}},"$m4t",function(){
+}}},"$m4v",function(){
 with(this){
 try{
 return [parent.compilecontrols,"width",parent.compilecontrols,"x"]
@@ -3044,11 +3080,11 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{$delegates:["onclick","$m4u",null],clickable:true,text:"View Source",y:3},"class":$lzc$class_m5o}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5p",["$m4v",function($0){
+}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{$delegates:["onclick","$m4w",null],clickable:true,text:"View Source",y:3},"class":$lzc$class_m5r}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5s",["$m4x",function($0){
 with(this){
 var $1=canvas.width-70;if($1!==this["width"]||!this.inited){
 this.setAttribute("width",$1)
-}}},"$m4w",function(){
+}}},"$m4y",function(){
 with(this){
 try{
 return [canvas,"width"]
@@ -3069,7 +3105,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzView,["displayName","<anonymous extends='view'>","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5r",["$m4z",function($0){
+}],LzView,["displayName","<anonymous extends='view'>","attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5u",["$m51",function($0){
 with(this){
 canvas.viewWrapper()
 }},"$lzsc$initialize",function($0,$1,$2,$3){
@@ -3084,7 +3120,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5s",["$m50",function($0){
+}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5v",["$m52",function($0){
 with(this){
 canvas.deploySOLO()
 }},"$lzsc$initialize",function($0,$1,$2,$3){
@@ -3099,7 +3135,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5t",["$m51",function($0){
+}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5w",["$m53",function($0){
 with(this){
 canvas.runWidget()
 }},"$lzsc$initialize",function($0,$1,$2,$3){
@@ -3114,7 +3150,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5u",["$m52",function($0){
+}],$lzc$class_button,["displayName","<anonymous extends='button'>","children",LzNode.mergeChildren([],$lzc$class_button["children"]),"attributes",new LzInheritedHash($lzc$class_button.attributes)]);Class.make("$lzc$class_m5x",["$m54",function($0){
 with(this){
 canvas.viewDocs()
 }},"$lzsc$initialize",function($0,$1,$2,$3){
@@ -3129,7 +3165,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzText,["displayName","<anonymous extends='text'>","attributes",new LzInheritedHash(LzText.attributes)]);Class.make("$lzc$class_m5v",["$m53",function($0){
+}],LzText,["displayName","<anonymous extends='text'>","attributes",new LzInheritedHash(LzText.attributes)]);Class.make("$lzc$class_m5y",["$m55",function($0){
 with(this){
 canvas.viewDev()
 }},"$lzsc$initialize",function($0,$1,$2,$3){
@@ -3144,7 +3180,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzText,["displayName","<anonymous extends='text'>","attributes",new LzInheritedHash(LzText.attributes)]);Class.make("$lzc$class_m5w",["$m54",function($0){
+}],LzText,["displayName","<anonymous extends='text'>","attributes",new LzInheritedHash(LzText.attributes)]);Class.make("$lzc$class_m5z",["$m56",function($0){
 with(this){
 canvas.viewForums()
 }},"$lzsc$initialize",function($0,$1,$2,$3){
@@ -3159,11 +3195,11 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzText,["displayName","<anonymous extends='text'>","attributes",new LzInheritedHash(LzText.attributes)]);Class.make("$lzc$class_m5q",["$m4x",function($0){
+}],LzText,["displayName","<anonymous extends='text'>","attributes",new LzInheritedHash(LzText.attributes)]);Class.make("$lzc$class_m5t",["$m4z",function($0){
 with(this){
 var $1=parent.firstrow.width;if($1!==this["width"]||!this.inited){
 this.setAttribute("width",$1)
-}}},"$m4y",function(){
+}}},"$m50",function(){
 with(this){
 try{
 return [parent.firstrow,"width"]
@@ -3184,11 +3220,11 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{fontsize:11,text:"<b>Deploy:</b>",x:8,y:4},"class":LzText},{attrs:{$delegates:["onclick","$m4z",null],clickable:true,text:"Server",x:65},"class":$lzc$class_m5r},{attrs:{$delegates:["onclick","$m50",null],clickable:true,text:"SOLO",x:134},"class":$lzc$class_m5s},{attrs:{$delegates:["onclick","$m51",null],clickable:true,text:"Widget Emulator",x:200},"class":$lzc$class_m5t},{attrs:{align:"right",fgcolor:LzColorUtils.convertColor("0x15159b"),layout:{axis:"x",spacing:3},options:{ignorelayout:true},y:3},children:[{attrs:{$delegates:["onclick","$m52",null],clickable:true,text:"<u>Documentation</u>"},"class":$lzc$class_m5u},{attrs:{$delegates:["onclick","$m53",null],clickable:true,text:"<u>Developer Community</u>"},"class":$lzc$class_m5v},{attrs:{$delegates:["onclick","$m54",null],clickable:true,text:"<u>Developer Forums</u>"},"class":$lzc$class_m5w}],"class":LzView}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m5x",["$m55",function($0){
+}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{fontsize:11,text:"<b>Deploy:</b>",x:8,y:4},"class":LzText},{attrs:{$delegates:["onclick","$m51",null],clickable:true,text:"Server",x:65},"class":$lzc$class_m5u},{attrs:{$delegates:["onclick","$m52",null],clickable:true,text:"SOLO",x:134},"class":$lzc$class_m5v},{attrs:{$delegates:["onclick","$m53",null],clickable:true,text:"Widget Emulator",x:200},"class":$lzc$class_m5w},{attrs:{align:"right",fgcolor:LzColorUtils.convertColor("0x15159b"),layout:{axis:"x",spacing:3},options:{ignorelayout:true},y:3},children:[{attrs:{$delegates:["onclick","$m54",null],clickable:true,text:"<u>Documentation</u>"},"class":$lzc$class_m5x},{attrs:{$delegates:["onclick","$m55",null],clickable:true,text:"<u>Developer Community</u>"},"class":$lzc$class_m5y},{attrs:{$delegates:["onclick","$m56",null],clickable:true,text:"<u>Developer Forums</u>"},"class":$lzc$class_m5z}],"class":LzView}],"attributes",new LzInheritedHash(LzView.attributes)]);Class.make("$lzc$class_m60",["$m57",function($0){
 with(this){
 var $1=parent.firstrow.width+20;if($1!==this["x"]||!this.inited){
 this.setAttribute("x",$1)
-}}},"$m56",function(){
+}}},"$m58",function(){
 with(this){
 try{
 return [parent.firstrow,"width"]
@@ -3197,11 +3233,11 @@ catch($lzsc$e){
 if(Error["$lzsc$isa"]?Error.$lzsc$isa($lzsc$e):$lzsc$e instanceof Error){
 lz.$lzsc$thrownError=$lzsc$e
 };throw $lzsc$e
-}}},"$m57",function($0){
+}}},"$m59",function($0){
 with(this){
 var $1=canvas.app_runtime!="dhtml";if($1!==this["visible"]||!this.inited){
 this.setAttribute("visible",$1)
-}}},"$m58",function(){
+}}},"$m5a",function(){
 with(this){
 try{
 return [canvas,"app_runtime"]
@@ -3210,11 +3246,11 @@ catch($lzsc$e){
 if(Error["$lzsc$isa"]?Error.$lzsc$isa($lzsc$e):$lzsc$e instanceof Error){
 lz.$lzsc$thrownError=$lzsc$e
 };throw $lzsc$e
-}}},"$m59",function($0){
+}}},"$m5b",function($0){
 with(this){
 var $1=canvas.app_console_debug;if($1!==this["value"]||!this.inited){
 this.setAttribute("value",$1)
-}}},"$m5a",function(){
+}}},"$m5c",function(){
 with(this){
 try{
 return [canvas,"app_console_debug"]
@@ -3235,7 +3271,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5b",["$m3u",function($0){
+}],$lzc$class_checkbox,["displayName","<anonymous extends='checkbox'>","children",LzNode.mergeChildren([],$lzc$class_checkbox["children"]),"attributes",new LzInheritedHash($lzc$class_checkbox.attributes)]);Class.make("$lzc$class_m5d",["$m3u",function($0){
 with(this){
 var $1=parent.width;if($1!==this["width"]||!this.inited){
 this.setAttribute("width",$1)
@@ -3260,7 +3296,7 @@ case 3:
 $3=false;
 
 };(arguments.callee["$superclass"]&&arguments.callee.$superclass.prototype["$lzsc$initialize"]||this.nextMethod(arguments.callee,"$lzsc$initialize")).call(this,$0,$1,$2,$3)
-}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{bgcolor:LzColorUtils.convertColor("0x4c4c4c"),height:new LzAlwaysExpr("height","size","$m3w","$m3x",null),name:"logo",resource:"footer_logo"},"class":$lzc$class_m5c},{attrs:{firstrow:void 0,name:"controls",x:70},children:[{attrs:{compilecontrols:void 0,name:"firstrow",y:4},children:[{attrs:{fontsize:11,text:"<b>Compile Options:</b>",x:8,y:7},"class":LzText},{attrs:{bgcolor:LzColorUtils.convertColor("0x0"),height:32,width:new LzAlwaysExpr("width","size","$m3y","$m3z",null),x:125},"class":$lzc$class_m5d},{attrs:{name:"compilecontrols",x:125},children:[{attrs:{$lzc$bind_id:function($0,$1){
+}],LzView,["displayName","<anonymous extends='view'>","children",[{attrs:{bgcolor:LzColorUtils.convertColor("0x4c4c4c"),height:new LzAlwaysExpr("height","size","$m3w","$m3x",null),name:"logo",resource:"footer_logo"},"class":$lzc$class_m5e},{attrs:{firstrow:void 0,name:"controls",x:70},children:[{attrs:{compilecontrols:void 0,name:"firstrow",y:4},children:[{attrs:{fontsize:11,text:"<b>Compile Options:</b>",x:8,y:7},"class":LzText},{attrs:{bgcolor:LzColorUtils.convertColor("0x0"),height:32,width:new LzAlwaysExpr("width","size","$m3y","$m3z",null),x:125},"class":$lzc$class_m5f},{attrs:{name:"compilecontrols",x:125},children:[{attrs:{$lzc$bind_id:function($0,$1){
 switch(arguments.length){
 case 1:
 $1=true;
@@ -3278,7 +3314,7 @@ $1=true;
 $0.id="rb8";rb8=$0
 }else if(rb8===$0){
 rb8=null;$0.id=null
-}},enabled:new LzAlwaysExpr("enabled","expression","$m42","$m43",null),id:"rb8",selected:new LzAlwaysExpr("selected","expression","$m44","$m45",null),text:"swf8",value:"swf8"},"class":$lzc$class_m5f},{attrs:{$lzc$bind_id:function($0,$1){
+}},enabled:new LzAlwaysExpr("enabled","expression","$m42","$m43",null),id:"rb8",selected:new LzAlwaysExpr("selected","expression","$m44","$m45",null),text:"swf8",value:"swf8"},"class":$lzc$class_m5h},{attrs:{$lzc$bind_id:function($0,$1){
 switch(arguments.length){
 case 1:
 $1=true;
@@ -3287,7 +3323,7 @@ $1=true;
 $0.id="rb10";rb10=$0
 }else if(rb10===$0){
 rb10=null;$0.id=null
-}},enabled:new LzAlwaysExpr("enabled","expression","$m46","$m47",null),id:"rb10",selected:new LzAlwaysExpr("selected","expression","$m48","$m49",null),text:"swf10",value:"swf10"},"class":$lzc$class_m5g},{attrs:{$lzc$bind_id:function($0,$1){
+}},enabled:new LzAlwaysExpr("enabled","expression","$m46","$m47",null),id:"rb10",selected:new LzAlwaysExpr("selected","expression","$m48","$m49",null),text:"swf10",value:"swf10"},"class":$lzc$class_m5i},{attrs:{$lzc$bind_id:function($0,$1){
 switch(arguments.length){
 case 1:
 $1=true;
@@ -3296,7 +3332,7 @@ $1=true;
 $0.id="rbdhtml";rbdhtml=$0
 }else if(rbdhtml===$0){
 rbdhtml=null;$0.id=null
-}},enabled:new LzAlwaysExpr("enabled","expression","$m4a","$m4b",null),id:"rbdhtml",selected:new LzAlwaysExpr("selected","expression","$m4c","$m4d",null),text:"HTML5",value:"dhtml"},"class":$lzc$class_m5h}],"class":$lzc$class_radiogroup},{attrs:{$delegates:["onvalue","$m4p","$m4o","onvalue","$m4r","$m4q"],x:new LzOnceExpr("x","numberExpression","$m4e",null)},"class":$lzc$class_m5i}],"class":LzView},{attrs:{x:new LzAlwaysExpr("x","numberExpression","$m4s","$m4t",null)},"class":$lzc$class_m5n}],"class":LzView},{attrs:{bgcolor:LzColorUtils.convertColor("0x0"),height:1,width:new LzAlwaysExpr("width","size","$m4v","$m4w",null),y:39},"class":$lzc$class_m5p},{attrs:{width:new LzAlwaysExpr("width","size","$m4x","$m4y",null),y:43},"class":$lzc$class_m5q},{attrs:{$lzc$bind_id:function($0,$1){
+}},enabled:new LzAlwaysExpr("enabled","expression","$m4a","$m4b",null),id:"rbdhtml",selected:new LzAlwaysExpr("selected","expression","$m4c","$m4d",null),text:"HTML5",value:"dhtml"},"class":$lzc$class_m5j}],"class":$lzc$class_radiogroup},{attrs:{$delegates:["onvalue","$m4r","$m4q","onvalue","$m4t","$m4s"],x:new LzOnceExpr("x","numberExpression","$m4e",null)},"class":$lzc$class_m5k}],"class":LzView},{attrs:{x:new LzAlwaysExpr("x","numberExpression","$m4u","$m4v",null)},"class":$lzc$class_m5q}],"class":LzView},{attrs:{bgcolor:LzColorUtils.convertColor("0x0"),height:1,width:new LzAlwaysExpr("width","size","$m4x","$m4y",null),y:39},"class":$lzc$class_m5s},{attrs:{width:new LzAlwaysExpr("width","size","$m4z","$m50",null),y:43},"class":$lzc$class_m5t},{attrs:{$lzc$bind_id:function($0,$1){
 switch(arguments.length){
 case 1:
 $1=true;
@@ -3305,7 +3341,7 @@ $1=true;
 $0.id="cb_remotedebug";cb_remotedebug=$0
 }else if(cb_remotedebug===$0){
 cb_remotedebug=null;$0.id=null
-}},id:"cb_remotedebug",text:"Console Remote Debug",value:new LzAlwaysExpr("value","expression","$m59","$m5a",null),visible:new LzAlwaysExpr("visible","boolean","$m57","$m58",null),x:new LzAlwaysExpr("x","numberExpression","$m55","$m56",null),y:10},"class":$lzc$class_m5x}],"class":LzView}],"attributes",new LzInheritedHash(LzView.attributes)]);canvas.LzInstantiateView({attrs:{$lzc$bind_name:function($0,$1){
+}},id:"cb_remotedebug",text:"Console Remote Debug",value:new LzAlwaysExpr("value","expression","$m5b","$m5c",null),visible:new LzAlwaysExpr("visible","boolean","$m59","$m5a",null),x:new LzAlwaysExpr("x","numberExpression","$m57","$m58",null),y:10},"class":$lzc$class_m60}],"class":LzView}],"attributes",new LzInheritedHash(LzView.attributes)]);canvas.LzInstantiateView({attrs:{$lzc$bind_name:function($0,$1){
 switch(arguments.length){
 case 1:
 $1=true;
@@ -3314,4 +3350,4 @@ $1=true;
 main=$0
 }else if(main===$0){
 main=null
-}},controls:void 0,logo:void 0,name:"main",width:new LzAlwaysExpr("width","size","$m3u","$m3v",null)},"class":$lzc$class_m5b},98);lz["basefocusview"]=$lzc$class_basefocusview;lz["focusoverlay"]=$lzc$class_focusoverlay;lz["_componentmanager"]=$lzc$class__componentmanager;lz["style"]=$lzc$class_style;lz["statictext"]=$lzc$class_statictext;lz["basecomponent"]=$lzc$class_basecomponent;lz["basebutton"]=$lzc$class_basebutton;lz["swatchview"]=$lzc$class_swatchview;lz["button"]=$lzc$class_button;lz["basevaluecomponent"]=$lzc$class_basevaluecomponent;lz["baseformitem"]=$lzc$class_baseformitem;lz["multistatebutton"]=$lzc$class_multistatebutton;lz["checkbox"]=$lzc$class_checkbox;lz["selectionmanager"]=$lzc$class_selectionmanager;lz["listselector"]=$lzc$class_listselector;lz["dataselectionmanager"]=$lzc$class_dataselectionmanager;lz["datalistselector"]=$lzc$class_datalistselector;lz["baselist"]=$lzc$class_baselist;lz["baselistitem"]=$lzc$class_baselistitem;lz["layout"]=LzLayout;lz["simplelayout"]=$lzc$class_simplelayout;lz["radiogroup"]=$lzc$class_radiogroup;lz["radiobutton"]=$lzc$class_radiobutton;canvas.initDone();
+}},controls:void 0,logo:void 0,name:"main",width:new LzAlwaysExpr("width","size","$m3u","$m3v",null)},"class":$lzc$class_m5d},101);lz["basefocusview"]=$lzc$class_basefocusview;lz["focusoverlay"]=$lzc$class_focusoverlay;lz["_componentmanager"]=$lzc$class__componentmanager;lz["style"]=$lzc$class_style;lz["statictext"]=$lzc$class_statictext;lz["basecomponent"]=$lzc$class_basecomponent;lz["basebutton"]=$lzc$class_basebutton;lz["swatchview"]=$lzc$class_swatchview;lz["button"]=$lzc$class_button;lz["basevaluecomponent"]=$lzc$class_basevaluecomponent;lz["baseformitem"]=$lzc$class_baseformitem;lz["multistatebutton"]=$lzc$class_multistatebutton;lz["checkbox"]=$lzc$class_checkbox;lz["selectionmanager"]=$lzc$class_selectionmanager;lz["listselector"]=$lzc$class_listselector;lz["dataselectionmanager"]=$lzc$class_dataselectionmanager;lz["datalistselector"]=$lzc$class_datalistselector;lz["baselist"]=$lzc$class_baselist;lz["baselistitem"]=$lzc$class_baselistitem;lz["layout"]=LzLayout;lz["simplelayout"]=$lzc$class_simplelayout;lz["radiogroup"]=$lzc$class_radiogroup;lz["radiobutton"]=$lzc$class_radiobutton;canvas.initDone();

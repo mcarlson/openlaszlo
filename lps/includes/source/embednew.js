@@ -530,7 +530,7 @@ lz.embed = {
                 if (token == ",") {
                     // we only saw key name, but no value, so give it an implicit true value.
                     if (lastkey != null && nvals == 0) {
-                        options[lastkey] = [true];
+                        options[lastkey] = ["true"];
                     }
                 } else if (token == "(") {
                     mystate = ARGS;
@@ -555,7 +555,7 @@ lz.embed = {
             }
         }
         if (lastkey != null && nvals == 0) {
-            options[lastkey] =  [true];
+            options[lastkey] =  ['true'];
         }
         return options;
     }
@@ -625,7 +625,13 @@ lz.embed = {
                 var val = opts[lzopt];
                 // The lzoptions parser returns a list of vals for each key.
                 // For back compatibility, if there is a single value, use it
-                options[lzopt] = val.length == 1 ? val[0] : val;
+                // options[lzopt] = val.length == 1 ? val[0] : val;
+                var sval = val.length == 1 ? val[0] : val;
+                // Also for back compatibility, coerce these known args to booleans
+                if (lzopt === 'usemastersprite' || lzopt === 'skipchromeinstall' || lzopt === 'cancelkeyboardcontrol' || lzopt === 'cancelmousewheel' || lzopt === 'history' || lzopt === 'accessible') {
+                    sval = (sval == 'true');
+                }
+                options[lzopt] = sval;
             }
         }
 

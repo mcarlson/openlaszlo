@@ -43,6 +43,7 @@
   <attribute name="app_lzt" />
   <attribute name="app_uid" />
   <attribute name="app_lzoptions" />
+  <attribute name="app_isproxied" />
   <attribute name="app_usemastersprite" />
 
   <handler name="oninit">
@@ -63,6 +64,7 @@
        setAttribute('app_backtrace', appdata.getPointer().xpathQuery("/request/param[@name = 'backtrace']/@value"));
        setAttribute('app_console_debug', 
                     appdata.getPointer().xpathQuery("/request/@console-remote-debug") == 'true');
+       setAttribute('app_isproxied', lz.Browser.getInitArg('appproxied'));
        setAttribute('app_floating_window',
                     appdata.getPointer().xpathQuery("/request/@console-floating-window") == 'true');
        setAttribute('app_fullpath', appdata.getPointer().xpathQuery("/request/@fullpath"));
@@ -79,10 +81,9 @@
 
        if ($dhtml) {
            setAttribute('lzr', 'dhtml');
-
-           // process query string
-           var qitems = LzParam.parseQueryString(app_query);
-           setAttribute('app_usemastersprite', qitems.lzusemastersprite);
+           setAttribute('app_usemastersprite',
+                        appdata.getPointer().xpathQuery("/request/param[@name = 'usemastersprite']/@value") || 
+                        appdata.getPointer().xpathQuery("/request/param[@name = 'lzusemastersprite']/@value"));
            canvas.width = document.body.clientWidth;
        }
        ]]>
@@ -90,7 +91,13 @@
 
   <!-- create a table listing which runtimes are enabled -->
   <method name="setupRuntimes">
-     var runtimes = lz.Browser.getInitArg('runtimes').split(",");
+     // default set of runtimes
+     var runtimes = ['dhtml', 'swf8', 'swf9', 'swf10'];
+     // server can tell us if only some are available
+     var runtimes_arg = lz.Browser.getInitArg('runtimes');
+     if (runtimes_arg != null) {
+        runtimes = runtimes_arg.split(",");
+    }
      for (var r in runtimes) {
          if (runtimes[r] == 'dhtml')  canvas.setAttribute('runtime_dhtml_enabled', true);
          if (runtimes[r] == 'swf8')   canvas.setAttribute('runtime_swf8_enabled', true);
@@ -218,13 +225,15 @@
                             x="16" y="8">Debug</checkbox>
                     <checkbox id="cb_backtrace" 
                             value="${canvas.app_backtrace == 'true'}" x="82" y="8">Backtrace</checkbox>
+                    <checkbox id="cb_proxied" 
+                            value="${canvas.app_isproxied == 'true'}" x="168" y="8">Proxied</checkbox>
                     <switch>
                         <when runtime="dhtml">
                             <checkbox id="cb_usemastersprite" 
-                                    value="${canvas.app_usemastersprite == 'true'}" x="168" y="8">Use master sprite</checkbox>
+                                    value="${canvas.app_usemastersprite == 'true'}" x="240" y="8">Use master sprite</checkbox>
                         </when>
                     </switch>
-                    <button onclick="canvas.gotoApp()" x="${canvas.app_runtime == 'dhtml' ? 300 : 168}" y="3">Compile</button>
+                    <button onclick="canvas.gotoApp()" x="${canvas.app_runtime == 'dhtml' ? 382 : 248}" y="3">Compile</button>
                     <handler name="onvalue" reference="cb_backtrace">
                     if (cb_backtrace.value) {
                         cb_debug.setAttribute('value', true);
@@ -356,7 +365,8 @@
     var qdebug = cb_debug.value;
     var qbacktrace = cb_backtrace.value;
     var consoledebug = cb_remotedebug.value;
-    
+    var qproxied = cb_proxied.value;
+
     // parse original app query string, override with user settings
     // for debug, runtime, etc
     var params = new LzParam();
@@ -382,12 +392,13 @@
     // override debug,runtime args
     lzoptions['debug'] = qdebug;
     lzoptions['backtrace'] = qbacktrace;
+    lzoptions['proxied'] = qproxied;
     lzoptions['runtime'] = qruntime;
     if ($dhtml) {
-        lzoptions['lzusemastersprite'] = cb_usemastersprite.value;
+        lzoptions['usemastersprite'] = cb_usemastersprite.value;
     }
     if (qruntime != 'dhtml') {
-        delete lzoptions['lzusemastersprite'];
+        delete lzoptions['usemastersprite'];
     }
 
     /*

@@ -155,11 +155,20 @@ public final class LzBrowserService {
     }
 
 
-    static var sOptionNameMap = {    runtime:    "lzr",
-                              backtrace:  "lzbacktrace",
-                              proxied:    "lzproxied"
+    /**
+     * Updates accessibility data
+     * @access private
+     */
+    static var sOptionNameMap = {    runtime:    "lzr"
+                                     ,backtrace:  "lzbacktrace"
+                                     ,proxied:    "lzproxied"
+                                     ,usemastersprite: "lzusemastersprite"
     }
 
+    /**
+     * Only the dev console uses this
+     * @access private
+     */
     function oldOptionName (key:String) {
         return LzBrowserService.sOptionNameMap[key];
     }
