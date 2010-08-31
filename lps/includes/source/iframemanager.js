@@ -437,7 +437,7 @@ lz.embed.iframemanager = {
             } else {
                 callobj.onSuccess = function(returnObj) {
                     //console.log('callRPC onSuccess', callback, returnObj.returnValue);
-                    callback.execute(returnObj.returnValue);
+                    callback(returnObj.returnValue);
                 }
             }
         }
