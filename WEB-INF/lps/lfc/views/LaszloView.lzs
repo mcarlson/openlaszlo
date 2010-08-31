@@ -2660,7 +2660,7 @@ function getAttributeRelative(prop, refView ) {
 
     if (prop == "x" || prop =="y" ){
         tLink.update ( prop );
-        return tLink.offset[prop] + tLink.scale[prop] * this[ prop ];
+        return (tLink.offset[prop] + this[ prop ]) * tLink.scale[prop];
     }else if ( prop == "width" || prop == "height" ){
         var axis = prop == "width" ? "x" : "y"
         tLink.update ( axis )
