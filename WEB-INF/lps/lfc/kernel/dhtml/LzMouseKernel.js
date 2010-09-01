@@ -80,9 +80,9 @@ var LzMouseKernel = {
             if (LzSprite.prototype.quirks.has_dom2_mouseevents) {
                 if (eventname == 'oncontextmenu') {
                     var cmenu = LzMouseKernel.__findContextMenu(e);
-                    if (cmenu != null) {
-                        // If there is an LZX menu defined,
-                        // suppress display of browser's builtin menu
+                    if (cmenu != null && cmenu.kernel.showbuiltins != true) {
+                        // If there is an LZX menu defined and showbuiltins 
+                        // is true, suppress display of browser's builtin menu
                         return false;
                     } else {
                         // display system builtin menu
@@ -313,8 +313,11 @@ var LzMouseKernel = {
         // show the default menu if not found...
         var cmenu = LzMouseKernel.__findContextMenu(e);
         if (cmenu) {
-            cmenu.kernel.__show();
-            return cmenu.kernel.showbuiltins;
+            var showbuiltins = cmenu.kernel.showbuiltins;
+            if (! showbuiltins) {
+                cmenu.kernel.__show();
+            }
+            return showbuiltins;
         } 
     }
     ,__findContextMenu: function(e) {
