@@ -37,7 +37,7 @@
 
     <!-- Whether the compressed rtemanager is up to date -->
     <uptodate property="rtemanager.uptodate" >
-      <srcfiles dir="." includes="rtemanager.js,iframestub.js,rtemanager-library.lzs,pmrpc.js" />
+      <srcfiles dir="." includes="rtemanager.js,iframestub.js,rtemanager-library.lzs,pmrpc.js,json2.js" />
       <compositemapper>
         <mergemapper to="../rtemanager.js" />
       </compositemapper>
@@ -61,7 +61,7 @@
 
     <!-- Whether the compressed iframestub is up to date -->
     <uptodate property="iframestub.uptodate" >
-      <srcfiles dir="." includes="iframestub.js" />
+      <srcfiles dir="." includes="iframestub.js,pmrpc.js,json2.js" />
       <compositemapper>
         <mergemapper to="../iframestub.js" />
       </compositemapper>

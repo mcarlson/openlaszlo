@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 
+#include "json2.js"
 pmrpc = self.pmrpc =  function() {
   // check if JSON library is available
   if (typeof JSON === "undefined" || typeof JSON.stringify === "undefined" || 
