@@ -15,10 +15,11 @@ The rte component uses the dijit.Editor from the dojo toolkit.</p>
         
         <p>For best results in Flash (like the html component), set the wmode attribute to 'transparent' when embedding the application.  See examples/extensions/html-swf.jsp for an example.  See examples/extensions/rte.lzx for an example of embedding <tagname>rte</tagname> in a window.</p>
         
-        <example><programlisting class="code"> &lt;canvas&gt;
+        <example><programlisting class="code"> &lt;canvas height="400"&gt;
     &lt;include href="extensions/rte.lzx"/&gt;
 
-    &lt;rte width="600" height="400"&gt;Initial contents that you can edit.&lt;/rte&gt; &lt;/canvas&gt;
+    &lt;rte width="600" height="400"&gt;Initial contents that you can edit.&lt;/rte&gt;
+    &lt;/canvas&gt;
         </programlisting></example>
                 
         <p><classname>rte</classname> extends <sgmltag class="element"
@@ -104,7 +105,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         this.text = t;
         // This can fire before the object is ready
         if (this.editorready) {
-          this.callRPC('lz.rte.manager.setText', null, t);
+          this.callJavascript('lz.rte.manager.setText', null, t);
         }
     </setter>
 
@@ -119,17 +120,13 @@ role="html">&lt;html&gt;</sgmltag>.</p>
     </method>
 
     <!--- 
-        Updates the text attribute for this component
-        @return String: the string displayed.
-        @access private
-     -->
-    <method name="__updateText" args="txt">
-        if (txt != this.text) {
-            this.text = txt;
-            if (this.ontext.ready) this.ontext.sendEvent(txt);
-        }
+        Returns the html string displayed in this editor. getText() gets the value from the editor and can contain information that is not yet reflected in the text attribute.
+        @param LzDelegate delegate: An LzDelegate which will be called with the editor contents.
+    -->
+    <method name="getText" args="delegate">
+        this.callJavascript('lz.rte.manager.getText', delegate);
     </method>
-   
+
     <!--- If true, the rte editor is ready to receive commands
           @type Boolean
           @access public
@@ -142,7 +139,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         @param String html: html to insert at the insertion point.
     -->
     <method name="insertHtml" args="html">
-        this.callRPC('lz.rte.manager.insertHtml', null, html);
+        this.callJavascript('lz.rte.manager.insertHtml', null, html);
     </method>
 
     <!---
@@ -153,7 +150,7 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         @param String arg: Argument required for certain commands.
     -->
     <method name="execCommand" args="cmd, arg=''">
-        this.callRPC('lz.rte.manager.execCommand', null, cmd, arg);
+        this.callJavascript('lz.rte.manager.execCommand', null, cmd, arg);
     </method>
 
 
@@ -202,13 +199,9 @@ role="html">&lt;html&gt;</sgmltag>.</p>
                 attributes['title'] = value;
         }
 
-        // must use a callback to store the ID
-        var scope = this;
-        var callback = function (id) {
-            Debug.warn('__storeButtonMapping', id, scope.__buttondelegates);
-            scope.button_mapping[id] = delegate;
-        }
-        this.callRPC('lz.rte.manager.addButton', callback, attributes);
+        var id = this.callJavascript ('lz.rte.manager.addButton', null, attributes);
+        this.button_mapping[id] = delegate;
+        return id;
         ]]>
     </method>
 
@@ -216,29 +209,28 @@ role="html">&lt;html&gt;</sgmltag>.</p>
     <handler name="onbuttonclick" args="id">
         // One of the user buttons was clicked
         var handler = this.button_mapping[id];
-        //console.log('onbuttonclick', id, handler, this);
         if (handler)
-            handler.execute(id);
+            handler.execute (id);
     </handler>
 
     <!--- @access private -->
     <handler name="onload"><![CDATA[
         // Change where dojo is found (if necessary)
         if (this.dojo_root.length > 0) {
-            this.callRPC('lz.rte.manager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
+            this.callJavascript('lz.rte.manager.setDojoPath', null, this.dojo_root, this.dojo_js, this.dojo_css);
         }
 
         // Set the theme
         if (this.dojo_theme.length > 0)
-            this.callRPC('lz.rte.manager.setDojoTheme', null, this.dojo_theme);
+            this.callJavascript('lz.rte.manager.setDojoTheme', null, this.dojo_theme);
 
         // Set the plugin list
         if (this.toolbar_order.length > 0)
-            this.callRPC('lz.rte.manager.setPlugins', null, this.toolbar_order);
+            this.callJavascript('lz.rte.manager.setPlugins', null, this.toolbar_order);
 
         // Create and start the editor
-        this.callRPC('lz.rte.manager.create', null, 'rte', this.iframeid);
-        this.callRPC('lz.rte.manager.rte_start', null, this.text);
+        this.callJavascript('lz.rte.manager.create', null, 'rte', this.iframeid);
+        this.callJavascript('lz.rte.manager.rte_start', null, this.text);
     ]]></handler>
 
     <!--- @access private -->
@@ -264,7 +256,11 @@ role="html">&lt;html&gt;</sgmltag>.</p>
     </handler>
 
     <!--- @access private -->
-    <handler name="on_text" method="__updateText"/>
+    <handler name="on_text" args="txt">
+        this.text = txt;
+        if (this.ontext.ready) this.ontext.sendEvent(txt);
+    </handler>
+
 
     <!--- @access private -->
     <method name="loadsrc" args="root">
@@ -288,19 +284,21 @@ role="html">&lt;html&gt;</sgmltag>.</p>
         
 
     <!--- @keywords private -->
-    <method name="destroy" ><![CDATA[
-        // ensure this.text is updated at least once before destroy
-        if (! this.__destroydel) this.__destroydel = new LzDelegate(this, '__finishdestroy');
-        this.callRPC("lz.rte.manager.getText", this.__destroydel);
-    ]]></method> 
-    <!--- @keywords private -->
-    <method name="__finishdestroy" args="text">
-        this.__updateText(text);
+    <method name="destroy_callback" args="txt"><![CDATA[
+        if (txt != this.text)
+            this.ontext.sendEvent(txt);
+
         if (this['iframeid']) {
-            this.callRPC('lz.rte.manager.__destroy', null, this.iframeid);
+            this.callJavascript('lz.rte.manager.__destroy', null, this.iframeid);
         }
+
         super.destroy();
-    </method>
+    ]]></method> 
+
+    <!--- @keywords private -->
+    <method name="destroy" ><![CDATA[
+        this.getText(new LzDelegate(this, 'destroy_callback'));
+    ]]></method> 
 
 </class>
 </library>

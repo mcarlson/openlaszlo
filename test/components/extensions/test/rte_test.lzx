@@ -26,8 +26,14 @@
       </handler>
 
       <!-- Turn the edit text bold -->
+      <method name="rte_bold_callback" args="txt"> <![CDATA[
+          this.editor.setAttribute('text', '<b>' + txt + '</b>');
+        ]]>
+      </method>
+
       <method name="rte_bold" args="ignore"> <![CDATA[
-        this.editor.setAttribute ('text', '<b>' + this.editor.getText() + '</b>');
+          var editor = this.editor;
+          this.editor.getText(new LzDelegate(this, 'rte_bold_callback'));
         ]]>
       </method>
 
@@ -119,7 +125,14 @@
         <simplelayout axis="y" spacing="2"/>
         <view>
           <simplelayout axis="x" spacing="0"/>
-          <button onclick="parent.parent.currenttext.setAttribute('text', canvas.topview.editor.text)">Get Text</button>
+          <button>Get Text
+            <method name="text_callback" args="txt">
+              parent.parent.currenttext.setAttribute('text', txt);
+            </method>
+            <handler name="onclick">
+              canvas.topview.editor.getText(new LzDelegate(this, 'text_callback'));
+            </handler>
+          </button>
           <button onclick="canvas.topview.editor.setAttribute('text', parent.parent.currenttext.text)">Set Text</button>
         </view>
         <edittext name="currenttext" multiline="true" width="300" height="100"/>
