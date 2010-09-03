@@ -60,7 +60,7 @@ override function __LZsendUpdate (upd:Boolean = false, upp:Boolean = false) :Boo
         // in a String value, hence the above.  This is a little
         // sketchy, because most presentation types expect strings
         // here...
-        var newvalue = node.acceptTypeValue(this.type, data);
+        var newvalue = lz.Type.acceptTypeValue(this.type, data, node, attr);
         if (pchg ||
                 // Avoid updating if the value is not changing, to
                 // minimize event cascades

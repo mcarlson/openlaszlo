@@ -7,6 +7,142 @@
  */
 
 /**
+ * <p><code>lz.Type</code> is the single instance of the class
+ * <code>lz.TypeService</code> which implements the runtime
+ * presentation type system.</p>
+ *
+ * @shortdesc Type service.
+ */
+public final class $lz$class_TypeService {
+  /** @access private */
+  const PresentationTypes:Object;
+
+  /**
+   * The type service.  Also available as the global
+   * <code>lz.Type</code>.
+   *
+   * @type $lz$class_TypeService
+   * @lzxtype lz.TypeService
+   * @keywords readonly
+   * @devnote this should be a public getter to enforce readonly
+   */
+  public static const Type:$lz$class_TypeService;
+
+  /** @access private
+   * @devnote AS3 does not allow private constructors, so we need the
+   * error
+   */
+  function $lz$class_TypeService () {
+    super();
+    //    if ($lz$class_TypeService.Type) {
+    //      throw new Error("There can be only one instance of lz.TypeService");
+    //    }
+    // Create on instance, not prototype
+    this.PresentationTypes = {};
+  }
+
+  $lz$class_TypeService.Type = new $lz$class_TypeService();
+
+  /**
+   * Converts a string representation of a value to a Javascript
+   * representation using the presentation type's accept method
+   *
+   * @param type:String the type name
+   * @param value:String the string representation of the desired
+   * value
+   * @param node:lz.node the node context
+   * @param attribute:String the attribute context
+   * @return Any: the string parsed as the type
+   *
+   * @devnote NOTE [2010-09-02 ptw] The context is important for types
+   * that allow relative values, e.g., percentages or ems, or css
+   * inherit values.
+   *
+   * @devnote NOTE [2010-09-02 ptw] `value` is intentionally un-typed,
+   * because we don't want any automagic coercion (for backwards
+   * compatibility).
+   */
+  function acceptTypeValue(type:String, value, node:LzNode, attribute:String):* {
+    var presentationtype = type ? this.PresentationTypes[type] : null;
+    // don't coerce null (or undefined) values
+    if (value != null) {
+      if (presentationtype != null) {
+        return presentationtype.accept(value, node, attribute);
+      } else if ($debug) {
+        Debug.warn("No <type> named %w", type);
+      }
+    }
+    return value;
+  }
+
+  /**
+   * Converts a Javascript representation of a value to a string
+   * representation using the presentation type's present method
+   *
+   * @param type:String the attribute type
+   * @param value:* the Javascript representation of the value
+   * @param node:lz.node the node context
+   * @param attribute:String the attribute context
+   * @return value:String
+   *
+   * @devnote NOTE [2010-09-02 ptw] `value` is intentionally un-typed,
+   * because we don't want any automagic coercion (for backwards
+   * compatibility).
+   */
+  function presentTypeValue(type:String, value, node:LzNode, attribute:String):String {
+    var presentationtype = this.PresentationTypes[type];
+    if (presentationtype != null) {
+      return presentationtype.present(value, node, attribute);
+    } else if ($debug) {
+      Debug.warn("No <type> named %w", type);
+    }
+    return value;
+  }
+
+  /**
+   * Add a new presentation type
+   *
+   * @access private
+   */
+  function addType(type:String, presentationType:$lz$class_PresentationType):void {
+    if ($debug) {
+      if (this.PresentationTypes[type]) {
+        Debug.error("Redefining %s from %w to %w", type, this.PresentationTypes[type], presentationType);
+      }
+    }
+    this.PresentationTypes[type] = presentationType;
+  }
+
+  /**
+   * Add a presentation type alias
+   *
+   * @access private
+   */
+  function addTypeAlias(alias:String, type:String):void {
+    var aliasType = this.PresentationTypes[type];
+    if (! aliasType) {
+      if ($debug) {
+        Debug.error("No <type> named %w", type);
+      }
+      return;
+    }
+    if ($debug) {
+      if (this.PresentationTypes[alias]) {
+        Debug.error("Redefining %s from %w to %w", alias, this.PresentationTypes[alias], this.PresentationTypes[alias]);
+      }
+    }
+    this.PresentationTypes[alias] = aliasType;
+  }
+}
+lz.TypeService = $lz$class_TypeService;  // publish
+
+/**
+ * lz.Type is a shortcut for <link linkend="$lz$class_TypeService.Type">lz.TypeService.Type</link>
+ * @type $lz$class_TypeService
+ */
+lz.Type = lz.TypeService.Type;
+
+/**
  * A presentation type is a specification of how to map a Javascript type to
  * and from a String representation.
  *
@@ -15,18 +151,18 @@
  *
  * @access private
  */
-class PresentationTypeClass {
+class $lz$class_PresentationType {
   static const nullValue = null;
   var _dbg_typename = 'type';
   var _dbg_name = function () {
     return this.constructor.lzxtype;
   }
-  function accept(value) {
+  function accept(value, node:LzNode, attribute:String) {
     if ($debug) {
       Debug.error("%w.accept must be defined", this);
     }
   }
-  function present(value) {
+  function present(value, node:LzNode, attribute:String) {
     return String(value);
   }
 };
@@ -36,15 +172,18 @@ class PresentationTypeClass {
  *
  * @access private
  */
-class StringPresentationTypeClass extends PresentationTypeClass {
+class $lz$class_StringPresentationType extends $lz$class_PresentationType {
   static const lzxtype = 'string';
   static const nullValue = "";
-  override function accept(value) {
+  override function accept(value, node:LzNode, attribute:String) {
     return String(value);
   }
 }
-/** @access private */
-var StringPresentationType = new StringPresentationTypeClass();
+
+lz.Type.addType('string', new $lz$class_StringPresentationType());
+
+lz.Type.addTypeAlias('html', 'string');
+
 
 /**
  * text presentation type
@@ -57,7 +196,7 @@ var StringPresentationType = new StringPresentationTypeClass();
  *
  * @access private
  */
-class TextPresentationTypeClass extends PresentationTypeClass {
+class $lz$class_TextPresentationType extends $lz$class_PresentationType {
   static const lzxtype = 'text';
   static const nullValue = "";
   /** The five XML entities
@@ -65,8 +204,8 @@ class TextPresentationTypeClass extends PresentationTypeClass {
    * @access private */
   static const xmlEscapes:Object = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;'};
 
-  override function accept(value) {
-    const escChars:Object = TextPresentationTypeClass.xmlEscapes;
+  override function accept(value, node:LzNode, attribute:String) {
+    const escChars:Object = $lz$class_TextPresentationType.xmlEscapes;
     var result:String = "";
     for (var i:int = 0, l:int = value.length; i < l; i++) {
       var c:String = value.charAt(i);
@@ -75,7 +214,7 @@ class TextPresentationTypeClass extends PresentationTypeClass {
     return result;
   }
 
-  override function present(value) {
+  override function present(value, node:LzNode, attribute:String) {
     var result:String = "";
     for (var i:int = 0, l:int = value.length; i < l; i++) {
       var c:String = value.charAt(i);
@@ -100,18 +239,21 @@ class TextPresentationTypeClass extends PresentationTypeClass {
     return result;
   }
 }
-/** @access private */
-var TextPresentationType = new TextPresentationTypeClass();
+// NOTE: [2010-06-16 ptw] (LPP-9027) For the time being, 'html'
+// and 'text' are treated as synonyms, and the runtime 'text'
+// presentation type is _not_ used.
+lz.Type.addTypeAlias('text', 'string');
+
 
 /**
  * Boolean presentation type
  *
  * @access private
  */
-class BooleanPresentationTypeClass extends PresentationTypeClass {
+class $lz$class_BooleanPresentationType extends $lz$class_PresentationType {
   static const nullValue = false;
   static const lzxtype = 'boolean';
-  override function accept(value) {
+  override function accept(value, node:LzNode, attribute:String) {
     // NOTE: [2009-01-13 ptw] Boolean("false") would not do what we
     // expect (a non-empty string is considered true).
     switch (value.toLowerCase()) {
@@ -122,18 +264,20 @@ class BooleanPresentationTypeClass extends PresentationTypeClass {
     }
   }
 }
-/** @access private */
-var BooleanPresentationType = new BooleanPresentationTypeClass();
+
+lz.Type.addType('boolean', new $lz$class_BooleanPresentationType());
+lz.Type.addTypeAlias('inheritableBoolean', 'boolean');
+
 
 /**
  * Number presentation type
  *
  * @access private
  */
-class NumberPresentationTypeClass extends PresentationTypeClass {
+class $lz$class_NumberPresentationType extends $lz$class_PresentationType {
   static const nullValue = 0;
   static const lzxtype='number';
-  override function accept(value) {
+  override function accept(value, node:LzNode, attribute:String) {
     // NOTE [2009-03-02 ptw] Only required for swf8 whose Number
     // does not understand Infinity
     if ($swf8) {
@@ -145,25 +289,26 @@ class NumberPresentationTypeClass extends PresentationTypeClass {
     return Number(value);
   }
 }
-/** @access private */
-var NumberPresentationType = new NumberPresentationTypeClass();
+
+lz.Type.addType('number', new $lz$class_NumberPresentationType());
+lz.Type.addTypeAlias('numberExpression', 'number');
 
 /**
  * Color presentation type
  *
  * @access private
  */
-class ColorPresentationTypeClass extends PresentationTypeClass {
+class $lz$class_ColorPresentationType extends $lz$class_PresentationType {
   static const nullValue = 0;
   static const lzxtype = 'color';
-  override function accept(value) {
+  override function accept(value, node:LzNode, attribute:String) {
     // handle 'transparent' semaphore from compiler (for canvas)
     if (value == -1) {
         return null;
     }
     return LzColorUtils.hextoint(value);
   }
-  override function present(value) {
+  override function present(value, node:LzNode, attribute:String) {
     // look up color names
     var ctab = lz.colors;
     for (var name in ctab) {
@@ -174,8 +319,9 @@ class ColorPresentationTypeClass extends PresentationTypeClass {
     return LzColorUtils.inttohex(value);
   }
 }
-/** @access private */
-var ColorPresentationType = new ColorPresentationTypeClass();
+
+lz.Type.addType('color', new $lz$class_ColorPresentationType());
+
 
 /**
  * Expression presentation type
@@ -189,10 +335,10 @@ var ColorPresentationType = new ColorPresentationTypeClass();
  *
  * @access private
  */
-class ExpressionPresentationTypeClass extends PresentationTypeClass {
+class $lz$class_ExpressionPresentationType extends $lz$class_PresentationType {
   static const nullValue = null;
   static const lzxtype = 'expression';
-  override function accept(value) {
+  override function accept(value, node:LzNode, attribute:String) {
     switch (value) {
       case "undefined": return void 0;
       case "null": return null;
@@ -219,23 +365,77 @@ class ExpressionPresentationTypeClass extends PresentationTypeClass {
   // be better because it would preserve the type (distinguish between
   // literals and strings, e.g., `null` vs. `"null"`)
 }
-/** @access private */
-var ExpressionPresentationType = new ExpressionPresentationTypeClass();
+
+lz.Type.addType('expression', new $lz$class_ExpressionPresentationType());
+
 
 /**
  * Size presentation type
  *
  * @access private
  */
-class SizePresentationTypeClass extends PresentationTypeClass {
+class $lz$class_SizePresentationType extends $lz$class_PresentationType {
   static const nullValue = null;
   static const lzxtype = 'size';
-  override function accept(value) {
+  override function accept(value, node:LzNode, attribute:String) {
     // sizeExpression can be null
     if (value == "null") { return null; }
     // TODO: handle percentage values?
     return Number(value);
   }
 }
-/** @access private */
-var SizePresentationType = new SizePresentationTypeClass();
+
+lz.Type.addType('size', new $lz$class_SizePresentationType());
+
+
+/**
+ * CSS declaration presentation type
+ *
+ * A CSS declaration is a string in the format "property: value,
+ * property: value, ..."  It is represented internally by an Object
+ * (acting as a Map).
+ *
+ * @access private
+ *
+ * @devnote: NOTE [2010-08-30 ptw] We intentionally leave the values
+ * as strings because we expect them to be accept/present-ed by the
+ * corresponding attribute's type.
+ */
+class $lz$class_CSSDeclarationPresentationType extends $lz$class_PresentationType {
+  static const nullValue = {};
+  static const lzxtype = 'css';
+  const PropRE = new RegExp('^\\s*(\\S*)\\s*:\\s*(\\S*)\\s*$');
+  const HyphenRE = new RegExp('-(\\w)', 'g');
+  const CapitalRE = new RegExp('[:upper:]', 'g');
+  override function accept(value, node:LzNode, attribute:String) {
+    var props = value.split(',');
+    var result = {};
+    for (var i = 0, len = props.length; i < len; i++) {
+      var prop = props[i];
+      var parts = prop.match(this.PropRE);
+      if (parts.length = 3) {
+        var attr = parts[1].replace(this.HyphenRE, function (m, p) { return p[1].toUpperCase(); });
+        result[attr] = parts[2];
+      }
+    }
+    return result;
+  }
+  override function present(value, node:LzNode, attribute:String) {
+    var props = [];
+    for (var attr in value) {
+      var prop = attr.replace(this.CapitalRE, function (m, p) { return '-' + p[1].toLowerCase(); });
+      props.push(prop + ': ' + value[attr]);
+    }
+    return props.join(', ');
+  }
+}
+
+lz.Type.addType('css', new $lz$class_CSSDeclarationPresentationType());
+
+
+// TODO?: add token: TokenPresentationType,
+// script: ScriptPresentationType
+
+
+
+

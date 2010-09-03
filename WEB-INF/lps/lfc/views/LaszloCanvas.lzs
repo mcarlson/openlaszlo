@@ -109,22 +109,22 @@ dynamic class LzCanvas extends LzView {
     var embedfonts;
     /** A String specifying the LPS build revision and the build directory: e.g. "4075 /Users/maxcarlson/openlaszlo/legals"
       * @type String
-      * @keywords final
+      * @keywords readonly
       */
     public var lpsbuild;
     /** A String specifying the date and time of the LPS build. "2007-03-05T15:33:42-0800"
       * @type String
-      * @keywords final
+      * @keywords readonly
       */
     public var lpsbuilddate;
     /** A String specifying the date and time of the application build. "2008-09-12T14:15:12Z"
       * @type String
-      * @keywords final
+      * @keywords readonly
       */
     public var appbuilddate;
     /** A String describing the target runtime. "dhtml" | "swf8" | "swf9" | "swf10" are currently supported. Others are in development.
       * @type String
-      * @keywords final
+      * @keywords readonly
       */
     public var runtime;
     /** Whether fullscreen display state is supported for the SWFx runtimes.
@@ -438,7 +438,7 @@ var onafterinit = LzDeclaredEvent;
 /** version number of the LPS that generated this application (for .lzo files,
   * this is the version number of the server that generated the optimized file, not the one 
   * that served it).
-  * @type Number
+  * @type String
   * @keywords final
   */
 var lpsversion;
@@ -455,10 +455,25 @@ var lpsrelease;
   * The lpsversion of this lzx application.
   * @type Number
   * @lzxtype string
-  * @lzxdefault "1.1"
-  * @modifiers deprecated final
+  * @keywords readonly
+  * @deprecated Use lpsversion
   */
 var version = null;
+
+  /**
+   * A CSS declaration of <replaceable>property:</replaceable>
+   * <replaceable>value</replaceable> pairs used to advise the
+   * underlying runtime of desired <varname>recursion</varname> and
+   * <varname>timeout</varname> limits.  Not all runtimes respect this
+   * advice.  The default value is runtime dependent, but typically
+   * recursion is at least 100 and timeout at least 10 (seconds).
+   * Example: <code>scriptlimits="recursion: 256, timeout: 15"</code>
+   *
+   * @type Object
+   * @lzxtype css
+   * @keywords final
+   */
+  var scriptlimits;
 
 /** @access private */
 var __LZlfcversion = "0";

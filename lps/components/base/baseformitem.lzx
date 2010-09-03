@@ -141,7 +141,7 @@
             @access private -->
         <method name="acceptValue" args="data, type=null">
           if (type == null) type = this.type;
-          this.setValue(this.acceptTypeValue(type, data), true);
+          this.setValue(lz.Type.acceptTypeValue(type, data, this, 'value'), true);
         </method>
 
         <!--- Finds a baseform ancestor
@@ -203,7 +203,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2009 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -1947,7 +1947,8 @@ public dynamic class LzNode extends LzEventable {
 
 
   /**
-   * A list of CSS property names and values that modify the
+   * A CSS declaration of <replaceable>property:</replaceable>
+   * <replaceable>value</replaceable> pairs that modify the
    * interaction of this node with controllers such as replicators and
    * layouts.
    *
@@ -2434,44 +2435,16 @@ public dynamic class LzNode extends LzEventable {
     return path;
   };
 
-  /** @access private */
-  static var presentationtypes = {
-    string: StringPresentationType,
-    // NOTE: [2010-06-16 ptw] (LPP-9027) For the time being, 'html'
-    // and 'text' are treated as synonyms
-    html: StringPresentationType,
-    text: StringPresentationType,
-    number: NumberPresentationType,
-    numberExpression: NumberPresentationType,
-    color: ColorPresentationType,
-    'boolean': BooleanPresentationType,
-    inheritableBoolean: BooleanPresentationType,
-    expression: ExpressionPresentationType,
-    size: SizePresentationType
-  };
- // TODO?: add css: CSSPresentationType, token: TokenPresentationType, script: ScriptPresentationType
-
  /**
   * @access private
-  * @param type:String the attribute type
-  * @param value:String the string representation of the desired value
-  * @return Any: the string parsed as the type
-  *
-  * Converts a string to a value using the presentation type's accept
-  * method
+  * @deprecated Use lz.Type.acceptTypeValue
   */
-  function acceptTypeValue(type, value) {
-   var presentationtype = type ? LzNode.presentationtypes[type] : null;
-   // don't coerce null (or undefined) values
-   if (value != null) {
-     if (presentationtype != null) {
-       value = presentationtype.accept(value);
-     } else if ($debug) {
-       Debug.warn("No <type> named %w", type);
-     }
-   }
-   return value;
- }
+  function acceptTypeValue(type, value, node:LzNode, attribute:String) {
+    if ($debug) {
+      Debug.deprecated(this, arguments.callee, lz.Type.acceptTypeValue);
+    }
+   return lz.Type.acceptTypeValue(type, value, node, attribute);
+  }
 
   /**
    * @access private
@@ -2483,7 +2456,7 @@ public dynamic class LzNode extends LzEventable {
    * presentationtype's accept method
    */
  function acceptAttribute(name, type, value) {
-   value = this.acceptTypeValue(type, value);
+   value = lz.type.acceptTypeValue(type, value, this, name);
    if (this[name] !== value) {
     //Debug.write('acceptAttribute', name, type, value, typeof value, presentationtype);
     this.setAttribute(name, value);
@@ -2491,23 +2464,15 @@ public dynamic class LzNode extends LzEventable {
  }
  
  /**
-   * @access private
-   * @param type:String the attribute type
-   * @return value:String
-   * 
-   * Returns the value converted to a string by the
-   * presentationtype's present method
-   */
-  function presentTypeValue(type, value) {
-   var presentationtype = LzNode.presentationtypes[type];
-   if (presentationtype != null) {
-     value = presentationtype.present(value);
-   } else if ($debug) {
-     Debug.warn("No <type> named %w", type);
-   }
-   //Debug.write('presentAttribute', name, type, value, typeof value, presentationtype);
-   return value;
- }
+  * @access private
+  * @deprecated Use lz.Type.presentTypeValue
+  */
+  function presentTypeValue(type, value, node:LzNode, attribute:String) {
+    if ($debug) {
+      Debug.deprecated(this, arguments.callee, lz.Type.presentTypeValue);
+    }
+   return lz.Type.presentTypeValue(type, value, node, attribute);
+  }
 
  /**
    * @access private
@@ -2519,7 +2484,7 @@ public dynamic class LzNode extends LzEventable {
    * presentationtype's present method
    */
  function presentAttribute(name, type) {
-   return this.presentTypeValue(type, this[name]);
+   return lz.Type.presentTypeValue(type, this[name], this, name);
  }
 
  /** @access private */

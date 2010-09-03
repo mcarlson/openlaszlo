@@ -755,7 +755,7 @@ function $lzc$set_fgcolor(c) {
   // to work, although they should use
   // `this.acceptAttribute('fgcolor', 'color', value)`
   if ((c != null) && isNaN(c)) {
-      c = this.acceptTypeValue('color', c);
+    c = lz.Type.acceptTypeValue('color', c, this, 'fgcolor');
   }
   this.fgcolor = c;
   if (this.onfgcolor.ready) this.onfgcolor.sendEvent( c );
@@ -908,17 +908,22 @@ function $lzc$set_backgroundrepeat( backgroundrepeat ){
     if (this.onbackgroundrepeat.ready) this.onbackgroundrepeat.sendEvent(this.backgroundrepeat);
 }
 
-/** A CSS property when declared in the tag: value sequence of layout
-  * parameters, which are used to create a layout that is attached to
-  * this view. If there is a class property, it names the class of the
-  * layout; otherwise <tagname>simplelayout</tagname> is used.
-  * Examples: 
-  * <code>layout="axis: x"</code>, <code>layout="class: constantlayout"</code>,
-  * <code>layout="axis: y"</code>, <code>layout="axis: x; spacing: 5"</code>.
-  * @type Object
-  * @lzxtype css
-  * @access public
-  */
+/**
+ * A CSS declaration of <replaceable>property:</replaceable>
+ * <replaceable>value</replaceable> pairs of layout attributes, which
+ * are used to create a layout that is attached to this view. If there
+ * is a <varname>class</varname> property, it names the class of the
+ * layout to be created, otherwise <tagname>simplelayout</tagname> is
+ * used.
+ *
+ * Examples:
+ * <code>layout="axis: x"</code>, <code>layout="class: constantlayout"</code>,
+ * <code>layout="axis: y"</code>, <code>layout="axis: x; spacing: 5"</code>.
+ *
+ * @type Object
+ * @lzxtype css
+ * @access public
+ */
 var layout; 
 
 /** @access private */
@@ -1150,7 +1155,7 @@ function $lzc$set_bgcolor(bgc) {
   // to work, although they should use
   // `this.acceptAttribute('bgcolor', 'color', value)`
   if ((bgc != null) && isNaN(bgc)) {
-    bgc = this.acceptTypeValue('color', bgc);
+    bgc = lz.Type.acceptTypeValue('color', bgc, this, 'bgcolor');
   } else if (bgc < 0) {
     // handle -1 semaphore from compiler (transparent)
     bgc = null;
@@ -3690,7 +3695,7 @@ function $lzc$set_tintcolor(color) {
 
         if (color != null && color != '') {
             if (isNaN(color)) {
-                var color = this.acceptTypeValue('color', color);
+              var color = lz.Type.acceptTypeValue('color', color, this, 'tintcolor');
             }
             var rgba = LzColorUtils.inttorgba(color);
             obj.redOffset = rgba[0];
