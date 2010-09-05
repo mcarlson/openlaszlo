@@ -1,128 +1,189 @@
 /**
-  *
-  * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
-  *            Use is subject to license terms.
-  *
-  * @access public
-  * @affects lzview
-  * @topic LFC
-  * @subtopic Views
-  */
+ *
+ * @copyright Copyright 2001-2010 Laszlo Systems, Inc.  All Rights Reserved.
+ *            Use is subject to license terms.
+ *
+ * @access public
+ * @affects lzview
+ * @topic LFC
+ * @subtopic Views
+ */
 
 /**
-  * This is an object which is capable of transformations between two views. It
-  * is somewhat slow to create, but once created should perform the
-  * transformations quickly. Use of this object has been deprecated.
-  * In general, it is bad practice to use scaling views as non-leaf nodes in
-  * the view hierarchy. Constraints are generally sufficient for non-scaling
-  * relation
-  * 
-  * An <class>LzViewLinkage</class> has two useful properties: a <attribute>scale</attribute> and an
-  * <attribute>offset</attribute>.
-  *
-  * In addition to any fields documented in the section below, these fields are also available:
-  *
-  * <attribute>scale</attribute>: An <class>LzPoint</class> representing the scale
-  * transformation of this linkage. 1 is no transformation.
-  *
-  * <attribute>offset</attribute>: An <class>LzPoint</class> representing the offset
-  * to be added by this linkage.
-  *
-  * Each of these objects have two slots (x and y) which contain the relevant
-  * scales and offsets between the two views in the linkage.
-  * 
-  * @access private
-  */
+ * Compute the transform between the point 0,0 in the fromView to the
+ * point 0,0 in the toView.
+ *
+ * Creating a linkage finds the path from each of the views to a
+ * shared reference frame.  This path is assumed to be static.  The
+ * offsets and scales of the views in the path are assumed to be
+ * dynamic, hence before the transform can be used, it must be updated
+ * for the applicable axis using the <code>update</code> method.
+ *
+ * @devnote NOTE: [2010-09-04 ptw] Only translation and scale are
+ * computed at this time, not rotation.
+ *
+ * @devnote NOTE: [2010-09-04 ptw] (LPP-9333) Previous versions of
+ * this code tried to short-circuit the case where one of the views is
+ * an ancestor of the other, but this short-circuit code was incorrect
+ * for all cases except where one of the views is the canvas (which is
+ * assumed to have an identity reference frame).  I have removed that
+ * broken optimization.  If we discover this code is a bottleneck, we
+ * can re-examine how to optimize it, but note that the transform
+ * calculation relies on calculating two separate transforms from each
+ * of the argument views to a shared reference view and then
+ * composing those transforms to get the correct total
+ * transform, so there should _never_ be an empty *link array, except
+ * in the totally degenerate case where from and to are the same view.
+ *
+ * @access private
+ */
 class LzViewLinkage {
+  var xscale:Number = 1;
+  var yscale:Number = 1;
+  var xoffset:Number = 0;
+  var yoffset:Number = 0;
+  var uplinkArray:Array = null;
+  var downlinkArray:Array = null;
 
-    var scale:Object = null;
-    var offset:Object = null;
-    var uplinkArray:Array = null;
-    var downlinkArray:Array = null;
+  if ($debug) {
+    var fromView:LzView;
+    var toView:LzView;
+  }
 
-/**
-  * @param fromView: the view from which to originate the transformation
-  * @param toView: the reference view
-  */
-  function LzViewLinkage ( fromView, toView ) {
-    //@field scale: An <b><i>LzPoint</b></i> representing the scale
-    //transformation of this linkage. 1 is no transformation.
-    this.scale = {};
-    //@field offset: An <b><i>LzPoint</b></i> representing the offset
-    //to be added by this linkage.
-    this.offset = {};
-    if (fromView === toView){ return; }
+  /**
+   * @param fromView: the view from which to originate the transformation
+   * @param toView: the reference view
+   */
+  function LzViewLinkage ( fromView:LzView, toView:LzView ) {
+    if ($debug) {
+      this.fromView = fromView;
+      this.toView = toView;
+    }
 
-    this.uplinkArray = [ ];
-    var uplinkArray = this.uplinkArray;
-    var pview = fromView;
+    if (fromView === toView) { return; }
+
+    // Build a list of fromView and its parents
+    var uplinkArray:Array = this.uplinkArray = [];
+    var pview:LzView = fromView;
     do {
       pview = pview.immediateparent;
       uplinkArray.push ( pview );
-    } while( pview !== toView && pview !== canvas);
+    } while (pview !== canvas);
 
-    this.downlinkArray = [ ];
-    var downlinkArray = this.downlinkArray;
-    if (pview === toView) return;
-
-    var pview = toView;
+    // Build list of toView and its parents
+    var downlinkArray:Array = this.downlinkArray = [];
+    var pview:LzView = toView;
     do {
       pview = pview.immediateparent;
       downlinkArray.push ( pview );
-    } while( pview !== canvas);
+    } while (pview !== canvas);
 
     while (uplinkArray.length > 1 &&
            downlinkArray[downlinkArray.length -1 ] ===
            uplinkArray[uplinkArray.length - 1 ] &&
            downlinkArray[downlinkArray.length -2 ]  ===
            uplinkArray[uplinkArray.length - 2 ] ){
-      //remove top level duplicates
+      // removed everything outside the shared "frame of reference"
+      // view
       downlinkArray.pop();
       uplinkArray.pop();
     }
+
+    if ($debug) { Debug.debug("%w", this); }
   }
 
-/**
-  * Updates the offset and scale of the view linkage.
-  * @param xory: The axis ( "x" or "y" ) in which to update the view linkage.
-  */
-  function update (xory) {
-    var tscale= 1;
-    var toffset= 0;
-    var scale = xory + "scale";
-    var uplinkArray = this.uplinkArray;
-    var downlinkArray = this.downlinkArray;
+  /**
+   * Updates the offset and scale of the view linkage for the specified
+   * axis
+   *
+   * @param xory: The axis ( "x" or "y" ) in which to update the view
+   * linkage.
+   */
+  function update (xory:String) {
+    var scale:String = xory + "scale";
+    var offset:String = xory + "offset";
+    var uplinkArray:Array = this.uplinkArray;
+    var downlinkArray:Array = this.downlinkArray;
 
+    // The last element of the up/down link arrays is the shared
+    // parent view or "frame of reference".
+    //
+    // The goal is to calculate the relative scale factor between from
+    // and to, such that a motion of 1 unit in the specified axis in
+    // the from node results in the same absolute motion as a motion
+    // of "scale" units in the same axis in the to node.
+    //
+    // Similarly, the goal is to calculate the relative offset between
+    // from and to such that a point at 0 in the specified axis in the
+    // from node is at the same absolute position as a point at
+    // `offset` in the same axis in the to node.
+    //
+    // The algorithm ignores the offset of the reference frame (since
+    // the reference frame 0 is independent of that), but applies the
+    // scale of the reference frame (since it affects every child
+    // frame).  For each child frame, its offset is scaled by the
+    // accumulated scale of its ancestors and added to the accumulated
+    // offset.  This gives us two transforms, from the fromView to the
+    // shared parant and from the shared parent to the toView.
+    // These two transforms are then composed to create the total
+    // transform.
+    //
+    // The fromView and toView do _not_ participate in the
+    // calculation, because it is their 0,0 frame of reference we are
+    // interested in, not their children.
+    //
+    // See the NOTE in the constructor before you try to optimize this
+    // calculation for (what may look like) degenerate cases.
+
+    // Calculate the transform the shared parent to the toView.
+    var upscale = 1;
+    var upoffset = 0;
     if (uplinkArray) {
-        for (var i = 0, ual = uplinkArray.length ; i < ual ; i++ ){
-            var a = uplinkArray[i];
-            tscale *= a[scale];
-            toffset += a[xory] / tscale;
-        }
+      var i = uplinkArray.length - 1;
+      var v = uplinkArray[i--];
+      upscale *= v[scale];
+      for (; i >= 0; i--) {
+        v = uplinkArray[i];
+        upoffset += v[xory] * upscale;
+        upscale *= v[scale];
+      }
     }
 
+    // Calculate the transform from the shared parent to the toView.
+    var downscale = 1;
+    var downoffset = 0;
     if (downlinkArray) {
-        for (var i = downlinkArray.length -1 ; i >= 0 ; i -- ){
-            var a = downlinkArray[i];
-            toffset -= a[xory] / tscale;
-            tscale /= a[scale];
-        }
+      var i = downlinkArray.length - 1;
+      var v = downlinkArray[i--];
+      downscale *= v[scale];
+      for (; i >= 0; i--) {
+        v = downlinkArray[i];
+        downoffset += v[xory] * downscale;
+        downscale *= v[scale];
+      }
     }
 
-    this.scale[xory] = tscale;
-    this.offset[xory] = toffset;
+    // Compose those two transforms to give the transform from
+    // fromView 0,0 to toView 0,0.
+    this[scale] = upscale / downscale;
+    // The offsets are relative to the shared parent, combine them and
+    // then scale them into the toView's
+    this[offset] = (upoffset - downoffset) / downscale;
   }
 
   if ($debug) {
-/**
-  * Debug name gives the linkage as a 2d transform, just for yuks
-  * @access private
-  */
+    /**
+     * Debug name gives the linkage as a 2d transform, just for yuks
+     * @access private
+     */
     LzViewLinkage.prototype._dbg_name = function () {
-      return '[' +
-        this.scale.x + ' 0 ' + this.offset.x +
-        ' 0 ' + this.scale.y + ' ' + this.offset.y +
-        ' 0 0 1]';
+      // Ensure up-to-date
+      this.update('x');
+      this.update('y');
+      return Debug.formatToString("%w -> %w: [%d 0 %d 0 %d %d 0 0 1]",
+                                  this.fromView, this.toView,
+                                  this.xscale, this.xoffset,
+                                  this.yscale, this.yoffset);
     };
   }
 }

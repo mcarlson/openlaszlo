@@ -150,6 +150,15 @@
     <view name="v2" bgcolor="red" width="20" height="10" xoffset="10" yoffset="5"/>
   </view>
 
+<!-- view15: getAttributeRelative() with scaling-->
+  <view name="view15" x="10" y="10" xscale="2" yscale="2" bgcolor="blue">
+    <view id="cyanview" x="20" y="20" width="30" height="30" xscale="3" yscale="3" bgcolor="cyan">
+      <view id="magentaview" x="5" y="5" width="5" height="5" xscale="5" yscale="5" bgcolor="magenta"/>
+    </view>
+    <view id="yellowview" x="10" y="10" width="100" height="100" bgcolor="yellow" opacity="0.5">
+      <view id="redview" x="40" y="40" width="20" height="20" bgcolor="red"/>
+    </view>
+  </view>
 
 
 <script><![CDATA[
@@ -261,25 +270,25 @@ suite.test2 = function() {
 // test3: stretch
 suite.test3 = function() {
   loctest("view3", view3, [90,0,50,80]);
-  LzTestManager.assertEquals (0, view3.unstretchedwidth, "view3.unstretchedwidth failure");
-  LzTestManager.assertEquals (0, view3.unstretchedheight, "view3.unstretchedheight failure");
+  LzTestManager.assertWithin (0, view3.unstretchedwidth, .01, "view3.unstretchedwidth failure");
+  LzTestManager.assertWithin (0, view3.unstretchedheight, .01, "view3.unstretchedheight failure");
 
-  LzTestManager.assertEquals (1, view3.v1.resourcewidth, "view3.v1.resourcewidth failure");
-  LzTestManager.assertEquals (1, view3.v1.resourceheight, "view3.v1.resourceheight failure");
+  LzTestManager.assertWithin (1, view3.v1.resourcewidth, .01, "view3.v1.resourcewidth failure");
+  LzTestManager.assertWithin (1, view3.v1.resourceheight, .01, "view3.v1.resourceheight failure");
 
   loctest("view3.v1", view3.v1, [0,0,10,20]);
-  LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure");
-  LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure");
+  LzTestManager.assertWithin (1, view3.v1.unstretchedwidth, .01, "view3.v1.unstretchedwidth failure");
+  LzTestManager.assertWithin (1, view3.v1.unstretchedheight, .01, "view3.v1.unstretchedheight failure");
 
   view3.v1.setAttribute('stretches', 'width');
   loctest("view3.v1 (2)", view3.v1, [0,0,10,20]);
-  LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure (2)");
-  LzTestManager.assertEquals (0, view3.v1.unstretchedheight, "(BUG: LPP-2161) view3.v1.unstretchedheight failure (2)");
+  LzTestManager.assertWithin (1, view3.v1.unstretchedwidth, .01, "view3.v1.unstretchedwidth failure (2)");
+  LzTestManager.assertWithin (0, view3.v1.unstretchedheight, .01, "(BUG: LPP-2161) view3.v1.unstretchedheight failure (2)");
 
   view3.v1.setAttribute('stretches', 'height');
   loctest("view3.v1 (3)", view3.v1, [0,0,10,20]);
-  LzTestManager.assertEquals (0, view3.v1.unstretchedwidth, "(BUG: LPP-2161) view3.v1.unstretchedwidth failure (3)");
-  LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure (3)");
+  LzTestManager.assertWithin (0, view3.v1.unstretchedwidth, .01, "(BUG: LPP-2161) view3.v1.unstretchedwidth failure (3)");
+  LzTestManager.assertWithin (1, view3.v1.unstretchedheight, .01, "view3.v1.unstretchedheight failure (3)");
 }
 
 // test4: Rotation and bounding box
@@ -464,7 +473,7 @@ suite.test13 = function() {
 
 suite.test14 = function() {
   if (view14.capabilities.rotation) loctest ('view14', view14.v1, [-3.53553390593274,-10.6066017177982,20,10]);
-  loctest ('view14', view14.v2, [-10,5,20,10]);
+  loctest ('view14', view14.v2, [-10,16.2,20,10]);
 }
 /* Leave for last
 suite.testN = function() {
@@ -472,6 +481,44 @@ suite.testN = function() {
   Debug.write (b.x + "," + b.y + "  " + b.width + "x" + b.height + " (" + b.xoffset + "," + b.yoffset + ")");
 }
 */
+
+suite.test15 = function() {
+  LzTestManager.assertEquals (110, view15.width, "view15.width failure");
+  LzTestManager.assertEquals (220, view15.getBounds().width, "view15.getBounds().width failure");
+
+  var trueRedViewX = view15.x + (yellowview.x*view15.xscale) + (redview.x*view15.xscale);
+  var relativeRedViewX = redview.getAttributeRelative('x', canvas)
+
+  LzTestManager.assertEquals(trueRedViewX, relativeRedViewX, "getAttributeRelative redview in canvas")
+  LzTestManager.assertEquals(view15.x + (yellowview.x*view15.xscale), yellowview.getAttributeRelative('x', canvas), "getAttributeRelative yellowview in canvas");
+  LzTestManager.assertEquals((yellowview.x+redview.x)*view15.xscale+view15.x, redview.getAttributeRelative('x', view15), "getAttributeRelative red x in blue")
+  LzTestManager.assertEquals((- yellowview.x), view15.getAttributeRelative('x', redview), "getAttributeRelative blue x in red")
+  LzTestManager.assertEquals(view15.getAttributeRelative('x', view15), view15.x, "getAttributeRelative blue x in blue")
+
+  // This relative attribute should be the same as the actual, because both views share the view15.xscale
+  LzTestManager.assertEquals(redview.width, redview.getAttributeRelative('width', view15), "getAttributeRelative red width in blue");
+  LzTestManager.assertEquals(view15.width, view15.getAttributeRelative('width', redview), "getAttributeRelative blue width in red");
+  // There _is_ a scaling factor between these views and the canvas
+  LzTestManager.assertEquals(redview.width*view15.xscale, redview.getAttributeRelative('width', canvas), "getAttributeRelative red width in canvas");
+  LzTestManager.assertEquals(view15.getBounds().width, view15.getAttributeRelative('width', canvas), "getAttributeRelative blue width in canvas");
+
+  var absmagentascale = magentaview.getAttributeRelative('width', canvas)/magentaview.width;
+  var absredwidth = redview.getAttributeRelative('width', canvas);
+  LzTestManager.assertWithin(absredwidth/absmagentascale, redview.getAttributeRelative('width', magentaview), .01, "getAttributeRelative red width in magenta");
+
+  var absmagentax = magentaview.getAttributeRelative('x', canvas);
+  redview.setAttribute('x', magentaview.getAttributeRelative('x', redview));
+  var origredx = redview.x;
+  LzTestManager.assertEquals(absmagentax, redview.getAttributeRelative('x', canvas), "getAttributeRelative red x moved to magenta x in red");
+  redview.setAttribute('x', origredx);
+  magentaview.setAttributeRelative('x', redview);
+  // Visually, the magentaview should move to align its x with the redview
+  LzTestManager.assertEquals(redview.getAttributeRelative('x', canvas), magentaview.getAttributeRelative('x', canvas), "setAttributeRelative magenta x to red");
+  redview.setAttributeRelative('width', magentaview);
+  // Visually, the redview should grow to be as wide as the magentaview
+  LzTestManager.assertEquals(redview.getAttributeRelative('width', canvas), magentaview.getAttributeRelative('width', canvas), "setAttributeRelative red width to magenta");
+
+}
 
 // Run the tests in order (test1,test2,...)
 suite.addTest(suite.test1);
@@ -488,6 +535,7 @@ suite.addTest(suite.test11);
 suite.addTest(suite.test12);
 suite.addTest(suite.test13);
 suite.addTest(suite.test14);
+suite.addTest(suite.test15);
 
 
 
@@ -500,7 +548,7 @@ suite.addTest(suite.test14);
 </canvas>
 <!-- 
 /* X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2007-2009 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Copyright 2007-2010 Laszlo Systems, Inc.  All Rights Reserved.          *
 * Use is subject to license terms.                                        *
 * X_LZ_COPYRIGHT_END ******************************************************/
 -->

@@ -2302,6 +2302,7 @@ var oncolortransform = LzDeclaredEvent;
   */
 var colortransform:Object;
 
+/** @access private */
 function $lzc$set_colortransform(o) {
     if (this.capabilities.colortransform) {
         if (this.colortransform === o) {
@@ -2578,26 +2579,43 @@ function updateResourceSize ( ){
 
 
 /**
-  * This method is used to set a view's property to match that of
-  * another view -- potentially one in another coordinate system.
-  * 
-  * @param String prop: a string specifying the property to set.
-  * known properties are: x, y, width, and height
-  * @param LzView refView: the reference view for the transformation
-  */
-function setAttributeRelative(prop, refView) {
+ * <p>Sets the named property of this view to the value that will cause
+ * the absolute value of the property in both views to be the same.</p>
+ *
+ * <p>For example, <tt>a.setAttributeRelative('x', b)</tt> will cause
+ * the left edge of view <replaceable>a</replaceable> to be aligned
+ * with the left edge of view <replaceable>b</replaceable> on the
+ * canvas.  This operation works for any two views on the canvas,
+ * regardless of their relative relationship.</p>
+ *
+ * <p>See also <method><link
+ * linkend="LzView.prototype.getAttributeRelative">lz.view.getAttributeRelative</link></method>.
+ * <tt>this.setAttributeRelative(property,
+ * that)</tt> is the same as (but more efficient than)
+ * <tt>this.setAttribute(property,
+ * that.getAttributeRelative(property, this))</tt>.</p>
+ * 
+ * @param String prop: the property to set: 'x', 'y', 'width',
+ * or 'height'
+ * @param LzView refView: the view whose property is to be matched
+ */
+  function setAttributeRelative(prop:String, refView:LzView):void {
     var tLink = this.getLinkage( refView );
     var val = refView[ prop ];
     if (prop == "x" || prop =="y" ){
         //these properties need to account for both offset and scale
         tLink.update ( prop );
-        this.setAttribute (prop ,  (  val - tLink.offset[prop] )
-                                / tLink.scale[prop] );
+        this.setAttribute (prop ,  (  val - tLink[prop + "offset"] )
+                                / tLink[prop + "scale"] );
     }else if ( prop == "width" || prop == "height" ){
         //these properties account only for scale
         var axis = prop == "width" ? "x" : "y"
         tLink.update ( axis )
-        this.setAttribute ( prop, val / tLink.scale[ axis ] );
+        // NOTE: [2010-09-04 ptw] Currently a view's scale _does_
+        // affect its absolute height/width, even though it does not
+        // affect its x/y, hence the additional factors.
+        var scale = axis + "scale";
+        this.setAttribute ( prop, val * refView[scale] / tLink[scale] / this[scale]);
 
     }else{
         //not yet implemented: rotation, alpha...
@@ -2647,30 +2665,48 @@ function $lzc$setAttributeRelative_dependencies ( who,self, prop ,
 
 
 /**
-  * Transform the specified attribute (width/height/x/y) from the existing
-  * coordinate space to the reference view's coordinate space. This 
-  * transformation takes into account any nested views between the views and
-  * the common ancestor view.
-  * 
-  * This method answers the question: what should this view set its
-  * width/height/x/y to in order to appear to have the same value for that
-  * attribute as the reference view?
-  * 
-  * @param String prop: a string specifying the property to return.
-  *              known properties are: x, y, width, and height
-  * @param LzView refView: the reference view for the transformation
-  */
-function getAttributeRelative(prop, refView ) {
+ * <p>Transform the specified attribute from this view's coordinate space
+ * to the reference view's coordinate space.  This operation works for
+ * any two views on the canvas, regardless of their relative
+ * relationship.</p>
+ *
+ * <p>This method answers these questions: For <tt>x</tt> or
+ * <tt>y</tt>: What value of <tt>x</tt> or <tt>y</tt> in the reference
+ * view will be the same absolute position as my current <tt>x</tt> or
+ * <tt>y</tt>? For <tt>width</tt> or <tt>height</tt>: What distance in
+ * the <tt>x</tt> or <tt>y</tt> axis in the reference view will be the
+ * same absolute distance as my current <tt>width</tt> or
+ * <tt>height</tt>.</p>
+ *
+ * <p>See also<method><link
+ * linkend="LzView.prototype.setAttributeRelative">lz.view.setAttributeRelative</link></method>.
+ * <tt>this.setAttributeRelative(property,
+ * that)</tt> is the same as (but more efficient than)
+ * <tt>this.setAttribute(property,
+ * that.getAttributeRelative(property, this))</tt>.</p>
+ * 
+ * @param String prop: the property to transform: 'x', 'y', 'width',
+ * or 'height'
+ * @param LzView refView: the view where the transformed property is measured
+ */
+function getAttributeRelative(prop:String, refView:LzView ) {
+    if (refView === this) {
+        return this[prop];
+    }
     var tLink = this.getLinkage( refView );
 
-    if (prop == "x" || prop =="y" ){
-        tLink.update ( prop );
-        return (tLink.offset[prop] + this[ prop ]) * tLink.scale[prop];
-    }else if ( prop == "width" || prop == "height" ){
+    if (prop == "x" || prop =="y") {
+        tLink.update (prop);
+        return (this[prop] * tLink[prop + "scale"]) + tLink[prop + "offset"];
+    } else if (prop == "width" || prop == "height") {
         var axis = prop == "width" ? "x" : "y"
-        tLink.update ( axis )
-        return tLink.scale[axis] * this[ prop ];
-    }else{
+        tLink.update (axis);
+        // NOTE: [2010-09-04 ptw] Currently a view's scale _does_
+        // affect its absolute height/width, even though it does not
+        // affect its x/y, hence the additional factors.
+        var scale = axis + "scale";
+        return this[ prop ] * this[scale] * tLink[scale] / refView[scale];
+    } else {
         //not yet implemented: rotation, alpha...
     }
 }
