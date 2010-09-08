@@ -279,6 +279,8 @@ will not have classroot defined.</para>
 <para/></section></section>
    <section id="mixins">
       <title><literal>&lt;mixin&gt;</literal>s</title>
+      <para>This page describes a basic usage of <literal>&lt;mixin&gt;</literal>. For a more advanced usage, see the <ulink url="http://localhost:8080/trunk/docs/reference/lz.mixin.html">Reference</ulink>.</para>
+         
       <para><literal>&lt;mixin&gt;</literal> is like <literal>&lt;class&gt;</literal>
          but rather than creating something you can instantiate, <literal>&lt;mixin&gt;</literal> creates a template that can be
          <emphasis>mixed in</emphasis> (added to) more than one other class. A

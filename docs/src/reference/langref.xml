@@ -40,6 +40,43 @@
     </doc>
     <class> </class>
   </property>
+  
+  <property id="tag.mixin" topic="LZX" subtopic="Basics" access="public">
+    <doc>
+      <tag name="shortdesc">
+        <text><literal>&lt;mixin&gt;</literal> is like <literal>&lt;class&gt;</literal> but rather than creating something you can instantiate, <literal>&lt;mixin&gt;</literal> creates a template that can be mixed in (added to) more than one other class. A <literal>&lt;mixin&gt;</literal> is like an interface, but it is allowed to have state and implementation.</text>
+      </tag>
+      <tag name="lzxname">
+        <text>mixin</text>
+      </tag>
+      <tag name="usage">
+        <text>
+          <p>This page describes an advanced usage of <literal>&lt;mixin&gt;</literal>. For a more basic usage, see the <a href="http://localhost:8080/trunk/docs/developers/class-inheritance.html#mixins"><i>Developers Guide</i></a>.</p>
+          
+          <p><literal>&lt;mixin&gt;</literal>s are a shorthand for creating intermediate anonymous classes (exactly as we do in our implementation): 
+            
+            <programlisting class="code">&lt;class name=&quot;a&quot; extends=&quot;d&quot; with=&quot;b,c&quot; /&gt; </programlisting>
+            
+            is meant to be _exactly_ equivalent to: 
+            
+        <programlisting class="code">&lt;class name=&quot;cd&quot; extends=&quot;d&quot; implements=&quot;c&quot;&gt; 
+          ... body of c ... 
+        &lt;/class&gt; 
+        
+        &lt;class name=&quot;bcd&quot; extends=&quot;cd&quot; implements=&quot;b&quot;&gt; 
+          ... body of b ... 
+        &lt;/class&gt; 
+        
+        &lt;class name=&quot;a&quot; extends=&quot;bcd&quot;&gt; 
+          ... body of a ... 
+        &lt;/class&gt; </programlisting></p>
+            
+            <p>Except that the intermediate classes <literal>cd</literal> and <literal>bcd</literal> are anonymous. So it is a shorthand for re-using the <literal>mixin</literal> bodies in multiple classes with potentially different superclasses. The primary difference between <literal>trait</literal> and <literal>mixin</literal> is that <literal>trait</literal> simply disallows any case where you could not simply use textual substitution, whereas <literal>mixin</literal> appeals to the class inheritance semantics to resolve those cases (including being able to make super calls to overridden <literal>mixin</literal> methods). In the cases where there are no conflicting attributes, <literal>mixins</literal> can be optimized to <literal>traits</literal> and you can eliminate the intermediate classes.</p>
+        </text>
+      </tag>
+    </doc>
+    <class> </class>
+  </property>
 
   <property id="tag.attribute" topic="LZX" subtopic="Basics" access="public">
     <doc>
